@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import './styles/navigation.css'
+import { Inter } from 'next/font/google'
+
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: '编程爱好者网址导航',
@@ -14,7 +17,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh">
-      <body>{children}</body>
+      <head>
+        <link 
+          rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        />
+        <link 
+          rel="stylesheet" 
+          href="/assets/css/fonts/linecons/css/linecons.css"
+        />
+      </head>
+      <body className={inter.className}>{children}</body>
     </html>
   )
 }

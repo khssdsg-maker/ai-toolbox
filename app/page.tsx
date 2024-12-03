@@ -5,8 +5,19 @@ import Link from 'next/link'
 import { navigationItems } from './data/navigation'
 import { resourceSections } from './data/resources'
 import ResourceCard from './components/ResourceCard'
+import { useState } from 'react'
 
 export default function Home() {
+  const [expandedItems, setExpandedItems] = useState<string[]>([])
+
+  const toggleItem = (id: string) => {
+    setExpandedItems(prev => 
+      prev.includes(id) 
+        ? prev.filter(item => item !== id)
+        : [...prev, id]
+    )
+  }
+
   return (
     <div className="page-container">
       <div className="sidebar-menu">
@@ -17,61 +28,65 @@ export default function Home() {
                 <Image 
                   src="/assets/images/logo@2x.png"
                   alt="Logo"
-                  width={100}
-                  height={40}
+                  width={160}
+                  height={64}
                   className="logo-expanded"
                 />
                 <Image
                   src="/assets/images/logo-collapsed@2x.png" 
                   alt="Logo"
-                  width={40}
-                  height={40}
+                  width={48}
+                  height={48}
                   className="logo-collapsed"
                 />
               </Link>
             </div>
           </header>
 
-          <nav>
-            <ul>
-              {navigationItems.map(item => (
-                <li key={item.id}>
-                  {item.items?.length ? (
-                    <div>
-                      <span>
-                        <i className={item.icon}></i>
-                        <span>{item.title}</span>
-                      </span>
-                      <ul>
-                        {item.items.map(subItem => (
-                          <li key={subItem.href}>
-                            <Link href={subItem.href}>
-                              <span>{subItem.title}</span>
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ) : (
-                    <Link href={`#${item.id}`}>
+          <ul className="main-menu">
+            {navigationItems.map(item => (
+              <li 
+                key={item.id}
+                className={expandedItems.includes(item.id) ? 'expanded' : ''}
+              >
+                {item.items?.length ? (
+                  <div>
+                    <span onClick={() => toggleItem(item.id)}>
                       <i className={item.icon}></i>
                       <span>{item.title}</span>
-                    </Link>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </nav>
+                      <i className={`fa-chevron-${expandedItems.includes(item.id) ? 'down' : 'right'} ml-auto`}></i>
+                    </span>
+                    <ul>
+                      {item.items.map(subItem => (
+                        <li key={subItem.href}>
+                          <Link href={subItem.href}>
+                            <span>{subItem.title}</span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  <Link href={`#${item.id}`}>
+                    <i className={item.icon}></i>
+                    <span>{item.title}</span>
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
       
       <div className="main-content">
         {resourceSections.map(section => (
           <section key={section.id} id={section.id}>
-            <h2 className="text-gray-700 mb-4">
-              <i className="linecons-tag mr-2"></i>
-              {section.title}
-            </h2>
+            <div className="section-header">
+              <h2>
+                <i className="linecons-tag mr-2" />
+                {section.title}
+              </h2>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {section.items.map(item => (
                 <ResourceCard
@@ -80,6 +95,7 @@ export default function Home() {
                 />
               ))}
             </div>
+            <div className="mb-12"></div>
           </section>
         ))}
       </div>

@@ -25,5 +25,55 @@ export const navigationItems: NavigationItem[] = [
     title: '社区资讯',
     icon: 'linecons-doc',
     items: []
+  },
+  {
+    id: 'inspiration',
+    title: '灵感采集',
+    icon: 'linecons-lightbulb',
+    items: [
+      { title: '发现产品', href: '#发现产品' },
+      { title: '界面灵感', href: '#界面灵感' },
+      { title: '网页灵感', href: '#网页灵感' }
+    ]
+  },
+  {
+    id: 'resources',
+    title: '素材资源',
+    icon: 'linecons-thumbs-up',
+    items: [
+      { title: '图标素材', href: '#图标素材' },
+      { title: 'LOGO设计', href: '#LOGO设计' },
+      { title: '平面素材', href: '#平面素材' },
+      { title: 'UI资源', href: '#UI资源' },
+      { title: 'Sketch资源', href: '#Sketch资源' },
+      { title: '字体资源', href: '#字体资源' },
+      { title: 'Mockup', href: '#Mockup' },
+      { title: '摄影图库', href: '#摄影图库' },
+      { title: 'PPT资源', href: '#PPT资源' }
+    ]
+  },
+  {
+    id: 'learning',
+    title: '学习教程',
+    icon: 'linecons-pencil',
+    items: [
+      { title: '设计规范', href: '#设计规范' },
+      { title: '视频教程', href: '#视频教程' },
+      { title: '设计文章', href: '#设计文章' },
+      { title: '设计电台', href: '#设计电台' },
+      { title: '交互设计', href: '#交互设计' }
+    ]
+  },
+  {
+    id: 'ued',
+    title: 'UED团队',
+    icon: 'linecons-user',
+    items: []
+  },
+  {
+    id: 'about',
+    title: '关于本站',
+    icon: 'linecons-heart',
+    items: []
   }
 ] 

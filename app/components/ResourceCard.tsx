@@ -13,16 +13,18 @@ export default function ResourceCard({ title, description, icon, url }: Resource
       className="card hover:shadow-lg transition-shadow"
     >
       <div className="card-content">
-        <Image
-          src={icon}
-          alt={title}
-          width={40}
-          height={40}
-          className="rounded-full"
-        />
-        <div>
-          <h3 className="font-bold">{title}</h3>
-          <p className="text-gray-600 text-sm">{description}</p>
+        <div className="card-icon">
+          <Image
+            src={icon}
+            alt={title}
+            width={48}
+            height={48}
+            className="rounded-lg"
+          />
+        </div>
+        <div className="card-text">
+          <h3 className="card-title">{title}</h3>
+          <p className="card-description">{description}</p>
         </div>
       </div>
     </Link>
