@@ -175,7 +175,7 @@ NEXTAUTH_SECRET=使用以下命令生成:
 1. 本地开发和生产环境使用不同的 OAuth App
 2. 生产环境需要更新回调 URL 为实际域名
 3. 确保 `.env.local` 不被提交到 Git
-4. 生产环境使用 Cloudflare Pages 的环变量
+4. 生产环境使用 Cloudflare Pages 的环��
 5. 定期轮换 Client Secret 以提高安全性
 
 ## Cloudflare Pages 部署
@@ -205,6 +205,9 @@ NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your-secret-here
 GITHUB_ID=your-github-id
 GITHUB_SECRET=your-github-secret
+GITHUB_OWNER=your-github-username
+GITHUB_REPO=your-repo-name
+GITHUB_BRANCH=main
 ```
 
 ## 开发
@@ -226,3 +229,84 @@ cp .env.example .env.local
 ```bash
 pnpm dev
 ```
+
+## 数据文件
+
+项目使用 GitHub 仓库存储数据，需要以下数据文件：
+
+1. `app/data/db/navigation.json` - 导航数据
+2. `app/data/db/resources.json` - 资源数据
+
+这些文件会在首次提交到仓库时自动创建。
+
+## 数据格式
+
+### navigation.json
+```json
+[
+  {
+    "id": "string",
+    "title": "string",
+    "icon": "string",
+    "items": [
+      {
+        "title": "string",
+        "titleEn": "string",
+        "description": "string",
+        "descriptionEn": "string",
+        "icon": "string",
+        "href": "string"
+      }
+    ],
+    "subCategories": [
+      {
+        "id": "string",
+        "title": "string",
+        "items": []
+      }
+    ]
+  }
+]
+```
+
+### resources.json
+```json
+[
+  {
+    "id": "string",
+    "title": "string",
+    "items": [
+      {
+        "title": "string",
+        "description": "string",
+        "icon": "string",
+        "url": "string"
+      }
+    ]
+  }
+]
+```
+
+## 故障排除
+
+### 导航数据加载失败
+
+1. 检查环境变量配置
+   - GITHUB_OWNER 是否正确
+   - GITHUB_REPO 是否正确
+   - GITHUB_BRANCH 是否正确
+
+2. 检查仓库权限
+   - 仓库是否公开
+   - OAuth App 是否有正确的权限
+   - Token 是否有效
+
+3. 检查数据文件
+   - navigation.json 是否存在
+   - 文件格式是否正确
+   - 文件路径是否正确
+
+4. 查看控制台日志
+   - 检查 API 请求是否成功
+   - 检查错误信息
+   - 检查返回的数据格式

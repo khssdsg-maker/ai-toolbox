@@ -17,8 +17,12 @@ export interface NavigationItem {
   id: string
   title: string
   icon: string
-  subCategories?: NavigationSubCategory[]
-  items?: NavigationSubItem[]
+  items: NavigationSubItem[]
+  subCategories: NavigationSubCategory[]
+}
+
+export interface NavigationData {
+  navigationItems: NavigationItem[]
 }
 
 export interface ResourceItem {

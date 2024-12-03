@@ -1,8 +1,8 @@
 [
   {
     "id": "1",
-    "title": "old",
-    "icon": "linecons-star",
+    "title": "开发工具",
+    "icon": "linecons-desktop",
     "items": [
       {
         "title": "GitHub",
@@ -13,45 +13,14 @@
         "href": "https://github.com"
       },
       {
-        "title": "Stack Overflow",
-        "titleEn": "Stack Overflow",
-        "description": "专业的程序员问答社区",
-        "descriptionEn": "Professional programmer Q&A community",
-        "icon": "linecons-code",
-        "href": "https://stackoverflow.com"
+        "title": "VS Code",
+        "titleEn": "VS Code",
+        "description": "微软开发的代码编辑器",
+        "descriptionEn": "Code editor developed by Microsoft",
+        "icon": "https://code.visualstudio.com/favicon.ico",
+        "href": "https://code.visualstudio.com"
       }
     ],
-    "subCategories": [
-      {
-        "id": "1733198086986",
-        "title": "新子分类2",
-        "items": []
-      },
-      {
-        "id": "1733199519921",
-        "title": "新子分类",
-        "items": []
-      },
-      {
-        "id": "1733199520020",
-        "title": "新子分类",
-        "items": []
-      }
-    ]
-  },
-  {
-    "id": "2",
-    "title": "开发工具",
-    "icon": "linecons-desktop",
-    "items": [
-      {
-        "title": "VS Code",
-        "href": "https://code.visualstudio.com"
-      },
-      {
-        "title": "WebStorm",
-        "href": "https://www.jetbrains.com/webstorm"
-      }
-    ]
+    "subCategories": []
   }
 ]
