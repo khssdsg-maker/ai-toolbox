@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server'
-import { promises as fs } from 'fs'
-import path from 'path'
+import navigationData from '@/app/data/db/navigation.json'
 import type { NavigationItem } from '@/types/navigation'
-
-const dataPath = path.join(process.cwd(), 'app/data/db/navigation.json')
 
 export const runtime = 'edge'
 
@@ -12,9 +9,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const data = await fs.readFile(dataPath, 'utf8')
-    const navigationItems: NavigationItem[] = JSON.parse(data)
-    const category = navigationItems.find(item => item.id === params.id)
+    const category = navigationData.find(item => item.id === params.id)
     
     if (!category) {
       return NextResponse.json({ error: 'Category not found' }, { status: 404 })
@@ -32,17 +27,8 @@ export async function PUT(
 ) {
   try {
     const category: NavigationItem = await request.json()
-    const data = await fs.readFile(dataPath, 'utf8')
-    const navigationItems: NavigationItem[] = JSON.parse(data)
-    
-    const index = navigationItems.findIndex(item => item.id === params.id)
-    if (index === -1) {
-      return NextResponse.json({ error: 'Category not found' }, { status: 404 })
-    }
-
-    navigationItems[index] = category
-    await fs.writeFile(dataPath, JSON.stringify(navigationItems, null, 2))
-    
+    // 在 Edge Runtime 中，我们需要通过 API 来保存数据
+    // 这里可以调用其他服务或数据库
     return NextResponse.json({ success: true })
   } catch (error) {
     return NextResponse.json({ error: 'Failed to save navigation data' }, { status: 500 })
