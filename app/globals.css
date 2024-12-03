@@ -5,11 +5,39 @@
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-rgb: 241, 241, 241;
+  --content-start-rgb: 245, 247, 250;
+  --content-end-rgb: 241, 241, 241;
   --primary-color: #4776E6;
   --secondary-color: #8E54E9;
   --text-primary: #2c2e2f;
   --text-secondary: #666;
   --border-color: rgba(0,0,0,0.05);
+  --sidebar-bg: #2c2e2f;
+  --sidebar-text: #979898;
+  --sidebar-hover: #fff;
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-shadow: rgba(0,0,0,0.1);
+  --section-border: #e7e7e7;
+  --section-icon-bg: #fff;
+  --section-text: #666;
+}
+
+[data-theme='dark'] {
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 22, 24, 28;
+  --content-start-rgb: 26, 28, 32;
+  --content-end-rgb: 22, 24, 28;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --border-color: rgba(255,255,255,0.1);
+  --sidebar-bg: #1e2024;
+  --sidebar-text: #888;
+  --sidebar-hover: #fff;
+  --card-bg: rgba(36, 38, 42, 0.95);
+  --card-shadow: rgba(0,0,0,0.2);
+  --section-border: #2a2d31;
+  --section-icon-bg: #2a2d31;
+  --section-text: #a0a0a0;
 }
 
 body {
@@ -58,4 +86,16 @@ html {
 ::selection {
   background: var(--primary-color);
   color: white;
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.02);
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.1);
+}
+
+[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.15);
 } 

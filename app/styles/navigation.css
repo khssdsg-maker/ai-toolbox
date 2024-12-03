@@ -5,8 +5,8 @@
 
 .sidebar-menu {
   width: 280px;
-  background: #2c2e2f;
-  color: #fff;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-hover);
   position: fixed;
   height: 100vh;
   overflow-y: auto;
@@ -55,7 +55,7 @@
   padding: 15px 20px;
   display: flex;
   align-items: center;
-  color: #979898;
+  color: var(--sidebar-text);
   text-decoration: none;
   transition: all 0.3s ease;
   cursor: pointer;
@@ -64,7 +64,7 @@
 
 .main-menu > li > a:hover,
 .main-menu > li > div > span:hover {
-  color: #fff;
+  color: var(--sidebar-hover);
   background: rgba(255,255,255,0.05);
   border-left: 3px solid var(--primary-color);
 }
@@ -107,12 +107,14 @@
   margin-left: 280px;
   padding: 30px 40px;
   width: 100%;
-  background: #f1f1f1;
   min-height: 100vh;
   max-width: 1920px;
   margin: 0 auto;
   margin-left: 280px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #f1f1f1 100%);
+  background: linear-gradient(135deg, 
+    rgb(var(--content-start-rgb)) 0%, 
+    rgb(var(--content-end-rgb)) 100%
+  );
   animation: fadeIn 0.3s ease-in-out;
 }
 
@@ -132,7 +134,7 @@
   position: relative;
   margin-bottom: 30px;
   padding-bottom: 10px;
-  border-bottom: 2px solid #e7e7e7;
+  border-bottom: 2px solid var(--section-border);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -140,29 +142,27 @@
 }
 
 .section-header i {
-  color: #666;
+  color: var(--primary-color);
   font-size: 16px;
   width: 24px;
   height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fff;
+  background: var(--section-icon-bg);
   border-radius: 6px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-  color: #4776E6;
 }
 
 .section-header h2 {
   display: inline-block;
   margin: 0;
   font-size: 18px;
-  color: #666;
+  color: var(--text-primary);
   font-weight: 600;
   letter-spacing: 0.5px;
   display: flex;
   align-items: center;
-  color: #2c2e2f;
 }
 
 /* 分隔线样式 */
@@ -178,13 +178,14 @@
 
 /* 卡片样式 */
 .card {
-  @apply bg-white rounded-lg shadow-sm p-6 hover:shadow-lg transition-all duration-300;
+  @apply rounded-lg shadow-sm p-6 hover:shadow-lg transition-all duration-300;
   @apply transform hover:-translate-y-1;
   border: 1px solid var(--border-color);
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  background: var(--card-bg);
+  box-shadow: 0 2px 8px var(--card-shadow);
 }
 
 .card::before {
@@ -212,13 +213,13 @@
 .card-icon {
   @apply flex-shrink-0;
   padding: 8px;
-  background: rgba(71, 118, 230, 0.05);
+  background: var(--section-icon-bg);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform 0.3s ease;
-  box-shadow: inset 0 0 0 1px rgba(71, 118, 230, 0.1);
+  box-shadow: inset 0 0 0 1px var(--border-color);
 }
 
 .card:hover .card-icon {
@@ -362,4 +363,172 @@
 
 .section-header:hover::after {
   width: 100px;
+} 
+
+/* 主题切换按钮样式 */
+.theme-toggle {
+  @apply fixed bottom-20 right-4 p-3 rounded-full shadow-lg transition-all duration-300;
+  background: var(--primary-color);
+  color: white;
+  z-index: 1000;
+}
+
+.theme-toggle:hover {
+  @apply shadow-xl;
+  transform: scale(1.05);
+}
+
+[data-theme='dark'] .theme-toggle {
+  background: var(--secondary-color);
+} 
+
+/* 添加菜单标题容器 */
+.menu-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 箭头图标样式 */
+.menu-arrow {
+  font-size: 14px;
+  transition: transform 0.3s ease;
+  opacity: 0.5;
+  margin-left: auto;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+/* 展开状态的箭头旋转 */
+.main-menu > li.expanded > div > span .menu-arrow {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* 悬停状态的箭头样式 */
+.main-menu > li > div > span:hover .menu-arrow {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* 箭头图标动画 */
+.menu-arrow {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.main-menu > li.expanded > div > span .menu-arrow.fa-angle-right {
+  transform: rotate(90deg);
+}
+
+/* 一级菜单文字和图标容器 */
+.main-menu > li > a,
+.menu-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.main-menu > li > a i,
+.main-menu > li > div > span i {
+  margin-right: 10px;
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .main-menu > li > a span,
+  .main-menu > li > div > span span {
+    display: none;
+  }
+
+  .main-menu > li > a,
+  .menu-title {
+    justify-content: center;
+    gap: 0;
+  }
+
+  .main-menu > li > a i,
+  .main-menu > li > div > span i {
+    margin-right: 0;
+  }
+} 
+
+/* 没有二级菜单的一级菜单样式 */
+.main-menu > li > a {
+  justify-content: flex-start;
+} 
+
+/* 返回顶部按钮样式 */
+.scroll-to-top {
+  @apply fixed bottom-4 right-4 p-3 rounded-full shadow-lg transition-all duration-300;
+  background: var(--secondary-color);
+  color: white;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+}
+
+.scroll-to-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.scroll-to-top:hover {
+  @apply shadow-xl;
+  transform: translateY(-2px);
+  background: var(--primary-color);
+}
+
+.scroll-to-top i {
+  font-size: 14px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 动画效果 */
+.scroll-to-top {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 夜间模式样式 */
+[data-theme='dark'] .scroll-to-top {
+  background: var(--primary-color);
+}
+
+[data-theme='dark'] .scroll-to-top:hover {
+  background: var(--secondary-color);
+} 
+
+/* 按钮共享样式 */
+.theme-toggle,
+.scroll-to-top {
+  width: 40px;
+  height: 40px;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .theme-toggle {
+    bottom: 16px;
+    right: 16px;
+  }
+  
+  .scroll-to-top {
+    bottom: 68px;
+    right: 16px;
+  }
 } 

@@ -52,9 +52,11 @@ export default function Home() {
                 {item.items?.length ? (
                   <div>
                     <span onClick={() => toggleItem(item.id)}>
-                      <i className={item.icon}></i>
-                      <span>{item.title}</span>
-                      <i className={`fa-chevron-${expandedItems.includes(item.id) ? 'down' : 'right'} ml-auto`}></i>
+                      <div className="menu-title">
+                        <i className={item.icon}></i>
+                        <span>{item.title}</span>
+                      </div>
+                      <i className={`fas fa-angle-${expandedItems.includes(item.id) ? 'down' : 'right'} menu-arrow`}></i>
                     </span>
                     <ul>
                       {item.items.map(subItem => (

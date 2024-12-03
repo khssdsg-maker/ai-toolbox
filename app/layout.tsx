@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import './styles/navigation.css'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'] })
+import { ThemeProvider } from '@/components/theme-provider'
+import { ThemeToggle } from '@/components/ThemeToggle'
+import { ScrollToTop } from '@/components/ScrollToTop'
 
 export const metadata: Metadata = {
   title: '编程爱好者网址导航',
@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh">
+    <html lang="zh" suppressHydrationWarning>
       <head>
         <link 
           rel="stylesheet" 
@@ -27,7 +27,18 @@ export default function RootLayout({
           href="/assets/css/fonts/linecons/css/linecons.css"
         />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body>
+        <ThemeProvider
+          attribute="data-theme"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <ThemeToggle />
+          <ScrollToTop />
+        </ThemeProvider>
+      </body>
     </html>
   )
 }
