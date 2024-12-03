@@ -2,8 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import navigationData from '@/app/data/db/navigation.json'
-import resourcesData from '@/app/data/db/resources.json'
+import type { NavigationData, ResourceData } from '@/types/navigation'
 import ResourceCard from './ResourceCard'
 
 interface NavigationItem {
@@ -27,7 +26,12 @@ interface ResourceSection {
   }>
 }
 
-export function NavigationSection() {
+interface NavigationSectionProps {
+  navigationData: NavigationData
+  resourcesData: ResourceData
+}
+
+export function NavigationSection({ navigationData, resourcesData }: NavigationSectionProps) {
   const [expandedItems, setExpandedItems] = useState<string[]>([])
 
   const toggleItem = (id: string) => {

@@ -48,15 +48,25 @@ export default function NavigationManagement() {
 
   const fetchNavigationItems = async () => {
     try {
+      console.log('Fetching navigation items...')
       const response = await fetch('/api/navigation')
-      if (!response.ok) throw new Error('Failed to fetch')
+      console.log('Response status:', response.status)
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch')
+      }
+      
       const data = await response.json()
-      if (Array.isArray(data)) {
-        setNavigationItems(data)
+      console.log('Fetched data:', data)
+
+      if (data && Array.isArray(data.navigationItems)) {
+        setNavigationItems(data.navigationItems)
       } else {
+        console.error('Invalid data format:', data)
         throw new Error('Invalid data format')
       }
     } catch (error) {
+      console.error('Error fetching navigation items:', error)
       toast({
         title: '错误',
         description: '加载导航数据失败',
@@ -69,6 +79,7 @@ export default function NavigationManagement() {
   const handleSave = async () => {
     setIsLoading(true)
     try {
+      console.log('Saving navigation items:', navigationItems)
       const response = await fetch('/api/navigation', {
         method: 'POST',
         headers: {
@@ -77,13 +88,16 @@ export default function NavigationManagement() {
         body: JSON.stringify(navigationItems),
       })
       
-      if (!response.ok) throw new Error('Failed to save')
+      if (!response.ok) {
+        throw new Error('Failed to save')
+      }
       
       toast({
         title: '成功',
-        description: '导数据已保存',
+        description: '导航数据已保存',
       })
     } catch (error) {
+      console.error('Error saving navigation items:', error)
       toast({
         title: '错误',
         description: '保存导航数据失败',

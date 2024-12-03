@@ -3,9 +3,16 @@ export async function getFileContent(path: string) {
   const repo = process.env.GITHUB_REPO!
   const branch = process.env.GITHUB_BRANCH || 'main'
 
+  console.log('GitHub API: Starting getFileContent', {
+    path,
+    owner,
+    repo,
+    branch
+  })
+
   try {
     const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`
-    console.log('Fetching from:', apiUrl)
+    console.log('GitHub API: Fetching from:', apiUrl)
 
     const response = await fetch(apiUrl, {
       headers: {
@@ -14,10 +21,11 @@ export async function getFileContent(path: string) {
       },
     })
 
-    console.log('Response status:', response.status)
+    console.log('GitHub API: Response status:', response.status)
+    console.log('GitHub API: Response headers:', Object.fromEntries(response.headers.entries()))
+
     if (response.status === 404) {
-      console.log('File not found, returning default data')
-      // 如果文件不存在，返回默认的空数据结构
+      console.log('GitHub API: File not found, returning default data')
       if (path.includes('navigation.json')) {
         return {
           navigationItems: []
@@ -36,16 +44,34 @@ export async function getFileContent(path: string) {
       console.error('GitHub API error:', {
         status: response.status,
         statusText: response.statusText,
-        error: errorText
+        error: errorText,
+        headers: Object.fromEntries(response.headers.entries())
       })
       throw new Error(`Failed to fetch file: ${response.statusText} (${errorText})`)
     }
 
     const data = await response.json()
-    console.log('Fetched data:', data)
+    console.log('GitHub API: Successfully fetched data:', data)
+
+    // 确保返回的数据格式一致
+    if (path.includes('navigation.json')) {
+      const result = {
+        navigationItems: Array.isArray(data) ? data : data.navigationItems || []
+      }
+      console.log('GitHub API: Returning navigation data:', result)
+      return result
+    }
+    if (path.includes('resources.json')) {
+      const result = {
+        resourceSections: Array.isArray(data) ? data : data.resourceSections || []
+      }
+      console.log('GitHub API: Returning resources data:', result)
+      return result
+    }
+
     return data
   } catch (error) {
-    console.error('Error in getFileContent:', error)
+    console.error('GitHub API: Error in getFileContent:', error)
     // 返回默认数据而不是抛出错误
     if (path.includes('navigation.json')) {
       return {
