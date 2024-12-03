@@ -10,7 +10,6 @@ import {
   CornerDownRight,
   MoreVertical,
   Folder,
-  type LucideIcon,
   Pencil,
   Check,
   X,
@@ -18,7 +17,7 @@ import {
   Scan,
 } from "lucide-react"
 
-export type Icon = typeof LucideIcon
+export type Icon = typeof Loader2
 
 export const Icons = {
   spinner: Loader2,
