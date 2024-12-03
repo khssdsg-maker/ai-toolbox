@@ -97,6 +97,15 @@ export async function commitFile(
     const updateUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`
     console.log('Updating file at:', updateUrl)
 
+    // 确保内容是有效的 JSON
+    let jsonContent = content
+    if (typeof content === 'object') {
+      jsonContent = JSON.stringify(content, null, 2)
+    }
+
+    // 处理中文编码
+    const encodedContent = btoa(unescape(encodeURIComponent(jsonContent)))
+
     const response = await fetch(updateUrl, {
       method: 'PUT',
       headers: {
@@ -107,7 +116,7 @@ export async function commitFile(
       },
       body: JSON.stringify({
         message,
-        content: btoa(unescape(encodeURIComponent(content))), // 处理中文
+        content: encodedContent,
         sha,
         branch,
       }),

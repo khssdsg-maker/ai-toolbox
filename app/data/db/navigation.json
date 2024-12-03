@@ -1,16 +1,26 @@
 [
   {
     "id": "1733217938286",
-    "title": "�{",
-    "icon": "linecons-star",
-    "subCategories": [],
-    "items": []
-  },
-  {
-    "id": "1733217944886",
-    "title": "�{",
-    "icon": "linecons-star",
-    "subCategories": [],
-    "items": []
+    "title": "开发工具",
+    "icon": "linecons-desktop",
+    "items": [
+      {
+        "title": "GitHub",
+        "titleEn": "GitHub",
+        "description": "全球最大的代码托管平台",
+        "descriptionEn": "The world's largest code hosting platform",
+        "icon": "https://github.com/favicon.ico",
+        "href": "https://github.com"
+      },
+      {
+        "title": "VS Code",
+        "titleEn": "VS Code",
+        "description": "微软开发的代码编辑器",
+        "descriptionEn": "Code editor developed by Microsoft",
+        "icon": "https://code.visualstudio.com/favicon.ico",
+        "href": "https://code.visualstudio.com"
+      }
+    ],
+    "subCategories": []
   }
 ]
