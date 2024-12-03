@@ -31,6 +31,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "cmdk": "^1.0.4",
+    "crypto-browserify": "^3.12.1",
     "encoding": "^0.1.13",
     "lucide-react": "^0.462.0",
     "next": "13.4.12",
