@@ -3,6 +3,8 @@ import { getServerSession } from 'next-auth'
 import { authConfig } from '@/app/api/auth/[...nextauth]/auth'
 import { AdminLayoutClient } from './AdminLayoutClient'
 
+export const runtime = 'edge'
+
 export default async function AdminLayout({
   children,
 }: {
