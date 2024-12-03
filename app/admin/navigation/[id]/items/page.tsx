@@ -47,7 +47,7 @@ export default function ItemsPage() {
         const subCategory = data.subCategories?.find((s: NavigationSubCategory) => s.id === subCategoryId)
         if (subCategory) {
           // 确保所有项目都有完整的字段
-          const completeItems = (subCategory.items || []).map(item => ({
+          const completeItems = (subCategory.items || []).map((item: Partial<NavigationSubItem>) => ({
             title: item.title || '',
             titleEn: item.titleEn || '',
             description: item.description || '',
@@ -61,7 +61,7 @@ export default function ItemsPage() {
         }
       } else {
         // 如果是父分类，直接使用其子项目
-        const completeItems = (data.items || []).map(item => ({
+        const completeItems = (data.items || []).map((item: Partial<NavigationSubItem>) => ({
           title: item.title || '',
           titleEn: item.titleEn || '',
           description: item.description || '',
