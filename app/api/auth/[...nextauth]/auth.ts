@@ -1,14 +1,12 @@
 import type { NextAuthOptions } from 'next-auth'
 import GithubProvider from 'next-auth/providers/github'
+import type { DefaultSession } from 'next-auth'
 
 declare module 'next-auth' {
   interface Session {
     user: {
       accessToken?: string
-      name?: string | null
-      email?: string | null
-      image?: string | null
-    }
+    } & DefaultSession['user']
   }
 }
 
@@ -30,12 +28,6 @@ export const authConfig: NextAuthOptions = {
       },
     }),
   ],
-  debug: process.env.NODE_ENV === 'development',
-  secret: process.env.NEXTAUTH_SECRET,
-  session: {
-    strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-  },
   callbacks: {
     async jwt({ token, account }) {
       if (account?.access_token) {
@@ -50,4 +42,6 @@ export const authConfig: NextAuthOptions = {
       return session
     },
   },
-} 
+}
+
+export default authConfig 

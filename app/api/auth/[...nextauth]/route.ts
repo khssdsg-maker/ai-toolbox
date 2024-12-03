@@ -4,4 +4,4 @@ import { authConfig } from './auth'
 export const runtime = 'edge'
 
 const handler = NextAuth(authConfig)
-export { handler as GET, handler as POST } 
+export { handler as GET, handler as POST }

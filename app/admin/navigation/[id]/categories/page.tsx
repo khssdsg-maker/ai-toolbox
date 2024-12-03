@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
 import { Icons } from '@/components/icons'
-import { NavigationItem, NavigationSubCategory } from '@/types/navigation'
+import { NavigationItem } from '@/types/navigation'
 import {
   DragDropContext,
   Droppable,
@@ -124,9 +124,7 @@ export default function SubCategoriesPage() {
     })
   }
 
-  const getItemsCount = (subCategory: NavigationSubCategory) => {
-    return subCategory.items?.length || 0
-  }
+  
 
   if (!category) return null
 
@@ -232,7 +230,7 @@ export default function SubCategoriesPage() {
                             </TableCell>
                             <TableCell>
                               <span className="text-sm">
-                                {getItemsCount(subCategory)}
+
                               </span>
                             </TableCell>
                             <TableCell className="text-right">

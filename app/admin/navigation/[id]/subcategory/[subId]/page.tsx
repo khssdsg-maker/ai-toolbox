@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
 import { Icons } from '@/components/icons'
-import { NavigationItem, NavigationSubCategory } from '@/types/navigation'
+import { NavigationItem, NavigationSubItem } from '@/types/navigation'
 import {
   Table,
   TableBody,
@@ -24,7 +24,7 @@ export default function SubCategoryItemsPage() {
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
   const [category, setCategory] = useState<NavigationItem | null>(null)
-  const [subCategory, setSubCategory] = useState<NavigationSubCategory | null>(null)
+  const [subCategory, setSubCategory] = useState<NavigationSubItem | null>(null)
   const [editingId, setEditingId] = useState<number | null>(null)
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function SubCategoryItemsPage() {
       const data = await response.json()
       setCategory(data)
       
-      const sub = data.subCategories?.find((s: NavigationSubCategory) => s.id === params.subId)
+      const sub = data.subCategories?.find((s: NavigationSubItem) => String(s.id) === params.subId)
       if (sub) {
         setSubCategory(sub)
       } else {

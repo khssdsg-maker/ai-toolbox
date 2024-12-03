@@ -1,12 +1,12 @@
 import NextAuth from 'next-auth'
 import GithubProvider from 'next-auth/providers/github'
-import type { Session } from 'next-auth'
+import type { DefaultSession } from 'next-auth'
 
 declare module 'next-auth' {
   interface Session {
     user: {
       accessToken?: string
-    } & Session['user']
+    } & DefaultSession['user']
   }
 }
 

@@ -36,4 +36,14 @@ export interface ResourceSection {
 
 export interface ResourceData {
   resourceSections: ResourceSection[]
+}
+
+export interface NavigationSubItem {
+  id: number | string
+  title: string
+  titleEn: string
+  description: string
+  descriptionEn: string
+  icon: string
+  href: string
 } 

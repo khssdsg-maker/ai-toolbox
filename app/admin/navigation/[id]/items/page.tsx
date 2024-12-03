@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
 import { Icons } from '@/components/icons'
-import { NavigationItem, NavigationSubCategory, NavigationSubItem } from '@/types/navigation'
+import { NavigationItem, NavigationSubItem } from '@/types/navigation'
 import {
   Table,
   TableBody,
@@ -46,7 +46,7 @@ export default function ItemsPage() {
 
       if (subCategoryId) {
         // 如果是子分类，找到对应的子分类数据
-        const subCategory = data.subCategories?.find((s: NavigationSubCategory) => s.id === subCategoryId)
+        const subCategory = data.subCategories?.find((s: NavigationSubItem & { id: string }) => s.id === subCategoryId)
         if (subCategory) {
           // 确保所有项目都有完整的字段
           const completeItems = (subCategory.items || []).map((item: Partial<NavigationSubItem>) => ({
@@ -132,6 +132,7 @@ export default function ItemsPage() {
 
   const addItem = () => {
     const newItem: NavigationSubItem = {
+      id: Date.now(),
       title: '新项目',
       titleEn: 'New Item',
       description: '项目描述',

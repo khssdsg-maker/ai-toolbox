@@ -1,3 +1,12 @@
+export interface NavigationSubItem {
+    title: string
+    titleEn: string
+    description: string
+    descriptionEn: string
+    icon: string
+    href: string
+}
+  
 export interface NavigationSubCategory {
     id: string
     title: string
@@ -11,14 +20,7 @@ export interface NavigationItem {
     id: string
     title: string
     icon: string
-    items: {
-        title: string
-        titleEn: string
-        description: string
-        descriptionEn: string
-        icon: string
-        href: string
-    }[]
+    items: NavigationSubItem[]
     subCategories: NavigationSubCategory[]
 }
   
