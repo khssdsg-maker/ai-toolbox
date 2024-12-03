@@ -17,6 +17,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { useState } from 'react'
+import { getServerSession } from 'next-auth/next'
+import { redirect } from 'next/navigation'
 
 const menuItems = [
   {
@@ -41,11 +43,17 @@ const menuItems = [
   }
 ]
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const session = await getServerSession()
+
+  if (!session?.user) {
+    redirect('/api/auth/signin')
+  }
+
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
 

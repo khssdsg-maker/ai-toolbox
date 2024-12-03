@@ -98,3 +98,15 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## 本地开发配置
+
+### 1. 环境变量设置
+
+复制 `.env.example` 到 `.env.local` 并填写配置：
+
+```bash
+cp .env.example .env.local
+```
+
+需要配置以下环境变量：
