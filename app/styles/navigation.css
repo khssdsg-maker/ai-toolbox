@@ -1,0 +1,37 @@
+.page-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar-menu {
+  width: 280px;
+  background: #2c2e2f;
+  color: #fff;
+  position: fixed;
+  height: 100vh;
+}
+
+.main-content {
+  margin-left: 280px;
+  padding: 20px;
+  width: 100%;
+}
+
+.card {
+  @apply bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow;
+}
+
+.card-content {
+  @apply flex items-start gap-4;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .sidebar-menu {
+    width: 70px;
+  }
+  
+  .main-content {
+    margin-left: 70px;
+  }
+} 

@@ -1,18 +1,10 @@
-import "@/styles/globals.css"
-import { Inter } from 'next/font/google'
-import { Providers } from "@/components/providers"
+import type { Metadata } from 'next'
+import './globals.css'
+import './styles/navigation.css'
 
-const inter = Inter({ subsets: ['latin'] })
-
-export const metadata = {
-  title: '检查清单 - 投资数据分析工具',
-  description: '一站式投资数据分析工具，提供ETF、基金、债券等实时数据和分析',
-  icons: {
-    icon: '/favicon.png',
-    shortcut: '/favicon.png',
-    apple: '/favicon.png',
-  },
-  manifest: '/site.webmanifest',
+export const metadata: Metadata = {
+  title: '编程爱好者网址导航',
+  description: '收集国内外优秀设计网站、UI设计资源网站、灵感创意网站、素材资源网站，定时更新分享优质产品设计书签。',
 }
 
 export default function RootLayout({
@@ -21,14 +13,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh" suppressHydrationWarning>
-      <head>
-        <link rel="icon" href="/favicon.png" />
-        <link rel="apple-touch-icon" href="/favicon.png" />
-      </head>
-      <body className={inter.className}>
-        <Providers>{children}</Providers>
-      </body>
+    <html lang="zh">
+      <body>{children}</body>
     </html>
   )
 }
