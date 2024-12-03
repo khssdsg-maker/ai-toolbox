@@ -1,36 +1,8 @@
-import NextAuth, { type NextAuthOptions } from 'next-auth'
-import GithubProvider from 'next-auth/providers/github'
+import { Auth } from '@auth/core'
+import { authConfig } from './auth'
 
-export const authOptions: NextAuthOptions = {
-  providers: [
-    GithubProvider({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
-      authorization: {
-        params: {
-          scope: 'repo',
-        },
-      },
-    }),
-  ],
-  callbacks: {
-    async signIn({ user, account }) {
-      return true
-    },
-    async session({ session, token }) {
-      if (session?.user) {
-        session.user.accessToken = token.accessToken as string
-      }
-      return session
-    },
-    async jwt({ token, account }) {
-      if (account) {
-        token.accessToken = account.access_token
-      }
-      return token
-    },
-  },
-}
+export const runtime = 'edge'
 
-const handler = NextAuth(authOptions)
+const req = new Request('http://localhost:3000/api/auth')
+const handler = Auth(req, authConfig)
 export { handler as GET, handler as POST } 

@@ -1,37 +1,40 @@
 import { NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth/next'
+import { Auth } from '@auth/core'
+import { authConfig } from '@/app/api/auth/[...nextauth]/auth'
 import navigationData from '@/app/data/db/navigation.json'
 import { commitFile } from '@/lib/github'
-import type { NavigationItem } from '@/types/navigation'
 
 export const runtime = 'edge'
 
-export async function GET() {
-  try {
-    return NextResponse.json(navigationData)
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to read navigation data' }, { status: 500 })
-  }
-}
-
 export async function POST(request: Request) {
-  try {
-    const session = await getServerSession()
-    if (!session?.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+  const req = new Request(request.url, {
+    headers: request.headers,
+    method: request.method,
+  })
+  
+  const session = await Auth(req, authConfig)
+  const token = session?.user?.accessToken
 
-    const data: NavigationItem[] = await request.json()
-    
+  if (!token) {
+    return new Response('Unauthorized', { status: 401 })
+  }
+
+  const data = await request.json()
+
+  try {
     await commitFile(
       'app/data/db/navigation.json',
       JSON.stringify(data, null, 2),
       'Update navigation data',
-      session.user.accessToken
+      token
     )
-
     return NextResponse.json({ success: true })
   } catch (error) {
+    console.error('Failed to save navigation data:', error)
     return NextResponse.json({ error: 'Failed to save navigation data' }, { status: 500 })
   }
+}
+
+export async function GET() {
+  return NextResponse.json(navigationData)
 } 

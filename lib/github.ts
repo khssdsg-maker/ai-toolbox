@@ -2,7 +2,7 @@ export async function commitFile(
   path: string,
   content: string,
   message: string,
-  accessToken: string
+  token: string
 ) {
   const owner = process.env.GITHUB_OWNER!
   const repo = process.env.GITHUB_REPO!
@@ -13,20 +13,21 @@ export async function commitFile(
     `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`,
     {
       headers: {
-        Authorization: `token ${accessToken}`,
+        Authorization: `token ${token}`,
         Accept: 'application/vnd.github.v3+json',
       },
     }
   ).then(res => res.json())
 
   // 提交更新
-  const response = await fetch(
+  await fetch(
     `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
     {
       method: 'PUT',
       headers: {
-        Authorization: `token ${accessToken}`,
+        Authorization: `token ${token}`,
         Accept: 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         message,
@@ -35,11 +36,9 @@ export async function commitFile(
         branch,
       }),
     }
-  )
-
-  if (!response.ok) {
-    throw new Error('Failed to commit file')
-  }
-
-  return response.json()
+  ).then(res => {
+    if (!res.ok) {
+      throw new Error(`Failed to commit file: ${res.statusText}`)
+    }
+  })
 } 
