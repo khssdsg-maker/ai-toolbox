@@ -49,7 +49,13 @@ export const icons = [
   { value: "linecons-link", label: "链接", category: "其他" },
   { value: "linecons-heart", label: "喜欢", category: "其他" },
   { value: "linecons-tag", label: "标签", category: "其他" },
-] as const
+]
+
+interface IconItem {
+  value: string
+  label: string
+  category: string
+}
 
 interface IconPickerProps {
   value: string
@@ -76,14 +82,14 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
       )
     })
 
-    return filtered.reduce((groups, icon) => {
+    return filtered.reduce<Record<string, IconItem[]>>((groups, icon) => {
       const category = icon.category
       if (!groups[category]) {
         groups[category] = []
       }
       groups[category].push(icon)
       return groups
-    }, {} as Record<string, typeof icons>)
+    }, {})
   }, [searchValue])
 
   return (
