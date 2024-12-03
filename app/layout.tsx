@@ -4,6 +4,7 @@ import './styles/navigation.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { ScrollToTop } from '@/components/ScrollToTop'
+import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
   title: '编程爱好者网址导航',
@@ -37,6 +38,7 @@ export default function RootLayout({
           {children}
           <ThemeToggle />
           <ScrollToTop />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

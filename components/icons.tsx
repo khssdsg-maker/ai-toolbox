@@ -1,0 +1,40 @@
+import {
+  Loader2,
+  Upload,
+  Save,
+  Plus,
+  Trash2,
+  List,
+  ArrowLeft,
+  GripVertical,
+  CornerDownRight,
+  MoreVertical,
+  Folder,
+  type LucideIcon,
+  Pencil,
+  Check,
+  X,
+  FolderOpen,
+  Scan,
+} from "lucide-react"
+
+export type Icon = typeof LucideIcon
+
+export const Icons = {
+  spinner: Loader2,
+  upload: Upload,
+  save: Save,
+  add: Plus,
+  trash: Trash2,
+  list: List,
+  back: ArrowLeft,
+  grip: GripVertical,
+  corner: CornerDownRight,
+  more: MoreVertical,
+  folder: Folder,
+  edit: Pencil,
+  check: Check,
+  close: X,
+  empty: FolderOpen,
+  scan: Scan,
+} 

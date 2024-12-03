@@ -1,0 +1,57 @@
+[
+  {
+    "id": "1",
+    "title": "常用推荐",
+    "icon": "linecons-star",
+    "items": [
+      {
+        "title": "GitHub",
+        "titleEn": "GitHub",
+        "description": "全球最大的代码托管平台",
+        "descriptionEn": "The world's largest code hosting platform",
+        "icon": "https://github.com/favicon.ico",
+        "href": "https://github.com"
+      },
+      {
+        "title": "Stack Overflow",
+        "titleEn": "Stack Overflow",
+        "description": "专业的程序员问答社区",
+        "descriptionEn": "Professional programmer Q&A community",
+        "icon": "linecons-code",
+        "href": "https://stackoverflow.com"
+      }
+    ],
+    "subCategories": [
+      {
+        "id": "1733198086986",
+        "title": "新子分类2",
+        "items": []
+      },
+      {
+        "id": "1733199519921",
+        "title": "新子分类",
+        "items": []
+      },
+      {
+        "id": "1733199520020",
+        "title": "新子分类",
+        "items": []
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "title": "开发工具",
+    "icon": "linecons-desktop",
+    "items": [
+      {
+        "title": "VS Code",
+        "href": "https://code.visualstudio.com"
+      },
+      {
+        "title": "WebStorm",
+        "href": "https://www.jetbrains.com/webstorm"
+      }
+    ]
+  }
+]
