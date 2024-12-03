@@ -25,7 +25,7 @@ export default function ItemsPage() {
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
   const [category, setCategory] = useState<NavigationItem | null>(null)
-  const [items, setItems] = useState<{ title: string; href: string }[]>([])
+  const [items, setItems] = useState<NavigationSubItem[]>([])
   const [editingId, setEditingId] = useState<number | null>(null)
 
   // 获取子分类ID（如果有）
@@ -46,13 +46,30 @@ export default function ItemsPage() {
         // 如果是子分类，找到对应的子分类数据
         const subCategory = data.subCategories?.find((s: NavigationSubCategory) => s.id === subCategoryId)
         if (subCategory) {
-          setItems(subCategory.items || [])
+          // 确保所有项目都有完整的字段
+          const completeItems = (subCategory.items || []).map(item => ({
+            title: item.title || '',
+            titleEn: item.titleEn || '',
+            description: item.description || '',
+            descriptionEn: item.descriptionEn || '',
+            icon: item.icon || 'linecons-link',
+            href: item.href || '#'
+          }))
+          setItems(completeItems)
         } else {
           throw new Error('Subcategory not found')
         }
       } else {
         // 如果是父分类，直接使用其子项目
-        setItems(data.items || [])
+        const completeItems = (data.items || []).map(item => ({
+          title: item.title || '',
+          titleEn: item.titleEn || '',
+          description: item.description || '',
+          descriptionEn: item.descriptionEn || '',
+          icon: item.icon || 'linecons-link',
+          href: item.href || '#'
+        }))
+        setItems(completeItems)
       }
     } catch (error) {
       toast({
