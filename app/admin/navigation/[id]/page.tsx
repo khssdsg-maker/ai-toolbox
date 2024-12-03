@@ -1,7 +1,5 @@
 'use client'
 
-export const runtime = 'edge'
-
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -11,7 +9,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { Icons } from '@/components/icons'
 import { NavigationItem, NavigationSubItem } from '@/types/navigation'
 
-export default function NavigationItemsPage() {
+export default function NavigationItemPage() {
   const params = useParams()
   const router = useRouter()
   const { toast } = useToast()
@@ -19,8 +17,10 @@ export default function NavigationItemsPage() {
   const [category, setCategory] = useState<NavigationItem | null>(null)
 
   useEffect(() => {
-    fetchCategory()
-  }, [])
+    if (params.id) {
+      fetchCategory()
+    }
+  }, [params.id])
 
   const fetchCategory = async () => {
     try {
