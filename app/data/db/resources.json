@@ -1,0 +1,40 @@
+{
+  "resourceSections": [
+    {
+      "id": "development",
+      "title": "开发工具",
+      "items": [
+        {
+          "title": "VS Code",
+          "description": "微软开源的代码编辑器",
+          "icon": "linecons-desktop",
+          "url": "https://code.visualstudio.com"
+        },
+        {
+          "title": "WebStorm",
+          "description": "JetBrains 出品的 Web 开发 IDE",
+          "icon": "linecons-desktop",
+          "url": "https://www.jetbrains.com/webstorm"
+        }
+      ]
+    },
+    {
+      "id": "design",
+      "title": "设计资源",
+      "items": [
+        {
+          "title": "Figma",
+          "description": "专业的在线设计工具",
+          "icon": "linecons-params",
+          "url": "https://www.figma.com"
+        },
+        {
+          "title": "Dribbble",
+          "description": "设计师必备的灵感社区",
+          "icon": "linecons-params",
+          "url": "https://dribbble.com"
+        }
+      ]
+    }
+  ]
+} 

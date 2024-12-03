@@ -175,5 +175,23 @@ NEXTAUTH_SECRET=使用以下命令生成:
 1. 本地开发和生产环境使用不同的 OAuth App
 2. 生产环境需要更新回调 URL 为实际域名
 3. 确保 `.env.local` 不被提交到 Git
-4. 生产环境使用 Cloudflare Pages 的环境变量
+4. 生产环境使用 Cloudflare Pages 的环��变量
 5. 定期轮换 Client Secret 以提高安全性
+
+## Cloudflare Pages 部署
+
+1. 在 Cloudflare Pages 中创建新项目
+2. 连接 GitHub 仓库
+3. 设置构建命令：
+   ```bash
+   pnpm install && pnpm build
+   ```
+4. 设置环境变量：
+   - GITHUB_ID
+   - GITHUB_SECRET
+   - GITHUB_OWNER
+   - GITHUB_REPO
+   - GITHUB_BRANCH
+   - NEXTAUTH_URL (设置为你的域名)
+   - NEXTAUTH_SECRET
+5. 部署项目
