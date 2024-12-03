@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
 import { Icons } from '@/components/icons'
-import { NavigationItem, NavigationSubCategory } from '@/types/navigation'
+import { NavigationItem, NavigationSubCategory, NavigationSubItem } from '@/types/navigation'
 import {
   Table,
   TableBody,
@@ -74,13 +74,16 @@ export default function ItemsPage() {
         // 更新子分类的子项目
         updatedCategory.subCategories = category.subCategories?.map(sub => {
           if (sub.id === subCategoryId) {
-            return { ...sub, items }
+            return {
+              ...sub,
+              items: items as NavigationSubItem[]
+            }
           }
           return sub
         })
       } else {
         // 更新父分类的子项目
-        updatedCategory.items = items
+        updatedCategory.items = items as NavigationSubItem[]
       }
 
       const response = await fetch(`/api/navigation/${params.id}`, {
@@ -109,17 +112,15 @@ export default function ItemsPage() {
   }
 
   const addItem = () => {
-    setItems([
-      ...items,
-      {
-        title: '新项目',
-        titleEn: 'New Item',
-        description: '项目描述',
-        descriptionEn: 'Item description',
-        icon: 'linecons-link',
-        href: '#'
-      }
-    ])
+    const newItem: NavigationSubItem = {
+      title: '新项目',
+      titleEn: 'New Item',
+      description: '项目描述',
+      descriptionEn: 'Item description',
+      icon: 'linecons-link',
+      href: '#'
+    }
+    setItems([...items, newItem])
   }
 
   const deleteItem = (index: number) => {
