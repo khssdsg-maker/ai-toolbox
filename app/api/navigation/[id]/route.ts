@@ -5,6 +5,8 @@ import type { NavigationItem } from '@/types/navigation'
 
 const dataPath = path.join(process.cwd(), 'app/data/db/navigation.json')
 
+export const runtime = 'edge'
+
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }

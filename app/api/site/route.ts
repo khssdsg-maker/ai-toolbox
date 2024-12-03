@@ -5,6 +5,8 @@ import type { SiteInfo } from '@/types/site'
 
 const dataPath = path.join(process.cwd(), 'app/data/db/site.json')
 
+export const runtime = 'edge'
+
 export async function GET() {
   try {
     const data = await fs.readFile(dataPath, 'utf8')
