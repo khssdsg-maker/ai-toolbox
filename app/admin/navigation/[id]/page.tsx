@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
 import { Icons } from '@/components/icons'
-import { NavigationItem } from '@/types/navigation'
+import { NavigationItem, NavigationSubItem } from '@/types/navigation'
 
 export default function NavigationItemsPage() {
   const params = useParams()
@@ -69,9 +69,20 @@ export default function NavigationItemsPage() {
     setCategory({
       ...category,
       items: [
-        ...(category.items || []),
+        ...(category.items || []).map((item: Partial<NavigationSubItem>) => ({
+          title: item.title || '',
+          titleEn: item.titleEn || '',
+          description: item.description || '',
+          descriptionEn: item.descriptionEn || '',
+          icon: item.icon || 'linecons-link',
+          href: item.href || '#'
+        })),
         {
           title: '新项目',
+          titleEn: 'New Item',
+          description: '项目描述',
+          descriptionEn: 'Item description',
+          icon: 'linecons-link',
           href: '#'
         }
       ]
