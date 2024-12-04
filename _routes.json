@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "include": [
+    "/*",
+    "/api/*",
+    "/auth/*"
+  ],
+  "exclude": [
+    "/api/auth/*"
+  ]
+} 
