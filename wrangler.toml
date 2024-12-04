@@ -11,7 +11,7 @@ GITHUB_OWNER = "tianyaxiang"
 GITHUB_REPO = "navsphere-data"
 GITHUB_BRANCH = "main"
 NEXTAUTH_URL = "https://navsphere.pages.dev/api/auth/"
-NEXTAUTH_SECRET = "PlMaZe+bbYzqSw4M+855b83Py2pVU9s4drWKSXkh0G4="
+NEXTAUTH_SECRET = "ea05404d0bcef4ed77700e7fd53e7ccd"
 
 [[routes]]
 pattern = "/api/auth/.*"
