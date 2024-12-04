@@ -3,8 +3,7 @@ compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".vercel/output/static"
 
-[build]
-command = "pnpm build"
+
 
 [env.production]
 GITHUB_ID = "Ov23lig3bTXpZHrPO1c8"
@@ -14,13 +13,3 @@ GITHUB_REPO = "navsphere-data"
 GITHUB_BRANCH = "main"
 NEXTAUTH_URL = "https://navsphere.pages.dev/api/auth/"
 NEXTAUTH_SECRET = "ea05404d0bcef4ed77700e7fd53e7ccd"
-
-[[routes]]
-pattern = "/api/auth/.*"
-zone_name = "navsphere.pages.dev"
-custom_domain = true
-
-[[routes]]
-pattern = "/*"
-zone_name = "navsphere.pages.dev"
-custom_domain = true
