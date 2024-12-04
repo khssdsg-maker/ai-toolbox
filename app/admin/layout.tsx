@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation'
-import { getServerSession } from 'next-auth'
-import { authConfig } from '@/app/api/auth/[...nextauth]/auth'
+import { auth } from '@/lib/auth'
 import { AdminLayoutClient } from './AdminLayoutClient'
 
 export const runtime = 'edge'
@@ -10,10 +9,10 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await getServerSession(authConfig)
+  const session = await auth()
 
   if (!session) {
-    redirect('/api/auth/signin')
+    redirect('/auth/signin')
   }
 
   return <AdminLayoutClient>{children}</AdminLayoutClient>

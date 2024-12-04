@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getToken } from 'next-auth/jwt'
+import { auth } from '@/lib/auth'
 import { commitFile, getFileContent } from '@/lib/github'
 import type { ResourceData } from '@/types/navigation'
 
