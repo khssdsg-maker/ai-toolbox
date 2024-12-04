@@ -15,6 +15,7 @@ import {
   X,
   FolderOpen,
   Scan,
+  Github,
 } from "lucide-react"
 
 export type Icon = typeof Loader2
@@ -36,4 +37,5 @@ export const Icons = {
   close: X,
   empty: FolderOpen,
   scan: Scan,
+  gitHub: Github,
 } 

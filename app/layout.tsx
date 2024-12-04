@@ -16,6 +16,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const isAdminRoute = children?.toString().includes('/admin')
+
   return (
     <html lang="zh" suppressHydrationWarning>
       <head>
@@ -29,17 +31,21 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <ThemeProvider
-          attribute="data-theme"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <ThemeToggle />
-          <ScrollToTop />
-          <Toaster />
-        </ThemeProvider>
+        {isAdminRoute ? (
+          children
+        ) : (
+          <ThemeProvider
+            attribute="data-theme"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <ThemeToggle />
+            <ScrollToTop />
+            <Toaster />
+          </ThemeProvider>
+        )}
       </body>
     </html>
   )

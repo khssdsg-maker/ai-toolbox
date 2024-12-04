@@ -3,6 +3,7 @@ export const runtime = 'edge'
 import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { AdminLayoutClient } from './AdminLayoutClient'
+import { Toaster } from "@/components/ui/toaster"
 
 export default async function AdminLayout({
   children,
@@ -15,5 +16,10 @@ export default async function AdminLayout({
     redirect('/auth/signin')
   }
 
-  return <AdminLayoutClient>{children}</AdminLayoutClient>
+  return (
+    <>
+      <AdminLayoutClient>{children}</AdminLayoutClient>
+      <Toaster />
+    </>
+  )
 } 
