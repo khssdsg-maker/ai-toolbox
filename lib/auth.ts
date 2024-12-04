@@ -41,10 +41,8 @@ const config = {
     }
   },
   pages: {
-    signIn: '/auth/signin',
-    error: '/auth/error'
+    signIn: '/auth/signin'
   },
-  trustHost: true
 } satisfies NextAuthConfig
 
 const handler = NextAuth(config)
