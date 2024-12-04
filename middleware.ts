@@ -3,13 +3,14 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
-  const session = await auth()
-
   if (request.nextUrl.pathname.startsWith('/admin')) {
-    if (!session) {
-      const signInUrl = new URL('/auth/signin', request.url)
-      signInUrl.searchParams.set('callbackUrl', request.url)
-      return NextResponse.redirect(signInUrl)
+    const session = await auth()
+    
+    if (!session?.user) {
+      const callbackUrl = request.url
+      return NextResponse.redirect(
+        new URL(`/auth/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`, request.url)
+      )
     }
   }
 
@@ -17,5 +18,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)']
+  matcher: ['/admin/:path*']
 } 

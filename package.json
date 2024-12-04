@@ -10,8 +10,6 @@
     "clean": "rm -rf .next"
   },
   "dependencies": {
-    "next": "14.0.4",
-    "next-auth": "5.0.0-beta.3",
     "@hello-pangea/dnd": "^17.0.0",
     "@radix-ui/react-aspect-ratio": "^1.1.0",
     "@radix-ui/react-avatar": "^1.1.1",
@@ -39,7 +37,10 @@
     "encoding": "^0.1.13",
     "events": "^3.3.0",
     "https-browserify": "^1.0.0",
+    "iron-session": "^8.0.4",
     "lucide-react": "^0.462.0",
+    "next": "14.0.4",
+    "next-auth": "5.0.0-beta.25",
     "next-themes": "^0.2.1",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",

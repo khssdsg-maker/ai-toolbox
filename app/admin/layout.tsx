@@ -2,8 +2,6 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { AdminLayoutClient } from './AdminLayoutClient'
 
-export const runtime = 'edge'
-
 export default async function AdminLayout({
   children,
 }: {
@@ -11,7 +9,7 @@ export default async function AdminLayout({
 }) {
   const session = await auth()
 
-  if (!session) {
+  if (!session?.user) {
     redirect('/auth/signin')
   }
 

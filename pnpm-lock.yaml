@@ -89,6 +89,9 @@ importers:
       https-browserify:
         specifier: ^1.0.0
         version: 1.0.0
+      iron-session:
+        specifier: ^8.0.4
+        version: 8.0.4
       lucide-react:
         specifier: ^0.462.0
         version: 0.462.0(react@18.2.0)
@@ -96,8 +99,8 @@ importers:
         specifier: 14.0.4
         version: 14.0.4(@babel/core@7.26.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       next-auth:
-        specifier: 5.0.0-beta.3
-        version: 5.0.0-beta.3(next@14.0.4(@babel/core@7.26.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
+        specifier: 5.0.0-beta.25
+        version: 5.0.0-beta.25(next@14.0.4(@babel/core@7.26.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)
       next-themes:
         specifier: ^0.2.1
         version: 0.2.1(next@14.0.4(@babel/core@7.26.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -192,8 +195,8 @@ packages:
     resolution: {integrity: sha512-2aDL3WUv8hMJb2L3r/PIQWsTLyq7RQr3v9xD16fiz6O8ys1xEyLhhTOv8gxtZvJiTzjTF5pHoArvRdesGL1DMQ==}
     hasBin: true
 
-  '@auth/core@0.0.0-manual.3f95eefa':
-    resolution: {integrity: sha512-6pEgzMNs3b1VuP14ixduua5eh+yghD7wwAl1YnF53Ctl2nOii/5XXZidYRcK8ammEGKaOghSQYiaEpEVlXaU2A==}
+  '@auth/core@0.37.2':
+    resolution: {integrity: sha512-kUvzyvkcd6h1vpeMAojK2y7+PAV5H+0Cc9+ZlKYDFhDY31AlvsB+GW5vNO4qE3Y07KeQgvNO9U0QUx/fN62kBw==}
     peerDependencies:
       '@simplewebauthn/browser': ^9.0.1
       '@simplewebauthn/server': ^9.0.2
@@ -1285,8 +1288,12 @@ packages:
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
-  cookie@0.6.0:
-    resolution: {integrity: sha512-U71cyTamuh1CRNCfpGY6to28lxvNwPG4Guz/EVjgf3Jmzv0vlDp1atT9eS5dDjMYHucpHbWns6Lwf3BKz6svdw==}
+  cookie@0.7.1:
+    resolution: {integrity: sha512-6DnInpx7SJ2AK3+CTUE/ZM0vWTUboZCegxhC2xiIydHR9jNuTAASBrfEpHhiGOZw/nX51bHt6YQl8jsGo4y/0w==}
+    engines: {node: '>= 0.6'}
+
+  cookie@0.7.2:
+    resolution: {integrity: sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==}
     engines: {node: '>= 0.6'}
 
   core-util-is@1.0.3:
@@ -1855,6 +1862,12 @@ packages:
   invariant@2.2.4:
     resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
 
+  iron-session@8.0.4:
+    resolution: {integrity: sha512-9ivNnaKOd08osD0lJ3i6If23GFS2LsxyMU8Gf/uBUEgm8/8CC1hrrCHFDpMo3IFbpBgwoo/eairRsaD3c5itxA==}
+
+  iron-webcrypto@1.2.1:
+    resolution: {integrity: sha512-feOM6FaSr6rEABp/eDfVseKyTMDt+KGpeB35SkVn9Tyn0CqvVsY3EwI0v5i8nMHyJnzCIQf7nsy3p41TPkJZhg==}
+
   is-arguments@1.1.1:
     resolution: {integrity: sha512-8Q7EARjzEnKpt/PCD7e1cgUS0a6X8u5tdSiMqXhojOdoV9TsMsiO+9VLC5vAmO8N7/GmXn7yjR8qnA6bVAEzfA==}
     engines: {node: '>= 0.4'}
@@ -2190,13 +2203,19 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  next-auth@5.0.0-beta.3:
-    resolution: {integrity: sha512-WOKhATBFGeONV+29HzFmspNmL7NXxrsCWLfaDKmAd/4DD1nqXE0BzNFH8t3SJBx7PUDMnB6F7xB76LM/AaV1MQ==}
+  next-auth@5.0.0-beta.25:
+    resolution: {integrity: sha512-2dJJw1sHQl2qxCrRk+KTQbeH+izFbGFPuJj5eGgBZFYyiYYtvlrBeUw1E/OJJxTRjuxbSYGnCTkUIRsIIW0bog==}
     peerDependencies:
-      next: ^14
+      '@simplewebauthn/browser': ^9.0.1
+      '@simplewebauthn/server': ^9.0.2
+      next: ^14.0.0-0 || ^15.0.0-0
       nodemailer: ^6.6.5
-      react: ^18.2.0
+      react: ^18.2.0 || ^19.0.0-0
     peerDependenciesMeta:
+      '@simplewebauthn/browser':
+        optional: true
+      '@simplewebauthn/server':
+        optional: true
       nodemailer:
         optional: true
 
@@ -2248,8 +2267,8 @@ packages:
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
-  oauth4webapi@2.17.0:
-    resolution: {integrity: sha512-lbC0Z7uzAFNFyzEYRIC+pkSVvDHJTbEW+dYlSBAlCYDe6RxUkJ26bClhk8ocBZip1wfI9uKTe0fm4Ib4RHn6uQ==}
+  oauth4webapi@3.1.4:
+    resolution: {integrity: sha512-eVfN3nZNbok2s/ROifO0UAc5G8nRoLSbrcKJ09OqmucgnhXEfdIQOR4gq1eJH1rN3gV7rNw62bDEgftsgFtBEg==}
 
   object-assign@4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
@@ -2886,6 +2905,9 @@ packages:
   unbox-primitive@1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}
 
+  uncrypto@0.1.3:
+    resolution: {integrity: sha512-Ql87qFHB3s/De2ClA9e0gsnS6zXG27SkTiSJwjCc9MebbfapQfuPzumMIUMi38ezPZVNFcHI9sUIepeQfw8J8Q==}
+
   universalify@2.0.1:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
@@ -3015,13 +3037,13 @@ snapshots:
 
   '@antfu/ni@0.21.12': {}
 
-  '@auth/core@0.0.0-manual.3f95eefa':
+  '@auth/core@0.37.2':
     dependencies:
       '@panva/hkdf': 1.2.1
       '@types/cookie': 0.6.0
-      cookie: 0.6.0
+      cookie: 0.7.1
       jose: 5.9.6
-      oauth4webapi: 2.17.0
+      oauth4webapi: 3.1.4
       preact: 10.11.3
       preact-render-to-string: 5.2.3(preact@10.11.3)
 
@@ -4208,7 +4230,9 @@ snapshots:
 
   convert-source-map@2.0.0: {}
 
-  cookie@0.6.0: {}
+  cookie@0.7.1: {}
+
+  cookie@0.7.2: {}
 
   core-util-is@1.0.3: {}
 
@@ -4527,7 +4551,7 @@ snapshots:
       eslint: 8.46.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@5.62.0(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(eslint@8.46.0))(eslint@8.46.0)
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@5.62.0(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-typescript@3.6.3)(eslint@8.46.0)
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@5.62.0(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@5.62.0(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(eslint@8.46.0))(eslint@8.46.0))(eslint@8.46.0)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@8.46.0)
       eslint-plugin-react: 7.37.2(eslint@8.46.0)
       eslint-plugin-react-hooks: 5.0.0-canary-7118f5dd7-20230705(eslint@8.46.0)
@@ -4558,7 +4582,7 @@ snapshots:
       is-bun-module: 1.3.0
       is-glob: 4.0.3
     optionalDependencies:
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@5.62.0(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-typescript@3.6.3)(eslint@8.46.0)
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@5.62.0(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@5.62.0(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(eslint@8.46.0))(eslint@8.46.0))(eslint@8.46.0)
     transitivePeerDependencies:
       - '@typescript-eslint/parser'
       - eslint-import-resolver-node
@@ -4576,7 +4600,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.31.0(@typescript-eslint/parser@5.62.0(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-typescript@3.6.3)(eslint@8.46.0):
+  eslint-plugin-import@2.31.0(@typescript-eslint/parser@5.62.0(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@5.62.0(eslint@8.46.0)(typescript@5.1.6))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0(eslint@8.46.0))(eslint@8.46.0))(eslint@8.46.0):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
@@ -4994,6 +5018,14 @@ snapshots:
     dependencies:
       loose-envify: 1.4.0
 
+  iron-session@8.0.4:
+    dependencies:
+      cookie: 0.7.2
+      iron-webcrypto: 1.2.1
+      uncrypto: 0.1.3
+
+  iron-webcrypto@1.2.1: {}
+
   is-arguments@1.1.1:
     dependencies:
       call-bind: 1.0.7
@@ -5292,14 +5324,11 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  next-auth@5.0.0-beta.3(next@14.0.4(@babel/core@7.26.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0):
+  next-auth@5.0.0-beta.25(next@14.0.4(@babel/core@7.26.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0):
     dependencies:
-      '@auth/core': 0.0.0-manual.3f95eefa
+      '@auth/core': 0.37.2
       next: 14.0.4(@babel/core@7.26.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
-    transitivePeerDependencies:
-      - '@simplewebauthn/browser'
-      - '@simplewebauthn/server'
 
   next-themes@0.2.1(next@14.0.4(@babel/core@7.26.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
@@ -5355,7 +5384,7 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
-  oauth4webapi@2.17.0: {}
+  oauth4webapi@3.1.4: {}
 
   object-assign@4.1.1: {}
 
@@ -6093,6 +6122,8 @@ snapshots:
       has-bigints: 1.0.2
       has-symbols: 1.0.3
       which-boxed-primitive: 1.0.2
+
+  uncrypto@0.1.3: {}
 
   universalify@2.0.1: {}
 

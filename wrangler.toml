@@ -10,10 +10,4 @@ GITHUB_SECRET = ""
 GITHUB_OWNER = ""
 GITHUB_REPO = ""
 GITHUB_BRANCH = "main"
-NEXTAUTH_URL = "https://your-domain.com"
 NEXTAUTH_SECRET = ""
-
-[[routes]]
-pattern = "/api/auth/.*"
-zone_name = "your-domain.com"
-custom_domain = true

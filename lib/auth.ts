@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth'
-import GitHub from 'next-auth/providers/github'
-import type { DefaultSession, NextAuthConfig, Session } from 'next-auth'
+import GithubProvider from 'next-auth/providers/github'
+import type { DefaultSession, NextAuthConfig } from 'next-auth'
 
 declare module 'next-auth' {
   interface Session {
@@ -18,7 +18,7 @@ declare module 'next-auth' {
 
 const config = {
   providers: [
-    GitHub({
+    GithubProvider({
       clientId: process.env.GITHUB_ID!,
       clientSecret: process.env.GITHUB_SECRET!,
       authorization: {
@@ -34,21 +34,19 @@ const config = {
       return token
     },
     async session({ session, token }) {
-      const newSession = session as Session
-      if (newSession.user) {
-        newSession.user.accessToken = token.accessToken as string
+      if (session?.user) {
+        session.user.accessToken = token.accessToken as string
       }
-      return newSession
+      return session
     }
   },
   pages: {
     signIn: '/auth/signin'
-  }
+  },
+  trustHost: true
 } satisfies NextAuthConfig
 
-const nextAuth = NextAuth(config)
+const handler = NextAuth(config)
 
-export const auth = nextAuth.auth
-export const signIn = nextAuth.signIn
-export const signOut = nextAuth.signOut
-export const { GET, POST } = nextAuth.handlers
+export const auth = handler.auth
+export const { handlers: { GET, POST } } = handler
