@@ -5,10 +5,10 @@ compatibility_date = "2024-01-01"
 command = "pnpm build"
 
 [env.production]
-GITHUB_ID=Ov23liAXoveQEtH4xb0j
-GITHUB_SECRET=c45d05543637151efca86108d0c7d46f3221f6b8
+GITHUB_ID=Ov23lig3bTXpZHrPO1c8
+GITHUB_SECRET=5895e0a49d35b3fc70f6541b876aebdb212c0201
 GITHUB_OWNER=tianyaxiang
 GITHUB_REPO=navsphere-data
 GITHUB_BRANCH=main
-NEXTAUTH_URL=https://navsphere.pages.dev/auth
+NEXTAUTH_URL=https://navsphere.pages.dev/api/auth
 NEXTAUTH_SECRET=PlMaZe+bbYzqSw4M+855b83Py2pVU9s4drWKSXkh0G4= 
