@@ -18,7 +18,15 @@ export default async function AdminLayout({
 
   return (
     <>
-      <AdminLayoutClient>{children}</AdminLayoutClient>
+      <AdminLayoutClient 
+        user={{
+          name: session.user.name,
+          email: session.user.email,
+          image: session.user.image
+        }}
+      >
+        {children}
+      </AdminLayoutClient>
       <Toaster />
     </>
   )

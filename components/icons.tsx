@@ -16,6 +16,16 @@ import {
   FolderOpen,
   Scan,
   Github,
+  LayoutDashboard,
+  Settings,
+  Menu,
+  Database,
+  LogOut,
+  User,
+  ChevronLeft,
+  ChevronRight,
+  PanelRightOpen,
+  PanelLeftClose,
 } from "lucide-react"
 
 export type Icon = typeof Loader2
@@ -38,4 +48,14 @@ export const Icons = {
   empty: FolderOpen,
   scan: Scan,
   gitHub: Github,
+  dashboard: LayoutDashboard,
+  settings: Settings,
+  menu: Menu,
+  database: Database,
+  logOut: LogOut,
+  user: User,
+  chevronLeft: ChevronLeft,
+  chevronRight: ChevronRight,
+  panelRightOpen: PanelRightOpen,
+  panelLeftClose: PanelLeftClose,
 } 
