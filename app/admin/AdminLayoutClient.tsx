@@ -88,30 +88,25 @@ export function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
                 </Button>
                 <div className="flex-1 overflow-hidden">
                   <div className="px-3 py-4">
-                    <div className="mb-4 space-y-3">
-                      <div className={cn(
-                        "flex items-center",
-                        isSidebarCollapsed ? "justify-center" : "gap-3"
+                    <div className="mb-6 flex items-center justify-center">
+                      <Link href="/admin" className={cn(
+                        "flex items-center gap-2",
+                        isSidebarCollapsed ? "justify-center" : "justify-start"
                       )}>
-                        <Avatar className="h-10 w-10">
-                          <AvatarImage src={user?.image || ''} alt={user?.name || 'User'} />
-                          <AvatarFallback>
-                            <Icons.user className="h-6 w-6" />
-                          </AvatarFallback>
-                        </Avatar>
+                        <img 
+                          src="/assets/images/alogo.png" 
+                          alt="Logo" 
+                          className="h-8 w-auto"
+                        />
                         {!isSidebarCollapsed && (
-                          <div className="space-y-1">
-                            <h2 className="text-sm font-semibold">
-                              {user?.name || 'User'}
-                            </h2>
-                            <p className="text-xs text-muted-foreground">
-                              {user?.email || ''}
-                            </p>
-                          </div>
+                          <span className="font-bold text-xl">
+                            NavSphere
+                          </span>
                         )}
-                      </div>
-                      <Separator />
+                      </Link>
                     </div>
+
+                    <Separator className="mb-4" />
                     
                     <div className="space-y-1">
                       {!isSidebarCollapsed && (
@@ -119,7 +114,7 @@ export function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
                           管理菜单
                         </h2>
                       )}
-                      <ScrollArea className="h-[calc(100vh-12rem)]">
+                      <ScrollArea className="h-[calc(100vh-8rem)]">
                         <div className="space-y-1 p-2">
                           {menuItems.map((item) => (
                             <Link key={item.href} href={item.href}>
@@ -129,37 +124,15 @@ export function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
                                   "w-full relative group",
                                   isSidebarCollapsed 
                                     ? "justify-center px-2" 
-                                    : "justify-start",
-                                  pathname === item.href && [
-                                    "bg-primary/10",
-                                    "hover:bg-primary/15",
-                                    "before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2",
-                                    "before:h-8 before:w-1",
-                                    "before:bg-primary before:rounded-r-md"
-                                  ],
-                                  "transition-colors"
+                                    : "justify-start"
                                 )}
                                 size="sm"
                               >
                                 <item.icon className={cn(
-                                  "h-4 w-4 transition-colors",
-                                  pathname === item.href 
-                                    ? "text-primary" 
-                                    : "text-muted-foreground group-hover:text-primary"
+                                  "h-4 w-4",
+                                  !isSidebarCollapsed && "mr-2"
                                 )} />
-                                {!isSidebarCollapsed && (
-                                  <span className={cn(
-                                    "ml-2 text-sm transition-colors",
-                                    pathname === item.href 
-                                      ? "text-foreground font-medium" 
-                                      : "text-muted-foreground group-hover:text-foreground"
-                                  )}>
-                                    {item.title}
-                                  </span>
-                                )}
-                                {isSidebarCollapsed && (
-                                  <span className="sr-only">{item.title}</span>
-                                )}
+                                {!isSidebarCollapsed && item.title}
                               </Button>
                             </Link>
                           ))}
