@@ -26,6 +26,7 @@ import {
   ChevronRight,
   PanelRightOpen,
   PanelLeftClose,
+  Search,
 } from "lucide-react"
 
 export type Icon = typeof Loader2
@@ -58,4 +59,5 @@ export const Icons = {
   chevronRight: ChevronRight,
   panelRightOpen: PanelRightOpen,
   panelLeftClose: PanelLeftClose,
+  search: Search,
 } 
