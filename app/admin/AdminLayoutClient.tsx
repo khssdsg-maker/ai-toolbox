@@ -88,15 +88,18 @@ export function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
                 </Button>
                 <div className="flex-1 overflow-hidden">
                   <div className="px-3 py-4">
-                    <div className="mb-6 flex items-center justify-center">
+                    <div className="mb-6">
                       <Link href="/admin" className={cn(
-                        "flex items-center gap-2",
+                        "flex items-center gap-2 px-2",
                         isSidebarCollapsed ? "justify-center" : "justify-start"
                       )}>
                         <img 
                           src="/assets/images/alogo.png" 
                           alt="Logo" 
-                          className="h-8 w-auto"
+                          className={cn(
+                            "h-8 w-auto",
+                            isSidebarCollapsed && "mx-auto"
+                          )}
                         />
                         {!isSidebarCollapsed && (
                           <span className="font-bold text-xl">
@@ -110,7 +113,7 @@ export function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
                     
                     <div className="space-y-1">
                       {!isSidebarCollapsed && (
-                        <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
+                        <h2 className="mb-2 px-4 text-sm font-semibold tracking-tight">
                           管理菜单
                         </h2>
                       )}
@@ -159,7 +162,7 @@ export function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
                     )} />
                     {!isSidebarCollapsed && "退出登录"}
                     {isSidebarCollapsed && (
-                      <span className="sr-only">退出登录</span>
+                      <span className="sr-only">退出登��</span>
                     )}
                   </Button>
                 </div>
