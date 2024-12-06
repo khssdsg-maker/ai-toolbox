@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { useToast } from '@/components/ui/use-toast'
+import { Button } from '@/registry/new-york/ui/button'
+import { Input } from '@/registry/new-york/ui/input'
+import { useToast } from '@/registry/new-york/hooks/use-toast'
 import { Icons } from '@/components/icons'
 import { NavigationItem } from '@/types/navigation'
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "@/registry/new-york/ui/skeleton"
 import {
   Table,
   TableBody,
@@ -15,7 +15,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/registry/new-york/ui/table"
 
 export default function CategoriesPage() {
   const params = useParams()
@@ -31,7 +31,6 @@ export default function CategoriesPage() {
   }, [])
 
   useEffect(() => {
-    // 根据搜索词过滤分类
     const filtered = categories.filter(category => 
       category.title.toLowerCase().includes(searchQuery.toLowerCase())
     )
@@ -57,21 +56,6 @@ export default function CategoriesPage() {
     }
   }
 
-  // 加载状态的骨架屏组件
-  const LoadingSkeleton = () => (
-    <div className="space-y-4">
-      {[1, 2, 3].map((i) => (
-        <div key={i} className="flex items-center space-x-4">
-          <Skeleton className="h-12 w-12" />
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-[250px]" />
-            <Skeleton className="h-4 w-[200px]" />
-          </div>
-        </div>
-      ))}
-    </div>
-  )
-
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -85,6 +69,7 @@ export default function CategoriesPage() {
           <Button
             onClick={() => router.back()}
             variant="outline"
+            size="sm"
           >
             <Icons.back className="mr-2 h-4 w-4" />
             返回
@@ -92,6 +77,7 @@ export default function CategoriesPage() {
           <Button
             onClick={() => {/* 添加分类的处理函数 */}}
             variant="outline"
+            size="sm"
           >
             <Icons.add className="mr-2 h-4 w-4" />
             添加分类
@@ -109,7 +95,17 @@ export default function CategoriesPage() {
       </div>
 
       {isLoading ? (
-        <LoadingSkeleton />
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex items-center space-x-4">
+              <Skeleton className="h-12 w-12" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px]" />
+                <Skeleton className="h-4 w-[200px]" />
+              </div>
+            </div>
+          ))}
+        </div>
       ) : (
         <div className="rounded-md border">
           <Table>
@@ -156,7 +152,7 @@ export default function CategoriesPage() {
                         variant="ghost"
                         size="sm"
                         onClick={() => {/* 删除处理 */}}
-                        className="text-red-500 hover:text-red-600"
+                        className="text-destructive hover:text-destructive/90"
                       >
                         <Icons.trash className="h-4 w-4" />
                       </Button>

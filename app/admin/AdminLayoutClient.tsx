@@ -1,64 +1,47 @@
 'use client'
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { cn } from "@/lib/utils"
-import { signOut } from 'next-auth/react'
-import { Icons } from '@/components/icons'
-import { Button } from "@/components/ui/button"
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
 import { useState } from 'react'
-
-const menuItems = [
-  {
-    title: '控制台',
-    icon: Icons.dashboard,
-    href: '/admin'
-  },
-  {
-    title: '站点设置',
-    icon: Icons.settings,
-    href: '/admin/site'
-  },
-  {
-    title: '导航管理',
-    icon: Icons.menu,
-    href: '/admin/navigation'
-  },
-  {
-    title: '资源管理',
-    icon: Icons.database,
-    href: '/admin/resources'
-  }
-]
+import { usePathname } from 'next/navigation'
+import Link from 'next/link'
+import { signOut } from 'next-auth/react'
+import { Button } from "@/registry/new-york/ui/button"
+import { ScrollArea } from "@/registry/new-york/ui/scroll-area"
+import { Separator } from "@/registry/new-york/ui/separator"
+import { 
+  LayoutDashboard,
+  ListTodo,
+  Settings,
+  ChevronLeft,
+  ChevronRight,
+  LogOut,
+} from "lucide-react"
+import { cn } from '@/lib/utils'
 
 interface AdminLayoutClientProps {
   children: React.ReactNode
-  user: {
-    name?: string | null
-    email?: string | null
-    image?: string | null
-  }
+  user: any
 }
+
+const menuItems = [
+  {
+    title: "仪表盘",
+    href: "/admin",
+    icon: LayoutDashboard,
+  },
+  {
+    title: "导航管理",
+    href: "/admin/navigation",
+    icon: ListTodo,
+  },
+  {
+    title: "站点设置",
+    href: "/admin/site",
+    icon: Settings,
+  },
+]
 
 export function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
   const pathname = usePathname()
-  const [isOpen, setIsOpen] = useState(false)
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
 
   return (
@@ -71,38 +54,39 @@ export function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
           )}>
             <div className="relative hidden lg:block">
               <div className={cn(
-                "fixed top-0 bottom-0 z-20 flex flex-col transition-all duration-300 bg-background border-r",
+                "fixed top-0 bottom-0 z-20 flex flex-col transition-all duration-300 bg-background border-r shadow-sm",
                 isSidebarCollapsed ? "w-[80px]" : "w-[240px]"
               )}>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute -right-3 top-[40%] translate-y-[-50%] z-50 border shadow-md bg-background"
+                  className="absolute -right-3 top-[40%] translate-y-[-50%] z-50 border shadow-md bg-background rounded-full hover:bg-muted"
                   onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
                 >
                   {isSidebarCollapsed ? (
-                    <Icons.chevronRight className="h-4 w-4" />
+                    <ChevronRight className="h-4 w-4" />
                   ) : (
-                    <Icons.chevronLeft className="h-4 w-4" />
+                    <ChevronLeft className="h-4 w-4" />
                   )}
                 </Button>
+
                 <div className="flex-1 overflow-hidden">
                   <div className="px-3 py-4">
                     <div className="mb-6">
                       <Link href="/admin" className={cn(
-                        "flex items-center gap-2 px-2",
+                        "flex items-center gap-3 px-2",
                         isSidebarCollapsed ? "justify-center" : "justify-start"
                       )}>
                         <img 
                           src="/assets/images/alogo.png" 
                           alt="Logo" 
                           className={cn(
-                            "h-8 w-auto",
+                            "h-8 w-auto rounded-md",
                             isSidebarCollapsed && "mx-auto"
                           )}
                         />
                         {!isSidebarCollapsed && (
-                          <span className="font-bold text-xl">
+                          <span className="font-bold text-xl tracking-tight">
                             NavSphere
                           </span>
                         )}
@@ -111,180 +95,80 @@ export function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
 
                     <Separator className="mb-4" />
                     
-                    <div className="space-y-1">
-                      {!isSidebarCollapsed && (
-                        <h2 className="mb-2 px-4 text-sm font-semibold tracking-tight">
-                          管理菜单
-                        </h2>
-                      )}
-                      <ScrollArea className="h-[calc(100vh-8rem)]">
-                        <div className="space-y-1 p-2">
-                          {menuItems.map((item) => (
-                            <Link key={item.href} href={item.href}>
-                              <Button
-                                variant={pathname === item.href ? "secondary" : "ghost"}
-                                className={cn(
-                                  "w-full relative group",
-                                  isSidebarCollapsed 
-                                    ? "justify-center px-2" 
-                                    : "justify-start"
-                                )}
-                                size="sm"
-                              >
-                                <item.icon className={cn(
-                                  "h-4 w-4",
-                                  !isSidebarCollapsed && "mr-2"
-                                )} />
-                                {!isSidebarCollapsed && item.title}
-                              </Button>
-                            </Link>
-                          ))}
+                    <ScrollArea className="h-[calc(100vh-10rem)]">
+                      <div className="py-1">
+                        <div className="px-3">
+                          {!isSidebarCollapsed && (
+                            <h2 className="mb-3 px-2 text-lg font-semibold tracking-tight">
+                              管理菜单
+                            </h2>
+                          )}
+                          <nav className="grid gap-[2px]">
+                            {menuItems.map((item) => (
+                              <Link key={item.href} href={item.href}>
+                                <Button
+                                  variant="ghost"
+                                  className={cn(
+                                    "w-full justify-start h-8",
+                                    "hover:bg-muted transition-all duration-200",
+                                    pathname === item.href && [
+                                      "bg-muted",
+                                      "hover:bg-muted/80",
+                                      "font-medium"
+                                    ],
+                                    !pathname.startsWith(item.href) && "text-muted-foreground",
+                                    !isSidebarCollapsed && "px-4"
+                                  )}
+                                  size="sm"
+                                >
+                                  <item.icon className={cn(
+                                    "h-4 w-4 shrink-0",
+                                    pathname === item.href 
+                                      ? "text-foreground" 
+                                      : "text-muted-foreground",
+                                    !isSidebarCollapsed && "mr-3"
+                                  )} />
+                                  {!isSidebarCollapsed && (
+                                    <span className="text-sm">
+                                      {item.title}
+                                    </span>
+                                  )}
+                                </Button>
+                              </Link>
+                            ))}
+                          </nav>
                         </div>
-                      </ScrollArea>
-                    </div>
+                      </div>
+                    </ScrollArea>
                   </div>
                 </div>
+
                 <div className="p-3 mt-auto">
                   <Button
                     variant="ghost"
                     className={cn(
-                      "w-full text-red-600 hover:text-red-600 hover:bg-red-100",
-                      isSidebarCollapsed 
-                        ? "justify-center px-2" 
-                        : "justify-start"
+                      "w-full justify-start",
+                      "hover:bg-destructive/10 text-muted-foreground hover:text-destructive",
+                      isSidebarCollapsed && "justify-center",
+                      !isSidebarCollapsed && "px-4"
                     )}
                     onClick={() => signOut({ callbackUrl: '/' })}
                     size="sm"
                   >
-                    <Icons.logOut className={cn(
-                      "h-4 w-4",
-                      !isSidebarCollapsed && "mr-2"
+                    <LogOut className={cn(
+                      "h-4 w-4 shrink-0",
+                      !isSidebarCollapsed && "mr-3"
                     )} />
-                    {!isSidebarCollapsed && "退出登录"}
-                    {isSidebarCollapsed && (
-                      <span className="sr-only">退出登��</span>
+                    {!isSidebarCollapsed && (
+                      <span className="text-sm">退出登录</span>
                     )}
                   </Button>
                 </div>
               </div>
             </div>
-            <div className={cn(
-              "min-h-screen transition-all duration-300"
-            )}>
-              <div className="sticky top-0 z-30 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                <div className="flex h-14 items-center px-4">
-                  <Sheet open={isOpen} onOpenChange={setIsOpen}>
-                    <SheetTrigger asChild className="lg:hidden">
-                      <Button variant="ghost" size="icon">
-                        <Icons.menu className="h-5 w-5" />
-                      </Button>
-                    </SheetTrigger>
-                    <SheetContent side="left" className="p-0 w-[240px]">
-                      <div className="flex flex-col h-full">
-                        <div className="p-4 border-b">
-                          <div className="flex items-center gap-3">
-                            <Avatar className="h-10 w-10">
-                              <AvatarImage src={user?.image || ''} alt={user?.name || 'User'} />
-                              <AvatarFallback>
-                                <Icons.user className="h-6 w-6" />
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="space-y-1">
-                              <h2 className="text-sm font-semibold">
-                                {user?.name || 'User'}
-                              </h2>
-                              <p className="text-xs text-muted-foreground">
-                                {user?.email || ''}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <ScrollArea className="flex-1 p-4">
-                          <div className="space-y-2">
-                            {menuItems.map((item) => (
-                              <Link key={item.href} href={item.href} onClick={() => setIsOpen(false)}>
-                                <Button
-                                  variant={pathname === item.href ? "secondary" : "ghost"}
-                                  className="w-full justify-start"
-                                  size="sm"
-                                >
-                                  <item.icon className="mr-2 h-4 w-4" />
-                                  {item.title}
-                                </Button>
-                              </Link>
-                            ))}
-                          </div>
-                        </ScrollArea>
-                        <div className="border-t p-4">
-                          <Button
-                            variant="ghost"
-                            className="w-full justify-start text-red-600 hover:text-red-600 hover:bg-red-100"
-                            onClick={() => signOut({ callbackUrl: '/' })}
-                            size="sm"
-                          >
-                            <Icons.logOut className="mr-2 h-4 w-4" />
-                            退出登录
-                          </Button>
-                        </div>
-                      </div>
-                    </SheetContent>
-                  </Sheet>
-                  <div className="flex w-full items-center gap-4">
-                    <div className="flex-1">
-                      <h1 className="text-lg font-semibold">
-                        {menuItems.find(item => item.href === pathname)?.title || '控制台'}
-                      </h1>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <span className="hidden md:inline-block text-sm text-muted-foreground">
-                        欢迎回来，{user?.name || 'User'}
-                      </span>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                            <Avatar className="h-8 w-8">
-                              <AvatarImage src={user?.image || ''} alt={user?.name || 'User'} />
-                              <AvatarFallback>
-                                <Icons.user className="h-4 w-4" />
-                              </AvatarFallback>
-                            </Avatar>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56" align="end" forceMount>
-                          <DropdownMenuLabel className="font-normal">
-                            <div className="flex flex-col space-y-1">
-                              <p className="text-sm font-medium leading-none">
-                                {user?.name || 'User'}
-                              </p>
-                              <p className="text-xs leading-none text-muted-foreground">
-                                {user?.email || ''}
-                              </p>
-                            </div>
-                          </DropdownMenuLabel>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            className="text-red-600 cursor-pointer"
-                            onClick={() => signOut({ callbackUrl: '/' })}
-                          >
-                            <Icons.logOut className="mr-2 h-4 w-4" />
-                            退出登录
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="px-4 py-6">
-                <div className="mx-auto">
-                  <ScrollArea className="h-[calc(100vh-8rem)]">
-                    <div className="space-y-6">
-                      <main>{children}</main>
-                    </div>
-                  </ScrollArea>
-                </div>
-              </div>
-            </div>
+            <main className="min-h-screen">
+              <div className="p-6">{children}</div>
+            </main>
           </div>
         </div>
       </div>
