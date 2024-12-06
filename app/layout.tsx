@@ -1,14 +1,13 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import './styles/navigation.css'
 import { ThemeProvider } from '@/components/theme-provider'
-import { ThemeToggle } from '@/components/ThemeToggle'
 import { ScrollToTop } from '@/components/ScrollToTop'
 import { Toaster } from "@/components/ui/toaster"
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 export const metadata: Metadata = {
-  title: '编程爱好者网址导航',
-  description: '收集国内外优秀设计网站、UI设计资源网站、灵感创意网站、素材资源网站，定时更新分享优质产品设计书签。',
+  title: 'NavSphere',
+  description: '导航管理系统',
 }
 
 export default function RootLayout({
@@ -16,36 +15,23 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const isAdminRoute = children?.toString().includes('/admin')
+  const isAdminOrAuth = children?.toString().includes('/admin') || children?.toString().includes('/auth')
 
   return (
-    <html lang="zh" suppressHydrationWarning>
-      <head>
-        <link 
-          rel="stylesheet" 
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-        />
-        <link 
-          rel="stylesheet" 
-          href="/assets/css/fonts/linecons/css/linecons.css"
-        />
-      </head>
-      <body>
-        {isAdminRoute ? (
-          children
-        ) : (
-          <ThemeProvider
-            attribute="data-theme"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+    <html lang="zh-CN" suppressHydrationWarning>
+      <body className="min-h-screen">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="h-screen flex flex-col">
             {children}
-            <ThemeToggle />
-            <ScrollToTop />
-            <Toaster />
-          </ThemeProvider>
-        )}
+          </div>
+          
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   )

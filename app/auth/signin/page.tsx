@@ -14,7 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-export default function SignIn() {
+export default function SignInPage() {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl')
   const [isLoading, setIsLoading] = useState(false)
@@ -32,7 +32,7 @@ export default function SignIn() {
   }
 
   return (
-    <div className="container relative min-h-screen flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+    <div className="h-full grid lg:max-w-none lg:grid-cols-2 lg:px-0">
       <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
         <div className="absolute inset-0 bg-zinc-900" />
         <div className="relative z-20 flex items-center text-lg font-medium">
@@ -47,8 +47,8 @@ export default function SignIn() {
           </blockquote>
         </div>
       </div>
-      <div className="lg:p-8">
-        <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+      <div className="h-full flex items-center justify-center lg:p-8">
+        <div className="w-full max-w-[350px] mx-auto space-y-6">
           <Card>
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl text-center">
