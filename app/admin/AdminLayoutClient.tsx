@@ -160,7 +160,7 @@ export function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
                   </div>
                 </div>
 
-                <div className="p-3 border-t">
+                <div className="p-3">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button 
@@ -171,7 +171,7 @@ export function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
                           isSidebarCollapsed ? "justify-center" : "justify-start"
                         )}
                       >
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 w-full">
                           <Avatar className="h-8 w-8">
                             <AvatarImage 
                               src={user.image || ''} 
@@ -182,11 +182,11 @@ export function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
                             </AvatarFallback>
                           </Avatar>
                           {!isSidebarCollapsed && (
-                            <div className="flex items-center gap-2 flex-1">
-                              <span className="text-sm font-medium leading-none">
+                            <div className="flex items-center flex-1 min-w-0">
+                              <span className="text-sm font-medium leading-none truncate">
                                 {user.name}
                               </span>
-                              <div className="flex flex-col gap-[3px] ml-auto mr-1">
+                              <div className="flex flex-col gap-[3px] ml-auto pl-4">
                                 <div className="h-[3px] w-[2px] rounded-full bg-muted-foreground/40" />
                                 <div className="h-[3px] w-[2px] rounded-full bg-muted-foreground/40" />
                                 <div className="h-[3px] w-[2px] rounded-full bg-muted-foreground/40" />
