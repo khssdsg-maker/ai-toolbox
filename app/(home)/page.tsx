@@ -2,9 +2,9 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { navigationItems } from './data/navigation'
-import { resourceSections } from './data/resources'
-import ResourceCard from './components/ResourceCard'
+import { navigationItems } from '../data/navigation'
+import { resourceSections } from '../data/resources'
+import ResourceCard from '../components/ResourceCard'
 import { useState } from 'react'
 
 export default function Home() {
@@ -80,16 +80,16 @@ export default function Home() {
         </div>
       </div>
       
-      <div className="main-content">
+      <div className="main-content bg-gray-100">
         {resourceSections.map(section => (
-          <section key={section.id} id={section.id}>
-            <div className="section-header">
-              <h2>
-                <i className="linecons-tag mr-2" />
+          <section key={section.id} id={section.id} className="px-8 py-6">
+            <div className="section-header mb-6">
+              <h2 className="text-2xl font-bold flex items-center">
+                <i className="linecons-tag mr-3" />
                 {section.title}
               </h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {section.items.map(item => (
                 <ResourceCard
                   key={item.url}
@@ -97,7 +97,7 @@ export default function Home() {
                 />
               ))}
             </div>
-            <div className="mb-12"></div>
+            <div className="mb-16"></div>
           </section>
         ))}
       </div>
