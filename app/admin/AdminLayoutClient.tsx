@@ -213,7 +213,7 @@ export function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
-                        className="text-destructive focus:text-destructive"
+                        className="cursor-pointer text-destructive hover:!text-destructive hover:!bg-destructive/10 focus:!text-destructive focus:!bg-destructive/10"
                         onClick={() => signOut({ callbackUrl: '/' })}
                       >
                         <LogOut className="mr-2 h-4 w-4" />
