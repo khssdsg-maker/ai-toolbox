@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import siteData from '@/app/data/db/site.json'
+import siteData from '@/navsphere/content/site.json'
 import type { SiteInfo } from '@/types/site'
 
 export const runtime = 'edge'

@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -19,20 +20,27 @@ import {
   FormLabel,
   FormMessage,
 } from "@/registry/new-york/ui/form"
+import { getSiteConfig, updateSiteConfig } from "@/services/siteConfigService"
+import type { SiteConfig } from "@/types/site"
 
 const formSchema = z.object({
-  title: z.string().min(2, {
-    message: "标题至少需要2个字符.",
+  basic: z.object({
+    title: z.string().min(2, {
+      message: "标题至少需要2个字符.",
+    }),
+    description: z.string().min(10, {
+      message: "描述至少需要10个字符.",
+    }),
+    keywords: z.string(),
   }),
-  description: z.string().min(10, {
-    message: "描述至少需要10个字符.",
-  }),
-  keywords: z.string(),
-  logo: z.string().url({
-    message: "请输入有效的URL地址.",
-  }),
-  favicon: z.string().url({
-    message: "请输入有效的URL地址.",
+  appearance: z.object({
+    logo: z.string().url({
+      message: "请输入有效的URL地址.",
+    }),
+    favicon: z.string().url({
+      message: "请输入有效的URL地址.",
+    }),
+    theme: z.enum(['light', 'dark', 'system']),
   }),
 })
 
@@ -41,21 +49,40 @@ export default function SiteSettings() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      keywords: "",
-      logo: "",
-      favicon: "",
+      basic: {
+        title: "",
+        description: "",
+        keywords: "",
+      },
+      appearance: {
+        logo: "",
+        favicon: "",
+        theme: "system",
+      },
     },
   })
 
+  useEffect(() => {
+    const loadConfig = async () => {
+      const config = await getSiteConfig()
+      if (config) {
+        form.reset(config)
+      }
+    }
+    loadConfig()
+  }, [form])
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      // API 调用保持不变
-      toast({
-        title: "成功",
-        description: "站点信息已保存",
-      })
+      const success = await updateSiteConfig(values)
+      if (success) {
+        toast({
+          title: "成功",
+          description: "站点信息已保存",
+        })
+      } else {
+        throw new Error("保存失败")
+      }
     } catch (error) {
       toast({
         title: "错误",
@@ -82,7 +109,7 @@ export default function SiteSettings() {
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                   <FormField
                     control={form.control}
-                    name="title"
+                    name="basic.title"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>网站标题</FormLabel>
@@ -98,7 +125,7 @@ export default function SiteSettings() {
                   />
                   <FormField
                     control={form.control}
-                    name="description"
+                    name="basic.description"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>网站描述</FormLabel>
@@ -118,7 +145,7 @@ export default function SiteSettings() {
                   />
                   <FormField
                     control={form.control}
-                    name="keywords"
+                    name="basic.keywords"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>关键词</FormLabel>
@@ -136,6 +163,7 @@ export default function SiteSettings() {
                     <Button 
                       type="submit"
                       className="w-[120px]"
+                      disabled={form.formState.isSubmitting}
                     >
                       {form.formState.isSubmitting ? (
                         <>
@@ -155,7 +183,70 @@ export default function SiteSettings() {
             </CardContent>
           </Card>
         </TabsContent>
-        {/* 外观设置 Tab 内容类似 */}
+        <TabsContent value="appearance">
+          <Card>
+            <CardHeader>
+              <CardTitle>外观设置</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                  <FormField
+                    control={form.control}
+                    name="appearance.logo"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Logo URL</FormLabel>
+                        <FormControl>
+                          <Input placeholder="输入Logo图片URL" {...field} />
+                        </FormControl>
+                        <FormDescription>
+                          建议尺寸: 160x64px
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="appearance.favicon"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Favicon URL</FormLabel>
+                        <FormControl>
+                          <Input placeholder="输入网站图标URL" {...field} />
+                        </FormControl>
+                        <FormDescription>
+                          建议尺寸: 32x32px
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex justify-end">
+                    <Button 
+                      type="submit"
+                      className="w-[120px]"
+                      disabled={form.formState.isSubmitting}
+                    >
+                      {form.formState.isSubmitting ? (
+                        <>
+                          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                          保存中
+                        </>
+                      ) : (
+                        <>
+                          <Icons.save className="mr-2 h-4 w-4" />
+                          保存更改
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
     </div>
   )
