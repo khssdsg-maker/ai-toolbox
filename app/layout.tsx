@@ -7,7 +7,14 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from "@/components/ui/toaster"
 import type { SiteConfig } from '@/types/site'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+  preload: true,
+  fallback: ['system-ui', 'arial'],
+  adjustFontFallback: true
+})
 
 async function getSiteInfo(): Promise<SiteConfig> {
   try {
@@ -55,29 +62,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh" suppressHydrationWarning>
+    <html lang="zh-CN" className={inter.variable}>
       <head>
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
         />
       </head>
-      <body className={cn(
-        'min-h-screen bg-background font-sans antialiased',
-        inter.className
-      )}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <div className="h-screen flex flex-col">
-            {children}
-          </div>
-          <Toaster />
-        </ThemeProvider>
-      </body>
+      <body>{children}</body>
     </html>
   )
 }
