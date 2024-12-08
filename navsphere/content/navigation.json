@@ -8,11 +8,14 @@
       "subCategories": []
     },
     {
-      "id": "1733651025712",
-      "title": "笔记",
-      "icon": "settings",
-      "items": [],
-      "subCategories": []
+      "subCategories": [
+        {
+          "id": "1733652252909",
+          "title": "二级分类",
+          "items": []
+        }
+      ],
+      "id": "1733651025712"
     }
   ]
 }
