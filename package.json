@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "pnpm next dev",
-    "build": "pnpm next build",
-    "start": "pnpm next start",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "lint": "next lint",
     "clean": "rm -rf .next"
   },
