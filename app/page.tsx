@@ -6,10 +6,10 @@ import { NavigationContent } from '@/components/navigation-content'
 
 async function getData() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || ''
     const [navigationRes, siteRes] = await Promise.all([
-      fetch(`${baseUrl}/api/home/navigation`),
-      fetch(`${baseUrl}/api/home/site`)
+      fetch(new URL('/api/home/navigation', baseUrl).toString()),
+      fetch(new URL('/api/home/site', baseUrl).toString())
     ])
 
     if (!navigationRes.ok || !siteRes.ok) {
