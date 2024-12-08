@@ -21,6 +21,13 @@
           "icon": "user"
         }
       ]
+    },
+    {
+      "id": "1733658309597",
+      "title": "工具2",
+      "icon": "list",
+      "items": [],
+      "subCategories": []
     }
   ]
 }
