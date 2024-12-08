@@ -16,17 +16,19 @@ import {
 
 export default function SignInPage() {
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams?.get('callbackUrl')
+  const callbackUrl = searchParams?.get('callbackUrl') || '/admin'
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSignIn = async () => {
     try {
       setIsLoading(true)
       await signIn('github', {
-        callbackUrl: callbackUrl || '/admin',
-        redirect: true
+        callbackUrl,
+        redirect: true,
+        scope: 'repo'
       })
     } catch (error) {
+      setIsLoading(false)
       console.error('登录失败:', error)
     }
   }
