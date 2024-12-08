@@ -8,11 +8,11 @@ import { Toaster } from "@/components/ui/toaster"
 import type { SiteConfig } from '@/types/site'
 
 const fontSans = localFont({
-  src: '../public/fonts/inter-var-latin.woff2',
+  src: '/fonts/inter-var-latin.woff2',
   variable: '--font-sans',
   display: 'swap',
   fallback: ['system-ui', 'arial'],
-  preload: true,
+  adjustFontFallback: false,
 })
 
 async function getSiteInfo(): Promise<SiteConfig> {
