@@ -70,6 +70,8 @@ export default function CategoryItemsPage() {
   }, [params?.id, params?.categoryId])
 
   const fetchData = async () => {
+    if (!params?.id || !params?.categoryId) return
+
     try {
       const response = await fetch(`/api/navigation/${params.id}`)
       if (!response.ok) throw new Error('Failed to fetch')
