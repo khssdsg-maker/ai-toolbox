@@ -25,6 +25,12 @@ const nextConfig = {
         destination: '/auth/:path*'
       }
     ]
+  },
+  // Cloudflare Pages configuration
+  experimental: {
+    serverActions: {
+      allowedOrigins: ['localhost', 'navsphere.com']
+    }
   }
 }
 
