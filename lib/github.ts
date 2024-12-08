@@ -45,55 +45,70 @@ export async function commitFile(
   path: string,
   content: string,
   message: string,
-  token: string
+  token: string,
+  retryCount = 3
 ) {
   const owner = process.env.GITHUB_OWNER!
   const repo = process.env.GITHUB_REPO!
   const branch = process.env.GITHUB_BRANCH || 'main'
 
-  try {
-    // 1. 获取当前文件信息（如果存在）
-    const currentFileUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`
-    const currentFileResponse = await fetch(currentFileUrl, {
-      headers: {
-        Authorization: `token ${token}`,
-        Accept: 'application/vnd.github.v3+json',
-        'User-Agent': 'NavSphere',
-      },
-    })
+  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
-    let sha = undefined
-    if (currentFileResponse.ok) {
-      const currentFile = await currentFileResponse.json()
-      sha = currentFile.sha
+  for (let attempt = 1; attempt <= retryCount; attempt++) {
+    try {
+      // 1. 获取当前文件信息（如果存在）
+      const currentFileUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`
+      const currentFileResponse = await fetch(currentFileUrl, {
+        headers: {
+          Authorization: `token ${token}`,
+          Accept: 'application/vnd.github.v3+json',
+          'User-Agent': 'NavSphere',
+        },
+        cache: 'no-store', // 禁用缓存，确保获取最新的文件信息
+      })
+
+      let sha = undefined
+      if (currentFileResponse.ok) {
+        const currentFile = await currentFileResponse.json()
+        sha = currentFile.sha
+      }
+
+      // 2. 创建或更新文件
+      const updateUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`
+      const response = await fetch(updateUrl, {
+        method: 'PUT',
+        headers: {
+          Authorization: `token ${token}`,
+          Accept: 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json',
+          'User-Agent': 'NavSphere',
+        },
+        body: JSON.stringify({
+          message,
+          content: Buffer.from(content).toString('base64'),
+          sha,
+          branch,
+        }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        if (attempt < retryCount && error.message?.includes('sha')) {
+          console.log(`Attempt ${attempt} failed, retrying after delay...`)
+          await delay(1000 * attempt) // 指数退避
+          continue
+        }
+        throw new Error(`Failed to commit file: ${error.message}`)
+      }
+
+      return await response.json()
+    } catch (error) {
+      if (attempt === retryCount) {
+        console.error('Error in commitFile:', error)
+        throw error
+      }
+      console.log(`Attempt ${attempt} failed, retrying...`)
+      await delay(1000 * attempt)
     }
-
-    // 2. 创建或更新文件
-    const updateUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`
-    const response = await fetch(updateUrl, {
-      method: 'PUT',
-      headers: {
-        Authorization: `token ${token}`,
-        Accept: 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json',
-        'User-Agent': 'NavSphere',
-      },
-      body: JSON.stringify({
-        message,
-        content: Buffer.from(content).toString('base64'),
-        sha,
-        branch,
-      }),
-    })
-
-    if (!response.ok) {
-      const error = await response.json()
-      throw new Error(`Failed to commit file: ${error.message}`)
-    }
-
-    return await response.json()
-  } catch (error) {
-    console.error('Error in commitFile:', error)
-    throw error
   }
 } 

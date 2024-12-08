@@ -2,13 +2,81 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { navigationItems } from '../data/navigation'
-import { resourceSections } from '../data/resources'
 import ResourceCard from '../components/ResourceCard'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
+interface NavigationItem {
+  id: string;
+  title: string;
+  icon: string;
+  items?: {
+    title: string;
+    href: string;
+  }[];
+}
+
+interface ResourceItem {
+  url: string;
+  title: string;
+  description?: string;
+  // 添加其他需要的属性
+}
+
+interface ResourceSection {
+  id: string;
+  title: string;
+  items: ResourceItem[];
+}
 
 export default function Home() {
   const [expandedItems, setExpandedItems] = useState<string[]>([])
+  const [navigation, setNavigation] = useState<NavigationItem[]>([])
+  const [resources, setResources] = useState<ResourceSection[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // 并行获取导航和资源数据
+        const [navResponse, resourceResponse] = await Promise.all([
+          fetch('/api/navigation'),
+          fetch('/api/resources')
+        ]);
+
+        const navData = await navResponse.json();
+        const resourceData = await resourceResponse.json();
+
+        console.log('Raw navigation data:', navData);
+        console.log('Raw resource data:', resourceData);
+
+        // 处理导航数据
+        if (navData.items && Array.isArray(navData.items)) {
+          setNavigation(navData.items);
+        } else if (Array.isArray(navData)) {
+          setNavigation(navData);
+        } else {
+          setNavigation([]);
+        }
+
+        // 处理资源数据
+        if (Array.isArray(resourceData)) {
+          setResources(resourceData);
+        } else if (resourceData.sections && Array.isArray(resourceData.sections)) {
+          setResources(resourceData.sections);
+        } else {
+          setResources([]);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setNavigation([]);
+        setResources([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const toggleItem = (id: string) => {
     setExpandedItems(prev => 
@@ -16,6 +84,13 @@ export default function Home() {
         ? prev.filter(item => item !== id)
         : [...prev, id]
     )
+  }
+
+  // 渲染前确保 navigation 是数组
+  const renderNavigation = Array.isArray(navigation) ? navigation : []
+
+  if (loading) {
+    return <div>Loading...</div>
   }
 
   return (
@@ -44,7 +119,7 @@ export default function Home() {
           </header>
 
           <ul className="main-menu">
-            {navigationItems.map(item => (
+            {renderNavigation.map(item => (
               <li 
                 key={item.id}
                 className={expandedItems.includes(item.id) ? 'expanded' : ''}
@@ -81,7 +156,7 @@ export default function Home() {
       </div>
       
       <div className="main-content bg-gray-100">
-        {resourceSections.map(section => (
+        {resources.map(section => (
           <section key={section.id} id={section.id} className="px-8 py-6">
             <div className="section-header mb-6">
               <h2 className="text-2xl font-bold flex items-center">
