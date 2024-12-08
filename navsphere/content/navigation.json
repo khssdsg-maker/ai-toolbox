@@ -6,6 +6,13 @@
       "icon": "linecons-desktop",
       "items": [],
       "subCategories": []
+    },
+    {
+      "id": "1733652503025",
+      "title": "父分类",
+      "icon": "search",
+      "items": [],
+      "subCategories": []
     }
   ]
 }
