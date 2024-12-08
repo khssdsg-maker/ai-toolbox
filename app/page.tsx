@@ -7,8 +7,8 @@ import { NavigationContent } from '@/components/navigation-content'
 async function getData() {
   try {
     const [navigationRes, siteRes] = await Promise.all([
-      fetch('http://localhost:3000/api/home/navigation'),
-      fetch('http://localhost:3000/api/home/site')
+      fetch('/api/home/navigation'),
+      fetch('/api/home/site')
     ])
 
     if (!navigationRes.ok || !siteRes.ok) {
