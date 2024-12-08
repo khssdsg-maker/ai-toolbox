@@ -224,7 +224,7 @@ export default function CategoryItemsPage() {
   }
 
   const moveItem = async (fromIndex: number, toIndex: number) => {
-    if (!navigation || !category || !category.items) return
+    if (!params?.id || !navigation || !category || !category.items) return
 
     const newItems = arrayMove(category.items, fromIndex, toIndex)
     const updatedCategory = {
@@ -268,20 +268,19 @@ export default function CategoryItemsPage() {
     const oldIndex = category.items.findIndex(item => item.id === active.id)
     const newIndex = category.items.findIndex(item => item.id === over.id)
     
+    if (oldIndex === -1 || newIndex === -1) return
+    
     moveItem(oldIndex, newIndex)
   }
 
   const moveToTop = async (index: number) => {
-    if (index > 0) {
-      moveItem(index, 0)
-    }
+    if (!category?.items || index <= 0) return
+    moveItem(index, 0)
   }
 
   const moveToBottom = async (index: number) => {
-    if (!category?.items) return
-    if (index < category.items.length - 1) {
-      moveItem(index, category.items.length - 1)
-    }
+    if (!category?.items || index >= category.items.length - 1) return
+    moveItem(index, category.items.length - 1)
   }
 
   const filteredItems = category?.items?.filter(item =>
