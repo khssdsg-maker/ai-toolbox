@@ -93,7 +93,7 @@ export default function CategoryItemsPage() {
   }
 
   const addItem = async (values: NavigationSubItem) => {
-    if (!navigation || !category) return
+    if (!params?.id || !navigation || !category) return
 
     try {
       const updatedCategory = {
