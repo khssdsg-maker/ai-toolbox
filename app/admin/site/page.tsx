@@ -22,6 +22,7 @@ import {
 } from "@/registry/new-york/ui/form"
 import { SiteConfigService} from "@/services/siteConfigService"
 import type { SiteConfig } from "@/types/site"
+import { Toaster } from "@/registry/new-york/ui/toaster"
 
 const formSchema = z.object({
   basic: z.object({
@@ -34,11 +35,11 @@ const formSchema = z.object({
     keywords: z.string(),
   }),
   appearance: z.object({
-    logo: z.string().url({
-      message: "请输入有效的URL地址.",
+    logo: z.string().regex(/^(https?:\/\/|\/)\S+$/i, {
+      message: "请输入有效的URL地址或相对路径",
     }),
-    favicon: z.string().url({
-      message: "请输入有效的URL地址.",
+    favicon: z.string().regex(/^(https?:\/\/|\/)\S+$/i, {
+      message: "请输入有效的URL地址或相对路径",
     }),
     theme: z.enum(['light', 'dark', 'system']),
   }),
@@ -91,161 +92,164 @@ export default function SiteSettings() {
   }
 
   return (
-    <div className="space-y-6">
-      <Tabs defaultValue="basic" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="basic">基本信息</TabsTrigger>
-          <TabsTrigger value="appearance">外观设置</TabsTrigger>
-        </TabsList>
-        <TabsContent value="basic">
-          <Card>
-            <CardHeader>
-              <CardTitle>基本信息</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                  <FormField
-                    control={form.control}
-                    name="basic.title"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>网站标题</FormLabel>
-                        <FormControl>
-                          <Input placeholder="输入网站标题" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          这将显示在浏览器标签页和搜索结果中
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="basic.description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>网站描述</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            placeholder="输入网站描述"
-                            className="resize-none"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          这将显示在搜索结果中
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="basic.keywords"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>关键词</FormLabel>
-                        <FormControl>
-                          <Input placeholder="输入关键词，用英文逗号分隔" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          用于搜索引擎优化，多个关键词请用英文逗号分隔
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="flex justify-end">
-                    <Button 
-                      type="submit"
-                      className="w-[120px]"
-                      disabled={form.formState.isSubmitting}
-                    >
-                      {form.formState.isSubmitting ? (
-                        <>
-                          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                          保存中
-                        </>
-                      ) : (
-                        <>
-                          <Icons.save className="mr-2 h-4 w-4" />
-                          保存更改
-                        </>
+    <>
+      <div className="space-y-6">
+        <Tabs defaultValue="basic" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="basic">基本信息</TabsTrigger>
+            <TabsTrigger value="appearance">外观设置</TabsTrigger>
+          </TabsList>
+          <TabsContent value="basic">
+            <Card>
+              <CardHeader>
+                <CardTitle>基本信息</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <FormField
+                      control={form.control}
+                      name="basic.title"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>网站标题</FormLabel>
+                          <FormControl>
+                            <Input placeholder="输入网站标题" {...field} />
+                          </FormControl>
+                          <FormDescription>
+                            这将显示在浏览器标签页和搜索结果中
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
                       )}
-                    </Button>
-                  </div>
-                </form>
-              </Form>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="appearance">
-          <Card>
-            <CardHeader>
-              <CardTitle>外观设置</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                  <FormField
-                    control={form.control}
-                    name="appearance.logo"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Logo URL</FormLabel>
-                        <FormControl>
-                          <Input placeholder="输入Logo图片URL" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          建议尺寸: 160x64px
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="appearance.favicon"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Favicon URL</FormLabel>
-                        <FormControl>
-                          <Input placeholder="输入网站图标URL" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          建议尺寸: 32x32px
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="flex justify-end">
-                    <Button 
-                      type="submit"
-                      className="w-[120px]"
-                      disabled={form.formState.isSubmitting}
-                    >
-                      {form.formState.isSubmitting ? (
-                        <>
-                          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                          保存中
-                        </>
-                      ) : (
-                        <>
-                          <Icons.save className="mr-2 h-4 w-4" />
-                          保存更改
-                        </>
+                    />
+                    <FormField
+                      control={form.control}
+                      name="basic.description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>网站描述</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              placeholder="输入网站描述"
+                              className="resize-none"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            这将显示在搜索结果中
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
                       )}
-                    </Button>
-                  </div>
-                </form>
-              </Form>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
+                    />
+                    <FormField
+                      control={form.control}
+                      name="basic.keywords"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>关键词</FormLabel>
+                          <FormControl>
+                            <Input placeholder="输入关键词，用英文逗号分隔" {...field} />
+                          </FormControl>
+                          <FormDescription>
+                            用于搜索引擎优化，多个关键词请用英文逗号分隔
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <div className="flex justify-end">
+                      <Button 
+                        type="submit"
+                        className="w-[120px]"
+                        disabled={form.formState.isSubmitting}
+                      >
+                        {form.formState.isSubmitting ? (
+                          <>
+                            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                            保存中
+                          </>
+                        ) : (
+                          <>
+                            <Icons.save className="mr-2 h-4 w-4" />
+                            保存更改
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="appearance">
+            <Card>
+              <CardHeader>
+                <CardTitle>外观设置</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <FormField
+                      control={form.control}
+                      name="appearance.logo"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Logo URL</FormLabel>
+                          <FormControl>
+                            <Input placeholder="输入Logo图片URL" {...field} />
+                          </FormControl>
+                          <FormDescription>
+                            建议尺寸: 160x64px
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="appearance.favicon"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Favicon URL</FormLabel>
+                          <FormControl>
+                            <Input placeholder="输入网站图标URL" {...field} />
+                          </FormControl>
+                          <FormDescription>
+                            建议尺寸: 32x32px
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <div className="flex justify-end">
+                      <Button 
+                        type="submit"
+                        className="w-[120px]"
+                        disabled={form.formState.isSubmitting}
+                      >
+                        {form.formState.isSubmitting ? (
+                          <>
+                            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                            保存中
+                          </>
+                        ) : (
+                          <>
+                            <Icons.save className="mr-2 h-4 w-4" />
+                            保存更改
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+      <Toaster />
+    </>
   )
 } 
