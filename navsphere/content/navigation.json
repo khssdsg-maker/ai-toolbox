@@ -21,13 +21,6 @@
           "icon": "user"
         }
       ]
-    },
-    {
-      "id": "tools",
-      "title": "开发工具",
-      "icon": "linecons-desktop",
-      "items": [],
-      "subCategories": []
     }
   ]
 }
