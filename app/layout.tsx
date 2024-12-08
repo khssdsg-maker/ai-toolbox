@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/toaster"
 import type { SiteConfig } from '@/types/site'
 
 const fontSans = localFont({
-  src: '/fonts/inter-var-latin.woff2',
+  src: ['/fonts/inter-var-latin.woff2', '/fonts/inter-var-latin.woff'],
   variable: '--font-sans',
   display: 'swap',
   fallback: ['system-ui', 'arial'],
