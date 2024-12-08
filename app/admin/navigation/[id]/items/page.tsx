@@ -45,6 +45,8 @@ export default function ItemsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [editingItem, setEditingItem] = useState<EditingItem | null>(null)
   const [deletingItem, setDeletingItem] = useState<EditingItem | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -69,28 +71,20 @@ export default function ItemsPage() {
   }, [params?.id, router])
 
   const fetchNavigation = async () => {
+    setIsLoading(true)
     try {
-      // 先获取完整的导航信息
       const navigationResponse = await fetch(`/api/navigation/${params!.id}`)
       if (!navigationResponse.ok) throw new Error('Failed to fetch navigation')
       const navigationData = await navigationResponse.json()
-      
-      // 再获取导航项目列表
-      const itemsResponse = await fetch(`/api/navigation/${params!.id}/items`)
-      if (!itemsResponse.ok) throw new Error('Failed to fetch items')
-      const itemsData = await itemsResponse.json()
-
-      // 合并数据
-      setNavigation({
-        ...navigationData,
-        items: itemsData.items
-      })
+      setNavigation(navigationData)
     } catch (error) {
       toast({
         title: "错误",
         description: "加载数据失败",
         variant: "destructive"
       })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -109,6 +103,7 @@ export default function ItemsPage() {
         title: "成功",
         description: "添加成功"
       })
+      setIsDialogOpen(false)
     } catch (error) {
       toast({
         title: "错误",
@@ -174,27 +169,23 @@ export default function ItemsPage() {
   const moveItem = async (fromIndex: number, toIndex: number) => {
     if (!navigation || !navigation.items) return
 
-    const newItems = arrayMove(navigation.items, fromIndex, toIndex)
-    const updatedNavigation = {
-      ...navigation,
-      items: newItems
-    }
-
     try {
       const response = await fetch(`/api/navigation/${params!.id}/items`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedNavigation)
+        body: JSON.stringify({
+          fromIndex,
+          toIndex
+        })
       })
 
       if (!response.ok) throw new Error('Failed to save order')
 
-      const data = await response.json()
-      setNavigation(data)
+      await fetchNavigation() // 重新获取最新数据
     } catch (error) {
       toast({
         title: "错误",
-        description: "保存顺序失败",
+        description: "保存���序失败",
         variant: "destructive"
       })
     }
@@ -237,161 +228,143 @@ export default function ItemsPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => router.back()}
-            className="h-8 w-8"
-            title="返回"
-          >
-            <Icons.back className="h-4 w-4" />
-          </Button>
-          <div>
-            <div className="text-sm text-muted-foreground mb-1">
-              {navigation.title} / {navigation.category}
-            </div>
-            <h2 className="text-lg font-semibold flex items-center gap-2">
-              子项目管理
-            </h2>
-          </div>
-          <div className="relative flex-1 max-w-sm">
-            <Icons.search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="搜索子项目..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8"
-            />
-            {searchQuery && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSearchQuery("")}
-                className="absolute right-1 top-1 h-7 w-7 p-0"
-              >
-                <Icons.close className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
+        <div className="space-y-1">
+          <h2 className="text-2xl font-semibold tracking-tight">
+            {navigation?.title}
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            管理导航项目列表
+          </p>
         </div>
-        <Dialog>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button>
               <Icons.add className="mr-2 h-4 w-4" />
-              添加子项目
+              添加项目
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>添加子项目</DialogTitle>
+              <DialogTitle>添加导航项目</DialogTitle>
+              <DialogDescription>
+                添加一个新的导航项目到当前分类中
+              </DialogDescription>
             </DialogHeader>
-            <AddItemForm onSubmit={addItem} />
+            <AddItemForm onSubmit={addItem} onCancel={() => setIsDialogOpen(false)} />
           </DialogContent>
         </Dialog>
       </div>
 
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext
-          items={filteredItems}
-          strategy={verticalListSortingStrategy}
+      {isLoading ? (
+        <div className="flex items-center justify-center h-32">
+          <Icons.spinner className="h-6 w-6 animate-spin" />
+        </div>
+      ) : navigation?.items && navigation.items.length > 0 ? (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
         >
-          <div className="grid gap-2">
-            {filteredItems.map((item, index) => (
-              <div key={index} className="group relative">
-                <div
-                  className="flex items-center justify-between py-2 px-4 bg-card rounded-lg border shadow-sm transition-colors hover:bg-accent/10"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
-                      {item.icon ? (
-                        <img src={item.icon} alt={item.title} className="w-4 h-4 object-contain" />
-                      ) : (
-                        <Icons.link className="h-4 w-4 text-primary" />
-                      )}
+          <SortableContext
+            items={filteredItems}
+            strategy={verticalListSortingStrategy}
+          >
+            <div className="grid gap-2">
+              {filteredItems.map((item, index) => (
+                <div key={index} className="group relative">
+                  <div
+                    className="flex items-center justify-between py-2 px-4 bg-card rounded-lg border shadow-sm transition-colors hover:bg-accent/10"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
+                        {item.icon ? (
+                          <img src={item.icon} alt={item.title} className="w-4 h-4 object-contain" />
+                        ) : (
+                          <Icons.link className="h-4 w-4 text-primary" />
+                        )}
+                      </div>
+                      <div>
+                        <div className="font-medium leading-none mb-1">{item.title}</div>
+                        {item.description && (
+                          <div className="text-xs text-muted-foreground">
+                            {item.description}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <div>
-                      <div className="font-medium leading-none mb-1">{item.title}</div>
-                      {item.description && (
-                        <div className="text-xs text-muted-foreground">
-                          {item.description}
-                        </div>
-                      )}
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => window.open(item.href, '_blank')}
+                        title="访问链接"
+                      >
+                        <Icons.globe className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => setEditingItem({ index, item })}
+                        title="编辑"
+                      >
+                        <Icons.edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => setDeletingItem({ index, item })}
+                        title="删除"
+                      >
+                        <Icons.trash className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => window.open(item.href, '_blank')}
-                      title="访问链接"
-                    >
-                      <Icons.globe className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => setEditingItem({ index, item })}
-                      title="编辑"
-                    >
-                      <Icons.edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => setDeletingItem({ index, item })}
-                      title="删除"
-                    >
-                      <Icons.trash className="h-4 w-4" />
-                    </Button>
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 pr-2 hidden group-hover:flex items-center gap-1">
+                    {index > 0 && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        onClick={() => moveToTop(index)}
+                        title="置顶"
+                      >
+                        <Icons.chevronLeft className="h-4 w-4 -rotate-90" />
+                      </Button>
+                    )}
+                    {index < (navigation?.items?.length || 0) - 1 && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        onClick={() => moveToBottom(index)}
+                        title="置底"
+                      >
+                        <Icons.chevronRight className="h-4 w-4 rotate-90" />
+                      </Button>
+                    )}
                   </div>
                 </div>
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 pr-2 hidden group-hover:flex items-center gap-1">
-                  {index > 0 && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => moveToTop(index)}
-                      title="置顶"
-                    >
-                      <Icons.chevronLeft className="h-4 w-4 -rotate-90" />
-                    </Button>
-                  )}
-                  {index < (navigation?.items?.length || 0) - 1 && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => moveToBottom(index)}
-                      title="置底"
-                    >
-                      <Icons.chevronRight className="h-4 w-4 rotate-90" />
-                    </Button>
+              ))}
+              {filteredItems.length === 0 && (
+                <div className="text-center py-10 text-muted-foreground">
+                  {navigation?.items?.length === 0 ? (
+                    <p>暂无子项目</p>
+                  ) : (
+                    <p>未找到匹配的子项目</p>
                   )}
                 </div>
-              </div>
-            ))}
-            {filteredItems.length === 0 && (
-              <div className="text-center py-10 text-muted-foreground">
-                {navigation?.items?.length === 0 ? (
-                  <p>暂无子项目</p>
-                ) : (
-                  <p>未找到匹配的子项目</p>
-                )}
-              </div>
-            )}
-          </div>
-        </SortableContext>
-      </DndContext>
-
+              )}
+            </div>
+          </SortableContext>
+        </DndContext>
+      ) : (
+        <div className="text-center py-10 text-muted-foreground">
+          暂无子项目
+        </div>
+      )}
       <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
         <DialogContent>
           <DialogHeader>

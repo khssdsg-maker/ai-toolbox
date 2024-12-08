@@ -15,6 +15,7 @@ import {
   FormDescription,
 } from "@/registry/new-york/ui/form"
 import { NavigationSubItem } from "@/types/navigation"
+import { Icons } from "@/components/icons"
 
 const formSchema = z.object({
   id: z.string().optional(),
@@ -26,10 +27,11 @@ const formSchema = z.object({
 
 interface AddItemFormProps {
   onSubmit: (values: NavigationSubItem) => Promise<void>
+  onCancel: () => void
   defaultValues?: NavigationSubItem
 }
 
-export function AddItemForm({ onSubmit, defaultValues }: AddItemFormProps) {
+export function AddItemForm({ onSubmit, onCancel, defaultValues }: AddItemFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues || {
@@ -101,9 +103,22 @@ export function AddItemForm({ onSubmit, defaultValues }: AddItemFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? "提交中..." : defaultValues ? "更新" : "添加"}
-        </Button>
+        <div className="flex justify-end space-x-2">
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={onCancel}
+            disabled={isSubmitting}
+          >
+            取消
+          </Button>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting && (
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            保存
+          </Button>
+        </div>
       </form>
     </Form>
   )
