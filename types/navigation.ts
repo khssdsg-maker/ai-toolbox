@@ -1,24 +1,24 @@
 export interface NavigationSubItem {
+  id: string
   title: string
-  titleEn: string
-  description: string
-  descriptionEn: string
-  icon: string
   href: string
+  description?: string
+  icon?: string
 }
 
 export interface NavigationCategory {
   id: string
   title: string
-  items: NavigationSubItem[]
+  icon?: string
+  parentId?: string
+  items?: NavigationSubItem[]
 }
 
 export interface NavigationItem {
   id: string
   title: string
-  icon: string
-  items: NavigationSubItem[]
-  subCategories: NavigationCategory[]
+  description?: string
+  subCategories?: NavigationCategory[]
 }
 
 export interface NavigationData {
@@ -40,4 +40,4 @@ export interface ResourceSection {
 
 export interface ResourceData {
   resourceSections: ResourceSection[]
-} 
+}

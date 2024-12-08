@@ -5,17 +5,17 @@ import { useParams, useRouter } from 'next/navigation'
 import { Button } from "@/registry/new-york/ui/button"
 import { useToast } from "@/registry/new-york/hooks/use-toast"
 import { Icons } from "@/components/icons"
-import { NavigationItem, NavigationCategory } from '@/types/navigation'
+import { NavigationItem, NavigationCategory, NavigationSubItem } from '@/types/navigation'
+import { AddItemForm } from '../../../../components/AddItemForm'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogFooter,
   DialogDescription,
+  DialogFooter,
 } from "@/registry/new-york/ui/dialog"
-import { AddCategoryForm } from '../../components/AddCategoryForm'
 import { Input } from "@/registry/new-york/ui/input"
 import {
   DndContext,
@@ -32,14 +32,20 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 
-export default function CategoriesPage() {
+interface EditingItem {
+  index: number
+  item: NavigationSubItem
+}
+
+export default function CategoryItemsPage() {
   const params = useParams()
   const router = useRouter()
   const { toast } = useToast()
   const [navigation, setNavigation] = useState<NavigationItem | null>(null)
+  const [category, setCategory] = useState<NavigationCategory | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
-  const [editingCategory, setEditingCategory] = useState<{ index: number; category: NavigationCategory } | null>(null)
-  const [deletingCategory, setDeletingCategory] = useState<{ index: number; category: NavigationCategory } | null>(null)
+  const [editingItem, setEditingItem] = useState<EditingItem | null>(null)
+  const [deletingItem, setDeletingItem] = useState<EditingItem | null>(null)
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -56,15 +62,21 @@ export default function CategoriesPage() {
   )
 
   useEffect(() => {
-    fetchNavigation()
-  }, [params.id])
+    fetchData()
+  }, [params.id, params.categoryId])
 
-  const fetchNavigation = async () => {
+  const fetchData = async () => {
     try {
       const response = await fetch(`/api/navigation/${params.id}`)
       if (!response.ok) throw new Error('Failed to fetch')
       const data = await response.json()
       setNavigation(data)
+      
+      const foundCategory = data.subCategories?.find(
+        (cat: NavigationCategory) => cat.id === params.categoryId
+      )
+      if (!foundCategory) throw new Error('Category not found')
+      setCategory(foundCategory)
     } catch (error) {
       toast({
         title: "错误",
@@ -74,63 +86,20 @@ export default function CategoriesPage() {
     }
   }
 
-  const addCategory = async (values: { title: string, icon: string }) => {
-    if (!navigation) return
+  const addItem = async (values: NavigationSubItem) => {
+    if (!navigation || !category) return
 
     try {
-      const newCategory: NavigationCategory = {
-        id: Date.now().toString(),
-        title: values.title,
-        icon: values.icon,
-        items: []
+      const updatedCategory = {
+        ...category,
+        items: [...(category.items || []), values]
       }
 
-      const updatedNavigation: NavigationItem = {
+      const updatedNavigation = {
         ...navigation,
-        subCategories: [...(navigation.subCategories || []), newCategory]
-      }
-
-      const response = await fetch(`/api/navigation/${params.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedNavigation)
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to save')
-      }
-
-      const updatedData = await response.json()
-      setNavigation(updatedData)
-      
-      toast({
-        title: "成功",
-        description: "添加成功"
-      })
-    } catch (error) {
-      console.error('Save error:', error)
-      toast({
-        title: "错误",
-        description: error instanceof Error ? error.message : "保存失败",
-        variant: "destructive"
-      })
-    }
-  }
-
-  const editCategory = async (values: { title: string, icon: string }) => {
-    if (!navigation || !editingCategory) return
-
-    try {
-      const updatedCategories = navigation.subCategories?.map((cat, index) => 
-        index === editingCategory.index 
-          ? { ...cat, title: values.title, icon: values.icon }
-          : cat
-      ) || []
-
-      const updatedNavigation: NavigationItem = {
-        ...navigation,
-        subCategories: updatedCategories
+        subCategories: navigation.subCategories?.map(cat =>
+          cat.id === category.id ? updatedCategory : cat
+        )
       }
 
       const response = await fetch(`/api/navigation/${params.id}`, {
@@ -141,13 +110,13 @@ export default function CategoriesPage() {
 
       if (!response.ok) throw new Error('Failed to save')
 
-      const updatedData = await response.json()
-      setNavigation(updatedData)
-      setEditingCategory(null)
+      const data = await response.json()
+      setNavigation(data)
+      setCategory(updatedCategory)
       
       toast({
         title: "成功",
-        description: "更新成功"
+        description: "添加成功"
       })
     } catch (error) {
       toast({
@@ -158,13 +127,68 @@ export default function CategoriesPage() {
     }
   }
 
-  const deleteCategory = async (categoryId: string) => {
-    if (!navigation) return
+  const updateItem = async (index: number, values: NavigationSubItem) => {
+    if (!navigation || !category) return
 
     try {
-      const updatedNavigation: NavigationItem = {
+      const updatedItems = [...(category.items || [])]
+      updatedItems[index] = values
+
+      const updatedCategory = {
+        ...category,
+        items: updatedItems
+      }
+
+      const updatedNavigation = {
         ...navigation,
-        subCategories: navigation.subCategories?.filter(cat => cat.id !== categoryId) || []
+        subCategories: navigation.subCategories?.map(cat =>
+          cat.id === category.id ? updatedCategory : cat
+        )
+      }
+
+      const response = await fetch(`/api/navigation/${params.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedNavigation)
+      })
+
+      if (!response.ok) throw new Error('Failed to update')
+
+      const data = await response.json()
+      setNavigation(data)
+      setCategory(updatedCategory)
+      setEditingItem(null)
+      
+      toast({
+        title: "成功",
+        description: "更新成功"
+      })
+    } catch (error) {
+      toast({
+        title: "错误",
+        description: "更新失败",
+        variant: "destructive"
+      })
+    }
+  }
+
+  const deleteItem = async (index: number) => {
+    if (!navigation || !category) return
+
+    try {
+      const updatedItems = [...(category.items || [])]
+      updatedItems.splice(index, 1)
+
+      const updatedCategory = {
+        ...category,
+        items: updatedItems
+      }
+
+      const updatedNavigation = {
+        ...navigation,
+        subCategories: navigation.subCategories?.map(cat =>
+          cat.id === category.id ? updatedCategory : cat
+        )
       }
 
       const response = await fetch(`/api/navigation/${params.id}`, {
@@ -175,8 +199,10 @@ export default function CategoriesPage() {
 
       if (!response.ok) throw new Error('Failed to delete')
 
-      const updatedData = await response.json()
-      setNavigation(updatedData)
+      const data = await response.json()
+      setNavigation(data)
+      setCategory(updatedCategory)
+      setDeletingItem(null)
       
       toast({
         title: "成功",
@@ -191,13 +217,20 @@ export default function CategoriesPage() {
     }
   }
 
-  const moveCategory = async (fromIndex: number, toIndex: number) => {
-    if (!navigation?.subCategories) return
+  const moveItem = async (fromIndex: number, toIndex: number) => {
+    if (!navigation || !category || !category.items) return
 
-    const newCategories = arrayMove(navigation.subCategories, fromIndex, toIndex)
+    const newItems = arrayMove(category.items, fromIndex, toIndex)
+    const updatedCategory = {
+      ...category,
+      items: newItems
+    }
+
     const updatedNavigation = {
       ...navigation,
-      subCategories: newCategories
+      subCategories: navigation.subCategories?.map(cat =>
+        cat.id === category.id ? updatedCategory : cat
+      )
     }
 
     try {
@@ -209,8 +242,9 @@ export default function CategoriesPage() {
 
       if (!response.ok) throw new Error('Failed to save order')
 
-      const updatedData = await response.json()
-      setNavigation(updatedData)
+      const data = await response.json()
+      setNavigation(data)
+      setCategory(updatedCategory)
     } catch (error) {
       toast({
         title: "错误",
@@ -223,32 +257,31 @@ export default function CategoriesPage() {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
     
-    if (!over || active.id === over.id || !navigation?.subCategories) return
+    if (!over || active.id === over.id || !category?.items) return
 
-    const oldIndex = navigation.subCategories.findIndex(cat => cat.id === active.id)
-    const newIndex = navigation.subCategories.findIndex(cat => cat.id === over.id)
+    const oldIndex = category.items.findIndex(item => item.id === active.id)
+    const newIndex = category.items.findIndex(item => item.id === over.id)
     
-    moveCategory(oldIndex, newIndex)
+    moveItem(oldIndex, newIndex)
   }
 
-  const moveToTop = async (id: string) => {
-    if (!navigation?.subCategories) return
-    const index = navigation.subCategories.findIndex(cat => cat.id === id)
+  const moveToTop = async (index: number) => {
     if (index > 0) {
-      moveCategory(index, 0)
+      moveItem(index, 0)
     }
   }
 
-  const moveToBottom = async (id: string) => {
-    if (!navigation?.subCategories) return
-    const index = navigation.subCategories.findIndex(cat => cat.id === id)
-    if (index < (navigation.subCategories.length - 1)) {
-      moveCategory(index, navigation.subCategories.length - 1)
+  const moveToBottom = async (index: number) => {
+    if (!category?.items) return
+    if (index < category.items.length - 1) {
+      moveItem(index, category.items.length - 1)
     }
   }
 
-  const filteredCategories = navigation?.subCategories?.filter(category =>
-    category.title.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredItems = category?.items?.filter(item =>
+    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.titleEn?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.href.toLowerCase().includes(searchQuery.toLowerCase())
   ) || []
 
   return (
@@ -264,13 +297,22 @@ export default function CategoriesPage() {
           >
             <Icons.back className="h-4 w-4" />
           </Button>
-          <h2 className="text-lg font-semibold flex items-center gap-2">
-            {navigation?.title || '加载中...'}
-          </h2>
+          <div>
+            <div className="text-sm text-muted-foreground mb-1">
+              {navigation?.title} {category?.parentId && navigation?.subCategories?.find(cat => cat.id === category.parentId)?.title && (
+                <>
+                  / {navigation.subCategories.find(cat => cat.id === category.parentId)?.title}
+                </>
+              )}
+            </div>
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              {category?.title || '加载中...'} - 项目管理
+            </h2>
+          </div>
           <div className="relative flex-1 max-w-sm">
             <Icons.search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="搜索分类..."
+              placeholder="搜索项目..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-8"
@@ -291,14 +333,14 @@ export default function CategoriesPage() {
           <DialogTrigger asChild>
             <Button>
               <Icons.add className="mr-2 h-4 w-4" />
-              添加分类
+              添加项目
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>添加分类</DialogTitle>
+              <DialogTitle>添加项目</DialogTitle>
             </DialogHeader>
-            <AddCategoryForm onSubmit={addCategory} />
+            <AddItemForm onSubmit={addItem} />
           </DialogContent>
         </Dialog>
       </div>
@@ -309,27 +351,30 @@ export default function CategoriesPage() {
         onDragEnd={handleDragEnd}
       >
         <SortableContext
-          items={filteredCategories}
+          items={filteredItems}
           strategy={verticalListSortingStrategy}
         >
           <div className="grid gap-2">
-            {filteredCategories.map((category, index) => (
-              <div key={category.id} className="group relative">
+            {filteredItems.map((item, index) => (
+              <div key={item.id} className="group relative">
                 <div
                   className="flex items-center justify-between py-2 px-4 bg-card rounded-lg border shadow-sm transition-colors hover:bg-accent/10"
                 >
                   <div className="flex items-center gap-3">
                     <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
-                      {(() => {
-                        const IconComponent = category.icon ? Icons[category.icon as keyof typeof Icons] : Icons.folder;
-                        return IconComponent ? <IconComponent className="h-4 w-4 text-primary" /> : <Icons.folder className="h-4 w-4 text-primary" />;
-                      })()}
+                      {item.icon ? (
+                        <img src={item.icon} alt={item.title} className="w-4 h-4 object-contain" />
+                      ) : (
+                        <Icons.link className="h-4 w-4 text-primary" />
+                      )}
                     </div>
                     <div>
-                      <div className="font-medium leading-none mb-1">{category.title}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {category.items?.length || 0} 个项目
-                      </div>
+                      <div className="font-medium leading-none mb-1">{item.title}</div>
+                      {item.description && (
+                        <div className="text-xs text-muted-foreground">
+                          {item.description}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center gap-1">
@@ -337,16 +382,16 @@ export default function CategoriesPage() {
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8"
-                      onClick={() => router.push(`/admin/navigation/${params.id}/categories/${category.id}/items`)}
-                      title="管理子项目"
+                      onClick={() => window.open(item.href, '_blank')}
+                      title="访问链接"
                     >
-                      <Icons.list className="h-4 w-4" />
+                      <Icons.globe className="h-4 w-4" />
                     </Button>
                     <Button
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8"
-                      onClick={() => setEditingCategory({ index, category })}
+                      onClick={() => setEditingItem({ index, item })}
                       title="编辑"
                     >
                       <Icons.edit className="h-4 w-4" />
@@ -355,7 +400,7 @@ export default function CategoriesPage() {
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8"
-                      onClick={() => setDeletingCategory({ index, category })}
+                      onClick={() => setDeletingItem({ index, item })}
                       title="删除"
                     >
                       <Icons.trash className="h-4 w-4" />
@@ -368,18 +413,18 @@ export default function CategoriesPage() {
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6"
-                      onClick={() => moveToTop(category.id)}
+                      onClick={() => moveToTop(index)}
                       title="置顶"
                     >
                       <Icons.chevronLeft className="h-4 w-4 -rotate-90" />
                     </Button>
                   )}
-                  {index < (navigation?.subCategories?.length || 0) - 1 && (
+                  {index < (category?.items?.length || 0) - 1 && (
                     <Button
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6"
-                      onClick={() => moveToBottom(category.id)}
+                      onClick={() => moveToBottom(index)}
                       title="置底"
                     >
                       <Icons.chevronRight className="h-4 w-4 rotate-90" />
@@ -388,12 +433,12 @@ export default function CategoriesPage() {
                 </div>
               </div>
             ))}
-            {filteredCategories.length === 0 && (
+            {filteredItems.length === 0 && (
               <div className="text-center py-10 text-muted-foreground">
-                {navigation?.subCategories?.length === 0 ? (
-                  <p>暂无分类</p>
+                {category?.items?.length === 0 ? (
+                  <p>暂无项目</p>
                 ) : (
-                  <p>未找到匹配的分类</p>
+                  <p>未找到匹配的项目</p>
                 )}
               </div>
             )}
@@ -401,39 +446,38 @@ export default function CategoriesPage() {
         </SortableContext>
       </DndContext>
 
-      <Dialog open={!!editingCategory} onOpenChange={(open) => !open && setEditingCategory(null)}>
+      <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>编辑分类</DialogTitle>
+            <DialogTitle>编辑项目</DialogTitle>
           </DialogHeader>
-          <AddCategoryForm
-            defaultValues={{ title: editingCategory?.category.title || '', icon: editingCategory?.category.icon || '' }}
-            onSubmit={editCategory}
+          <AddItemForm
+            defaultValues={editingItem?.item}
+            onSubmit={(values) => editingItem && updateItem(editingItem.index, values)}
           />
         </DialogContent>
       </Dialog>
 
-      <Dialog open={!!deletingCategory} onOpenChange={(open) => !open && setDeletingCategory(null)}>
+      <Dialog open={!!deletingItem} onOpenChange={(open) => !open && setDeletingItem(null)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>删除确认</DialogTitle>
             <DialogDescription>
-              确定要删除分类 "{deletingCategory?.category.title}" 吗？此操作无法撤销，分类下的所有项目也将被删除。
+              确定要删除项目 "{deletingItem?.item.title}" 吗？此操作无法撤销。
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button
               variant="ghost"
-              onClick={() => setDeletingCategory(null)}
+              onClick={() => setDeletingItem(null)}
             >
               取消
             </Button>
             <Button
               variant="destructive"
               onClick={() => {
-                if (deletingCategory) {
-                  deleteCategory(deletingCategory.category.id)
-                  setDeletingCategory(null)
+                if (deletingItem) {
+                  deleteItem(deletingItem.index)
                 }
               }}
             >

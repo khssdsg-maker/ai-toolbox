@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Button } from "@/registry/new-york/ui/button"
 import { Input } from "@/registry/new-york/ui/input"
-import { Textarea } from "@/registry/new-york/ui/textarea"
 import {
   Form,
   FormControl,
@@ -13,34 +12,36 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/registry/new-york/ui/form"
+import { NavigationSubItem } from "@/types/navigation"
 
 const formSchema = z.object({
+  id: z.string().optional(),
   title: z.string().min(2, { message: "标题至少需要2个字符" }),
-  titleEn: z.string().min(2, { message: "英文标题至少需要2个字符" }),
-  description: z.string().min(10, { message: "描述至少需要10个字符" }),
-  descriptionEn: z.string().min(10, { message: "英文描述至少需要10个字符" }),
-  icon: z.string().min(1, { message: "请输入图标" }),
-  href: z.string().min(1, { message: "请输入链接" })
+  href: z.string().url({ message: "请输入有效的URL" }),
+  description: z.string().optional(),
+  icon: z.string().optional(),
 })
 
 interface AddItemFormProps {
-  onSubmit: (values: z.infer<typeof formSchema>) => Promise<void>
-  defaultValues?: Partial<z.infer<typeof formSchema>>
+  onSubmit: (values: NavigationSubItem) => Promise<void>
+  defaultValues?: NavigationSubItem
 }
 
 export function AddItemForm({ onSubmit, defaultValues }: AddItemFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues || {
+      id: String(Date.now()),
       title: "",
-      titleEn: "",
+      href: "",
       description: "",
-      descriptionEn: "",
       icon: "",
-      href: ""
     }
   })
+
+  const isSubmitting = form.formState.isSubmitting
 
   return (
     <Form {...form}>
@@ -52,46 +53,7 @@ export function AddItemForm({ onSubmit, defaultValues }: AddItemFormProps) {
             <FormItem>
               <FormLabel>标题</FormLabel>
               <FormControl>
-                <Input placeholder="输入标题" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="titleEn"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>英文标题</FormLabel>
-              <FormControl>
-                <Input placeholder="输入英文标题" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>描���</FormLabel>
-              <FormControl>
-                <Textarea placeholder="输入描述" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="descriptionEn"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>英文描述</FormLabel>
-              <FormControl>
-                <Textarea placeholder="输入英文描述" {...field} />
+                <Input placeholder="输入项目标题" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -102,9 +64,25 @@ export function AddItemForm({ onSubmit, defaultValues }: AddItemFormProps) {
           name="icon"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>图标</FormLabel>
+              <FormLabel>网站图标</FormLabel>
               <FormControl>
-                <Input placeholder="输入图标URL或类名" {...field} />
+                <Input placeholder="输入网站图标URL" {...field} />
+              </FormControl>
+              <FormDescription>
+                支持 URL 或 Base64 格式的图标
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>描述</FormLabel>
+              <FormControl>
+                <Input placeholder="输入项目描述" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -115,18 +93,18 @@ export function AddItemForm({ onSubmit, defaultValues }: AddItemFormProps) {
           name="href"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>链接</FormLabel>
+              <FormLabel>网站链接</FormLabel>
               <FormControl>
-                <Input placeholder="输入链接地址" {...field} />
+                <Input placeholder="输入项目链接" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <div className="flex justify-end">
-          <Button type="submit">保存</Button>
-        </div>
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+          {isSubmitting ? "提交中..." : defaultValues ? "更新" : "添加"}
+        </Button>
       </form>
     </Form>
   )
-} 
+}
