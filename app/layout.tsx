@@ -1,17 +1,19 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
 import './globals.css'
-import { Inter } from 'next/font/google'
+import localFont from 'next/font/local'
 import { cn } from '@/lib/utils'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeToggle } from '@/components/theme-toggle'
 import type { SiteConfig } from '@/types/site'
 
-const inter = Inter({
-  subsets: ['latin'],
+const fontSans = localFont({
+  src: '/fonts/inter-var-latin.woff2',
+  variable: '--font-sans',
   display: 'swap',
-  variable: '--font-inter',
+  fallback: ['system-ui', 'arial'],
+  adjustFontFallback: false,
 })
 
 async function getSiteInfo(): Promise<SiteConfig> {
@@ -60,7 +62,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="zh-CN" className={fontSans.variable}>
       <body className={cn('min-h-screen bg-background font-sans antialiased')}>
         <ThemeProvider
           attribute="class"
