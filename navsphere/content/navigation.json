@@ -1,13 +1,6 @@
 {
   "navigationItems": [
     {
-      "id": "tools",
-      "title": "开发工具",
-      "icon": "linecons-desktop",
-      "items": [],
-      "subCategories": []
-    },
-    {
       "id": "1733652503025",
       "title": "父分类",
       "icon": "search",
@@ -16,14 +9,25 @@
         {
           "id": "1733652778769",
           "title": "二级分类",
-          "items": []
-        },
-        {
-          "id": "1733652784919",
-          "title": "二级分类2",
-          "items": []
+          "items": [
+            {
+              "id": "1733656130242",
+              "title": "网站1",
+              "href": "https://dh.leti.ltd/",
+              "description": "werewrwer",
+              "icon": "/werwer"
+            }
+          ],
+          "icon": "user"
         }
       ]
+    },
+    {
+      "id": "tools",
+      "title": "开发工具",
+      "icon": "linecons-desktop",
+      "items": [],
+      "subCategories": []
     }
   ]
 }
