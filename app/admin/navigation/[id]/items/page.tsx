@@ -25,7 +25,7 @@ interface EditingItem {
 }
 
 export default function ItemsPage() {
-  const params = useParams()
+  const params = useParams<{ id: string }>()
   const router = useRouter()
   const { toast } = useToast()
   const [navigation, setNavigation] = useState<NavigationItem | null>(null)
@@ -50,7 +50,10 @@ export default function ItemsPage() {
         throw new Error('Navigation ID not found')
       }
 
-      const navigationId = Array.isArray(params.id) ? params.id[0] : params.id
+      const navigationId = params?.id
+      if (!navigationId) {
+        throw new Error('Navigation ID is missing')
+      }
       const response = await fetch(`/api/navigation/${navigationId}`)
       if (!response.ok) throw new Error('Failed to fetch')
       
@@ -73,7 +76,10 @@ export default function ItemsPage() {
         throw new Error('Navigation ID or data not found')
       }
 
-      const navigationId = Array.isArray(params.id) ? params.id[0] : params.id
+      const navigationId = params?.id
+      if (!navigationId) {
+        throw new Error('Navigation ID is missing')
+      }
       const response = await fetch(`/api/navigation/${navigationId}/items`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -103,7 +109,10 @@ export default function ItemsPage() {
         throw new Error('Navigation ID or data not found')
       }
 
-      const navigationId = Array.isArray(params.id) ? params.id[0] : params.id
+      const navigationId = params?.id
+      if (!navigationId) {
+        throw new Error('Navigation ID is missing')
+      }
       const items = [...(navigation.items || [])]
       items[index] = values
 
@@ -144,7 +153,10 @@ export default function ItemsPage() {
         throw new Error('Navigation ID or data not found')
       }
 
-      const navigationId = Array.isArray(params.id) ? params.id[0] : params.id
+      const navigationId = params?.id
+      if (!navigationId) {
+        throw new Error('Navigation ID is missing')
+      }
       const items = [...(navigation.items || [])]
       items.splice(index, 1)
 
@@ -186,7 +198,10 @@ export default function ItemsPage() {
     items.splice(result.destination.index, 0, reorderedItem)
 
     try {
-      const navigationId = Array.isArray(params.id) ? params.id[0] : params.id
+      const navigationId = params?.id
+      if (!navigationId) {
+        throw new Error('Navigation ID is missing')
+      }
       const response = await fetch(`/api/navigation/${navigationId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -219,7 +234,10 @@ export default function ItemsPage() {
       items.unshift(reorderedItem)
 
       try {
-        const navigationId = Array.isArray(params.id) ? params.id[0] : params.id
+        const navigationId = params?.id
+        if (!navigationId) {
+          throw new Error('Navigation ID is missing')
+        }
         const response = await fetch(`/api/navigation/${navigationId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -254,7 +272,10 @@ export default function ItemsPage() {
       items.push(reorderedItem)
 
       try {
-        const navigationId = Array.isArray(params.id) ? params.id[0] : params.id
+        const navigationId = params?.id
+        if (!navigationId) {
+          throw new Error('Navigation ID is missing')
+        }
         const response = await fetch(`/api/navigation/${navigationId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },

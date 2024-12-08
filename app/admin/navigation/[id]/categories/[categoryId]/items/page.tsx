@@ -17,20 +17,7 @@ import {
   DialogFooter,
 } from "@/registry/new-york/ui/dialog"
 import { Input } from "@/registry/new-york/ui/input"
-import {
-  DndContext,
-  DragEndEvent,
-  MouseSensor,
-  TouchSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core'
-import {
-  SortableContext,
-  arrayMove,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable'
+import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd'
 
 interface EditingItem {
   index: number
@@ -46,20 +33,6 @@ export default function CategoryItemsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [editingItem, setEditingItem] = useState<EditingItem | null>(null)
   const [deletingItem, setDeletingItem] = useState<EditingItem | null>(null)
-
-  const sensors = useSensors(
-    useSensor(MouseSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    }),
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 200,
-        tolerance: 5,
-      },
-    })
-  )
 
   useEffect(() => {
     if (!params?.id || !params?.categoryId) {
@@ -226,7 +199,10 @@ export default function CategoryItemsPage() {
   const moveItem = async (fromIndex: number, toIndex: number) => {
     if (!params?.id || !navigation || !category || !category.items) return
 
-    const newItems = arrayMove(category.items, fromIndex, toIndex)
+    const newItems = [...category.items]
+    const [removed] = newItems.splice(fromIndex, 1)
+    newItems.splice(toIndex, 0, removed)
+
     const updatedCategory = {
       ...category,
       items: newItems
@@ -260,17 +236,9 @@ export default function CategoryItemsPage() {
     }
   }
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event
-    
-    if (!over || active.id === over.id || !category?.items) return
-
-    const oldIndex = category.items.findIndex(item => item.id === active.id)
-    const newIndex = category.items.findIndex(item => item.id === over.id)
-    
-    if (oldIndex === -1 || newIndex === -1) return
-    
-    moveItem(oldIndex, newIndex)
+  const onDragEnd = (result: DropResult) => {
+    if (!result.destination) return
+    moveItem(result.source.index, result.destination.index)
   }
 
   const moveToTop = async (index: number) => {
@@ -358,106 +326,111 @@ export default function CategoryItemsPage() {
         </Dialog>
       </div>
 
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext
-          items={filteredItems}
-          strategy={verticalListSortingStrategy}
-        >
-          <div className="grid gap-2">
-            {filteredItems.map((item, index) => (
-              <div key={item.id} className="group relative">
-                <div
-                  className="flex items-center justify-between py-2 px-4 bg-card rounded-lg border shadow-sm transition-colors hover:bg-accent/10"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
-                      {item.icon ? (
-                        <img src={item.icon} alt={item.title} className="w-4 h-4 object-contain" />
-                      ) : (
-                        <Icons.link className="h-4 w-4 text-primary" />
-                      )}
-                    </div>
-                    <div>
-                      <div className="font-medium leading-none mb-1">{item.title}</div>
-                      {item.description && (
-                        <div className="text-xs text-muted-foreground">
-                          {item.description}
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="droppable">
+          {(provided) => (
+            <div {...provided.droppableProps} ref={provided.innerRef} className="grid gap-2">
+              {filteredItems.map((item, index) => (
+                <Draggable key={item.id} draggableId={item.id} index={index}>
+                  {(provided) => (
+                    <div
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      ref={provided.innerRef}
+                      className="group relative"
+                    >
+                      <div
+                        className="flex items-center justify-between py-2 px-4 bg-card rounded-lg border shadow-sm transition-colors hover:bg-accent/10"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
+                            {item.icon ? (
+                              <img src={item.icon} alt={item.title} className="w-4 h-4 object-contain" />
+                            ) : (
+                              <Icons.link className="h-4 w-4 text-primary" />
+                            )}
+                          </div>
+                          <div>
+                            <div className="font-medium leading-none mb-1">{item.title}</div>
+                            {item.description && (
+                              <div className="text-xs text-muted-foreground">
+                                {item.description}
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      )}
+                        <div className="flex items-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => window.open(item.href, '_blank')}
+                            title="访问链接"
+                          >
+                            <Icons.globe className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => setEditingItem({ index, item })}
+                            title="编辑"
+                          >
+                            <Icons.pencil className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => setDeletingItem({ index, item })}
+                            title="删除"
+                          >
+                            <Icons.trash className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="absolute right-0 top-1/2 -translate-y-1/2 pr-2 hidden group-hover:flex items-center gap-1">
+                        {index > 0 && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            onClick={() => moveToTop(index)}
+                            title="置顶"
+                          >
+                            <Icons.chevronLeft className="h-4 w-4 -rotate-90" />
+                          </Button>
+                        )}
+                        {index < (category?.items?.length || 0) - 1 && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            onClick={() => moveToBottom(index)}
+                            title="置底"
+                          >
+                            <Icons.chevronRight className="h-4 w-4 rotate-90" />
+                          </Button>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => window.open(item.href, '_blank')}
-                      title="访问链接"
-                    >
-                      <Icons.globe className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => setEditingItem({ index, item })}
-                      title="编辑"
-                    >
-                      <Icons.pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => setDeletingItem({ index, item })}
-                      title="删除"
-                    >
-                      <Icons.trash className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 pr-2 hidden group-hover:flex items-center gap-1">
-                  {index > 0 && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => moveToTop(index)}
-                      title="置顶"
-                    >
-                      <Icons.chevronLeft className="h-4 w-4 -rotate-90" />
-                    </Button>
                   )}
-                  {index < (category?.items?.length || 0) - 1 && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => moveToBottom(index)}
-                      title="置底"
-                    >
-                      <Icons.chevronRight className="h-4 w-4 rotate-90" />
-                    </Button>
+                </Draggable>
+              ))}
+              {filteredItems.length === 0 && (
+                <div className="text-center py-10 text-muted-foreground">
+                  {category?.items?.length === 0 ? (
+                    <p>暂无项目</p>
+                  ) : (
+                    <p>未找到匹配的项目</p>
                   )}
                 </div>
-              </div>
-            ))}
-            {filteredItems.length === 0 && (
-              <div className="text-center py-10 text-muted-foreground">
-                {category?.items?.length === 0 ? (
-                  <p>暂无项目</p>
-                ) : (
-                  <p>未找到匹配的项目</p>
-                )}
-              </div>
-            )}
-          </div>
-        </SortableContext>
-      </DndContext>
+              )}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
 
       <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
         <DialogContent>

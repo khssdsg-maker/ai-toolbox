@@ -15,20 +15,7 @@ import {
 import { NavigationCard } from './components/NavigationCard'
 import { AddCategoryForm } from './components/AddCategoryForm'
 import { Input } from "@/registry/new-york/ui/input"
-import {
-  DndContext,
-  DragEndEvent,
-  MouseSensor,
-  TouchSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core'
-import {
-  SortableContext,
-  arrayMove,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable'
+import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd'
 
 interface AddNavigationValues {
   title: string
@@ -40,20 +27,6 @@ export default function NavigationManagement() {
   const [searchQuery, setSearchQuery] = useState("")
   const { toast } = useToast()
   
-  const sensors = useSensors(
-    useSensor(MouseSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    }),
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 200,
-        tolerance: 5,
-      },
-    })
-  )
-
   useEffect(() => {
     fetchItems()
   }, [])
@@ -108,7 +81,9 @@ export default function NavigationManagement() {
   }
 
   const moveItem = async (fromIndex: number, toIndex: number) => {
-    const newItems = arrayMove(items, fromIndex, toIndex)
+    const newItems = [...items]
+    const [removed] = newItems.splice(fromIndex, 1)
+    newItems.splice(toIndex, 0, removed)
     setItems(newItems)
 
     try {
@@ -132,15 +107,12 @@ export default function NavigationManagement() {
     }
   }
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event
+  const handleDragEnd = (result: DropResult) => {
+    const { destination, source } = result
     
-    if (!over || active.id === over.id) return
+    if (!destination || destination.index === source.index) return
 
-    const oldIndex = items.findIndex(item => item.id === active.id)
-    const newIndex = items.findIndex(item => item.id === over.id)
-    
-    moveItem(oldIndex, newIndex)
+    moveItem(source.index, destination.index)
   }
 
   const moveToTop = async (id: string) => {
@@ -200,60 +172,65 @@ export default function NavigationManagement() {
         </Dialog>
       </div>
 
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext
-          items={filteredItems}
-          strategy={verticalListSortingStrategy}
-        >
-          <div className="grid gap-2">
-            {filteredItems.map((item, index) => (
-              <div key={item.id} className="group relative">
-                <NavigationCard
-                  item={item}
-                  onUpdate={fetchItems}
-                />
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 pr-2 hidden group-hover:flex items-center gap-1">
-                  {index > 0 && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => moveToTop(item.id)}
-                      title="置顶"
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="droppable-1">
+          {(provided) => (
+            <div {...provided.droppableProps} ref={provided.innerRef} className="grid gap-2">
+              {filteredItems.map((item, index) => (
+                <Draggable key={item.id} draggableId={item.id} index={index}>
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      className="group relative"
                     >
-                      <Icons.chevronLeft className="h-4 w-4 -rotate-90" />
-                    </Button>
+                      <NavigationCard
+                        item={item}
+                        onUpdate={fetchItems}
+                      />
+                      <div className="absolute right-0 top-1/2 -translate-y-1/2 pr-2 hidden group-hover:flex items-center gap-1">
+                        {index > 0 && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            onClick={() => moveToTop(item.id)}
+                            title="置顶"
+                          >
+                            <Icons.chevronLeft className="h-4 w-4 -rotate-90" />
+                          </Button>
+                        )}
+                        {index < items.length - 1 && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            onClick={() => moveToBottom(item.id)}
+                            title="置底"
+                          >
+                            <Icons.chevronRight className="h-4 w-4 rotate-90" />
+                          </Button>
+                        )}
+                      </div>
+                    </div>
                   )}
-                  {index < items.length - 1 && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => moveToBottom(item.id)}
-                      title="置底"
-                    >
-                      <Icons.chevronRight className="h-4 w-4 rotate-90" />
-                    </Button>
+                </Draggable>
+              ))}
+              {filteredItems.length === 0 && (
+                <div className="text-center py-10 text-muted-foreground">
+                  {items.length === 0 ? (
+                    <p>暂无导航项目</p>
+                  ) : (
+                    <p>未找到匹配的导航项目</p>
                   )}
                 </div>
-              </div>
-            ))}
-            {filteredItems.length === 0 && (
-              <div className="text-center py-10 text-muted-foreground">
-                {items.length === 0 ? (
-                  <p>暂无导航项目</p>
-                ) : (
-                  <p>未找到匹配的导航项目</p>
-                )}
-              </div>
-            )}
-          </div>
-        </SortableContext>
-      </DndContext>
+              )}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
     </div>
   )
 }

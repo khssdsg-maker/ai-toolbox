@@ -17,20 +17,7 @@ import {
 } from "@/registry/new-york/ui/dialog"
 import { AddCategoryForm } from '../../components/AddCategoryForm'
 import { Input } from "@/registry/new-york/ui/input"
-import {
-  DndContext,
-  DragEndEvent,
-  MouseSensor,
-  TouchSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core'
-import {
-  SortableContext,
-  arrayMove,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable'
+import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd'
 import { Params } from 'next/dist/shared/lib/router/utils/route-matcher'
 
 export default function CategoriesPage() {
@@ -41,20 +28,6 @@ export default function CategoriesPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [editingCategory, setEditingCategory] = useState<{ index: number; category: NavigationCategory } | null>(null)
   const [deletingCategory, setDeletingCategory] = useState<{ index: number; category: NavigationCategory } | null>(null)
-
-  const sensors = useSensors(
-    useSensor(MouseSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    }),
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 200,
-        tolerance: 5,
-      },
-    })
-  )
 
   useEffect(() => {
     if (!params?.id) {
@@ -216,7 +189,10 @@ export default function CategoriesPage() {
 
     if (!navigation?.subCategories) return
 
-    const newCategories = arrayMove(navigation.subCategories, fromIndex, toIndex)
+    const newCategories = [...navigation.subCategories]
+    const [removed] = newCategories.splice(fromIndex, 1)
+    newCategories.splice(toIndex, 0, removed)
+
     const updatedNavigation = {
       ...navigation,
       subCategories: newCategories
@@ -242,15 +218,12 @@ export default function CategoriesPage() {
     }
   }
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event
+  const handleDragEnd = (result: DropResult) => {
+    const { destination, source } = result
     
-    if (!over || active.id === over.id || !navigation?.subCategories) return
+    if (!destination || destination.index === source.index || !navigation?.subCategories) return
 
-    const oldIndex = navigation.subCategories.findIndex(cat => cat.id === active.id)
-    const newIndex = navigation.subCategories.findIndex(cat => cat.id === over.id)
-    
-    moveCategory(oldIndex, newIndex)
+    moveCategory(source.index, destination.index)
   }
 
   const moveToTop = async (id: string) => {
@@ -361,106 +334,111 @@ export default function CategoriesPage() {
         </Dialog>
       </div>
 
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext
-          items={filteredCategories}
-          strategy={verticalListSortingStrategy}
-        >
-          <div className="grid gap-2">
-            {filteredCategories.map((category, index) => (
-              <div key={category.id} className="group relative">
-                <div
-                  className="flex items-center justify-between py-2 px-4 bg-card rounded-lg border shadow-sm transition-colors hover:bg-accent/10"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
-                      {(() => {
-                        const IconComponent = category.icon ? Icons[category.icon as keyof typeof Icons] : Icons.folder;
-                        return IconComponent ? <IconComponent className="h-4 w-4 text-primary" /> : <Icons.folder className="h-4 w-4 text-primary" />;
-                      })()}
-                    </div>
-                    <div>
-                      <div className="font-medium leading-none mb-1">{category.title}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {category.items?.length || 0} 个项目
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="droppable">
+          {(provided) => (
+            <div {...provided.droppableProps} ref={provided.innerRef} className="grid gap-2">
+              {filteredCategories.map((category, index) => (
+                <Draggable key={category.id} draggableId={category.id} index={index}>
+                  {(provided) => (
+                    <div
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      ref={provided.innerRef}
+                      className="group relative"
+                    >
+                      <div
+                        className="flex items-center justify-between py-2 px-4 bg-card rounded-lg border shadow-sm transition-colors hover:bg-accent/10"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
+                            {(() => {
+                              const IconComponent = category.icon ? Icons[category.icon as keyof typeof Icons] : Icons.folder;
+                              return IconComponent ? <IconComponent className="h-4 w-4 text-primary" /> : <Icons.folder className="h-4 w-4 text-primary" />;
+                            })()}
+                          </div>
+                          <div>
+                            <div className="font-medium leading-none mb-1">{category.title}</div>
+                            <div className="text-xs text-muted-foreground">
+                              {category.items?.length || 0} 个项目
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => {
+                              if (!params?.id) return
+                              router.push(`/admin/navigation/${params.id}/categories/${category.id}/items`)
+                            }}
+                            title="管理子项目"
+                          >
+                            <Icons.list className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => setEditingCategory({ index, category })}
+                            title="编辑"
+                          >
+                            <Icons.pencil className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => setDeletingCategory({ index, category })}
+                            title="删除"
+                          >
+                            <Icons.trash className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="absolute right-0 top-1/2 -translate-y-1/2 pr-2 hidden group-hover:flex items-center gap-1">
+                        {index > 0 && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            onClick={() => moveToTop(category.id)}
+                            title="置顶"
+                          >
+                            <Icons.chevronLeft className="h-4 w-4 -rotate-90" />
+                          </Button>
+                        )}
+                        {index < (navigation?.subCategories?.length || 0) - 1 && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            onClick={() => moveToBottom(category.id)}
+                            title="置底"
+                          >
+                            <Icons.chevronRight className="h-4 w-4 rotate-90" />
+                          </Button>
+                        )}
                       </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => {
-                        if (!params?.id) return
-                        router.push(`/admin/navigation/${params.id}/categories/${category.id}/items`)
-                      }}
-                      title="管理子项目"
-                    >
-                      <Icons.list className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => setEditingCategory({ index, category })}
-                      title="编辑"
-                    >
-                      <Icons.pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => setDeletingCategory({ index, category })}
-                      title="删除"
-                    >
-                      <Icons.trash className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 pr-2 hidden group-hover:flex items-center gap-1">
-                  {index > 0 && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => moveToTop(category.id)}
-                      title="置顶"
-                    >
-                      <Icons.chevronLeft className="h-4 w-4 -rotate-90" />
-                    </Button>
                   )}
-                  {index < (navigation?.subCategories?.length || 0) - 1 && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6"
-                      onClick={() => moveToBottom(category.id)}
-                      title="置底"
-                    >
-                      <Icons.chevronRight className="h-4 w-4 rotate-90" />
-                    </Button>
+                </Draggable>
+              ))}
+              {filteredCategories.length === 0 && (
+                <div className="text-center py-10 text-muted-foreground">
+                  {navigation?.subCategories?.length === 0 ? (
+                    <p>暂无分类</p>
+                  ) : (
+                    <p>未找到匹配的分类</p>
                   )}
                 </div>
-              </div>
-            ))}
-            {filteredCategories.length === 0 && (
-              <div className="text-center py-10 text-muted-foreground">
-                {navigation?.subCategories?.length === 0 ? (
-                  <p>暂无分类</p>
-                ) : (
-                  <p>未找到匹配的分类</p>
-                )}
-              </div>
-            )}
-          </div>
-        </SortableContext>
-      </DndContext>
+              )}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
 
       <Dialog open={!!editingCategory} onOpenChange={(open) => !open && setEditingCategory(null)}>
         <DialogContent>
