@@ -2,7 +2,7 @@
 
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { NavigationItem } from './NavigationItem'
-import type { NavigationItem as NavigationItemType } from '@/types/navigation'
+import type { NavigationItem as NavigationItemType, NavigationSubItem } from '@/types/navigation'
 
 interface NavigationSidebarProps {
   navigationItems: NavigationItemType[]

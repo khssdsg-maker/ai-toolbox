@@ -300,7 +300,7 @@ export default function CategoryItemsPage() {
             className="h-8 w-8"
             title="返回"
           >
-            <Icons.back className="h-4 w-4" />
+            <Icons.arrowLeft className="h-4 w-4" />
           </Button>
           <div>
             <div className="text-sm text-muted-foreground mb-1">
@@ -329,7 +329,7 @@ export default function CategoryItemsPage() {
                 onClick={() => setSearchQuery("")}
                 className="absolute right-1 top-1 h-7 w-7 p-0"
               >
-                <Icons.close className="h-4 w-4" />
+                <Icons.x className="h-4 w-4" />
               </Button>
             )}
           </div>
@@ -337,7 +337,7 @@ export default function CategoryItemsPage() {
         <Dialog>
           <DialogTrigger asChild>
             <Button>
-              <Icons.add className="mr-2 h-4 w-4" />
+              <Icons.plus className="mr-2 h-4 w-4" />
               添加项目
             </Button>
           </DialogTrigger>
@@ -407,7 +407,7 @@ export default function CategoryItemsPage() {
                       onClick={() => setEditingItem({ index, item })}
                       title="编辑"
                     >
-                      <Icons.edit className="h-4 w-4" />
+                      <Icons.pencil className="h-4 w-4" />
                     </Button>
                     <Button
                       variant="ghost"
@@ -466,7 +466,12 @@ export default function CategoryItemsPage() {
           </DialogHeader>
           <AddItemForm
             defaultValues={editingItem?.item}
-            onSubmit={(values) => editingItem && updateItem(editingItem.index, values)}
+            onSubmit={(values) => {
+              if (editingItem) {
+                return updateItem(editingItem.index, values)
+              }
+              return Promise.resolve()
+            }}
             onCancel={() => setEditingItem(null)}
           />
         </DialogContent>

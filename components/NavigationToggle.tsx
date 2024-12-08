@@ -3,7 +3,7 @@
 import { useState } from 'react'
 
 interface NavigationToggleProps {
-  icon: string
+  icon?: string
   title: string
   children: React.ReactNode
 }
@@ -18,7 +18,7 @@ export function NavigationToggle({ icon, title, children }: NavigationToggleProp
         className="flex items-center w-full"
       >
         <div className="menu-title">
-          <i className={icon}></i>
+          {icon && <i className={icon}></i>}
           <span>{title}</span>
         </div>
         <i className={`fas fa-angle-${isExpanded ? 'down' : 'right'} menu-arrow`}></i>

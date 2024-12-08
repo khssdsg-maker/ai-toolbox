@@ -34,7 +34,12 @@ export default function SubCategoryItemsPage() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch(`/api/navigation/${params.id}`)
+      if (!params?.id) {
+        throw new Error('Navigation ID not found')
+      }
+
+      const navigationId = Array.isArray(params.id) ? params.id[0] : params.id
+      const response = await fetch(`/api/navigation/${navigationId}`)
       if (!response.ok) throw new Error('Failed to fetch')
       const data = await response.json()
       setCategory(data)

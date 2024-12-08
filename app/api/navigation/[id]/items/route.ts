@@ -40,7 +40,7 @@ export async function POST(
       if (item.id === params.id) {
         return {
           ...item,
-          items: [...item.items, newItem]
+          items: [...(item.items || []), newItem]
         }
       }
       return item
@@ -77,7 +77,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Navigation not found' }, { status: 404 })
     }
 
-    const updatedItems = [...navigation.items]
+    const updatedItems = [...(navigation.items || [])]
     updatedItems[index] = item
 
     const updatedNavigations = data.navigationItems.map(nav => {
@@ -121,7 +121,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Navigation not found' }, { status: 404 })
     }
 
-    const updatedItems = navigation.items.filter((_, i) => i !== index)
+    const updatedItems = (navigation.items || []).filter((_, i) => i !== index)
     const updatedNavigations = data.navigationItems.map(nav => {
       if (nav.id === params.id) {
         return {

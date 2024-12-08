@@ -180,14 +180,14 @@ export default function NavigationManagement() {
               onClick={() => setSearchQuery("")}
               className="absolute right-1 top-1 h-7 w-7 p-0"
             >
-              <Icons.close className="h-4 w-4" />
+              <Icons.x className="h-4 w-4" />
             </Button>
           )}
         </div>
         <Dialog>
           <DialogTrigger asChild>
             <Button>
-              <Icons.add className="mr-2 h-4 w-4" />
+              <Icons.plus className="mr-2 h-4 w-4" />
               添加导航
             </Button>
           </DialogTrigger>

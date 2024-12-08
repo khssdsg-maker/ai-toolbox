@@ -73,14 +73,20 @@ export default function ItemsPage() {
   const fetchNavigation = async () => {
     setIsLoading(true)
     try {
-      const navigationResponse = await fetch(`/api/navigation/${params!.id}`)
-      if (!navigationResponse.ok) throw new Error('Failed to fetch navigation')
-      const navigationData = await navigationResponse.json()
-      setNavigation(navigationData)
+      if (!params?.id) {
+        throw new Error('Navigation ID not found')
+      }
+
+      const navigationId = Array.isArray(params.id) ? params.id[0] : params.id
+      const response = await fetch(`/api/navigation/${navigationId}`)
+      if (!response.ok) throw new Error('Failed to fetch')
+      
+      const data = await response.json()
+      setNavigation(data)
     } catch (error) {
       toast({
         title: "错误",
-        description: "加载数据失败",
+        description: "获取数据失败",
         variant: "destructive"
       })
     } finally {
@@ -90,7 +96,12 @@ export default function ItemsPage() {
 
   const addItem = async (values: NavigationSubItem) => {
     try {
-      const response = await fetch(`/api/navigation/${params!.id}/items`, {
+      if (!params?.id || !navigation) {
+        throw new Error('Navigation ID or data not found')
+      }
+
+      const navigationId = Array.isArray(params.id) ? params.id[0] : params.id
+      const response = await fetch(`/api/navigation/${navigationId}/items`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values)
@@ -115,27 +126,40 @@ export default function ItemsPage() {
 
   const updateItem = async (index: number, values: NavigationSubItem) => {
     try {
-      const response = await fetch(`/api/navigation/${params!.id}/items`, {
+      if (!params?.id || !navigation) {
+        throw new Error('Navigation ID or data not found')
+      }
+
+      const navigationId = Array.isArray(params.id) ? params.id[0] : params.id
+      const items = [...(navigation.items || [])]
+      items[index] = values
+
+      const updatedNavigation: NavigationItem = {
+        id: navigation.id || navigationId,
+        title: navigation.title || '',
+        description: navigation.description || '',
+        items,
+        subCategories: navigation.subCategories || []
+      }
+
+      const response = await fetch(`/api/navigation/${navigationId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          index,
-          item: values
-        })
+        body: JSON.stringify(updatedNavigation)
       })
 
-      if (!response.ok) throw new Error('Failed to update')
+      if (!response.ok) throw new Error('Failed to save')
 
-      await fetchNavigation()
-      setEditingItem(null)
+      setNavigation(updatedNavigation)
       toast({
         title: "成功",
-        description: "更新成功"
+        description: "保存成功"
       })
+      setEditingItem(null)
     } catch (error) {
       toast({
         title: "错误",
-        description: "更新失败",
+        description: "保存失败",
         variant: "destructive"
       })
     }
@@ -143,16 +167,31 @@ export default function ItemsPage() {
 
   const deleteItem = async (index: number) => {
     try {
-      const response = await fetch(`/api/navigation/${params!.id}/items`, {
-        method: 'DELETE',
+      if (!params?.id || !navigation) {
+        throw new Error('Navigation ID or data not found')
+      }
+
+      const navigationId = Array.isArray(params.id) ? params.id[0] : params.id
+      const items = [...(navigation.items || [])]
+      items.splice(index, 1)
+
+      const updatedNavigation: NavigationItem = {
+        id: navigation.id || navigationId,
+        title: navigation.title || '',
+        description: navigation.description || '',
+        items,
+        subCategories: navigation.subCategories || []
+      }
+
+      const response = await fetch(`/api/navigation/${navigationId}`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ index })
+        body: JSON.stringify(updatedNavigation)
       })
 
       if (!response.ok) throw new Error('Failed to delete')
 
-      await fetchNavigation()
-      setDeletingItem(null)
+      setNavigation(updatedNavigation)
       toast({
         title: "成功",
         description: "删除成功"
@@ -170,7 +209,12 @@ export default function ItemsPage() {
     if (!navigation || !navigation.items) return
 
     try {
-      const response = await fetch(`/api/navigation/${params!.id}/items`, {
+      if (!params?.id) {
+        throw new Error('Navigation ID not found')
+      }
+
+      const navigationId = Array.isArray(params.id) ? params.id[0] : params.id
+      const response = await fetch(`/api/navigation/${navigationId}/items`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -185,7 +229,7 @@ export default function ItemsPage() {
     } catch (error) {
       toast({
         title: "错误",
-        description: "保存���序失败",
+        description: "保存顺序失败",
         variant: "destructive"
       })
     }
@@ -239,7 +283,7 @@ export default function ItemsPage() {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button>
-              <Icons.add className="mr-2 h-4 w-4" />
+              <Icons.plus className="mr-2 h-4 w-4" />
               添加项目
             </Button>
           </DialogTrigger>
@@ -257,7 +301,7 @@ export default function ItemsPage() {
 
       {isLoading ? (
         <div className="flex items-center justify-center h-32">
-          <Icons.spinner className="h-6 w-6 animate-spin" />
+          <Icons.loader2 className="h-6 w-6 animate-spin" />
         </div>
       ) : navigation?.items && navigation.items.length > 0 ? (
         <DndContext
@@ -309,7 +353,7 @@ export default function ItemsPage() {
                         onClick={() => setEditingItem({ index, item })}
                         title="编辑"
                       >
-                        <Icons.edit className="h-4 w-4" />
+                        <Icons.pencil className="h-4 w-4" />
                       </Button>
                       <Button
                         variant="ghost"
@@ -372,7 +416,12 @@ export default function ItemsPage() {
           </DialogHeader>
           <AddItemForm
             defaultValues={editingItem?.item}
-            onSubmit={(values) => editingItem && updateItem(editingItem.index, values)}
+            onSubmit={async (values) => {
+              if (editingItem) {
+                await updateItem(editingItem.index, values)
+              }
+            }}
+            onCancel={() => setEditingItem(null)}
           />
         </DialogContent>
       </Dialog>

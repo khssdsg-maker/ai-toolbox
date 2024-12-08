@@ -2,18 +2,16 @@
 
 import { NavigationToggle } from './NavigationToggle'
 import { NavigationLink } from './NavigationLink'
+import type { NavigationSubItem } from '@/types/navigation'
 
 interface NavigationItemProps {
   id: string
   title: string
-  icon: string
-  items?: Array<{
-    title: string
-    href: string
-  }>
+  icon?: string
+  items?: NavigationSubItem[]
 }
 
-export function NavigationItem({ id, title, icon, items }: NavigationItemProps) {
+export function NavigationItem({ id, title, icon, items = [] }: NavigationItemProps) {
   if (!items?.length) {
     return (
       <li>

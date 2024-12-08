@@ -47,7 +47,16 @@ export function AddItemForm({ onSubmit, onCancel, defaultValues }: AddItemFormPr
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(async (data) => {
+        const values: NavigationSubItem = {
+          id: data.id || await crypto.randomUUID(),
+          title: data.title,
+          href: data.href,
+          description: data.description,
+          icon: data.icon
+        }
+        onSubmit(values)
+      })} className="space-y-4">
         <FormField
           control={form.control}
           name="title"
@@ -114,7 +123,7 @@ export function AddItemForm({ onSubmit, onCancel, defaultValues }: AddItemFormPr
           </Button>
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              <Icons.loader2 className="mr-2 h-4 w-4 animate-spin" />
             )}
             保存
           </Button>

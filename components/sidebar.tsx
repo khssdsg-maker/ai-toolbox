@@ -68,7 +68,7 @@ export function Sidebar({ className, navigationData, siteInfo }: SidebarProps) {
                           className="w-full justify-start"
                           onClick={() => scrollToSection(subCategory.id)}
                         >
-                          <Icons.corner className="mr-2 h-3 w-3" />
+                          <Icons.cornerDownRight className="mr-2 h-3 w-3" />
                           {subCategory.title}
                         </Button>
                       ))}
@@ -79,14 +79,14 @@ export function Sidebar({ className, navigationData, siteInfo }: SidebarProps) {
             </div>
           </div>
           
-          {pathname.startsWith("/admin") && (
+          {pathname?.startsWith("/admin") && (
             <div className="py-2">
               <h2 className="mb-2 px-2 text-lg font-semibold tracking-tight">
                 管理
               </h2>
               <div className="space-y-1">
                 <Button
-                  variant={pathname.startsWith("/admin") ? "secondary" : "ghost"}
+                  variant={pathname?.startsWith("/admin") ? "secondary" : "ghost"}
                   className="w-full justify-start"
                   asChild
                 >

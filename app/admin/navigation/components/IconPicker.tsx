@@ -27,65 +27,64 @@ const iconGroups = [
     icons: [
       { name: 'home', icon: Icons.home },
       { name: 'folder', icon: Icons.folder },
-      { name: 'file', icon: Icons.file },
+      { name: 'fileText', icon: Icons.fileText },
       { name: 'list', icon: Icons.list },
       { name: 'search', icon: Icons.search },
-      { name: 'add', icon: Icons.add },
-      { name: 'save', icon: Icons.save },
-      { name: 'trash', icon: Icons.trash },
-      { name: 'edit', icon: Icons.edit },
+      { name: 'plus', icon: Icons.plus },
+      { name: 'bookmark', icon: Icons.bookmark },
+      { name: 'link', icon: Icons.link }
     ]
   },
   {
     label: '导航',
     icons: [
       { name: 'menu', icon: Icons.menu },
-      { name: 'back', icon: Icons.back },
+      { name: 'arrowLeft', icon: Icons.arrowLeft },
       { name: 'chevronLeft', icon: Icons.chevronLeft },
       { name: 'chevronRight', icon: Icons.chevronRight },
-      { name: 'more', icon: Icons.more },
-      { name: 'panelLeft', icon: Icons.panelLeft },
-      { name: 'panelRight', icon: Icons.panelRight },
+      { name: 'moreVertical', icon: Icons.moreVertical },
+      { name: 'navigation', icon: Icons.navigation },
+      { name: 'compass', icon: Icons.compass },
+      { name: 'map', icon: Icons.map }
     ]
   },
   {
     label: '状态',
     icons: [
       { name: 'check', icon: Icons.check },
-      { name: 'close', icon: Icons.close },
-      { name: 'spinner', icon: Icons.spinner },
-      { name: 'empty', icon: Icons.empty },
+      { name: 'x', icon: Icons.x },
+      { name: 'loader2', icon: Icons.loader2 },
+      { name: 'plus', icon: Icons.plus }
     ]
   },
   {
     label: '系统',
     icons: [
-      { name: 'dashboard', icon: Icons.dashboard },
-      { name: 'settings', icon: Icons.settings },
+      { name: 'layoutDashboard', icon: Icons.layoutDashboard },
       { name: 'database', icon: Icons.database },
-      { name: 'upload', icon: Icons.upload },
-      { name: 'scan', icon: Icons.scan },
+      { name: 'command', icon: Icons.command },
+      { name: 'monitor', icon: Icons.monitor }
     ]
   },
   {
     label: '用户',
     icons: [
       { name: 'user', icon: Icons.user },
-      { name: 'users', icon: Icons.users },
-      { name: 'logout', icon: Icons.logout },
-      { name: 'gitHub', icon: Icons.gitHub },
+      { name: 'logOut', icon: Icons.logOut },
+      { name: 'github', icon: Icons.github },
+      { name: 'mail', icon: Icons.mail }
     ]
   },
   {
     label: '内容',
     icons: [
-      { name: 'book', icon: Icons.book },
+      { name: 'bookOpen', icon: Icons.bookOpen },
       { name: 'bookmark', icon: Icons.bookmark },
       { name: 'library', icon: Icons.library },
-      { name: 'news', icon: Icons.news },
+      { name: 'newspaper', icon: Icons.newspaper },
       { name: 'mail', icon: Icons.mail },
-      { name: 'message', icon: Icons.message },
-      { name: 'calendar', icon: Icons.calendar },
+      { name: 'messageSquare', icon: Icons.messageSquare },
+      { name: 'calendar', icon: Icons.calendar }
     ]
   }
 ]

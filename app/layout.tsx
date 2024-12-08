@@ -7,23 +7,12 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from "@/components/ui/toaster"
 import type { SiteConfig } from '@/types/site'
 
-const inter = localFont({
-  src: [
-    {
-      path: '../public/fonts/Inter-roman.var.woff2',
-      style: 'normal',
-      weight: '100 900',
-    },
-    {
-      path: '../public/fonts/Inter-italic.var.woff2',
-      style: 'italic',
-      weight: '100 900',
-    }
-  ],
-  variable: '--font-inter',
+const fontSans = localFont({
+  src: './fonts/inter-var-latin.woff2',
+  variable: '--font-sans',
   display: 'swap',
   fallback: ['system-ui', 'arial'],
-  adjustFontFallback: true,
+  adjustFontFallback: false,
 })
 
 async function getSiteInfo(): Promise<SiteConfig> {
@@ -72,14 +61,24 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh-CN" className={inter.variable}>
+    <html lang="zh-CN" className={fontSans.variable} suppressHydrationWarning>
       <head>
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
         />
       </head>
-      <body>{children}</body>
+      <body className={cn('min-h-screen bg-background font-sans antialiased')}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Toaster />
+        </ThemeProvider>
+      </body>
     </html>
   )
 }

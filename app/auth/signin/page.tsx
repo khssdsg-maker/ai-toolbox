@@ -16,7 +16,7 @@ import {
 
 export default function SignInPage() {
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl')
+  const callbackUrl = searchParams?.get('callbackUrl')
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSignIn = async () => {
@@ -71,7 +71,7 @@ export default function SignInPage() {
                   </>
                 ) : (
                   <>
-                    <Icons.gitHub className="mr-2 h-4 w-4" />
+                    <Icons.github className="mr-2 h-4 w-4" />
                     GitHub 账号登录
                   </>
                 )}

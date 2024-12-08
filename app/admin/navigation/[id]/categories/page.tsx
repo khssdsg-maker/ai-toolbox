@@ -31,9 +31,10 @@ import {
   arrayMove,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
+import { Params } from 'next/dist/shared/lib/router/utils/route-matcher'
 
 export default function CategoriesPage() {
-  const params = useParams()
+  const params = useParams<{ id: string }>()
   const router = useRouter()
   const { toast } = useToast()
   const [navigation, setNavigation] = useState<NavigationItem | null>(null)
@@ -56,10 +57,18 @@ export default function CategoriesPage() {
   )
 
   useEffect(() => {
+    if (!params?.id) {
+      router.push('/admin/navigation')
+      return
+    }
     fetchNavigation()
-  }, [params.id])
+  }, [params?.id])
 
   const fetchNavigation = async () => {
+    if (!params?.id) {
+      throw new Error('Navigation ID not found')
+    }
+
     try {
       const response = await fetch(`/api/navigation/${params.id}`)
       if (!response.ok) throw new Error('Failed to fetch')
@@ -75,18 +84,24 @@ export default function CategoriesPage() {
   }
 
   const addCategory = async (values: { title: string, icon: string }) => {
+    if (!params?.id) {
+      throw new Error('Navigation ID not found')
+    }
+
     if (!navigation) return
 
     try {
       const newCategory: NavigationCategory = {
-        id: Date.now().toString(),
+        id: crypto.randomUUID(),
         title: values.title,
         icon: values.icon,
         items: []
       }
 
       const updatedNavigation: NavigationItem = {
-        ...navigation,
+        id: navigation.id || params.id,
+        title: navigation.title || '',
+        description: navigation.description || '',
         subCategories: [...(navigation.subCategories || []), newCategory]
       }
 
@@ -96,14 +111,9 @@ export default function CategoriesPage() {
         body: JSON.stringify(updatedNavigation)
       })
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to save')
-      }
+      if (!response.ok) throw new Error('Failed to save')
 
-      const updatedData = await response.json()
-      setNavigation(updatedData)
-      
+      await fetchNavigation()
       toast({
         title: "成功",
         description: "添加成功"
@@ -119,6 +129,10 @@ export default function CategoriesPage() {
   }
 
   const editCategory = async (values: { title: string, icon: string }) => {
+    if (!params?.id) {
+      throw new Error('Navigation ID not found')
+    }
+
     if (!navigation || !editingCategory) return
 
     try {
@@ -159,11 +173,17 @@ export default function CategoriesPage() {
   }
 
   const deleteCategory = async (categoryId: string) => {
+    if (!params?.id) {
+      throw new Error('Navigation ID not found')
+    }
+
     if (!navigation) return
 
     try {
       const updatedNavigation: NavigationItem = {
-        ...navigation,
+        id: navigation.id || params.id,
+        title: navigation.title || '',
+        description: navigation.description || '',
         subCategories: navigation.subCategories?.filter(cat => cat.id !== categoryId) || []
       }
 
@@ -175,9 +195,7 @@ export default function CategoriesPage() {
 
       if (!response.ok) throw new Error('Failed to delete')
 
-      const updatedData = await response.json()
-      setNavigation(updatedData)
-      
+      await fetchNavigation()
       toast({
         title: "成功",
         description: "删除成功"
@@ -192,6 +210,10 @@ export default function CategoriesPage() {
   }
 
   const moveCategory = async (fromIndex: number, toIndex: number) => {
+    if (!params?.id) {
+      throw new Error('Navigation ID not found')
+    }
+
     if (!navigation?.subCategories) return
 
     const newCategories = arrayMove(navigation.subCategories, fromIndex, toIndex)
@@ -232,6 +254,10 @@ export default function CategoriesPage() {
   }
 
   const moveToTop = async (id: string) => {
+    if (!params?.id) {
+      throw new Error('Navigation ID not found')
+    }
+
     if (!navigation?.subCategories) return
     const index = navigation.subCategories.findIndex(cat => cat.id === id)
     if (index > 0) {
@@ -240,10 +266,42 @@ export default function CategoriesPage() {
   }
 
   const moveToBottom = async (id: string) => {
+    if (!params?.id) {
+      throw new Error('Navigation ID not found')
+    }
+
     if (!navigation?.subCategories) return
     const index = navigation.subCategories.findIndex(cat => cat.id === id)
     if (index < (navigation.subCategories.length - 1)) {
       moveCategory(index, navigation.subCategories.length - 1)
+    }
+  }
+
+  const updateNavigation = async (updatedNavigation: NavigationItem) => {
+    if (!params?.id) {
+      throw new Error('Navigation ID not found')
+    }
+
+    try {
+      const response = await fetch(`/api/navigation/${params.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedNavigation)
+      })
+
+      if (!response.ok) throw new Error('Failed to save')
+
+      setNavigation(updatedNavigation)
+      toast({
+        title: "成功",
+        description: "保存成功"
+      })
+    } catch (error) {
+      toast({
+        title: "错误",
+        description: "保存失败",
+        variant: "destructive"
+      })
     }
   }
 
@@ -262,7 +320,7 @@ export default function CategoriesPage() {
             className="h-8 w-8"
             title="返回"
           >
-            <Icons.back className="h-4 w-4" />
+            <Icons.arrowLeft className="h-4 w-4" />
           </Button>
           <h2 className="text-lg font-semibold flex items-center gap-2">
             {navigation?.title || '加载中...'}
@@ -282,7 +340,7 @@ export default function CategoriesPage() {
                 onClick={() => setSearchQuery("")}
                 className="absolute right-1 top-1 h-7 w-7 p-0"
               >
-                <Icons.close className="h-4 w-4" />
+                <Icons.x className="h-4 w-4" />
               </Button>
             )}
           </div>
@@ -290,7 +348,7 @@ export default function CategoriesPage() {
         <Dialog>
           <DialogTrigger asChild>
             <Button>
-              <Icons.add className="mr-2 h-4 w-4" />
+              <Icons.plus className="mr-2 h-4 w-4" />
               添加分类
             </Button>
           </DialogTrigger>
@@ -337,7 +395,10 @@ export default function CategoriesPage() {
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8"
-                      onClick={() => router.push(`/admin/navigation/${params.id}/categories/${category.id}/items`)}
+                      onClick={() => {
+                        if (!params?.id) return
+                        router.push(`/admin/navigation/${params.id}/categories/${category.id}/items`)
+                      }}
                       title="管理子项目"
                     >
                       <Icons.list className="h-4 w-4" />
@@ -349,7 +410,7 @@ export default function CategoriesPage() {
                       onClick={() => setEditingCategory({ index, category })}
                       title="编辑"
                     >
-                      <Icons.edit className="h-4 w-4" />
+                      <Icons.pencil className="h-4 w-4" />
                     </Button>
                     <Button
                       variant="ghost"

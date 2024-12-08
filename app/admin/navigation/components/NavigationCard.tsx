@@ -30,7 +30,7 @@ export function NavigationCard({ item, onUpdate }: NavigationCardProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   
   // 获取图标组件，如果不存在则使用默认图标
-  const IconComponent = Icons[item.icon as keyof typeof Icons] || Icons.placeholder
+  const IconComponent = Icons[item.icon as keyof typeof Icons] || Icons.folderOpen
 
   const {
     attributes,
@@ -48,7 +48,7 @@ export function NavigationCard({ item, onUpdate }: NavigationCardProps) {
     cursor: 'move'
   }
 
-  const handleEdit = async (values: { title: string; icon: string }) => {
+  const handleEdit = async (values: { title: string; description: string; icon: string }) => {
     try {
       const response = await fetch(`/api/navigation/${item.id}`, {
         method: 'PUT',
@@ -56,6 +56,7 @@ export function NavigationCard({ item, onUpdate }: NavigationCardProps) {
         body: JSON.stringify({
           ...item,
           title: values.title,
+          description: values.description,
           icon: values.icon
         })
       })
@@ -127,7 +128,7 @@ export function NavigationCard({ item, onUpdate }: NavigationCardProps) {
           onClick={() => router.push(`/admin/navigation/${item.id}/categories`)}
           title="分类管理"
         >
-          <Icons.category className="h-4 w-4" />
+          <Icons.folderOpen className="h-4 w-4" />
         </Button>
         <Button
           variant="ghost"
@@ -145,7 +146,7 @@ export function NavigationCard({ item, onUpdate }: NavigationCardProps) {
           onClick={() => setIsEditDialogOpen(true)}
           title="编辑"
         >
-          <Icons.edit className="h-4 w-4" />
+          <Icons.pencil className="h-4 w-4" />
         </Button>
         <Button
           variant="ghost"
@@ -154,7 +155,7 @@ export function NavigationCard({ item, onUpdate }: NavigationCardProps) {
           onClick={() => setIsDeleteDialogOpen(true)}
           title="删除"
         >
-          <Icons.trash className="h-4 w-4" />
+          <Icons.x className="h-4 w-4" />
         </Button>
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
           <DialogContent>
