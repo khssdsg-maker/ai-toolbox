@@ -6,7 +6,7 @@ import { Button } from "@/registry/new-york/ui/button"
 import { useToast } from "@/registry/new-york/hooks/use-toast"
 import { Icons } from "@/components/icons"
 import { NavigationItem, NavigationCategory, NavigationSubItem } from '@/types/navigation'
-import { AddItemForm } from '../../../../components/AddItemForm'
+import { AddItemForm } from "../../../../components/AddItemForm"
 import {
   Dialog,
   DialogContent,

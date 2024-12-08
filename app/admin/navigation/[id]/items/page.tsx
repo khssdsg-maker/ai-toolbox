@@ -6,22 +6,31 @@ import { Button } from "@/registry/new-york/ui/button"
 import { useToast } from "@/registry/new-york/hooks/use-toast"
 import { Icons } from "@/components/icons"
 import { NavigationItem, NavigationSubItem } from '@/types/navigation'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/registry/new-york/ui/table"
+import { Input } from "@/registry/new-york/ui/input"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
+  DialogFooter,
 } from "@/registry/new-york/ui/dialog"
-import { AddItemForm } from '../components/AddItemForm'
+import { AddItemForm } from '../../components/AddItemForm'
+import {
+  DndContext,
+  DragEndEvent,
+  MouseSensor,
+  TouchSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
+import {
+  SortableContext,
+  arrayMove,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
 
 interface EditingItem {
   index: number
@@ -33,8 +42,23 @@ export default function ItemsPage() {
   const router = useRouter()
   const { toast } = useToast()
   const [navigation, setNavigation] = useState<NavigationItem | null>(null)
+  const [searchQuery, setSearchQuery] = useState("")
   const [editingItem, setEditingItem] = useState<EditingItem | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [deletingItem, setDeletingItem] = useState<EditingItem | null>(null)
+
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 200,
+        tolerance: 5,
+      },
+    })
+  )
 
   useEffect(() => {
     if (!params?.id) {
@@ -46,19 +70,27 @@ export default function ItemsPage() {
 
   const fetchNavigation = async () => {
     try {
-      setIsLoading(true)
-      const response = await fetch(`/api/navigation/${params!.id}/items`)
-      if (!response.ok) throw new Error('Failed to fetch')
-      const data = await response.json()
-      setNavigation(data)
+      // 先获取完整的导航信息
+      const navigationResponse = await fetch(`/api/navigation/${params!.id}`)
+      if (!navigationResponse.ok) throw new Error('Failed to fetch navigation')
+      const navigationData = await navigationResponse.json()
+      
+      // 再获取导航项目列表
+      const itemsResponse = await fetch(`/api/navigation/${params!.id}/items`)
+      if (!itemsResponse.ok) throw new Error('Failed to fetch items')
+      const itemsData = await itemsResponse.json()
+
+      // 合并数据
+      setNavigation({
+        ...navigationData,
+        items: itemsData.items
+      })
     } catch (error) {
       toast({
         title: "错误",
         description: "加载数据失败",
         variant: "destructive"
       })
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -86,43 +118,13 @@ export default function ItemsPage() {
     }
   }
 
-  const handleEdit = (index: number, item: NavigationSubItem) => {
-    setEditingItem({ index, item })
-  }
-
-  const handleDelete = async (index: number) => {
-    try {
-      const response = await fetch(`/api/navigation/${params!.id}/items`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ index })
-      })
-
-      if (!response.ok) throw new Error('Failed to delete')
-
-      await fetchNavigation()
-      toast({
-        title: "成功",
-        description: "删除成功"
-      })
-    } catch (error) {
-      toast({
-        title: "错误",
-        description: "删除失败",
-        variant: "destructive"
-      })
-    }
-  }
-
-  const handleUpdate = async (values: NavigationSubItem) => {
-    if (!editingItem) return
-
+  const updateItem = async (index: number, values: NavigationSubItem) => {
     try {
       const response = await fetch(`/api/navigation/${params!.id}/items`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          index: editingItem.index,
+          index,
           item: values
         })
       })
@@ -144,20 +146,134 @@ export default function ItemsPage() {
     }
   }
 
-  if (isLoading) {
-    return <div>加载中...</div>
+  const deleteItem = async (index: number) => {
+    try {
+      const response = await fetch(`/api/navigation/${params!.id}/items`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ index })
+      })
+
+      if (!response.ok) throw new Error('Failed to delete')
+
+      await fetchNavigation()
+      setDeletingItem(null)
+      toast({
+        title: "成功",
+        description: "删除成功"
+      })
+    } catch (error) {
+      toast({
+        title: "错误",
+        description: "删除失败",
+        variant: "destructive"
+      })
+    }
   }
+
+  const moveItem = async (fromIndex: number, toIndex: number) => {
+    if (!navigation || !navigation.items) return
+
+    const newItems = arrayMove(navigation.items, fromIndex, toIndex)
+    const updatedNavigation = {
+      ...navigation,
+      items: newItems
+    }
+
+    try {
+      const response = await fetch(`/api/navigation/${params!.id}/items`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedNavigation)
+      })
+
+      if (!response.ok) throw new Error('Failed to save order')
+
+      const data = await response.json()
+      setNavigation(data)
+    } catch (error) {
+      toast({
+        title: "错误",
+        description: "保存顺序失败",
+        variant: "destructive"
+      })
+    }
+  }
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+    
+    if (!over || active.id === over.id || !navigation?.items) return
+
+    const oldIndex = navigation.items.findIndex(item => item.id === active.id)
+    const newIndex = navigation.items.findIndex(item => item.id === over.id)
+    
+    moveItem(oldIndex, newIndex)
+  }
+
+  const moveToTop = async (index: number) => {
+    if (index > 0) {
+      moveItem(index, 0)
+    }
+  }
+
+  const moveToBottom = async (index: number) => {
+    if (!navigation?.items) return
+    if (index < navigation.items.length - 1) {
+      moveItem(index, navigation.items.length - 1)
+    }
+  }
+
+  const filteredItems = navigation?.items?.filter(item =>
+    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.href.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.description?.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || []
 
   if (!navigation) {
     return <div>导航不存在</div>
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-3xl font-bold">{navigation.title} - 子项目管理</h2>
-          <p className="text-muted-foreground">管理导航的子项目</p>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => router.back()}
+            className="h-8 w-8"
+            title="返回"
+          >
+            <Icons.back className="h-4 w-4" />
+          </Button>
+          <div>
+            <div className="text-sm text-muted-foreground mb-1">
+              {navigation.title} / {navigation.category}
+            </div>
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              子项目管理
+            </h2>
+          </div>
+          <div className="relative flex-1 max-w-sm">
+            <Icons.search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="搜索子项目..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-8"
+            />
+            {searchQuery && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSearchQuery("")}
+                className="absolute right-1 top-1 h-7 w-7 p-0"
+              >
+                <Icons.close className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
         </div>
         <Dialog>
           <DialogTrigger asChild>
@@ -175,56 +291,145 @@ export default function ItemsPage() {
         </Dialog>
       </div>
 
-      <div className="border rounded-lg">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>标题</TableHead>
-              <TableHead>英文标题</TableHead>
-              <TableHead>链接</TableHead>
-              <TableHead className="text-right">操作</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {navigation.items?.map((item, index) => (
-              <TableRow key={index}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{item.title}</TableCell>
-                <TableCell>{item.titleEn}</TableCell>
-                <TableCell>{item.href}</TableCell>
-                <TableCell className="text-right space-x-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleEdit(index, item)}
-                  >
-                    <Icons.edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleDelete(index)}
-                    className="text-red-500"
-                  >
-                    <Icons.trash className="h-4 w-4" />
-                  </Button>
-                </TableCell>
-              </TableRow>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={filteredItems}
+          strategy={verticalListSortingStrategy}
+        >
+          <div className="grid gap-2">
+            {filteredItems.map((item, index) => (
+              <div key={index} className="group relative">
+                <div
+                  className="flex items-center justify-between py-2 px-4 bg-card rounded-lg border shadow-sm transition-colors hover:bg-accent/10"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
+                      {item.icon ? (
+                        <img src={item.icon} alt={item.title} className="w-4 h-4 object-contain" />
+                      ) : (
+                        <Icons.link className="h-4 w-4 text-primary" />
+                      )}
+                    </div>
+                    <div>
+                      <div className="font-medium leading-none mb-1">{item.title}</div>
+                      {item.description && (
+                        <div className="text-xs text-muted-foreground">
+                          {item.description}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => window.open(item.href, '_blank')}
+                      title="访问链接"
+                    >
+                      <Icons.globe className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => setEditingItem({ index, item })}
+                      title="编辑"
+                    >
+                      <Icons.edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => setDeletingItem({ index, item })}
+                      title="删除"
+                    >
+                      <Icons.trash className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 pr-2 hidden group-hover:flex items-center gap-1">
+                  {index > 0 && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6"
+                      onClick={() => moveToTop(index)}
+                      title="置顶"
+                    >
+                      <Icons.chevronLeft className="h-4 w-4 -rotate-90" />
+                    </Button>
+                  )}
+                  {index < (navigation?.items?.length || 0) - 1 && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6"
+                      onClick={() => moveToBottom(index)}
+                      title="置底"
+                    >
+                      <Icons.chevronRight className="h-4 w-4 rotate-90" />
+                    </Button>
+                  )}
+                </div>
+              </div>
             ))}
-          </TableBody>
-        </Table>
-      </div>
+            {filteredItems.length === 0 && (
+              <div className="text-center py-10 text-muted-foreground">
+                {navigation?.items?.length === 0 ? (
+                  <p>暂无子项目</p>
+                ) : (
+                  <p>未找到匹配的子项目</p>
+                )}
+              </div>
+            )}
+          </div>
+        </SortableContext>
+      </DndContext>
 
-      <Dialog open={!!editingItem} onOpenChange={() => setEditingItem(null)}>
+      <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>编辑子项目</DialogTitle>
           </DialogHeader>
-          <AddItemForm 
-            onSubmit={handleUpdate}
+          <AddItemForm
             defaultValues={editingItem?.item}
+            onSubmit={(values) => editingItem && updateItem(editingItem.index, values)}
           />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!deletingItem} onOpenChange={(open) => !open && setDeletingItem(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>删除确认</DialogTitle>
+            <DialogDescription>
+              确定要删除子项目 "{deletingItem?.item.title}" 吗？此操作无法撤销。
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="ghost"
+              onClick={() => setDeletingItem(null)}
+            >
+              取消
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                if (deletingItem) {
+                  deleteItem(deletingItem.index)
+                }
+              }}
+            >
+              删除
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

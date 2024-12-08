@@ -1,10 +1,12 @@
 import { cn } from "@/lib/utils"
 import Image from "next/image"
+import Link from "next/link"
+import { resolveIconPath } from "@/types/navigation"
 
 interface ResourceCardProps {
   title: string
-  description: string
-  icon: string
+  description?: string
+  icon?: string
   url: string
   className?: string
 }
@@ -16,28 +18,36 @@ export default function ResourceCard({
   url,
   className
 }: ResourceCardProps) {
+  // 使用 resolveIconPath 解析图标路径
+  const resolvedIcon = resolveIconPath(icon)
+
   return (
-    <a 
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="block p-6 bg-white rounded-3xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] hover:-translate-y-1 transition-all duration-300"
-    >
-      <div className="flex items-center gap-4 mb-2">
-        <div className="w-12 h-12 flex items-center justify-center">
-          <Image 
-            src={icon} 
-            alt={title}
-            width={48}
-            height={48}
-            className="rounded-xl"
-          />
+    <Link href={url} target="_blank" className={cn("block", className)}>
+      <div className="group relative rounded-lg border p-6 hover:border-foreground">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-4">
+            {resolvedIcon && (
+              <div className="relative h-8 w-8">
+                <Image
+                  src={resolvedIcon}
+                  alt={title}
+                  className="object-contain"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  onError={(e) => {
+                    console.warn(`Failed to load icon for ${title}:`, resolvedIcon)
+                    e.currentTarget.style.display = 'none'
+                  }}
+                />
+              </div>
+            )}
+            <h3 className="font-semibold">{title}</h3>
+          </div>
         </div>
-        <div>
-          <h3 className="font-medium text-gray-900 text-lg">{title}</h3>
-          <p className="text-gray-500 text-sm mt-1">{description}</p>
-        </div>
+        {description && (
+          <p className="text-sm text-muted-foreground line-clamp-3">{description}</p>
+        )}
       </div>
-    </a>
+    </Link>
   )
-} 
+}

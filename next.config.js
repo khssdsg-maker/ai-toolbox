@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverActions: true
-  },
   async rewrites() {
     return [
       {
@@ -18,4 +15,3 @@ const nextConfig = {
 }
 
 module.exports = nextConfig
-

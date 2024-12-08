@@ -18,10 +18,10 @@ import { NavigationSubItem } from "@/types/navigation"
 
 const formSchema = z.object({
   id: z.string().optional(),
-  title: z.string().min(2, { message: "标题至少需要2个字符" }),
-  href: z.string().url({ message: "请输入有效的URL" }),
-  description: z.string().optional(),
+  title: z.string().min(2, { message: "网站标题至少需要2个字符" }),
+  href: z.string().url({ message: "请输入有效的网站链接" }),
   icon: z.string().optional(),
+  description: z.string().optional(),
 })
 
 interface AddItemFormProps {
@@ -36,8 +36,8 @@ export function AddItemForm({ onSubmit, defaultValues }: AddItemFormProps) {
       id: String(Date.now()),
       title: "",
       href: "",
-      description: "",
       icon: "",
+      description: "",
     }
   })
 
@@ -51,9 +51,22 @@ export function AddItemForm({ onSubmit, defaultValues }: AddItemFormProps) {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>标题</FormLabel>
+              <FormLabel>网站标题</FormLabel>
               <FormControl>
-                <Input placeholder="输入项目标题" {...field} />
+                <Input placeholder="输入网站标题" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="href"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>网站链接</FormLabel>
+              <FormControl>
+                <Input placeholder="输入网站链接" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -80,22 +93,9 @@ export function AddItemForm({ onSubmit, defaultValues }: AddItemFormProps) {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>描述</FormLabel>
+              <FormLabel>网站描述</FormLabel>
               <FormControl>
-                <Input placeholder="输入项目描述" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="href"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>网站链接</FormLabel>
-              <FormControl>
-                <Input placeholder="输入项目链接" {...field} />
+                <Input placeholder="输入网站描述" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
