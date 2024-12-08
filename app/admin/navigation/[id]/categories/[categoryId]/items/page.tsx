@@ -345,7 +345,15 @@ export default function CategoryItemsPage() {
             <DialogHeader>
               <DialogTitle>添加项目</DialogTitle>
             </DialogHeader>
-            <AddItemForm onSubmit={addItem} />
+            <AddItemForm 
+              onSubmit={addItem} 
+              onCancel={() => {
+                const dialog = document.querySelector('dialog')
+                if (dialog) {
+                  dialog.close()
+                }
+              }} 
+            />
           </DialogContent>
         </Dialog>
       </div>
@@ -459,6 +467,7 @@ export default function CategoryItemsPage() {
           <AddItemForm
             defaultValues={editingItem?.item}
             onSubmit={(values) => editingItem && updateItem(editingItem.index, values)}
+            onCancel={() => setEditingItem(null)}
           />
         </DialogContent>
       </Dialog>
