@@ -21,6 +21,13 @@
       "icon": "linecons-desktop",
       "items": [],
       "subCategories": []
+    },
+    {
+      "id": "1733651025712",
+      "title": "笔记",
+      "icon": "settings",
+      "items": [],
+      "subCategories": []
     }
   ]
 }
