@@ -6,7 +6,7 @@
   },
   "appearance": {
     "logo": "/assets/images/alogo.png",
-    "favicon": "/favicon.ico",
+    "favicon": "/assets/images/favicon.png",
     "theme": "system"
   }
 }
