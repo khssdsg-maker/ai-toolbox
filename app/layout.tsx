@@ -1,18 +1,16 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
 import './globals.css'
-import localFont from 'next/font/local'
+import { Inter } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from "@/components/ui/toaster"
 import type { SiteConfig } from '@/types/site'
 
-const fontSans = localFont({
-  src: ['/fonts/inter-var-latin.woff2', '/fonts/inter-var-latin.woff'],
-  variable: '--font-sans',
+const inter = Inter({
+  subsets: ['latin'],
   display: 'swap',
-  fallback: ['system-ui', 'arial'],
-  adjustFontFallback: false,
+  variable: '--font-inter',
 })
 
 async function getSiteInfo(): Promise<SiteConfig> {
@@ -61,24 +59,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh-CN" className={fontSans.variable} suppressHydrationWarning>
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-        />
-      </head>
-      <body className={cn('min-h-screen bg-background font-sans antialiased')}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster />
-        </ThemeProvider>
-      </body>
+    <html lang="en" className={inter.variable}>
+      <body>{children}</body>
     </html>
   )
 }
