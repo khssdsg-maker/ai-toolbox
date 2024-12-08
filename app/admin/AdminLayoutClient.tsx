@@ -13,6 +13,7 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   LogOut,
 } from "lucide-react"
 import { cn } from '@/lib/utils'
@@ -35,23 +36,62 @@ const menuItems = [
   {
     title: "仪表盘",
     href: "/admin",
-    icon: LayoutDashboard,
+    icon: LayoutDashboard
   },
   {
     title: "导航管理",
     href: "/admin/navigation",
     icon: ListTodo,
+    subItems: [
+      {
+        title: "导航分类",
+        href: "/admin/navigation"
+      },
+      {
+        title: "子分类管理",
+        href: "/admin/navigation/categories"
+      },
+      {
+        title: "子项目管理",
+        href: "/admin/navigation/items"
+      }
+    ]
+  },
+  {
+    title: "资源管理",
+    href: "/admin/resources",
+    icon: Settings,
+    subItems: [
+      {
+        title: "资源分类",
+        href: "/admin/resources"
+      },
+      {
+        title: "资源项目",
+        href: "/admin/resources/items"
+      }
+    ]
   },
   {
     title: "站点设置",
     href: "/admin/site",
     icon: Settings,
-  },
+    onClick: undefined
+  }
 ]
 
 export function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
   const pathname = usePathname()
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+  const [expandedItems, setExpandedItems] = useState<string[]>([])
+
+  const toggleMenuItem = (href: string) => {
+    setExpandedItems(prev => 
+      prev.includes(href) 
+        ? prev.filter(item => item !== href)
+        : [...prev, href]
+    )
+  }
 
   return (
     <div className="hidden md:block h-screen">
@@ -124,36 +164,58 @@ export function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
                       )}
                       <nav className="grid gap-[2px]">
                         {menuItems.map((item) => (
-                          <Link key={item.href} href={item.href}>
+                          <div key={item.href}>
                             <Button
                               variant="ghost"
                               className={cn(
-                                "w-full justify-start h-8",
-                                "hover:bg-muted transition-all duration-200",
-                                pathname === item.href && [
-                                  "bg-muted",
-                                  "hover:bg-muted/80",
-                                  "font-medium"
-                                ],
-                                !pathname.startsWith(item.href) && "text-muted-foreground",
-                                !isSidebarCollapsed && "px-4"
+                                "w-full justify-start",
+                                pathname === item.href && "bg-muted"
                               )}
-                              size="sm"
+                              onClick={() => item.subItems && toggleMenuItem(item.href)}
+                              asChild={!item.subItems}
                             >
-                              <item.icon className={cn(
-                                "h-4 w-4 shrink-0",
-                                pathname === item.href 
-                                  ? "text-foreground" 
-                                  : "text-muted-foreground",
-                                !isSidebarCollapsed && "mr-3"
-                              )} />
-                              {!isSidebarCollapsed && (
-                                <span className="text-sm">
-                                  {item.title}
-                                </span>
+                              {!item.subItems ? (
+                                <Link href={item.href}>
+                                  <item.icon className="mr-2 h-4 w-4" />
+                                  {!isSidebarCollapsed && <span>{item.title}</span>}
+                                </Link>
+                              ) : (
+                                <>
+                                  <item.icon className="mr-2 h-4 w-4" />
+                                  {!isSidebarCollapsed && (
+                                    <>
+                                      <span>{item.title}</span>
+                                      <ChevronDown 
+                                        className={cn(
+                                          "ml-auto h-4 w-4 transition-transform",
+                                          expandedItems.includes(item.href) && "rotate-180"
+                                        )}
+                                      />
+                                    </>
+                                  )}
+                                </>
                               )}
                             </Button>
-                          </Link>
+                            {item.subItems && expandedItems.includes(item.href) && !isSidebarCollapsed && (
+                              <div className="ml-4 mt-1 space-y-1">
+                                {item.subItems.map((subItem) => (
+                                  <Button
+                                    key={subItem.href}
+                                    variant="ghost"
+                                    className={cn(
+                                      "w-full justify-start pl-6",
+                                      pathname === subItem.href && "bg-muted"
+                                    )}
+                                    asChild
+                                  >
+                                    <Link href={subItem.href}>
+                                      {subItem.title}
+                                    </Link>
+                                  </Button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         ))}
                       </nav>
                     </div>

@@ -7,13 +7,14 @@ export const runtime = 'edge'
 
 export async function GET() {
   try {
-    const data = await getFileContent('app/data/db/navigation.json') as NavigationData
+    const data = await getFileContent('navsphere/content/navigation.json')
     return NextResponse.json(data)
   } catch (error) {
     console.error('Failed to fetch navigation data:', error)
+    // 返回默认数据结构
     return NextResponse.json({
       navigationItems: []
-    } as NavigationData)
+    })
   }
 }
 
@@ -25,9 +26,15 @@ export async function POST(request: Request) {
     }
 
     const data = await request.json()
+    
+    // 验证数据结构
+    if (!data.navigationItems || !Array.isArray(data.navigationItems)) {
+      throw new Error('Invalid navigation data structure')
+    }
+
     await commitFile(
-      'app/data/db/navigation.json',
-      JSON.stringify({ navigationItems: data }, null, 2),
+      'navsphere/content/navigation.json',
+      JSON.stringify(data, null, 2),
       'Update navigation data',
       session.user.accessToken
     )

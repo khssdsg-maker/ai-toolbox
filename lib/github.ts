@@ -6,7 +6,6 @@ export async function getFileContent(path: string) {
   const branch = process.env.GITHUB_BRANCH || 'main'
 
   try {
-    // 获取当前会话的 token
     const session = await auth()
     const token = session?.user?.accessToken
 
@@ -20,41 +19,25 @@ export async function getFileContent(path: string) {
     })
 
     if (response.status === 404) {
-      console.log('GitHub API: File not found, returning default data')
-      return {
-        basic: {
-          title: '',
-          description: '',
-          keywords: ''
-        },
-        appearance: {
-          logo: '',
-          favicon: '',
-          theme: 'system'
-        }
+      console.log(`File not found: ${path}, returning default data`)
+      if (path.includes('navigation.json')) {
+        return { navigationItems: [] }
       }
+      return {}
     }
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch file: ${response.statusText}`)
+      throw new Error(`GitHub API error: ${response.statusText}`)
     }
 
     const data = await response.json()
     return data
   } catch (error) {
     console.error('Error fetching file:', error)
-    return {
-      basic: {
-        title: '',
-        description: '',
-        keywords: ''
-      },
-      appearance: {
-        logo: '',
-        favicon: '',
-        theme: 'system'
-      }
+    if (path.includes('navigation.json')) {
+      return { navigationItems: [] }
     }
+    return {}
   }
 }
 

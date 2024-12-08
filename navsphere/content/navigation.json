@@ -1,0 +1,18 @@
+{
+  "navigationItems": [
+    {
+      "id": "common",
+      "title": "常用推荐",
+      "icon": "linecons-star",
+      "items": [],
+      "subCategories": []
+    },
+    {
+      "id": "tools",
+      "title": "开发工具",
+      "icon": "linecons-desktop",
+      "items": [],
+      "subCategories": []
+    }
+  ]
+}

@@ -2,12 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { Button } from '@/registry/new-york/ui/button'
-import { Input } from '@/registry/new-york/ui/input'
-import { useToast } from '@/registry/new-york/hooks/use-toast'
-import { Icons } from '@/components/icons'
+import { Button } from "@/registry/new-york/ui/button"
+import { useToast } from "@/registry/new-york/hooks/use-toast"
+import { Icons } from "@/components/icons"
 import { NavigationItem } from '@/types/navigation'
-import { Skeleton } from "@/registry/new-york/ui/skeleton"
 import {
   Table,
   TableBody,
@@ -16,43 +14,72 @@ import {
   TableHeader,
   TableRow,
 } from "@/registry/new-york/ui/table"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/registry/new-york/ui/dialog"
+import { AddCategoryForm } from '../components/AddCategoryForm'
 
 export default function CategoriesPage() {
   const params = useParams()
   const router = useRouter()
   const { toast } = useToast()
-  const [isLoading, setIsLoading] = useState(true)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [categories, setCategories] = useState<any[]>([])
-  const [filteredCategories, setFilteredCategories] = useState<any[]>([])
+  const [navigation, setNavigation] = useState<NavigationItem | null>(null)
 
   useEffect(() => {
-    fetchCategories()
+    fetchNavigation()
   }, [])
 
-  useEffect(() => {
-    const filtered = categories.filter(category => 
-      category.title.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    setFilteredCategories(filtered)
-  }, [searchQuery, categories])
-
-  const fetchCategories = async () => {
+  const fetchNavigation = async () => {
     try {
-      setIsLoading(true)
-      const response = await fetch(`/api/navigation/${params.id}/categories`)
+      const response = await fetch(`/api/navigation/${params.id}`)
       if (!response.ok) throw new Error('Failed to fetch')
       const data = await response.json()
-      setCategories(data)
-      setFilteredCategories(data)
+      setNavigation(data)
     } catch (error) {
       toast({
-        title: '错误',
-        description: '加载分类数据失败',
-        variant: 'destructive'
+        title: "错误",
+        description: "加载数据失败",
+        variant: "destructive"
       })
-    } finally {
-      setIsLoading(false)
+    }
+  }
+
+  const addCategory = async (values: any) => {
+    try {
+      const newCategory = {
+        id: Date.now().toString(),
+        title: values.title,
+        items: []
+      }
+
+      const updatedNavigation = {
+        ...navigation,
+        subCategories: [...(navigation?.subCategories || []), newCategory]
+      }
+
+      const response = await fetch(`/api/navigation/${params.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedNavigation)
+      })
+
+      if (!response.ok) throw new Error('Failed to save')
+
+      setNavigation(updatedNavigation)
+      toast({
+        title: "成功",
+        description: "添加成功"
+      })
+    } catch (error) {
+      toast({
+        title: "错误",
+        description: "保存失败",
+        variant: "destructive"
+      })
     }
   }
 
@@ -60,110 +87,63 @@ export default function CategoriesPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-lg font-medium">导航分类管理</h3>
-          <p className="text-sm text-muted-foreground">
-            管理网站的导航菜单分类
-          </p>
+          <h2 className="text-3xl font-bold">{navigation?.title} - 分类管理</h2>
+          <p className="text-muted-foreground">管理导航的分类</p>
         </div>
-        <div className="space-x-2">
-          <Button
-            onClick={() => router.back()}
-            variant="outline"
-            size="sm"
-          >
-            <Icons.back className="mr-2 h-4 w-4" />
-            返回
-          </Button>
-          <Button
-            onClick={() => {/* 添加分类的处理函数 */}}
-            variant="outline"
-            size="sm"
-          >
-            <Icons.add className="mr-2 h-4 w-4" />
-            添加分类
-          </Button>
-        </div>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button>
+              <Icons.add className="mr-2 h-4 w-4" />
+              添加分类
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>添加分类</DialogTitle>
+            </DialogHeader>
+            <AddCategoryForm onSubmit={addCategory} />
+          </DialogContent>
+        </Dialog>
       </div>
 
-      <div className="flex items-center space-x-2">
-        <Input
-          placeholder="搜索分类..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="max-w-sm"
-        />
-      </div>
-
-      {isLoading ? (
-        <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="flex items-center space-x-4">
-              <Skeleton className="h-12 w-12" />
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-[250px]" />
-                <Skeleton className="h-4 w-[200px]" />
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px]">排序</TableHead>
-                <TableHead>分类名称</TableHead>
-                <TableHead>子项目数</TableHead>
-                <TableHead className="text-right">操作</TableHead>
+      <div className="border rounded-lg">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>ID</TableHead>
+              <TableHead>标题</TableHead>
+              <TableHead>子项目数</TableHead>
+              <TableHead className="text-right">操作</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {navigation?.subCategories?.map((category, index) => (
+              <TableRow key={category.id}>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>{category.title}</TableCell>
+                <TableCell>{category.items?.length || 0}</TableCell>
+                <TableCell className="text-right space-x-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {}}
+                  >
+                    <Icons.edit className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {}}
+                    className="text-red-500"
+                  >
+                    <Icons.trash className="h-4 w-4" />
+                  </Button>
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredCategories.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={4} className="text-center py-8">
-                    {searchQuery ? (
-                      <div className="text-muted-foreground">
-                        <Icons.search className="mx-auto h-12 w-12 opacity-50" />
-                        <p className="mt-2">没有找到匹配的分类</p>
-                      </div>
-                    ) : (
-                      <div className="text-muted-foreground">
-                        <Icons.empty className="mx-auto h-12 w-12 opacity-50" />
-                        <p className="mt-2">暂无分类数据</p>
-                      </div>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ) : (
-                filteredCategories.map((category, index) => (
-                  <TableRow key={category.id}>
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{category.title}</TableCell>
-                    <TableCell>{category.items?.length || 0}</TableCell>
-                    <TableCell className="text-right space-x-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => {/* 编辑处理 */}}
-                      >
-                        <Icons.edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => {/* 删除处理 */}}
-                        className="text-destructive hover:text-destructive/90"
-                      >
-                        <Icons.trash className="h-4 w-4" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
-      )}
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   )
 } 
