@@ -5,7 +5,7 @@ pages_build_output_dir = ".vercel/output/static"
 
 
 
-[env.production]
+[env.production.vars]
 GITHUB_ID = "Ov23lig3bTXpZHrPO1c8"
 GITHUB_SECRET = "5895e0a49d35b3fc70f6541b876aebdb212c0201"
 GITHUB_OWNER = "tianyaxiang"
