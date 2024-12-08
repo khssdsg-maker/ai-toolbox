@@ -134,7 +134,7 @@ export default function CategoryItemsPage() {
   }
 
   const updateItem = async (index: number, values: NavigationSubItem) => {
-    if (!navigation || !category) return
+    if (!params?.id || !navigation || !category) return
 
     try {
       const updatedItems = [...(category.items || [])]
