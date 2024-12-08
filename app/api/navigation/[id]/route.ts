@@ -3,6 +3,8 @@ import { auth } from '@/lib/auth'
 import { commitFile, getFileContent } from '@/lib/github'
 import type { NavigationData, NavigationItem } from '@/types/navigation'
 
+export const runtime = 'edge'
+
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }

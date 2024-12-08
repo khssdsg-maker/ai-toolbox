@@ -3,7 +3,7 @@ import { auth } from '@/lib/auth'
 import { commitFile, getFileContent } from '@/lib/github'
 import type { SiteInfo } from '@/types/site'
 
-export const runtime = 'edge'
+export const runtime = 'experimental-edge'
 
 export async function GET() {
   try {

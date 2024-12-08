@@ -1,5 +1,7 @@
 'use client'
 
+export const runtime = 'edge'
+
 import { useEffect } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
