@@ -285,8 +285,8 @@ export default function CategoryItemsPage() {
 
   const filteredItems = category?.items?.filter(item =>
     item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.titleEn?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.href.toLowerCase().includes(searchQuery.toLowerCase())
+    item.href.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.description?.toLowerCase().includes(searchQuery.toLowerCase())
   ) || []
 
   return (
