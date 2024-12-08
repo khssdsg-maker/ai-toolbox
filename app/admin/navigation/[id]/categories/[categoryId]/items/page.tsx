@@ -62,8 +62,12 @@ export default function CategoryItemsPage() {
   )
 
   useEffect(() => {
+    if (!params?.id || !params?.categoryId) {
+      router.push('/admin/navigation')
+      return
+    }
     fetchData()
-  }, [params.id, params.categoryId])
+  }, [params?.id, params?.categoryId])
 
   const fetchData = async () => {
     try {
