@@ -3,26 +3,42 @@
 import type { NavigationData } from '@/types/navigation'
 import type { SiteConfig } from '@/types/site'
 import { NavigationContent } from '@/components/navigation-content'
+import { headers } from 'next/headers'
 
 async function getData() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+    // Dynamically construct base URL
+    const host = headers().get('host')
+    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'
+    
+    // Fallback to a complete URL if environment variables are not set
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 
+                    (host ? `${protocol}://${host}` : 'http://localhost:3000')
+
+    console.log('Base URL:', baseUrl)
+
     const [navigationRes, siteRes] = await Promise.all([
-      fetch(`${baseUrl}/api/home/navigation`, { 
+      fetch(new URL('/api/home/navigation', baseUrl).toString(), { 
         next: { 
           revalidate: 3600 // 1 hour 
         } 
       }),
-      fetch(`${baseUrl}/api/home/site`, { 
+      fetch(new URL('/api/home/site', baseUrl).toString(), { 
         next: { 
           revalidate: 3600 // 1 hour 
         } 
       })
     ])
- // Add status code logging
- console.log('Navigation response status:', navigationRes.status)
- console.log('Site response status:', siteRes.status)
+
+    // Log status codes for debugging
+    console.log('Navigation response status:', navigationRes.status)
+    console.log('Site response status:', siteRes.status)
+
     if (!navigationRes.ok || !siteRes.ok) {
+      console.error('Failed to fetch data', {
+        navigationStatus: navigationRes.status,
+        siteStatus: siteRes.status
+      })
       throw new Error('Failed to fetch data')
     }
 
@@ -33,7 +49,7 @@ async function getData() {
 
     return { navigationData, siteData }
   } catch (error) {
-    console.error('Error fetching data:', error)
+    console.error('Error in getData:', error)
     return {
       navigationData: { navigationItems: [] },
       siteData: {
