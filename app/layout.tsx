@@ -1,24 +1,34 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
 import './globals.css'
-import { Inter } from 'next/font/google'
+import localFont from 'next/font/local'
 import { cn } from '@/lib/utils'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from "@/components/ui/toaster"
 import type { SiteConfig } from '@/types/site'
 
-const inter = Inter({ 
-  subsets: ['latin'],
-  display: 'swap',
+const inter = localFont({
+  src: [
+    {
+      path: '../public/fonts/Inter-roman.var.woff2',
+      style: 'normal',
+      weight: '100 900',
+    },
+    {
+      path: '../public/fonts/Inter-italic.var.woff2',
+      style: 'italic',
+      weight: '100 900',
+    }
+  ],
   variable: '--font-inter',
-  preload: true,
+  display: 'swap',
   fallback: ['system-ui', 'arial'],
-  adjustFontFallback: true
+  adjustFontFallback: true,
 })
 
 async function getSiteInfo(): Promise<SiteConfig> {
   try {
-    const res = await fetch('http://localhost:3000/api/home/site')
+    const res = await fetch('/api/home/site')
     if (!res.ok) {
       throw new Error('Failed to fetch site data')
     }
