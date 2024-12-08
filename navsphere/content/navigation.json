@@ -1,11 +1,14 @@
 {
   "navigationItems": [
     {
-      "id": "common",
-      "title": "常用推荐",
-      "icon": "linecons-star",
-      "items": [],
-      "subCategories": []
+      "subCategories": [
+        {
+          "id": "1733650413746",
+          "title": "二级分类",
+          "items": []
+        }
+      ],
+      "id": "common"
     },
     {
       "id": "tools",
