@@ -60,6 +60,13 @@
           "href": "http://www.uisdc.com/",
           "description": "设计师交流学习平台",
           "icon": "uisdc"
+        },
+        {
+          "id": "1733665031305",
+          "title": "test",
+          "href": "https://dh.leti.ltd/",
+          "icon": "/werwer",
+          "description": "werewrwer"
         }
       ],
       "subCategories": []
