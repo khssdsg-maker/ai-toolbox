@@ -6,7 +6,7 @@ import { NavigationContent } from '@/components/navigation-content'
 
 async function getData() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
     const [navigationRes, siteRes] = await Promise.all([
       fetch(`${baseUrl}/api/home/navigation`, { 
         next: { 
