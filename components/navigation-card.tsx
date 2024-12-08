@@ -1,62 +1,51 @@
+import Link from 'next/link'
 import Image from 'next/image'
-import { NavigationSubItem } from '@/types/navigation'
-import { cn } from '@/lib/utils'
+import { Card, CardContent } from '@/registry/new-york/ui/card'
 import { Icons } from '@/components/icons'
+import type { NavigationItem } from '@/types/navigation'
 
 interface NavigationCardProps {
-  item: NavigationSubItem
-  className?: string
+  item: NavigationItem
 }
 
-const isValidUrl = (urlString: string) => {
-  try {
-    return Boolean(new URL(urlString)) || urlString.startsWith('/')
-  } catch (e) {
-    return false
-  }
-}
+export function NavigationCard({ item }: NavigationCardProps) {
+  const isExternalIcon = item.icon?.startsWith('http')
+  const isLocalIcon = item.icon?.startsWith('/')
 
-export function NavigationCard({ item, className }: NavigationCardProps) {
   return (
-    <a
-      href={item.href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={cn(
-        "group flex items-start gap-3 rounded-lg border bg-card p-3 transition-colors hover:bg-accent/10",
-        className
-      )}
-    >
-      {/* 图标 */}
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-        {item.icon ? (
-          isValidUrl(item.icon) ? (
-            <Image
-              src={item.icon}
-              alt={item.title}
-              width={20}
-              height={20}
-              className="h-5 w-5 object-contain"
-            />
-          ) : (
-            <div className="h-5 w-5 bg-primary/20 rounded" />
-          )
-        ) : (
-          <div className="h-5 w-5 bg-primary/20 rounded" />
-        )}
-      </div>
-
-      {/* 内容 */}
-      <div className="space-y-1">
-        <div className="font-medium leading-none group-hover:text-primary">
-          {item.title}
-        </div>
-        {item.description && (
-          <div className="text-xs text-muted-foreground line-clamp-2">
-            {item.description}
+    <Card className="overflow-hidden">
+      <Link
+        href={item.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block h-full"
+      >
+        <CardContent className="p-4">
+          <div className="flex items-start space-x-4">
+            <div className="h-10 w-10 shrink-0">
+              {isExternalIcon || isLocalIcon ? (
+                <Image
+                  src={item.icon}
+                  alt={item.title}
+                  width={40}
+                  height={40}
+                  className="h-10 w-10 rounded-lg object-contain"
+                />
+              ) : (
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg border bg-muted">
+                  <Icons.placeholder className="h-5 w-5" />
+                </div>
+              )}
+            </div>
+            <div className="space-y-1">
+              <h3 className="font-medium leading-none">{item.title}</h3>
+              <p className="text-sm text-muted-foreground line-clamp-2">
+                {item.description}
+              </p>
+            </div>
           </div>
-        )}
-      </div>
-    </a>
+        </CardContent>
+      </Link>
+    </Card>
   )
 }
