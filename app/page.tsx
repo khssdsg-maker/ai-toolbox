@@ -1,6 +1,6 @@
-'use server'
-
 export const runtime = 'edge'
+
+'use server'
 
 import type { NavigationData } from '@/types/navigation'
 import type { SiteConfig } from '@/types/site'
