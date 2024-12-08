@@ -1,174 +1,6 @@
 {
   "navigationItems": [
     {
-      "id": "1733657315005",
-      "title": "常用推荐",
-      "icon": "linecons-star",
-      "items": [
-      ],
-      "subCategories": [ {
-        "id": "17336573150051",
-        "title": "常用推荐子级",
-        "icon": "linecons-star",
-        "items": [
-          {
-            "id": "1733657315006",
-            "title": "Google Analytics",
-            "href": "https://analytics.google.com/",
-            "description": "Google分析（Google Analytics）是一个由Google所提供的网站流量统计服务。",
-            "icon": "/assets/images/logos/analytics.ico"
-          },
-          {
-            "id": "1733657315007",
-            "title": "Vercel",
-            "href": "https://vercel.com/",
-            "description": "Vercel 提供开发者工具和云基础设施，帮助构建、扩展和保护更快、更个性化的网络应用。",
-            "icon": "/assets/images/logos/vercel.png"
-          },
-          {
-            "id": "1733657315008",
-            "title": "Cloudflare",
-            "href": "https://dash.cloudflare.com/",
-            "description": "Cloudflare以向客户提供基于反向代理的内容分发网络及分布式域名解析服务为主要业务。",
-            "icon": "/assets/images/logos/vercel.png"
-          },
-          {
-            "id": "1733657315009",
-            "title": "Google AdSense",
-            "href": "https://www.google.com/adsense/",
-            "description": "Google AdSense广告服务。",
-            "icon": "/assets/images/logos/vercel.png"
-          },
-          {
-            "id": "1733657315010",
-            "title": "Producthunt",
-            "href": "https://www.producthunt.com/",
-            "description": "发现新鲜有趣的产品",
-            "icon": "/assets/images/logos/vercel.png"
-          },
-          {
-            "id": "1733657315011",
-            "title": "Leonardo.AI",
-            "href": "https://app.leonardo.ai/",
-            "description": "Leonardo.AI是一个人工智能绘图社区和工具。它基于Stable Diffusion人工智能模型,深度集成了其各种插件,提供强大的图片生成和创作功能。",
-            "icon": "/assets/images/logos/vercel.png"
-          },
-          {
-            "id": "1733657315012",
-            "title": "Tensor.art",
-            "href": "https://tensor.art/",
-            "description": "Tensor.art是一个免费的在线图像生成和模型托管平台。它允许用户在线运行模型来免费生成图像。",
-            "icon": "tensorart"
-          },
-          {
-            "id": "1733657315013",
-            "title": "优设",
-            "href": "http://www.uisdc.com/",
-            "description": "设计师交流学习平台",
-            "icon": "uisdc"
-          },
-          {
-            "id": "1733665031305",
-            "title": "test",
-            "href": "https://dh.leti.ltd/",
-            "description": "werewrwer"
-          },
-          {
-            "id": "1733665031305",
-            "title": "test",
-            "href": "https://dh.leti.ltd/",
-            "description": "werewrwer"
-          },
-          {
-            "id": "1733665081436",
-            "title": "tet",
-            "href": "https://dh.leti.ltd/",
-            "description": ""
-          }
-        ]
-      },{
-        "id": "17336573150057",
-        "title": "常用推荐子级2",
-        "icon": "linecons-star",
-        "items": [
-          {
-            "id": "1733657315006",
-            "title": "Google Analytics",
-            "href": "https://analytics.google.com/",
-            "description": "Google分析（Google Analytics）是一个由Google所提供的网站流量统计服务。",
-            "icon": "analytics"
-          },
-          {
-            "id": "1733657315007",
-            "title": "Vercel",
-            "href": "https://vercel.com/",
-            "description": "Vercel 提供开发者工具和云基础设施，帮助构建、扩展和保护更快、更个性化的网络应用。",
-            "icon": "vercel"
-          },
-          {
-            "id": "1733657315008",
-            "title": "Cloudflare",
-            "href": "https://dash.cloudflare.com/",
-            "description": "Cloudflare以向客户提供基于反向代理的内容分发网络及分布式域名解析服务为主要业务。",
-            "icon": "vercel"
-          },
-          {
-            "id": "1733657315009",
-            "title": "Google AdSense",
-            "href": "https://www.google.com/adsense/",
-            "description": "Google AdSense广告服务。",
-            "icon": "https://www.google.com/adsense/start/images/favicon.ico"
-          },
-          {
-            "id": "1733657315010",
-            "title": "Producthunt",
-            "href": "https://www.producthunt.com/",
-            "description": "发现新鲜有趣的产品",
-            "icon": "https://ph-static.imgix.net/ph-favicon-coral.ico"
-          },
-          {
-            "id": "1733657315011",
-            "title": "Leonardo.AI",
-            "href": "https://app.leonardo.ai/",
-            "description": "Leonardo.AI是一个人工智能绘图社区和工具。它基于Stable Diffusion人工智能模型,深度集成了其各种插件,提供强大的图片生成和创作功能。",
-            "icon": "https://app.leonardo.ai/favicon.ico"
-          },
-          {
-            "id": "1733657315012",
-            "title": "Tensor.art",
-            "href": "https://tensor.art/",
-            "description": "Tensor.art是一个免费的在线图像生成和模型托管平台。它允许用户在线运行模型来免费生成图像。",
-            "icon": "tensorart"
-          },
-          {
-            "id": "1733657315013",
-            "title": "优设",
-            "href": "http://www.uisdc.com/",
-            "description": "设计师交流学习平台",
-            "icon": "uisdc"
-          },
-          {
-            "id": "1733665031305",
-            "title": "test",
-            "href": "https://dh.leti.ltd/",
-            "description": "werewrwer"
-          },
-          {
-            "id": "1733665031305",
-            "title": "test",
-            "href": "https://dh.leti.ltd/",
-            "description": "werewrwer"
-          },
-          {
-            "id": "1733665081436",
-            "title": "tet",
-            "href": "https://dh.leti.ltd/",
-            "description": ""
-          }
-        ]
-      }]
-    },
-    {
       "id": "1733657315014",
       "title": "常用AI",
       "icon": "linecons-lightbulb",
@@ -203,6 +35,176 @@
         }
       ],
       "subCategories": []
+    },
+    {
+      "id": "1733657315005",
+      "title": "常用推荐",
+      "icon": "linecons-star",
+      "items": [],
+      "subCategories": [
+        {
+          "id": "17336573150051",
+          "title": "常用推荐子级",
+          "icon": "linecons-star",
+          "items": [
+            {
+              "id": "1733657315006",
+              "title": "Google Analytics",
+              "href": "https://analytics.google.com/",
+              "description": "Google分析（Google Analytics）是一个由Google所提供的网站流量统计服务。",
+              "icon": "/assets/images/logos/analytics.ico"
+            },
+            {
+              "id": "1733657315007",
+              "title": "Vercel",
+              "href": "https://vercel.com/",
+              "description": "Vercel 提供开发者工具和云基础设施，帮助构建、扩展和保护更快、更个性化的网络应用。",
+              "icon": "/assets/images/logos/vercel.png"
+            },
+            {
+              "id": "1733657315008",
+              "title": "Cloudflare",
+              "href": "https://dash.cloudflare.com/",
+              "description": "Cloudflare以向客户提供基于反向代理的内容分发网络及分布式域名解析服务为主要业务。",
+              "icon": "/assets/images/logos/vercel.png"
+            },
+            {
+              "id": "1733657315009",
+              "title": "Google AdSense",
+              "href": "https://www.google.com/adsense/",
+              "description": "Google AdSense广告服务。",
+              "icon": "/assets/images/logos/vercel.png"
+            },
+            {
+              "id": "1733657315010",
+              "title": "Producthunt",
+              "href": "https://www.producthunt.com/",
+              "description": "发现新鲜有趣的产品",
+              "icon": "/assets/images/logos/vercel.png"
+            },
+            {
+              "id": "1733657315011",
+              "title": "Leonardo.AI",
+              "href": "https://app.leonardo.ai/",
+              "description": "Leonardo.AI是一个人工智能绘图社区和工具。它基于Stable Diffusion人工智能模型,深度集成了其各种插件,提供强大的图片生成和创作功能。",
+              "icon": "/assets/images/logos/vercel.png"
+            },
+            {
+              "id": "1733657315012",
+              "title": "Tensor.art",
+              "href": "https://tensor.art/",
+              "description": "Tensor.art是一个免费的在线图像生成和模型托管平台。它允许用户在线运行模型来免费生成图像。",
+              "icon": "tensorart"
+            },
+            {
+              "id": "1733657315013",
+              "title": "优设",
+              "href": "http://www.uisdc.com/",
+              "description": "设计师交流学习平台",
+              "icon": "uisdc"
+            },
+            {
+              "id": "1733665031305",
+              "title": "test",
+              "href": "https://dh.leti.ltd/",
+              "description": "werewrwer"
+            },
+            {
+              "id": "1733665031305",
+              "title": "test",
+              "href": "https://dh.leti.ltd/",
+              "description": "werewrwer"
+            },
+            {
+              "id": "1733665081436",
+              "title": "tet",
+              "href": "https://dh.leti.ltd/",
+              "description": ""
+            }
+          ]
+        },
+        {
+          "id": "17336573150057",
+          "title": "常用推荐子级2",
+          "icon": "linecons-star",
+          "items": [
+            {
+              "id": "1733657315006",
+              "title": "Google Analytics",
+              "href": "https://analytics.google.com/",
+              "description": "Google分析（Google Analytics）是一个由Google所提供的网站流量统计服务。",
+              "icon": "analytics"
+            },
+            {
+              "id": "1733657315007",
+              "title": "Vercel",
+              "href": "https://vercel.com/",
+              "description": "Vercel 提供开发者工具和云基础设施，帮助构建、扩展和保护更快、更个性化的网络应用。",
+              "icon": "vercel"
+            },
+            {
+              "id": "1733657315008",
+              "title": "Cloudflare",
+              "href": "https://dash.cloudflare.com/",
+              "description": "Cloudflare以向客户提供基于反向代理的内容分发网络及分布式域名解析服务为主要业务。",
+              "icon": "vercel"
+            },
+            {
+              "id": "1733657315009",
+              "title": "Google AdSense",
+              "href": "https://www.google.com/adsense/",
+              "description": "Google AdSense广告服务。",
+              "icon": "https://www.google.com/adsense/start/images/favicon.ico"
+            },
+            {
+              "id": "1733657315010",
+              "title": "Producthunt",
+              "href": "https://www.producthunt.com/",
+              "description": "发现新鲜有趣的产品",
+              "icon": "https://ph-static.imgix.net/ph-favicon-coral.ico"
+            },
+            {
+              "id": "1733657315011",
+              "title": "Leonardo.AI",
+              "href": "https://app.leonardo.ai/",
+              "description": "Leonardo.AI是一个人工智能绘图社区和工具。它基于Stable Diffusion人工智能模型,深度集成了其各种插件,提供强大的图片生成和创作功能。",
+              "icon": "https://app.leonardo.ai/favicon.ico"
+            },
+            {
+              "id": "1733657315012",
+              "title": "Tensor.art",
+              "href": "https://tensor.art/",
+              "description": "Tensor.art是一个免费的在线图像生成和模型托管平台。它允许用户在线运行模型来免费生成图像。",
+              "icon": "tensorart"
+            },
+            {
+              "id": "1733657315013",
+              "title": "优设",
+              "href": "http://www.uisdc.com/",
+              "description": "设计师交流学习平台",
+              "icon": "uisdc"
+            },
+            {
+              "id": "1733665031305",
+              "title": "test",
+              "href": "https://dh.leti.ltd/",
+              "description": "werewrwer"
+            },
+            {
+              "id": "1733665031305",
+              "title": "test",
+              "href": "https://dh.leti.ltd/",
+              "description": "werewrwer"
+            },
+            {
+              "id": "1733665081436",
+              "title": "tet",
+              "href": "https://dh.leti.ltd/",
+              "description": ""
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "1733657315019",
