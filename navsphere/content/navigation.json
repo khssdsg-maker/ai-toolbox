@@ -1,21 +1,6 @@
 {
   "navigationItems": [
     {
-      "subCategories": [
-        {
-          "id": "1733650492794",
-          "title": "二级分类",
-          "items": []
-        },
-        {
-          "id": "1733650502092",
-          "title": "二级分类",
-          "items": []
-        }
-      ],
-      "id": "common"
-    },
-    {
       "id": "tools",
       "title": "开发工具",
       "icon": "linecons-desktop",
