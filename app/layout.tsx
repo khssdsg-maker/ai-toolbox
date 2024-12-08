@@ -5,6 +5,7 @@ import { Inter } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from "@/components/ui/toaster"
+import { ThemeToggle } from '@/components/theme-toggle'
 import type { SiteConfig } from '@/types/site'
 
 const inter = Inter({
@@ -60,7 +61,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body>{children}</body>
+      <body className={cn('min-h-screen bg-background font-sans antialiased')}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="fixed top-4 right-4 z-50">
+            <ThemeToggle />
+          </div>
+          {children}
+          <Toaster />
+        </ThemeProvider>
+      </body>
     </html>
   )
 }
