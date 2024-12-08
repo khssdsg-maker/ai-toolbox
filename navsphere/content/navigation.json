@@ -12,7 +12,13 @@
       "title": "父分类",
       "icon": "search",
       "items": [],
-      "subCategories": []
+      "subCategories": [
+        {
+          "id": "1733652777714",
+          "title": "二级分类",
+          "items": []
+        }
+      ]
     }
   ]
 }
