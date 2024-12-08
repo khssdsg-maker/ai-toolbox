@@ -9,7 +9,15 @@
         {
           "id": "1733652778769",
           "title": "二级分类",
-          "items": [],
+          "items": [
+            {
+              "id": "1733656130242",
+              "title": "网站1",
+              "href": "https://dh.leti.ltd/",
+              "description": "werewrwer",
+              "icon": "/werwer"
+            }
+          ],
           "icon": "user"
         }
       ]
