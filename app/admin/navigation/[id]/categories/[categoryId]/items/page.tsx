@@ -179,7 +179,7 @@ export default function CategoryItemsPage() {
   }
 
   const deleteItem = async (index: number) => {
-    if (!navigation || !category) return
+    if (!params?.id || !navigation || !category) return
 
     try {
       const updatedItems = [...(category.items || [])]
