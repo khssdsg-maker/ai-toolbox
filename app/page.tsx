@@ -1,6 +1,6 @@
-export const runtime = 'edge'
-
 'use server'
+
+export const runtime = 'edge'
 
 import type { NavigationData } from '@/types/navigation'
 import type { SiteConfig } from '@/types/site'
@@ -54,6 +54,5 @@ async function getData() {
 
 export default async function HomePage() {
   const { navigationData, siteData } = await getData()
-
   return <NavigationContent navigationData={navigationData} siteData={siteData} />
 }
