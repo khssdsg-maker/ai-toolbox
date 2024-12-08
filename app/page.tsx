@@ -1,9 +1,8 @@
-'use server'
+export const runtime = 'edge'
 
-import type { NavigationData } from '@/types/navigation'
-import type { SiteConfig } from '@/types/site'
 import { NavigationContent } from '@/components/navigation-content'
 import { headers } from 'next/headers'
+
 
 async function getData() {
   try {
