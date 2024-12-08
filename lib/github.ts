@@ -98,10 +98,8 @@ export async function commitFile(
   const branch = process.env.GITHUB_BRANCH || 'main'
 
   try {
-    console.log('Committing file:', path)
-    // 获取当前文件信息
+    // 1. 获取当前文件信息（如果存在）
     const currentFileUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`
-
     const currentFileResponse = await fetch(currentFileUrl, {
       headers: {
         Authorization: `token ${token}`,
@@ -114,24 +112,10 @@ export async function commitFile(
     if (currentFileResponse.ok) {
       const currentFile = await currentFileResponse.json()
       sha = currentFile.sha
-      console.log('Found existing file with sha:', sha)
-    } else {
-      console.log('File does not exist, creating new file')
     }
 
-    // 提交更新
+    // 2. 创建或更新文件
     const updateUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`
-    console.log('Updating file at:', updateUrl)
-
-    // 确保内容是有效的 JSON
-    let jsonContent = content
-    if (typeof content === 'object') {
-      jsonContent = JSON.stringify(content, null, 2)
-    }
-
-    // 处理中文编码
-    const encodedContent = btoa(unescape(encodeURIComponent(jsonContent)))
-
     const response = await fetch(updateUrl, {
       method: 'PUT',
       headers: {
@@ -142,7 +126,7 @@ export async function commitFile(
       },
       body: JSON.stringify({
         message,
-        content: encodedContent,
+        content: Buffer.from(content).toString('base64'),
         sha,
         branch,
       }),
@@ -150,13 +134,10 @@ export async function commitFile(
 
     if (!response.ok) {
       const error = await response.json()
-      console.error('GitHub API error:', error)
       throw new Error(`Failed to commit file: ${error.message}`)
     }
 
-    const result = await response.json()
-    console.log('File committed successfully:', result)
-    return result
+    return await response.json()
   } catch (error) {
     console.error('Error in commitFile:', error)
     throw error

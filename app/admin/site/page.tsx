@@ -20,7 +20,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/registry/new-york/ui/form"
-import { getSiteConfig, updateSiteConfig } from "@/services/siteConfigService"
+import { SiteConfigService} from "@/services/siteConfigService"
 import type { SiteConfig } from "@/types/site"
 
 const formSchema = z.object({
@@ -64,9 +64,10 @@ export default function SiteSettings() {
 
   useEffect(() => {
     const loadConfig = async () => {
-      const config = await getSiteConfig()
+      const siteConfigService = new SiteConfigService();
+      const config = await siteConfigService.getSiteConfig();
       if (config) {
-        form.reset(config)
+        form.reset(config);
       }
     }
     loadConfig()
@@ -74,21 +75,18 @@ export default function SiteSettings() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const success = await updateSiteConfig(values)
-      if (success) {
-        toast({
-          title: "成功",
-          description: "站点信息已保存",
-        })
-      } else {
-        throw new Error("保存失败")
-      }
+      const siteConfigService = new SiteConfigService();
+      await siteConfigService.updateSiteConfig(values);
+      toast({
+        title: "成功",
+        description: "站点信息已保存",
+      });
     } catch (error) {
       toast({
         title: "错误",
         description: "保存失败",
         variant: "destructive",
-      })
+      });
     }
   }
 
