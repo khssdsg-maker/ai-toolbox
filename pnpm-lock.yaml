@@ -243,9 +243,6 @@ importers:
       '@radix-ui/react-icons':
         specifier: ^1.3.2
         version: 1.3.2(react@18.2.0)
-      '@shadcn/ui':
-        specifier: ^0.0.4
-        version: 0.0.4
       '@types/node':
         specifier: 20.4.5
         version: 20.4.5
@@ -1295,10 +1292,6 @@ packages:
 
   '@rushstack/eslint-patch@1.10.4':
     resolution: {integrity: sha512-WJgX9nzTqknM393q1QJDJmoW28kUfEnybeTfVNcNAPnIx210RXm2DiXiHzfNPJNIUUb1tJnz/l4QGtJ30PgWmA==}
-
-  '@shadcn/ui@0.0.4':
-    resolution: {integrity: sha512-0dtu/5ApsOZ24qgaZwtif8jVwqol7a4m1x5AxPuM1k5wxhqU7t/qEfBGtaSki1R8VlbTQfCj5PAlO45NKCa7Gg==}
-    hasBin: true
 
   '@swc/helpers@0.5.2':
     resolution: {integrity: sha512-E4KcWTpoLHqwPHLxidpOqQbcrZVgi0rsmmZXUle1jXmJfuIf/UWpczUJ7MZZ5tlxytgJXyp0w4PGkkeLiuIdZw==}
@@ -4690,17 +4683,6 @@ snapshots:
   '@rtsao/scc@1.1.0': {}
 
   '@rushstack/eslint-patch@1.10.4': {}
-
-  '@shadcn/ui@0.0.4':
-    dependencies:
-      chalk: 5.2.0
-      commander: 10.0.1
-      execa: 7.2.0
-      fs-extra: 11.2.0
-      node-fetch: 3.3.2
-      ora: 6.3.1
-      prompts: 2.4.2
-      zod: 3.22.4
 
   '@swc/helpers@0.5.2':
     dependencies:
