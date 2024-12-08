@@ -1,89 +1,60 @@
+import { auth } from '@/lib/auth'
+
 export async function getFileContent(path: string) {
   const owner = process.env.GITHUB_OWNER!
   const repo = process.env.GITHUB_REPO!
   const branch = process.env.GITHUB_BRANCH || 'main'
 
-  console.log('GitHub API: Starting getFileContent', {
-    path,
-    owner,
-    repo,
-    branch
-  })
-
   try {
-    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`
-    console.log('GitHub API: Fetching from:', apiUrl)
+    // 获取当前会话的 token
+    const session = await auth()
+    const token = session?.user?.accessToken
 
+    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`
     const response = await fetch(apiUrl, {
       headers: {
         Accept: 'application/vnd.github.v3.raw',
+        Authorization: token ? `token ${token}` : '',
         'User-Agent': 'NavSphere',
       },
     })
 
-    console.log('GitHub API: Response status:', response.status)
-    console.log('GitHub API: Response headers:', Object.fromEntries(response.headers.entries()))
-
     if (response.status === 404) {
       console.log('GitHub API: File not found, returning default data')
-      if (path.includes('navigation.json')) {
-        return {
-          navigationItems: []
+      return {
+        basic: {
+          title: '',
+          description: '',
+          keywords: ''
+        },
+        appearance: {
+          logo: '',
+          favicon: '',
+          theme: 'system'
         }
       }
-      if (path.includes('resources.json')) {
-        return {
-          resourceSections: []
-        }
-      }
-      return {}
     }
 
     if (!response.ok) {
-      const errorText = await response.text()
-      console.error('GitHub API error:', {
-        status: response.status,
-        statusText: response.statusText,
-        error: errorText,
-        headers: Object.fromEntries(response.headers.entries())
-      })
-      throw new Error(`Failed to fetch file: ${response.statusText} (${errorText})`)
+      throw new Error(`Failed to fetch file: ${response.statusText}`)
     }
 
     const data = await response.json()
-    console.log('GitHub API: Successfully fetched data:', data)
-
-    // 确保返回的数据格式一致
-    if (path.includes('navigation.json')) {
-      const result = {
-        navigationItems: Array.isArray(data) ? data : data.navigationItems || []
-      }
-      console.log('GitHub API: Returning navigation data:', result)
-      return result
-    }
-    if (path.includes('resources.json')) {
-      const result = {
-        resourceSections: Array.isArray(data) ? data : data.resourceSections || []
-      }
-      console.log('GitHub API: Returning resources data:', result)
-      return result
-    }
-
     return data
   } catch (error) {
-    console.error('GitHub API: Error in getFileContent:', error)
-    // 返回默认数据而不是抛出错误
-    if (path.includes('navigation.json')) {
-      return {
-        navigationItems: []
+    console.error('Error fetching file:', error)
+    return {
+      basic: {
+        title: '',
+        description: '',
+        keywords: ''
+      },
+      appearance: {
+        logo: '',
+        favicon: '',
+        theme: 'system'
       }
     }
-    if (path.includes('resources.json')) {
-      return {
-        resourceSections: []
-      }
-    }
-    return {}
   }
 }
 
