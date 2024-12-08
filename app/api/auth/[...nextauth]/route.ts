@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth'
 import GithubProvider from 'next-auth/providers/github'
 
-const handler = NextAuth({
+const authOptions = {
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID!,
@@ -9,6 +9,10 @@ const handler = NextAuth({
     }),
   ],
   // ... 其他配置
-})
+}
 
-export { handler as GET, handler as POST }
+const handler = NextAuth(authOptions)
+
+// 正确的导出方式
+export const GET = handler
+export const POST = handler
