@@ -83,7 +83,14 @@
           "description": ""
         }
       ],
-      "subCategories": []
+      "subCategories": [
+        {
+          "id": "1733665429211",
+          "title": "我是二级分类",
+          "icon": "add",
+          "items": []
+        }
+      ]
     },
     {
       "id": "1733657315014",
