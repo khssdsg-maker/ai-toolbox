@@ -20,11 +20,11 @@ const formSchema = z.object({
   icon: z.string().min(1, { message: "请选择图标" })
 })
 
-interface AddCategoryFormProps {
+interface AddNavigationFormProps {
   onSubmit: (values: z.infer<typeof formSchema>) => Promise<void>
 }
 
-export function AddCategoryForm({ onSubmit }: AddCategoryFormProps) {
+export function AddNavigationForm({ onSubmit }: AddNavigationFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

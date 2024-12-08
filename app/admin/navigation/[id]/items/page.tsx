@@ -47,7 +47,7 @@ export default function ItemsPage() {
   const fetchNavigation = async () => {
     try {
       setIsLoading(true)
-      const response = await fetch(`/api/navigation/${params!.id}`)
+      const response = await fetch(`/api/navigation/${params!.id}/items`)
       if (!response.ok) throw new Error('Failed to fetch')
       const data = await response.json()
       setNavigation(data)
@@ -63,23 +63,16 @@ export default function ItemsPage() {
   }
 
   const addItem = async (values: NavigationSubItem) => {
-    if (!navigation?.id) return
-
     try {
-      const updatedNavigation: NavigationItem = {
-        ...navigation,
-        items: [...(navigation.items || []), values]
-      }
-
-      const response = await fetch(`/api/navigation/${params!.id}`, {
-        method: 'PUT',
+      const response = await fetch(`/api/navigation/${params!.id}/items`, {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedNavigation)
+        body: JSON.stringify(values)
       })
 
       if (!response.ok) throw new Error('Failed to save')
 
-      setNavigation(updatedNavigation)
+      await fetchNavigation()
       toast({
         title: "成功",
         description: "添加成功"
@@ -93,31 +86,21 @@ export default function ItemsPage() {
     }
   }
 
-  const handleEdit = (item: any) => {
-    setEditingItem(item)
+  const handleEdit = (index: number, item: NavigationSubItem) => {
+    setEditingItem({ index, item })
   }
 
   const handleDelete = async (index: number) => {
-    if (!navigation?.id || !params?.id) return
-
     try {
-      const updatedItems = [...navigation.items]
-      updatedItems.splice(index, 1)
-
-      const updatedNavigation: NavigationItem = {
-        ...navigation,
-        items: updatedItems
-      }
-
-      const response = await fetch(`/api/navigation/${params.id}`, {
-        method: 'PUT',
+      const response = await fetch(`/api/navigation/${params!.id}/items`, {
+        method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedNavigation)
+        body: JSON.stringify({ index })
       })
 
       if (!response.ok) throw new Error('Failed to delete')
 
-      setNavigation(updatedNavigation)
+      await fetchNavigation()
       toast({
         title: "成功",
         description: "删除成功"
@@ -132,30 +115,21 @@ export default function ItemsPage() {
   }
 
   const handleUpdate = async (values: NavigationSubItem) => {
-    if (!navigation?.id || !params?.id || !editingItem) return
+    if (!editingItem) return
 
     try {
-      const updatedItems = navigation.items.map((item, i) => {
-        if (i === editingItem.index) {
-          return values
-        }
-        return item
-      })
-
-      const updatedNavigation: NavigationItem = {
-        ...navigation,
-        items: updatedItems
-      }
-
-      const response = await fetch(`/api/navigation/${params.id}`, {
+      const response = await fetch(`/api/navigation/${params!.id}/items`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedNavigation)
+        body: JSON.stringify({
+          index: editingItem.index,
+          item: values
+        })
       })
 
       if (!response.ok) throw new Error('Failed to update')
 
-      setNavigation(updatedNavigation)
+      await fetchNavigation()
       setEditingItem(null)
       toast({
         title: "成功",
@@ -182,7 +156,7 @@ export default function ItemsPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-3xl font-bold">{navigation?.title} - 子项目管理</h2>
+          <h2 className="text-3xl font-bold">{navigation.title} - 子项目管理</h2>
           <p className="text-muted-foreground">管理导航的子项目</p>
         </div>
         <Dialog>
@@ -213,7 +187,7 @@ export default function ItemsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {navigation?.items?.map((item, index) => (
+            {navigation.items?.map((item, index) => (
               <TableRow key={index}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{item.title}</TableCell>
@@ -223,7 +197,7 @@ export default function ItemsPage() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => handleEdit({ index, item })}
+                    onClick={() => handleEdit(index, item)}
                   >
                     <Icons.edit className="h-4 w-4" />
                   </Button>

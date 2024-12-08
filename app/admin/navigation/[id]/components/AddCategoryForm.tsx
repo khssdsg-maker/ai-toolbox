@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Button } from "@/registry/new-york/ui/button"
 import { Input } from "@/registry/new-york/ui/input"
-import { IconPicker } from "@/components/ui/icon-picker"
 import {
   Form,
   FormControl,
@@ -16,8 +15,7 @@ import {
 } from "@/registry/new-york/ui/form"
 
 const formSchema = z.object({
-  title: z.string().min(2, { message: "标题至少需要2个字符" }),
-  icon: z.string().min(1, { message: "请选择图标" })
+  title: z.string().min(2, { message: "标题至少需要2个字符" })
 })
 
 interface AddCategoryFormProps {
@@ -28,8 +26,7 @@ export function AddCategoryForm({ onSubmit }: AddCategoryFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      icon: ""
+      title: ""
     }
   })
 
@@ -41,22 +38,9 @@ export function AddCategoryForm({ onSubmit }: AddCategoryFormProps) {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>标题</FormLabel>
+              <FormLabel>分类名称</FormLabel>
               <FormControl>
-                <Input placeholder="输入导航标题" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="icon"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>图标</FormLabel>
-              <FormControl>
-                <IconPicker {...field} />
+                <Input placeholder="输入分类名称" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
