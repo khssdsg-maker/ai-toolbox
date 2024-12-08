@@ -70,7 +70,8 @@ import {
   Tv,
   Zap,
   type Icon as LucideIcon,
-  Navigation
+  Navigation,
+  Clock
 } from "lucide-react"
 
 export type Icon = LucideIcon
@@ -150,5 +151,6 @@ export const Icons = {
   zap: Zap,
   category: Folder,
   placeholder: Folder,
-  logo: Navigation
+  logo: Navigation,
+  clock: Clock
 } as const

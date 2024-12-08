@@ -1,10 +1,19 @@
 import Image from 'next/image'
 import { NavigationSubItem } from '@/types/navigation'
 import { cn } from '@/lib/utils'
+import { Icons } from '@/components/icons'
 
 interface NavigationCardProps {
   item: NavigationSubItem
   className?: string
+}
+
+const isValidUrl = (urlString: string) => {
+  try {
+    return Boolean(new URL(urlString)) || urlString.startsWith('/')
+  } catch (e) {
+    return false
+  }
 }
 
 export function NavigationCard({ item, className }: NavigationCardProps) {
@@ -21,13 +30,17 @@ export function NavigationCard({ item, className }: NavigationCardProps) {
       {/* 图标 */}
       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
         {item.icon ? (
-          <Image
-            src={item.icon}
-            alt={item.title}
-            width={20}
-            height={20}
-            className="h-5 w-5 object-contain"
-          />
+          isValidUrl(item.icon) ? (
+            <Image
+              src={item.icon}
+              alt={item.title}
+              width={20}
+              height={20}
+              className="h-5 w-5 object-contain"
+            />
+          ) : (
+            <div className="h-5 w-5 bg-primary/20 rounded" />
+          )
         ) : (
           <div className="h-5 w-5 bg-primary/20 rounded" />
         )}
