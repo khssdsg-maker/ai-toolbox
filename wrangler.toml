@@ -4,6 +4,9 @@ compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".vercel/output/static"
 
 
+[build]
+command = "pnpm build"
+
 
 [env.production]
 GITHUB_ID = "Ov23lig3bTXpZHrPO1c8"
