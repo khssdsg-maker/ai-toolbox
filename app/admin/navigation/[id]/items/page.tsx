@@ -178,27 +178,31 @@ export default function ItemsPage() {
     }
   }
 
-  const moveItem = async (fromIndex: number, toIndex: number) => {
-    if (!navigation || !navigation.items) return
+  const onDragEnd = async (result: DropResult) => {
+    if (!result.destination) return
+
+    const items = Array.from(navigation?.items || [])
+    const [reorderedItem] = items.splice(result.source.index, 1)
+    items.splice(result.destination.index, 0, reorderedItem)
 
     try {
-      if (!params?.id) {
-        throw new Error('Navigation ID not found')
-      }
-
       const navigationId = Array.isArray(params.id) ? params.id[0] : params.id
-      const response = await fetch(`/api/navigation/${navigationId}/items`, {
+      const response = await fetch(`/api/navigation/${navigationId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          fromIndex,
-          toIndex
+          ...navigation,
+          items
         })
       })
 
       if (!response.ok) throw new Error('Failed to save order')
 
-      await fetchNavigation() // 重新获取最新数据
+      await fetchNavigation() // Refresh data
+      toast({
+        title: "成功",
+        description: "项目顺序已更新"
+      })
     } catch (error) {
       toast({
         title: "错误",
@@ -208,27 +212,72 @@ export default function ItemsPage() {
     }
   }
 
-  const handleDragEnd = (result: DropResult) => {
-    const { destination, source } = result
-    
-    if (!destination || destination.index === source.index || !navigation?.items) return
-
-    const oldIndex = source.index
-    const newIndex = destination.index
-    
-    moveItem(oldIndex, newIndex)
-  }
-
   const moveToTop = async (index: number) => {
     if (index > 0) {
-      moveItem(index, 0)
+      const items = Array.from(navigation?.items || [])
+      const [reorderedItem] = items.splice(index, 1)
+      items.unshift(reorderedItem)
+
+      try {
+        const navigationId = Array.isArray(params.id) ? params.id[0] : params.id
+        const response = await fetch(`/api/navigation/${navigationId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...navigation,
+            items
+          })
+        })
+
+        if (!response.ok) throw new Error('Failed to save order')
+
+        await fetchNavigation() // Refresh data
+        toast({
+          title: "成功",
+          description: "项目顺序已更新"
+        })
+      } catch (error) {
+        toast({
+          title: "错误",
+          description: "保存顺序失败",
+          variant: "destructive"
+        })
+      }
     }
   }
 
   const moveToBottom = async (index: number) => {
     if (!navigation?.items) return
     if (index < navigation.items.length - 1) {
-      moveItem(index, navigation.items.length - 1)
+      const items = Array.from(navigation?.items || [])
+      const [reorderedItem] = items.splice(index, 1)
+      items.push(reorderedItem)
+
+      try {
+        const navigationId = Array.isArray(params.id) ? params.id[0] : params.id
+        const response = await fetch(`/api/navigation/${navigationId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...navigation,
+            items
+          })
+        })
+
+        if (!response.ok) throw new Error('Failed to save order')
+
+        await fetchNavigation() // Refresh data
+        toast({
+          title: "成功",
+          description: "项目顺序已更新"
+        })
+      } catch (error) {
+        toast({
+          title: "错误",
+          description: "保存顺序失败",
+          variant: "destructive"
+        })
+      }
     }
   }
 
@@ -277,92 +326,66 @@ export default function ItemsPage() {
           <Icons.loader2 className="h-6 w-6 animate-spin" />
         </div>
       ) : navigation?.items && navigation.items.length > 0 ? (
-        <DragDropContext onDragEnd={handleDragEnd}>
+        <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable">
             {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef} className="grid gap-2">
                 {filteredItems.map((item, index) => (
-                  <Draggable key={index} draggableId={String(index)} index={index}>
-                    {(provided) => (
+                  <Draggable key={item.id} draggableId={item.id} index={index}>
+                    {(provided, snapshot) => (
                       <div
+                        ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        ref={provided.innerRef}
-                        className="group relative"
+                        className={`flex items-center justify-between p-4 rounded-lg border bg-card text-card-foreground shadow-sm hover:border-primary/50 transition-colors ${
+                          snapshot.isDragging ? 'bg-gray-50' : ''
+                        }`}
                       >
-                        <div
-                          className="flex items-center justify-between py-2 px-4 bg-card rounded-lg border shadow-sm transition-colors hover:bg-accent/10"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
-                              {item.icon ? (
-                                <img src={item.icon} alt={item.title} className="w-4 h-4 object-contain" />
-                              ) : (
-                                <Icons.link className="h-4 w-4 text-primary" />
-                              )}
-                            </div>
-                            <div>
-                              <div className="font-medium leading-none mb-1">{item.title}</div>
-                              {item.description && (
-                                <div className="text-xs text-muted-foreground">
-                                  {item.description}
-                                </div>
-                              )}
-                            </div>
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
+                            {item.icon ? (
+                              <img src={item.icon} alt={item.title} className="w-4 h-4 object-contain" />
+                            ) : (
+                              <Icons.link className="h-4 w-4 text-primary" />
+                            )}
                           </div>
-                          <div className="flex items-center gap-1">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8"
-                              onClick={() => window.open(item.href, '_blank')}
-                              title="访问链接"
-                            >
-                              <Icons.globe className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8"
-                              onClick={() => setEditingItem({ index, item })}
-                              title="编辑"
-                            >
-                              <Icons.pencil className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8"
-                              onClick={() => setDeletingItem({ index, item })}
-                              title="删除"
-                            >
-                              <Icons.trash className="h-4 w-4" />
-                            </Button>
+                          <div>
+                            <div className="font-medium leading-none mb-1">{item.title}</div>
+                            {item.description && (
+                              <div className="text-xs text-muted-foreground">
+                                {item.description}
+                              </div>
+                            )}
                           </div>
                         </div>
-                        <div className="absolute right-0 top-1/2 -translate-y-1/2 pr-2 hidden group-hover:flex items-center gap-1">
-                          {index > 0 && (
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-6 w-6"
-                              onClick={() => moveToTop(index)}
-                              title="置顶"
-                            >
-                              <Icons.chevronLeft className="h-4 w-4 -rotate-90" />
-                            </Button>
-                          )}
-                          {index < (navigation?.items?.length || 0) - 1 && (
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-6 w-6"
-                              onClick={() => moveToBottom(index)}
-                              title="置底"
-                            >
-                              <Icons.chevronRight className="h-4 w-4 rotate-90" />
-                            </Button>
-                          )}
+                        <div className="flex items-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => window.open(item.href, '_blank')}
+                            title="访问链接"
+                          >
+                            <Icons.globe className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => setEditingItem({ index, item })}
+                            title="编辑"
+                          >
+                            <Icons.pencil className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            onClick={() => setDeletingItem({ index, item })}
+                            title="删除"
+                          >
+                            <Icons.trash className="h-4 w-4" />
+                          </Button>
                         </div>
                       </div>
                     )}
