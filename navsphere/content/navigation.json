@@ -226,7 +226,14 @@
           "description": "1222"
         }
       ],
-      "subCategories": []
+      "subCategories": [
+        {
+          "id": "1733665928753",
+          "title": "二级",
+          "icon": "save",
+          "items": []
+        }
+      ]
     }
   ]
 }
