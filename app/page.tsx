@@ -19,7 +19,9 @@ async function getData() {
         } 
       })
     ])
-
+ // Add status code logging
+ console.log('Navigation response status:', navigationRes.status)
+ console.log('Site response status:', siteRes.status)
     if (!navigationRes.ok || !siteRes.ok) {
       throw new Error('Failed to fetch data')
     }
