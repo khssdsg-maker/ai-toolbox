@@ -69,9 +69,11 @@ import {
   Tool,
   Tv,
   Zap,
+  type Icon as LucideIcon,
+  Navigation
 } from "lucide-react"
 
-export type Icon = typeof Loader2
+export type Icon = LucideIcon
 
 export const Icons = {
   spinner: Loader2,
@@ -147,5 +149,6 @@ export const Icons = {
   tv: Tv,
   zap: Zap,
   category: Folder,
-  placeholder: Folder
+  placeholder: Folder,
+  logo: Navigation
 } as const
