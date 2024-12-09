@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { commitFile, getFileContent } from '@/lib/github'
-import type { NavigationData } from '@/types/navigation'
+import type { NavigationData, NavigationItem } from '@/types/navigation'
 
 export const runtime = 'edge'
 
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
     }
 
     // 额外的数据验证
-    const invalidItems = data.navigationItems.filter(item => 
+    const invalidItems = data.navigationItems.filter((item: NavigationItem) => 
       !item.id || 
       !item.title || 
       (item.items && !Array.isArray(item.items)) ||

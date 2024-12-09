@@ -58,7 +58,7 @@ export function NavigationCard({
 
   const handleEdit = async (values: { 
     title: string; 
-    description: string; 
+    description?: string; 
     icon: string;
     enabled: boolean;
   }) => {
@@ -241,7 +241,8 @@ export function NavigationCard({
                 defaultValues={{
                   title: item.title,
                   description: item.description || '',
-                  icon: item.icon || ''
+                  icon: item.icon || '',
+                  enabled: true
                 }}
                 onSubmit={handleEdit}
                 onCancel={() => setIsEditDialogOpen(false)}

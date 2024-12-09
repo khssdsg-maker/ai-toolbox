@@ -24,7 +24,7 @@ interface AddCategoryFormProps {
     icon: string
     enabled: boolean
   }
-  onSubmit: (values: z.infer<typeof formSchema>) => void
+  onSubmit: (values: z.infer<typeof formSchema>) => Promise<void>
   onCancel: () => void
 }
 
@@ -39,9 +39,18 @@ export function AddCategoryForm({ defaultValues, onSubmit, onCancel }: AddCatego
     }
   })
 
+  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      await onSubmit(values);
+      onCancel();
+    } catch (error) {
+      console.error('Failed to submit:', error);
+    }
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="title"
@@ -122,11 +131,18 @@ export function AddCategoryForm({ defaultValues, onSubmit, onCancel }: AddCatego
         />
 
         <div className="flex justify-end gap-2">
-          <Button type="button" variant="outline" onClick={onCancel}>
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={onCancel}
+          >
             取消
           </Button>
-          <Button type="submit">
-            保存
+          <Button 
+            type="submit"
+            disabled={form.formState.isSubmitting}
+          >
+            {form.formState.isSubmitting ? "保存中..." : "保存"}
           </Button>
         </div>
       </form>
