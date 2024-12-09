@@ -74,7 +74,7 @@ export default function SiteSettings() {
       }
     }
     loadConfig()
-  }, [form])
+  }, [])
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
