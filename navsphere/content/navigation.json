@@ -58,6 +58,14 @@
           "description": "twetwe",
           "enabled": true,
           "items": []
+        },
+        {
+          "id": "33c2f64e-3424-4774-8ad0-da846fdd9d5d",
+          "title": "wwwe",
+          "icon": "BookOpen",
+          "description": "423423",
+          "enabled": true,
+          "items": []
         }
       ]
     },
