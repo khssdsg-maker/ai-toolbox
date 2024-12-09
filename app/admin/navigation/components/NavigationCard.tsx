@@ -3,10 +3,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from "@/registry/new-york/ui/button"
-import { Icons } from "@/components/icons"
-import { NavigationItem } from '@/types/navigation'
-import { useToast } from "@/registry/new-york/hooks/use-toast"
-import { Draggable } from "@hello-pangea/dnd"
 import { 
   Dialog, 
   DialogContent, 
@@ -15,21 +11,48 @@ import {
   DialogFooter, 
   DialogDescription, 
 } from "@/registry/new-york/ui/dialog"
+import { useToast } from "@/registry/new-york/hooks/use-toast"
 import { EditNavigationForm } from './EditNavigationForm'
+import { Draggable } from "@hello-pangea/dnd"
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/registry/new-york/ui/tooltip"
+import { NavigationItem } from '@/types/navigation'
+import { navigationIcons, type IconType } from '@/lib/icons'
+import { 
+  Folder, 
+  FolderOpen, 
+  List, 
+  Image, 
+  Pencil, 
+  Trash, 
+  ChevronsUp, 
+  ChevronsDown 
+} from 'lucide-react'
 
 interface NavigationCardProps {
   item: NavigationItem
+  index: number
   onUpdate: () => void
+  onMoveToTop?: () => void
+  onMoveToBottom?: () => void
+  showMoveToTop?: boolean
+  showMoveToBottom?: boolean
 }
 
-export function NavigationCard({ item, onUpdate }: NavigationCardProps) {
+export function NavigationCard({ 
+  item, 
+  index,
+  onUpdate,
+  onMoveToTop,
+  onMoveToBottom,
+  showMoveToTop,
+  showMoveToBottom
+}: NavigationCardProps) {
   const router = useRouter()
   const { toast } = useToast()
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   
-  // 获取图标组件，如果不存在则使用默认图标
-  const IconComponent = Icons[item.icon as keyof typeof Icons] || Icons.folderOpen
+  const Icon = item.icon && navigationIcons[item.icon as IconType] ? navigationIcons[item.icon as IconType] : navigationIcons.Folder
 
   const handleEdit = async (values: { title: string; description: string; icon: string }) => {
     try {
@@ -85,7 +108,7 @@ export function NavigationCard({ item, onUpdate }: NavigationCardProps) {
   }
 
   return (
-    <Draggable draggableId={item.id} index={0}>
+    <Draggable draggableId={item.id} index={index}>
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
@@ -96,46 +119,111 @@ export function NavigationCard({ item, onUpdate }: NavigationCardProps) {
           }`}
         >
           <div className="flex items-center space-x-4">
-            <IconComponent className="h-6 w-6 text-muted-foreground" />
+            <Icon className="h-6 w-6 text-muted-foreground" />
             <div>
               <h3 className="text-sm font-medium">{item.title}</h3>
               <p className="text-xs text-muted-foreground">{item.description}</p>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => router.push(`/admin/navigation/${item.id}/categories`)}
-              title="分类管理"
-            >
-              <Icons.folderOpen className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => router.push(`/admin/navigation/${item.id}/items`)}
-              title="子项目"
-            >
-              <Icons.list className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsEditDialogOpen(true)}
-              title="编辑"
-            >
-              <Icons.pencil className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsDeleteDialogOpen(true)}
-              title="删除"
-            >
-              <Icons.x className="h-4 w-4" />
-            </Button>
+          <div className="flex items-center gap-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => router.push(`/admin/navigation/${item.id}/categories`)}
+                    className="h-8 w-8"
+                  >
+                    <FolderOpen className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>分类管理</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => router.push(`/admin/navigation/${item.id}/items`)}
+                    className="h-8 w-8"
+                  >
+                    <List className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>子项目</p>
+                </TooltipContent>
+              </Tooltip>
+              {showMoveToTop && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={onMoveToTop}
+                      className="h-8 w-8"
+                    >
+                      <ChevronsUp className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>置顶</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
+              {showMoveToBottom && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={onMoveToBottom}
+                      className="h-8 w-8"
+                    >
+                      <ChevronsDown className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>置底</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsEditDialogOpen(true)}
+                    className="h-8 w-8"
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>编辑</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsDeleteDialogOpen(true)}
+                    className="h-8 w-8"
+                  >
+                    <Trash className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>删除</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
+
           <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
             <DialogContent>
               <DialogHeader>
@@ -144,6 +232,7 @@ export function NavigationCard({ item, onUpdate }: NavigationCardProps) {
               <EditNavigationForm item={item} onSubmit={handleEdit} />
             </DialogContent>
           </Dialog>
+
           <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
             <DialogContent>
               <DialogHeader>

@@ -1,43 +1,42 @@
 'use client'
 
+import * as React from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Button } from "@/registry/new-york/ui/button"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/registry/new-york/ui/form"
 import { Input } from "@/registry/new-york/ui/input"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/registry/new-york/ui/form"
-import { IconPicker } from './IconPicker'
+import { IconSelector } from "./IconSelector"
 
 const formSchema = z.object({
-  title: z.string().min(2, { message: "标题至少需要2个字符" }),
-  icon: z.string().min(1, { message: "请选择图标" })
+  title: z.string().min(1, "请输入分类名称"),
+  description: z.string().optional(),
+  icon: z.string().min(1, "请选择图标")
 })
 
+type FormValues = z.infer<typeof formSchema>
+
 interface AddCategoryFormProps {
-  onSubmit: (values: z.infer<typeof formSchema>) => Promise<void>
-  defaultValues?: {
-    title: string
-    icon: string
-  }
+  onSubmit: (values: FormValues) => void
+  onCancel: () => void
+  defaultValues?: Partial<FormValues>
 }
 
-export function AddCategoryForm({ onSubmit, defaultValues }: AddCategoryFormProps) {
-  const form = useForm<z.infer<typeof formSchema>>({
+export function AddCategoryForm({ 
+  onSubmit, 
+  onCancel, 
+  defaultValues: initialDefaultValues 
+}: AddCategoryFormProps) {
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: defaultValues || {
+    defaultValues: {
       title: "",
-      icon: ""
+      description: "",
+      icon: "Folder",
+      ...initialDefaultValues
     }
   })
-
-  const isSubmitting = form.formState.isSubmitting
 
   return (
     <Form {...form}>
@@ -47,9 +46,22 @@ export function AddCategoryForm({ onSubmit, defaultValues }: AddCategoryFormProp
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>标题</FormLabel>
+              <FormLabel>分类名称</FormLabel>
               <FormControl>
-                <Input placeholder="输入分类标题" {...field} />
+                <Input placeholder="输入分类名称..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>描述</FormLabel>
+              <FormControl>
+                <Input placeholder="输入描述..." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -62,15 +74,24 @@ export function AddCategoryForm({ onSubmit, defaultValues }: AddCategoryFormProp
             <FormItem>
               <FormLabel>图标</FormLabel>
               <FormControl>
-                <IconPicker value={field.value} onChange={field.onChange} />
+                <IconSelector value={field.value} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? "提交中..." : defaultValues ? "更新" : "添加"}
-        </Button>
+        <div className="flex justify-end space-x-2">
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={onCancel}
+          >
+            取消
+          </Button>
+          <Button type="submit">
+            {initialDefaultValues?.title ? '更新' : '创建'}
+          </Button>
+        </div>
       </form>
     </Form>
   )

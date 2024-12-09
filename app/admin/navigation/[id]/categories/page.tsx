@@ -6,7 +6,18 @@ import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { Button } from "@/registry/new-york/ui/button"
 import { useToast } from "@/registry/new-york/hooks/use-toast"
-import { Icons } from "@/components/icons"
+import { 
+  Plus, 
+  Folder, 
+  Search, 
+  X, 
+  ArrowLeft, 
+  List, 
+  Pencil, 
+  Trash, 
+  ChevronsUp, 
+  ChevronsDown 
+} from 'lucide-react'
 import { NavigationItem, NavigationCategory } from '@/types/navigation'
 import {
   Dialog,
@@ -58,7 +69,11 @@ export default function CategoriesPage() {
     }
   }
 
-  const addCategory = async (values: { title: string, icon: string }) => {
+  const addCategory = async (values: { 
+    title: string, 
+    icon: string, 
+    description?: string 
+  }) => {
     if (!params?.id) {
       throw new Error('Navigation ID not found')
     }
@@ -70,6 +85,7 @@ export default function CategoriesPage() {
         id: crypto.randomUUID(),
         title: values.title,
         icon: values.icon,
+        description: values.description,
         items: []
       }
 
@@ -103,7 +119,11 @@ export default function CategoriesPage() {
     }
   }
 
-  const editCategory = async (values: { title: string, icon: string }) => {
+  const editCategory = async (values: { 
+    title: string, 
+    icon: string, 
+    description?: string 
+  }) => {
     if (!params?.id) {
       throw new Error('Navigation ID not found')
     }
@@ -113,7 +133,7 @@ export default function CategoriesPage() {
     try {
       const updatedCategories = navigation.subCategories?.map((cat, index) => 
         index === editingCategory.index 
-          ? { ...cat, title: values.title, icon: values.icon }
+          ? { ...cat, title: values.title, icon: values.icon, description: values.description }
           : cat
       ) || []
 
@@ -295,13 +315,13 @@ export default function CategoriesPage() {
             className="h-8 w-8"
             title="返回"
           >
-            <Icons.arrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-4 w-4" />
           </Button>
           <h2 className="text-lg font-semibold flex items-center gap-2">
             {navigation?.title || '加载中...'}
           </h2>
           <div className="relative flex-1 max-w-sm">
-            <Icons.search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="搜索分类..."
               value={searchQuery}
@@ -315,7 +335,7 @@ export default function CategoriesPage() {
                 onClick={() => setSearchQuery("")}
                 className="absolute right-1 top-1 h-7 w-7 p-0"
               >
-                <Icons.x className="h-4 w-4" />
+                <X className="h-4 w-4" />
               </Button>
             )}
           </div>
@@ -323,7 +343,7 @@ export default function CategoriesPage() {
         <Dialog>
           <DialogTrigger asChild>
             <Button>
-              <Icons.plus className="mr-2 h-4 w-4" />
+              <Plus className="mr-2 h-4 w-4" />
               添加分类
             </Button>
           </DialogTrigger>
@@ -331,7 +351,10 @@ export default function CategoriesPage() {
             <DialogHeader>
               <DialogTitle>添加分类</DialogTitle>
             </DialogHeader>
-            <AddCategoryForm onSubmit={addCategory} />
+            <AddCategoryForm 
+              onSubmit={addCategory} 
+              onCancel={() => setEditingCategory(null)} 
+            />
           </DialogContent>
         </Dialog>
       </div>
@@ -354,10 +377,7 @@ export default function CategoriesPage() {
                       >
                         <div className="flex items-center gap-3">
                           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
-                            {(() => {
-                              const IconComponent = category.icon ? Icons[category.icon as keyof typeof Icons] : Icons.folder;
-                              return IconComponent ? <IconComponent className="h-4 w-4 text-primary" /> : <Icons.folder className="h-4 w-4 text-primary" />;
-                            })()}
+                            <Folder className="w-5 h-5 text-primary" />
                           </div>
                           <div>
                             <div className="font-medium leading-none mb-1">{category.title}</div>
@@ -370,32 +390,30 @@ export default function CategoriesPage() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8"
                             onClick={() => {
-                              if (!params?.id) return
-                              router.push(`/admin/navigation/${params.id}/categories/${category.id}/items`)
+                              if (params?.id) {
+                                router.push(`/admin/navigation/${params.id}/categories/${category.id}/items`)
+                              }
                             }}
                             title="管理子项目"
                           >
-                            <Icons.list className="h-4 w-4" />
+                            <List className="h-4 w-4" />
                           </Button>
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8"
                             onClick={() => setEditingCategory({ index, category })}
                             title="编辑"
                           >
-                            <Icons.pencil className="h-4 w-4" />
+                            <Pencil className="h-4 w-4" />
                           </Button>
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8"
                             onClick={() => setDeletingCategory({ index, category })}
                             title="删除"
                           >
-                            <Icons.trash className="h-4 w-4" />
+                            <Trash className="h-4 w-4" />
                           </Button>
                         </div>
                       </div>
@@ -408,7 +426,7 @@ export default function CategoriesPage() {
                             onClick={() => moveToTop(category.id)}
                             title="置顶"
                           >
-                            <Icons.chevronLeft className="h-4 w-4 -rotate-90" />
+                            <ChevronsUp className="h-4 w-4" />
                           </Button>
                         )}
                         {index < (navigation?.subCategories?.length || 0) - 1 && (
@@ -419,7 +437,7 @@ export default function CategoriesPage() {
                             onClick={() => moveToBottom(category.id)}
                             title="置底"
                           >
-                            <Icons.chevronRight className="h-4 w-4 rotate-90" />
+                            <ChevronsDown className="h-4 w-4" />
                           </Button>
                         )}
                       </div>
@@ -448,8 +466,13 @@ export default function CategoriesPage() {
             <DialogTitle>编辑分类</DialogTitle>
           </DialogHeader>
           <AddCategoryForm
-            defaultValues={{ title: editingCategory?.category.title || '', icon: editingCategory?.category.icon || '' }}
+            defaultValues={{
+              title: editingCategory?.category.title || '',
+              icon: editingCategory?.category.icon || '',
+              description: editingCategory?.category.description || ''
+            }}
             onSubmit={editCategory}
+            onCancel={() => setEditingCategory(null)}
           />
         </DialogContent>
       </Dialog>

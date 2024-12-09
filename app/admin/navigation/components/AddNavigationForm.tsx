@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Button } from "@/registry/new-york/ui/button"
 import { Input } from "@/registry/new-york/ui/input"
-import { IconPicker } from "@/components/ui/icon-picker"
+import { IconSelector } from './IconSelector'
 import {
   Form,
   FormControl,
@@ -13,6 +13,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/registry/new-york/ui/form"
 
 const formSchema = z.object({
@@ -22,16 +23,22 @@ const formSchema = z.object({
 
 interface AddNavigationFormProps {
   onSubmit: (values: z.infer<typeof formSchema>) => Promise<void>
+  defaultValues?: {
+    title: string
+    icon: string
+  }
 }
 
-export function AddNavigationForm({ onSubmit }: AddNavigationFormProps) {
+export function AddNavigationForm({ onSubmit, defaultValues }: AddNavigationFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    defaultValues: defaultValues || {
       title: "",
-      icon: ""
+      icon: "FolderKanban"
     }
   })
+
+  const isSubmitting = form.formState.isSubmitting
 
   return (
     <Form {...form}>
@@ -56,16 +63,19 @@ export function AddNavigationForm({ onSubmit }: AddNavigationFormProps) {
             <FormItem>
               <FormLabel>图标</FormLabel>
               <FormControl>
-                <IconPicker {...field} />
+                <IconSelector value={field.value} onChange={field.onChange} />
               </FormControl>
+              <FormDescription>
+                从 Lucide 图标库中选择一个图标
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <div className="flex justify-end">
-          <Button type="submit">保存</Button>
-        </div>
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+          {isSubmitting ? "提交中..." : defaultValues ? "更新" : "添加"}
+        </Button>
       </form>
     </Form>
   )
-} 
+}

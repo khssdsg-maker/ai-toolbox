@@ -44,7 +44,7 @@ const menuItems = [
     icon: ListTodo,
     subItems: [
       {
-        title: "导航分类",
+        title: "分类管理",
         href: "/admin/navigation"
       },
       {

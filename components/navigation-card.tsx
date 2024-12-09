@@ -28,20 +28,16 @@ export function NavigationCard({ item }: NavigationCardProps) {
         className="block h-full"
       >
         <CardHeader>
-          <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg border bg-background">
-              {isExternalIcon || isLocalIcon ? (
-                <Image
-                  src={iconPath}
-                  alt={item.title}
-                  width={40}
-                  height={40}
-                  className="h-6 w-6"
+          <div className="flex items-start gap-4">
+            {item.icon && (
+              <div className="flex-shrink-0 w-11 h-11">
+                <img
+                  src={item.icon}
+                  alt={`${item.title} icon`}
+                  className="w-full h-full object-contain"
                 />
-              ) : (
-                <Icons.folderOpen className="h-6 w-6" />
-              )}
-            </div>
+              </div>
+            )}
             <div className="space-y-1">
               <CardTitle className="text-base">{item.title}</CardTitle>
               {item.description && (

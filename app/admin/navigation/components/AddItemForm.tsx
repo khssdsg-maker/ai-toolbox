@@ -16,6 +16,7 @@ import {
 } from "@/registry/new-york/ui/form"
 import { NavigationSubItem } from "@/types/navigation"
 import { Icons } from "@/components/icons"
+import { IconSelector } from "./IconSelector"
 
 const formSchema = z.object({
   id: z.string().optional(),
@@ -88,12 +89,24 @@ export function AddItemForm({ onSubmit, onCancel, defaultValues }: AddItemFormPr
           name="icon"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>网站图标</FormLabel>
+              <FormLabel>图标</FormLabel>
               <FormControl>
-                <Input placeholder="输入网站图标URL" {...field} />
+                <div className="flex gap-2">
+                  <Input 
+                    placeholder="输入图标URL或选择Lucide图标" 
+                    {...field} 
+                    className="flex-1"
+                  />
+                  <div className="w-[200px]">
+                    <IconSelector 
+                      value={field.value} 
+                      onChange={field.onChange}
+                    />
+                  </div>
+                </div>
               </FormControl>
               <FormDescription>
-                支持 URL 或 Base64 格式的图标
+                支持 URL、Base64 或 Lucide 图标名称
               </FormDescription>
               <FormMessage />
             </FormItem>
