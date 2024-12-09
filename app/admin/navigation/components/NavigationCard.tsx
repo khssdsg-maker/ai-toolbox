@@ -12,7 +12,7 @@ import {
   DialogDescription, 
 } from "@/registry/new-york/ui/dialog"
 import { useToast } from "@/registry/new-york/hooks/use-toast"
-import { EditNavigationForm } from './EditNavigationForm'
+import { AddCategoryForm } from './AddCategoryForm'
 import { Draggable } from "@hello-pangea/dnd"
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/registry/new-york/ui/tooltip"
 import { NavigationItem } from '@/types/navigation'
@@ -84,7 +84,7 @@ export function NavigationCard({
     }
   }
 
-  const deleteItem = async () => {
+  const handleDelete = async () => {
     try {
       const response = await fetch(`/api/navigation/${item.id}`, {
         method: 'DELETE'
@@ -227,9 +227,17 @@ export function NavigationCard({
           <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>编辑导航</DialogTitle>
+                <DialogTitle>编辑分类</DialogTitle>
               </DialogHeader>
-              <EditNavigationForm item={item} onSubmit={handleEdit} />
+              <AddCategoryForm
+                defaultValues={{
+                  title: item.title,
+                  description: item.description || '',
+                  icon: item.icon || ''
+                }}
+                onSubmit={handleEdit}
+                onCancel={() => setIsEditDialogOpen(false)}
+              />
             </DialogContent>
           </Dialog>
 
@@ -245,7 +253,7 @@ export function NavigationCard({
                 <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
                   取消
                 </Button>
-                <Button variant="destructive" onClick={deleteItem}>
+                <Button variant="destructive" onClick={handleDelete}>
                   删除
                 </Button>
               </DialogFooter>

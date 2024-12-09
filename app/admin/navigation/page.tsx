@@ -113,6 +113,21 @@ export default function NavigationPage() {
 
     if (sourceIndex === destinationIndex) return
 
+    // 创建一个新的数组副本
+    const currentItems = Array.isArray(items) ? [...items] : []
+    
+    // 记录原始顺序，用于可能的回滚
+    const originalItems = [...currentItems]
+
+    // 移动元素
+    const [movedItem] = currentItems.splice(sourceIndex, 1)
+    currentItems.splice(destinationIndex, 0, movedItem)
+
+    // 乐观更新：立即更新本地状态
+    await mutate(currentItems, { 
+      revalidate: false  // 阻止重新获取数据
+    })
+
     try {
       const response = await fetch('/api/navigation/reorder', {
         method: 'POST',
@@ -124,13 +139,27 @@ export default function NavigationPage() {
         })
       })
 
-      if (!response.ok) throw new Error('Failed to reorder')
+      if (!response.ok) {
+        // 如果服务器请求失败，回滚到原始状态
+        await mutate(originalItems, { revalidate: false })
+        throw new Error('排序失败')
+      }
 
-      mutate()
+      // 成功后重新获取最新数据以确保一致性
+      await mutate()
+
+      toast({
+        title: "成功",
+        description: "排序已更新"
+      })
+
     } catch (error) {
+      // 回滚到原始状态
+      await mutate(originalItems, { revalidate: false })
+
       toast({
         title: "错误",
-        description: "排序失败",
+        description: "排序失败，已恢复原状",
         variant: "destructive"
       })
     }
