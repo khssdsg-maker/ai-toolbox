@@ -12,7 +12,7 @@ import {
   DialogDescription, 
 } from "@/registry/new-york/ui/dialog"
 import { useToast } from "@/registry/new-york/hooks/use-toast"
-import { AddCategoryForm } from './AddCategoryForm'
+import { AddNavigationForm } from './AddNavigationForm'
 import { Draggable } from "@hello-pangea/dnd"
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/registry/new-york/ui/tooltip"
 import { NavigationItem } from '@/types/navigation'
@@ -54,7 +54,7 @@ export function NavigationCard({
   
   const Icon = item.icon && navigationIcons[item.icon as IconType] ? navigationIcons[item.icon as IconType] : navigationIcons.Folder
 
-  const handleEdit = async (values: { title: string; description: string; icon: string }) => {
+  const handleEdit = async (values: { title: string; icon: string }) => {
     try {
       const response = await fetch(`/api/navigation/${item.id}`, {
         method: 'PUT',
@@ -62,7 +62,6 @@ export function NavigationCard({
         body: JSON.stringify({
           ...item,
           title: values.title,
-          description: values.description,
           icon: values.icon
         })
       })
@@ -229,7 +228,7 @@ export function NavigationCard({
               <DialogHeader>
                 <DialogTitle>编辑分类</DialogTitle>
               </DialogHeader>
-              <AddCategoryForm
+              <AddNavigationForm
                 defaultValues={{
                   title: item.title,
                   description: item.description || '',
