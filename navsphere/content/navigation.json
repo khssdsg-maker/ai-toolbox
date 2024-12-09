@@ -310,6 +310,13 @@
       "icon": "Clock",
       "items": [],
       "subCategories": []
+    },
+    {
+      "id": "1733713196860",
+      "title": "数据库",
+      "icon": "Database",
+      "items": [],
+      "subCategories": []
     }
   ]
 }
