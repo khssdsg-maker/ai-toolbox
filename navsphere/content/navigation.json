@@ -66,6 +66,14 @@
           "description": "423423",
           "enabled": true,
           "items": []
+        },
+        {
+          "id": "1b025baa-b217-4541-a5fe-fb2135b2d5de",
+          "title": "tee",
+          "icon": "BookOpen",
+          "description": "fff",
+          "enabled": true,
+          "items": []
         }
       ]
     },
