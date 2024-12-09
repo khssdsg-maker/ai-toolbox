@@ -312,6 +312,15 @@
       ],
       "subCategories": [],
       "description": ""
+    },
+    {
+      "id": "1733725272901",
+      "title": "test2222",
+      "icon": "FolderKanban",
+      "description": "",
+      "enabled": true,
+      "items": [],
+      "subCategories": []
     }
   ]
 }
