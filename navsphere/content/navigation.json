@@ -276,7 +276,9 @@
       "title": "数据库",
       "icon": "Database",
       "items": [],
-      "subCategories": []
+      "subCategories": [],
+      "description": "",
+      "enabled": true
     },
     {
       "id": "1733665151010",
