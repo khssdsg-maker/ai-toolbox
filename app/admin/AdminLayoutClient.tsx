@@ -52,7 +52,7 @@ const menuItems = [
         href: "/admin/navigation/categories"
       },
       {
-        title: "子项目管理",
+        title: "站点管理",
         href: "/admin/navigation/items"
       }
     ]
