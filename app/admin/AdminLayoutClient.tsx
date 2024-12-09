@@ -53,7 +53,7 @@ const menuItems = [
       },
       {
         title: "站点管理",
-        href: "/admin/navigation/items"
+        href: "/admin/sitelist"
       }
     ]
   },
