@@ -3,7 +3,7 @@
     {
       "id": "1733657315005",
       "title": "常用推荐",
-      "icon": "linecons-star",
+      "icon": "bookmark",
       "items": [],
       "subCategories": [
         {
@@ -168,7 +168,8 @@
             }
           ]
         }
-      ]
+      ],
+      "description": ""
     },
     {
       "id": "1733665151010",
