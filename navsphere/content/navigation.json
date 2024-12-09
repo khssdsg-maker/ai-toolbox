@@ -1,15 +1,162 @@
 {
   "navigationItems": [
     {
+      "id": "1733657315019",
+      "title": "在线工具",
+      "icon": "linecons-diamond",
+      "items": [
+        {
+          "id": "1733657315020",
+          "title": "TableConvert",
+          "href": "https://tableconvert.com/",
+          "description": "Excel转sql在线工具。将你的Excel数据转换成一个网络友好格式,包括HTML、JSON和XML,还可以把Excel 转换成Sql,excel 表格转成 Markdown",
+          "icon": "tableconvert"
+        },
+        {
+          "id": "1733657315021",
+          "title": "JSON Editor Online",
+          "href": "https://jsoneditoronline.org/",
+          "description": "在线的JSON编辑器，包括格式化，可视化，对比，显示行号功能。",
+          "icon": "json"
+        },
+        {
+          "id": "1733657315022",
+          "title": "beautifier",
+          "href": "https://beautifier.io/",
+          "description": "Beautify JavaScript, JSON, React.js, HTML, CSS, SCSS, and SASS",
+          "icon": "beautifier"
+        },
+        {
+          "id": "1733657315023",
+          "title": "Sql 格式化",
+          "href": "https://www.dpriver.com/pp/sqlformat.htm",
+          "description": "在线美化SQL语句的工具，格式化方便阅读",
+          "icon": "sqlformat"
+        },
+        {
+          "id": "1733657315024",
+          "title": "TinyPng",
+          "href": "https://tinypng.com/",
+          "description": "TinyPNG为您的应用和站点压缩图片。 将会减少带宽占用，并更快加载。",
+          "icon": "tinypng"
+        },
+        {
+          "id": "1733657315025",
+          "title": "goqr",
+          "href": "http://goqr.me/",
+          "description": "create QR codes for free (Logo, T-Shirt, vCard, EPS)",
+          "icon": "goqr"
+        },
+        {
+          "id": "1733657315026",
+          "title": "ezgif",
+          "href": "https://ezgif.com",
+          "description": "simple online GIF maker and toolset for basic animated GIF editing.",
+          "icon": "ezgif"
+        },
+        {
+          "id": "1733657315027",
+          "title": "Android 9 patch",
+          "href": "http://inloop.github.io/shadow4android/",
+          "description": "Android 9-patch shadow generator fully customizable shadows",
+          "icon": "Android9patch"
+        }
+      ],
+      "subCategories": []
+    },
+    {
+      "id": "1733657315014",
+      "title": "常用AI",
+      "icon": "linecons-lightbulb",
+      "items": [
+        {
+          "id": "1733657315015",
+          "title": "ChatGPT",
+          "href": "https://chatgpt.com/",
+          "description": "OpenAI开发的人工智能聊天机器人程序",
+          "icon": "chatgpt"
+        },
+        {
+          "id": "1733657315016",
+          "title": "Claude",
+          "href": "https://claude.ai/",
+          "description": "Claude是由Anthropic公司开发的先进人工智能模型，专注于创建安全、可靠且符合人类价值观的人工智能系统",
+          "icon": "claude"
+        },
+        {
+          "id": "1733657315017",
+          "title": "Gemini",
+          "href": "https://gemini.google.com/",
+          "description": "Google开发的生成式人工智能聊天机器人。它基于同名的Gemini系列大型语言模型。",
+          "icon": "gemini"
+        },
+        {
+          "id": "1733657315018",
+          "title": "Poe",
+          "href": "https://poe.com/",
+          "description": "Poe一款由Quora开发的应用程序。该应用程序集成了多种生成式人工智能，可使用户能够便利切换，比较和使用市场上主流的大型语言模型。",
+          "icon": "poe"
+        }
+      ],
+      "subCategories": []
+    },
+    {
+      "id": "1733712730306",
+      "title": "test",
+      "icon": "Clock",
+      "items": [],
+      "subCategories": []
+    },
+    {
+      "id": "1733713196860",
+      "title": "数据库",
+      "icon": "Database",
+      "items": [],
+      "subCategories": []
+    },
+    {
+      "id": "1733665151010",
+      "title": "test3",
+      "icon": "fileText",
+      "items": [
+        {
+          "id": "1733665259756",
+          "title": "test",
+          "href": "https://dh.leti.ltd/",
+          "description": "1222"
+        },
+        {
+          "id": "1733665259756",
+          "title": "test",
+          "href": "https://dh.leti.ltd/",
+          "description": "1222"
+        },
+        {
+          "id": "1733665259756",
+          "title": "test",
+          "href": "https://dh.leti.ltd/",
+          "description": "1222"
+        },
+        {
+          "id": "1733665259756",
+          "title": "test",
+          "href": "https://dh.leti.ltd/",
+          "description": "1222"
+        }
+      ],
+      "subCategories": [],
+      "description": ""
+    },
+    {
       "id": "1733657315005",
       "title": "常用推荐",
-      "icon": "linecons-star",
+      "icon": "bookmark",
       "items": [],
       "subCategories": [
         {
           "id": "17336573150051",
           "title": "常用推荐子级",
-          "icon": "linecons-star",
+          "icon": "mail",
           "items": [
             {
               "id": "1733657315006",
@@ -168,140 +315,8 @@
             }
           ]
         }
-      ]
-    },
-    {
-      "id": "1733665151010",
-      "title": "test3",
-      "icon": "file",
-      "items": [
-        {
-          "id": "1733665259756",
-          "title": "test",
-          "href": "https://dh.leti.ltd/",
-          "description": "1222"
-        },
-        {
-          "id": "1733665259756",
-          "title": "test",
-          "href": "https://dh.leti.ltd/",
-          "description": "1222"
-        },
-        {
-          "id": "1733665259756",
-          "title": "test",
-          "href": "https://dh.leti.ltd/",
-          "description": "1222"
-        },
-        {
-          "id": "1733665259756",
-          "title": "test",
-          "href": "https://dh.leti.ltd/",
-          "description": "1222"
-        }
       ],
-      "subCategories": [],
       "description": ""
-    },
-    {
-      "id": "1733657315019",
-      "title": "在线工具",
-      "icon": "linecons-diamond",
-      "items": [
-        {
-          "id": "1733657315020",
-          "title": "TableConvert",
-          "href": "https://tableconvert.com/",
-          "description": "Excel转sql在线工具。将你的Excel数据转换成一个网络友好格式,包括HTML、JSON和XML,还可以把Excel 转换成Sql,excel 表格转成 Markdown",
-          "icon": "tableconvert"
-        },
-        {
-          "id": "1733657315021",
-          "title": "JSON Editor Online",
-          "href": "https://jsoneditoronline.org/",
-          "description": "在线的JSON编辑器，包括格式化，可视化，对比，显示行号功能。",
-          "icon": "json"
-        },
-        {
-          "id": "1733657315022",
-          "title": "beautifier",
-          "href": "https://beautifier.io/",
-          "description": "Beautify JavaScript, JSON, React.js, HTML, CSS, SCSS, and SASS",
-          "icon": "beautifier"
-        },
-        {
-          "id": "1733657315023",
-          "title": "Sql 格式化",
-          "href": "https://www.dpriver.com/pp/sqlformat.htm",
-          "description": "在线美化SQL语句的工具，格式化方便阅读",
-          "icon": "sqlformat"
-        },
-        {
-          "id": "1733657315024",
-          "title": "TinyPng",
-          "href": "https://tinypng.com/",
-          "description": "TinyPNG为您的应用和站点压缩图片。 将会减少带宽占用，并更快加载。",
-          "icon": "tinypng"
-        },
-        {
-          "id": "1733657315025",
-          "title": "goqr",
-          "href": "http://goqr.me/",
-          "description": "create QR codes for free (Logo, T-Shirt, vCard, EPS)",
-          "icon": "goqr"
-        },
-        {
-          "id": "1733657315026",
-          "title": "ezgif",
-          "href": "https://ezgif.com",
-          "description": "simple online GIF maker and toolset for basic animated GIF editing.",
-          "icon": "ezgif"
-        },
-        {
-          "id": "1733657315027",
-          "title": "Android 9 patch",
-          "href": "http://inloop.github.io/shadow4android/",
-          "description": "Android 9-patch shadow generator fully customizable shadows",
-          "icon": "Android9patch"
-        }
-      ],
-      "subCategories": []
-    },
-    {
-      "id": "1733657315014",
-      "title": "常用AI",
-      "icon": "linecons-lightbulb",
-      "items": [
-        {
-          "id": "1733657315015",
-          "title": "ChatGPT",
-          "href": "https://chatgpt.com/",
-          "description": "OpenAI开发的人工智能聊天机器人程序",
-          "icon": "chatgpt"
-        },
-        {
-          "id": "1733657315016",
-          "title": "Claude",
-          "href": "https://claude.ai/",
-          "description": "Claude是由Anthropic公司开发的先进人工智能模型，专注于创建安全、可靠且符合人类价值观的人工智能系统",
-          "icon": "claude"
-        },
-        {
-          "id": "1733657315017",
-          "title": "Gemini",
-          "href": "https://gemini.google.com/",
-          "description": "Google开发的生成式人工智能聊天机器人。它基于同名的Gemini系列大型语言模型。",
-          "icon": "gemini"
-        },
-        {
-          "id": "1733657315018",
-          "title": "Poe",
-          "href": "https://poe.com/",
-          "description": "Poe一款由Quora开发的应用程序。该应用程序集成了多种生成式人工智能，可使用户能够便利切换，比较和使用市场上主流的大型语言模型。",
-          "icon": "poe"
-        }
-      ],
-      "subCategories": []
     }
   ]
 }
