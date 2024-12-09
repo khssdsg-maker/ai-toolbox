@@ -38,6 +38,29 @@ import {
   AlertDialogTitle,
 } from "@/registry/new-york/ui/alert-dialog"
 
+interface NavigationItem {
+  id: string
+  title: string
+  href: string
+  description?: string
+  icon?: string
+}
+
+interface SubCategory {
+  id: string
+  title: string
+  icon?: string
+  items: NavigationItem[]
+}
+
+interface Category {
+  id: string
+  title: string
+  icon?: string
+  items: NavigationItem[]
+  subCategories?: SubCategory[]
+}
+
 interface Site {
   id: string
   name: string
@@ -64,34 +87,34 @@ export default function SiteListPage() {
     fetchSites()
   }, [])
 
-  const extractSites = (navigationItems: any[]): Site[] => {
+  const extractSites = (navigationItems: Category[]): Site[] => {
     let allSites: Site[] = [];
     
-    navigationItems.forEach(category => {
+    navigationItems.forEach((category: Category) => {
       // Add sites from main category items
       if (category.items && Array.isArray(category.items)) {
-        const sites = category.items.map(item => ({
+        const sites: Site[] = category.items.map((item: NavigationItem): Site => ({
           id: item.id,
           name: item.title,
           url: item.href,
           description: item.description,
-          createdAt: '', // Add if available in your data
-          updatedAt: '', // Add if available in your data
+          createdAt: '', 
+          updatedAt: '', 
         }));
         allSites = [...allSites, ...sites];
       }
 
       // Add sites from subcategories
       if (category.subCategories && Array.isArray(category.subCategories)) {
-        category.subCategories.forEach(subCategory => {
+        category.subCategories.forEach((subCategory: SubCategory) => {
           if (subCategory.items && Array.isArray(subCategory.items)) {
-            const subSites = subCategory.items.map(item => ({
+            const subSites: Site[] = subCategory.items.map((item: NavigationItem): Site => ({
               id: item.id,
               name: item.title,
               url: item.href,
               description: item.description,
-              createdAt: '', // Add if available in your data
-              updatedAt: '', // Add if available in your data
+              createdAt: '', 
+              updatedAt: '', 
             }));
             allSites = [...allSites, ...subSites];
           }
@@ -135,16 +158,16 @@ export default function SiteListPage() {
     site.description?.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
+  const handleSelectAll = (checked: boolean | string) => {
+    if (checked === true) {
       setSelectedSites(filteredSites.map(site => site.id))
     } else {
       setSelectedSites([])
     }
   }
 
-  const handleSelectOne = (checked: boolean, siteId: string) => {
-    if (checked) {
+  const handleSelectOne = (checked: boolean | string, siteId: string) => {
+    if (checked === true) {
       setSelectedSites([...selectedSites, siteId])
     } else {
       setSelectedSites(selectedSites.filter(id => id !== siteId))
