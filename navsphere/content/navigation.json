@@ -42,6 +42,14 @@
           "description": "twetwe",
           "enabled": true,
           "items": []
+        },
+        {
+          "id": "74615e99-efe0-41bb-bf40-338df25b1ba6",
+          "title": "tese",
+          "icon": "Edit",
+          "description": "twetwe",
+          "enabled": true,
+          "items": []
         }
       ]
     },
