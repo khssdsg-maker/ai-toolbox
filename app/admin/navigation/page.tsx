@@ -5,7 +5,7 @@ export const runtime = 'edge'
 import { useState } from "react"
 import { Button } from "@/registry/new-york/ui/button"
 import { NavigationCard } from "./components/NavigationCard"
-import { AddCategoryForm } from "./components/AddCategoryForm"
+import { AddNavigationForm } from "./components/AddNavigationForm"
 import { Input } from "@/registry/new-york/ui/input"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/registry/new-york/ui/dialog"
 import { useToast } from "@/registry/new-york/hooks/use-toast"
@@ -14,6 +14,7 @@ import useSWR from 'swr'
 import { NavigationItem } from "@/types/navigation"
 import { DragDropContext, Droppable } from '@hello-pangea/dnd'
 import { Plus, X, AlertTriangle, Inbox } from 'lucide-react'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/registry/new-york/ui/select"
 
 async function fetcher(url: string): Promise<NavigationItem[]> {
   const res = await fetch(url)
@@ -25,6 +26,7 @@ async function fetcher(url: string): Promise<NavigationItem[]> {
 export default function NavigationPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
+  const [showEnabled, setShowEnabled] = useState<boolean | null>(null)
   const { toast } = useToast()
   
   const { data: items = [], error, isLoading, mutate } = useSWR<NavigationItem[]>(
@@ -36,15 +38,40 @@ export default function NavigationPage() {
     }
   )
 
-  const handleAdd = async (values: { title: string; icon: string }) => {
+  const handleAdd = async (values: { 
+    title: string; 
+    icon: string; 
+    description?: string;
+    enabled?: boolean 
+  }) => {
     try {
+      // 生成唯一ID
+      const newItem: NavigationItem = {
+        id: Date.now().toString(),
+        title: values.title,
+        icon: values.icon,
+        description: values.description || '',
+        enabled: values.enabled ?? true,
+        items: [],
+        subCategories: []
+      }
+
       const response = await fetch('/api/navigation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values)
+        body: JSON.stringify({
+          navigationItems: [
+            ...items,  // 保留现有的导航项
+            newItem    // 添加新的导航项
+          ]
+        })
       })
 
-      if (!response.ok) throw new Error('Failed to add')
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('添加失败:', errorText)
+        throw new Error('Failed to add')
+      }
 
       setIsDialogOpen(false)
       mutate()
@@ -53,9 +80,10 @@ export default function NavigationPage() {
         description: "添加成功"
       })
     } catch (error) {
+      console.error('添加导航项错误:', error)
       toast({
         title: "错误",
-        description: "添加失败",
+        description: "添加失败：" + (error as Error).message,
         variant: "destructive"
       })
     }
@@ -165,20 +193,41 @@ export default function NavigationPage() {
     }
   }
 
-  const filteredItems = items.filter(item =>
-    item.title.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredItems = items
+    .filter(item => 
+      item.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      (showEnabled === null || item.enabled === showEnabled)
+    )
 
   return (
     <div className="h-full flex-1 flex-col space-y-8 p-8 md:flex">
       <div className="flex items-center justify-between space-x-4">
-        <div className="flex-1 max-w-[300px]">
+        <div className="flex items-center gap-4 flex-1">
           <Input
             placeholder="搜索分类..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full"
+            className="max-w-[300px]"
           />
+          <Select
+            value={showEnabled === null ? "all" : String(showEnabled)}
+            onValueChange={(value) => {
+              if (value === "all") {
+                setShowEnabled(null)
+              } else {
+                setShowEnabled(value === "true")
+              }
+            }}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="状态筛选" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">全部</SelectItem>
+              <SelectItem value="true">已启用</SelectItem>
+              <SelectItem value="false">已禁用</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <Button onClick={() => setIsDialogOpen(true)}>
           <Plus className="mr-2 h-4 w-4" />
@@ -264,7 +313,7 @@ export default function NavigationPage() {
           <DialogHeader>
             <DialogTitle>添加分类</DialogTitle>
           </DialogHeader>
-          <AddCategoryForm
+          <AddNavigationForm
             onSubmit={handleAdd}
             onCancel={() => setIsDialogOpen(false)}
           />

@@ -27,6 +27,8 @@ import {
   ChevronsUp, 
   ChevronsDown 
 } from 'lucide-react'
+import { cn } from "@/lib/utils"
+import { Badge } from "@/registry/new-york/ui/badge"
 
 interface NavigationCardProps {
   item: NavigationItem
@@ -54,7 +56,12 @@ export function NavigationCard({
   
   const Icon = item.icon && navigationIcons[item.icon as IconType] ? navigationIcons[item.icon as IconType] : navigationIcons.Folder
 
-  const handleEdit = async (values: { title: string; icon: string }) => {
+  const handleEdit = async (values: { 
+    title: string; 
+    description: string; 
+    icon: string;
+    enabled: boolean;
+  }) => {
     try {
       const response = await fetch(`/api/navigation/${item.id}`, {
         method: 'PUT',
@@ -62,7 +69,9 @@ export function NavigationCard({
         body: JSON.stringify({
           ...item,
           title: values.title,
-          icon: values.icon
+          description: values.description,
+          icon: values.icon,
+          enabled: values.enabled
         })
       })
 

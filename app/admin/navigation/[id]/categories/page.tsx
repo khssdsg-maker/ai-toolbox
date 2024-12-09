@@ -32,6 +32,7 @@ import { AddCategoryForm } from '../../components/AddCategoryForm'
 import { Input } from "@/registry/new-york/ui/input"
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd'
 import { Params } from 'next/dist/shared/lib/router/utils/route-matcher'
+import { Badge } from "@/registry/new-york/ui/badge"
 
 export default function CategoriesPage() {
   const params = useParams<{ id: string }>()
@@ -72,13 +73,10 @@ export default function CategoriesPage() {
   const addCategory = async (values: { 
     title: string, 
     icon: string, 
-    description?: string 
+    description?: string,
+    enabled: boolean 
   }) => {
-    if (!params?.id) {
-      throw new Error('Navigation ID not found')
-    }
-
-    if (!navigation) return
+    if (!params?.id || !navigation) return
 
     try {
       const newCategory: NavigationCategory = {
@@ -86,13 +84,12 @@ export default function CategoriesPage() {
         title: values.title,
         icon: values.icon,
         description: values.description,
+        enabled: values.enabled,
         items: []
       }
 
       const updatedNavigation: NavigationItem = {
-        id: navigation.id || params.id,
-        title: navigation.title || '',
-        description: navigation.description || '',
+        ...navigation,
         subCategories: [...(navigation.subCategories || []), newCategory]
       }
 
@@ -122,18 +119,21 @@ export default function CategoriesPage() {
   const editCategory = async (values: { 
     title: string, 
     icon: string, 
-    description?: string 
+    description?: string,
+    enabled: boolean 
   }) => {
-    if (!params?.id) {
-      throw new Error('Navigation ID not found')
-    }
-
-    if (!navigation || !editingCategory) return
+    if (!params?.id || !navigation || !editingCategory) return
 
     try {
       const updatedCategories = navigation.subCategories?.map((cat, index) => 
         index === editingCategory.index 
-          ? { ...cat, title: values.title, icon: values.icon, description: values.description }
+          ? { 
+              ...cat, 
+              title: values.title, 
+              icon: values.icon, 
+              description: values.description,
+              enabled: values.enabled 
+            }
           : cat
       ) || []
 
@@ -380,8 +380,18 @@ export default function CategoriesPage() {
                             <Folder className="w-5 h-5 text-primary" />
                           </div>
                           <div>
-                            <div className="font-medium leading-none mb-1">{category.title}</div>
-                            <div className="text-xs text-muted-foreground">
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium leading-none">{category.title}</span>
+                              {!category.enabled && (
+                                <Badge variant="secondary" className="text-xs">已禁用</Badge>
+                              )}
+                            </div>
+                            {category.description && (
+                              <div className="text-xs text-muted-foreground mt-1">
+                                {category.description}
+                              </div>
+                            )}
+                            <div className="text-xs text-muted-foreground mt-1">
                               {category.items?.length || 0} 个项目
                             </div>
                           </div>
@@ -469,7 +479,8 @@ export default function CategoriesPage() {
             defaultValues={{
               title: editingCategory?.category.title || '',
               icon: editingCategory?.category.icon || '',
-              description: editingCategory?.category.description || ''
+              description: editingCategory?.category.description || '',
+              enabled: editingCategory?.category.enabled || true
             }}
             onSubmit={editCategory}
             onCancel={() => setEditingCategory(null)}

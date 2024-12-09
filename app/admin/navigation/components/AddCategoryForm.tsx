@@ -4,20 +4,25 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import { Button } from "@/registry/new-york/ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/registry/new-york/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/registry/new-york/ui/form"
 import { Input } from "@/registry/new-york/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/registry/new-york/ui/select"
 import { navigationIcons } from "@/lib/icons"
+import { Switch } from "@/registry/new-york/ui/switch"
 
 const formSchema = z.object({
   title: z.string().min(1, "标题不能为空"),
-  icon: z.string().min(1, "请选择图标")
+  description: z.string().optional(),
+  icon: z.string().min(1, "请选择图标"),
+  enabled: z.boolean().default(true)
 })
 
 interface AddCategoryFormProps {
   defaultValues?: {
     title: string
+    description?: string
     icon: string
+    enabled: boolean
   }
   onSubmit: (values: z.infer<typeof formSchema>) => void
   onCancel: () => void
@@ -28,7 +33,9 @@ export function AddCategoryForm({ defaultValues, onSubmit, onCancel }: AddCatego
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues || {
       title: "",
-      icon: ""
+      description: "",
+      icon: "",
+      enabled: true
     }
   })
 
@@ -43,6 +50,20 @@ export function AddCategoryForm({ defaultValues, onSubmit, onCancel }: AddCatego
               <FormLabel>标题</FormLabel>
               <FormControl>
                 <Input placeholder="输入分类标题" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>描述</FormLabel>
+              <FormControl>
+                <Input placeholder="输入分类描述" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -73,6 +94,29 @@ export function AddCategoryForm({ defaultValues, onSubmit, onCancel }: AddCatego
                 </SelectContent>
               </Select>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="enabled"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>
+                  启用状态
+                </FormLabel>
+                <FormDescription>
+                  控制该分类是否在导航中显示
+                </FormDescription>
+              </div>
             </FormItem>
           )}
         />

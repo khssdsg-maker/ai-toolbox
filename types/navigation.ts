@@ -4,6 +4,7 @@ export interface NavigationSubItem {
   href: string
   description?: string
   icon?: string
+  enabled?: boolean
 }
 
 export interface NavigationCategory {
@@ -13,6 +14,7 @@ export interface NavigationCategory {
   description?: string
   parentId?: string
   items?: NavigationSubItem[]
+  enabled?: boolean
 }
 
 export interface NavigationItem {
@@ -22,6 +24,7 @@ export interface NavigationItem {
   icon?: string
   items?: NavigationSubItem[]
   subCategories?: NavigationCategory[]
+  enabled?: boolean
 }
 
 export interface NavigationData {

@@ -27,9 +27,36 @@ export async function POST(request: Request) {
 
     const data = await request.json()
     
-    // 验证数据结构
-    if (!data.navigationItems || !Array.isArray(data.navigationItems)) {
-      throw new Error('Invalid navigation data structure')
+    // 详细的数据结构验证和日志
+    console.log('Received navigation data:', JSON.stringify(data, null, 2))
+    
+    // 严格验证数据结构
+    if (!data || typeof data !== 'object') {
+      console.error('Invalid data: not an object')
+      throw new Error('Invalid navigation data: not an object')
+    }
+
+    if (!('navigationItems' in data)) {
+      console.error('Missing navigationItems key')
+      throw new Error('Invalid navigation data: missing navigationItems')
+    }
+
+    if (!Array.isArray(data.navigationItems)) {
+      console.error('navigationItems is not an array', typeof data.navigationItems)
+      throw new Error('Invalid navigation data: navigationItems must be an array')
+    }
+
+    // 额外的数据验证
+    const invalidItems = data.navigationItems.filter(item => 
+      !item.id || 
+      !item.title || 
+      (item.items && !Array.isArray(item.items)) ||
+      (item.subCategories && !Array.isArray(item.subCategories))
+    )
+
+    if (invalidItems.length > 0) {
+      console.error('Invalid navigation items:', invalidItems)
+      throw new Error('Invalid navigation data: some items are malformed')
     }
 
     await commitFile(
@@ -43,7 +70,10 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Failed to save navigation data:', error)
     return NextResponse.json(
-      { error: 'Failed to save navigation data' },
+      { 
+        error: 'Failed to save navigation data', 
+        details: (error as Error).message 
+      },
       { status: 500 }
     )
   }

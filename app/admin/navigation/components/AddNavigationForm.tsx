@@ -5,6 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Button } from "@/registry/new-york/ui/button"
 import { Input } from "@/registry/new-york/ui/input"
+import { Switch } from "@/registry/new-york/ui/switch"
+
 import { IconSelector } from './IconSelector'
 import {
   Form,
@@ -18,31 +20,56 @@ import {
 
 const formSchema = z.object({
   title: z.string().min(2, { message: "标题至少需要2个字符" }),
-  icon: z.string().min(1, { message: "请选择图标" })
+  icon: z.string().min(1, { message: "请选择图标" }),
+  description: z.string().optional(),
+  enabled: z.boolean().default(true)
 })
 
 interface AddNavigationFormProps {
-  onSubmit: (values: z.infer<typeof formSchema>) => Promise<void>
+  onSubmit: (values: { 
+    title: string; 
+    icon: string; 
+    description?: string;
+    enabled: boolean;
+  }) => void
   defaultValues?: {
     title: string
     icon: string
+    description?: string
+    enabled: boolean
   }
+  onCancel?: () => void
 }
 
-export function AddNavigationForm({ onSubmit, defaultValues }: AddNavigationFormProps) {
+export function AddNavigationForm({ 
+  onSubmit, 
+  defaultValues, 
+  onCancel 
+}: AddNavigationFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues || {
       title: "",
-      icon: "FolderKanban"
+      icon: "FolderKanban",
+      description: "",
+      enabled: true
     }
   })
 
-  const isSubmitting = form.formState.isSubmitting
+  const { isSubmitting } = form.formState
+
+  const onSubmitHandler = (values: z.infer<typeof formSchema>) => {
+    onSubmit({
+      title: values.title,
+      icon: values.icon,
+      description: values.description,
+      enabled: values.enabled
+    })
+  }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmitHandler)} className="space-y-4">
         <FormField
           control={form.control}
           name="title"
@@ -69,6 +96,42 @@ export function AddNavigationForm({ onSubmit, defaultValues }: AddNavigationForm
                 从 Lucide 图标库中选择一个图标
               </FormDescription>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>描述</FormLabel>
+              <FormControl>
+                <Input placeholder="输入导航描述（可选）" {...field} />
+              </FormControl>
+              <FormDescription>
+                简短描述该导航项的用途
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="enabled"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+              <div className="space-y-0.5">
+                <FormLabel className="text-base">启用状态</FormLabel>
+                <FormDescription>
+                  设置该项是否启用
+                </FormDescription>
+              </div>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
             </FormItem>
           )}
         />
