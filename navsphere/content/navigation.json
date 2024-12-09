@@ -1,6 +1,70 @@
 {
   "navigationItems": [
     {
+      "id": "1733657315019",
+      "title": "在线工具",
+      "icon": "linecons-diamond",
+      "items": [
+        {
+          "id": "1733657315020",
+          "title": "TableConvert",
+          "href": "https://tableconvert.com/",
+          "description": "Excel转sql在线工具。将你的Excel数据转换成一个网络友好格式,包括HTML、JSON和XML,还可以把Excel 转换成Sql,excel 表格转成 Markdown",
+          "icon": "tableconvert"
+        },
+        {
+          "id": "1733657315021",
+          "title": "JSON Editor Online",
+          "href": "https://jsoneditoronline.org/",
+          "description": "在线的JSON编辑器，包括格式化，可视化，对比，显示行号功能。",
+          "icon": "json"
+        },
+        {
+          "id": "1733657315022",
+          "title": "beautifier",
+          "href": "https://beautifier.io/",
+          "description": "Beautify JavaScript, JSON, React.js, HTML, CSS, SCSS, and SASS",
+          "icon": "beautifier"
+        },
+        {
+          "id": "1733657315023",
+          "title": "Sql 格式化",
+          "href": "https://www.dpriver.com/pp/sqlformat.htm",
+          "description": "在线美化SQL语句的工具，格式化方便阅读",
+          "icon": "sqlformat"
+        },
+        {
+          "id": "1733657315024",
+          "title": "TinyPng",
+          "href": "https://tinypng.com/",
+          "description": "TinyPNG为您的应用和站点压缩图片。 将会减少带宽占用，并更快加载。",
+          "icon": "tinypng"
+        },
+        {
+          "id": "1733657315025",
+          "title": "goqr",
+          "href": "http://goqr.me/",
+          "description": "create QR codes for free (Logo, T-Shirt, vCard, EPS)",
+          "icon": "goqr"
+        },
+        {
+          "id": "1733657315026",
+          "title": "ezgif",
+          "href": "https://ezgif.com",
+          "description": "simple online GIF maker and toolset for basic animated GIF editing.",
+          "icon": "ezgif"
+        },
+        {
+          "id": "1733657315027",
+          "title": "Android 9 patch",
+          "href": "http://inloop.github.io/shadow4android/",
+          "description": "Android 9-patch shadow generator fully customizable shadows",
+          "icon": "Android9patch"
+        }
+      ],
+      "subCategories": []
+    },
+    {
       "id": "1733657315014",
       "title": "常用AI",
       "icon": "linecons-lightbulb",
@@ -253,70 +317,6 @@
         }
       ],
       "description": ""
-    },
-    {
-      "id": "1733657315019",
-      "title": "在线工具",
-      "icon": "linecons-diamond",
-      "items": [
-        {
-          "id": "1733657315020",
-          "title": "TableConvert",
-          "href": "https://tableconvert.com/",
-          "description": "Excel转sql在线工具。将你的Excel数据转换成一个网络友好格式,包括HTML、JSON和XML,还可以把Excel 转换成Sql,excel 表格转成 Markdown",
-          "icon": "tableconvert"
-        },
-        {
-          "id": "1733657315021",
-          "title": "JSON Editor Online",
-          "href": "https://jsoneditoronline.org/",
-          "description": "在线的JSON编辑器，包括格式化，可视化，对比，显示行号功能。",
-          "icon": "json"
-        },
-        {
-          "id": "1733657315022",
-          "title": "beautifier",
-          "href": "https://beautifier.io/",
-          "description": "Beautify JavaScript, JSON, React.js, HTML, CSS, SCSS, and SASS",
-          "icon": "beautifier"
-        },
-        {
-          "id": "1733657315023",
-          "title": "Sql 格式化",
-          "href": "https://www.dpriver.com/pp/sqlformat.htm",
-          "description": "在线美化SQL语句的工具，格式化方便阅读",
-          "icon": "sqlformat"
-        },
-        {
-          "id": "1733657315024",
-          "title": "TinyPng",
-          "href": "https://tinypng.com/",
-          "description": "TinyPNG为您的应用和站点压缩图片。 将会减少带宽占用，并更快加载。",
-          "icon": "tinypng"
-        },
-        {
-          "id": "1733657315025",
-          "title": "goqr",
-          "href": "http://goqr.me/",
-          "description": "create QR codes for free (Logo, T-Shirt, vCard, EPS)",
-          "icon": "goqr"
-        },
-        {
-          "id": "1733657315026",
-          "title": "ezgif",
-          "href": "https://ezgif.com",
-          "description": "simple online GIF maker and toolset for basic animated GIF editing.",
-          "icon": "ezgif"
-        },
-        {
-          "id": "1733657315027",
-          "title": "Android 9 patch",
-          "href": "http://inloop.github.io/shadow4android/",
-          "description": "Android 9-patch shadow generator fully customizable shadows",
-          "icon": "Android9patch"
-        }
-      ],
-      "subCategories": []
     }
   ]
 }
