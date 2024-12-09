@@ -34,7 +34,16 @@
           "icon": "poe"
         }
       ],
-      "subCategories": []
+      "subCategories": [
+        {
+          "id": "3863513d-7a21-472b-ac51-cec41c1e8e12",
+          "title": "tese",
+          "icon": "Edit",
+          "description": "twetwe",
+          "enabled": true,
+          "items": []
+        }
+      ]
     },
     {
       "id": "1733657315005",
