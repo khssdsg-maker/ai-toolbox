@@ -7,13 +7,6 @@ import { Toaster } from "@/components/ui/toaster"
 import { ThemeToggle } from '@/components/theme-toggle'
 import type { SiteConfig } from '@/types/site'
 
-const fontSans = localFont({
-  src: '/fonts/inter-var-latin.woff2',
-  variable: '--font-sans',
-  display: 'swap',
-  fallback: ['system-ui', 'arial'],
-  adjustFontFallback: false,
-})
 
 async function getSiteInfo(): Promise<SiteConfig> {
   try {
@@ -61,7 +54,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh-CN" className={fontSans.variable}>
+    <html lang="zh-CN">
       <body className={cn('min-h-screen bg-background font-sans antialiased')}>
         <ThemeProvider
           attribute="class"
