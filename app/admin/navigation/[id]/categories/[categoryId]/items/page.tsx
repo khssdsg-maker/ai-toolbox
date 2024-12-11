@@ -49,6 +49,7 @@ export default function CategoryItemsPage() {
   const [deletingItem, setDeletingItem] = useState<EditingItem | null>(null)
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'enabled' | 'disabled'>('all')
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
 
   useEffect(() => {
     if (!params?.id || !params?.categoryId) {
@@ -373,7 +374,7 @@ export default function CategoryItemsPage() {
                 </SelectContent>
               </Select>
             </div>
-            <Dialog>
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
               <DialogTrigger asChild>
                 <Button>
                   <Icons.plus className="mr-2 h-4 w-4" />
@@ -385,13 +386,11 @@ export default function CategoryItemsPage() {
                   <DialogTitle>添加站点</DialogTitle>
                 </DialogHeader>
                 <AddItemForm 
-                  onSubmit={addItem} 
-                  onCancel={() => {
-                    const dialog = document.querySelector('dialog')
-                    if (dialog) {
-                      dialog.close()
-                    }
-                  }} 
+                  onSubmit={(values) => {
+                    addItem(values)
+                    setIsAddDialogOpen(false)
+                  }}
+                  onCancel={() => setIsAddDialogOpen(false)}
                 />
               </DialogContent>
             </Dialog>
