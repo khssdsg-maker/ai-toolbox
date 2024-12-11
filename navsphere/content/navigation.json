@@ -295,21 +295,109 @@
           "href": "#图标素材",
           "icon": "",
           "description": "",
-          "items": [
+"items": [
             {
               "id": "8_1_1",
-              "title": "Iconfont",
-              "href": "https://www.iconfont.cn/",
+              "title": "Iconfinder",
+              "href": "https://www.iconfinder.com",
+              "description": "2,100,000+ free and premium vector icons.",
+              "icon": "/assets/images/logos/Iconfinder.png",
+              "enabled": true
+            },
+            {
+              "id": "8_1_2",
+              "title": "iconfont",
+              "href": "http://www.iconfont.cn/",
               "description": "阿里巴巴矢量图标库",
               "icon": "/assets/images/logos/iconfont.png",
               "enabled": true
             },
             {
-              "id": "8_1_2",
-              "title": "IconFinder",
-              "href": "https://www.iconfinder.com/",
-              "description": "高质量图标资源",
-              "icon": "/assets/images/logos/iconfinder.png",
+              "id": "8_1_3",
+              "title": "iconmonstr",
+              "href": "https://iconmonstr.com/",
+              "description": "Free simple icons for your next project",
+              "icon": "/assets/images/logos/iconmonstr.png",
+              "enabled": true
+            },
+            {
+              "id": "8_1_4",
+              "title": "Icon Archive",
+              "href": "http://www.iconarchive.com/",
+              "description": "Search 590,912 free icons",
+              "icon": "/assets/images/logos/iconarchive.png",
+              "enabled": true
+            },
+            {
+              "id": "8_1_5",
+              "title": "FindIcons",
+              "href": "https://findicons.com/",
+              "description": "Search through 300,000 free icons",
+              "icon": "/assets/images/logos/FindIcons.png",
+              "enabled": true
+            },
+            {
+              "id": "8_1_6",
+              "title": "IcoMoonApp",
+              "href": "https://icomoon.io/app/",
+              "description": "Icon Font, SVG, PDF & PNG Generator",
+              "icon": "/assets/images/logos/IcoMoonApp.png",
+              "enabled": true
+            },
+            {
+              "id": "8_1_7",
+              "title": "easyicon",
+              "href": "http://www.easyicon.net/",
+              "description": "PNG、ICO、ICNS格式图标搜索、图标下载服务",
+              "icon": "/assets/images/logos/easyicon.png",
+              "enabled": true
+            },
+            {
+              "id": "8_1_8",
+              "title": "flaticon",
+              "href": "https://www.flaticon.com/",
+              "description": "634,000+ Free vector icons in SVG, PSD, PNG, EPS format or as ICON FONT.",
+              "icon": "/assets/images/logos/flaticon.png",
+              "enabled": true
+            },
+            {
+              "id": "8_1_9",
+              "title": "UICloud",
+              "href": "http://ui-cloud.com/",
+              "description": "The largest user interface design database in the world.",
+              "icon": "/assets/images/logos/UICloud.png",
+              "enabled": true
+            },
+            {
+              "id": "8_1_10",
+              "title": "Material icons",
+              "href": "https://material.io/icons/",
+              "description": "Access over 900 material system icons, available in a variety of sizes and densities, and as a web font.",
+              "icon": "/assets/images/logos/Materialicons.png",
+              "enabled": true
+            },
+            {
+              "id": "8_1_11",
+              "title": "Font Awesome Icon",
+              "href": "fontawesomeicon",
+              "description": "The complete set of 675 icons in Font Awesome",
+              "icon": "/assets/images/logos/fontawesomeicon.png",
+              "enabled": true
+            },
+            {
+              "id": "8_1_12",
+              "title": "ion icons",
+              "href": "http://ionicons.com/",
+              "description": "The premium icon font for Ionic Framework.",
+              "icon": "/assets/images/logos/ionicons.png",
+              "enabled": true
+            },
+            {
+              "id": "8_1_13",
+              "title": "Simpleline Icons",
+              "href": "http://simplelineicons.com/",
+              "description": "Simple line Icons pack",
+              "icon": "/assets/images/logos/simplelineicons.png",
               "enabled": true
             }
           ]
