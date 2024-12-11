@@ -107,14 +107,16 @@
               "title": "Cloudflare",
               "href": "https://dash.cloudflare.com/",
               "description": "Cloudflare以向客户提供基于反向代理的内容分发网络及分布式域名解析服务为主要业务。",
-              "icon": "/assets/images/logos/vercel.png"
+              "icon": "/assets/images/logos/vercel.png",
+              "enabled": true
             },
             {
               "id": "1733657315007",
               "title": "Vercel",
               "href": "https://vercel.com/",
               "description": "Vercel 提供开发者工具和云基础设施，帮助构建、扩展和保护更快、更个性化的网络应用。",
-              "icon": "/assets/images/logos/vercel.png"
+              "icon": "/assets/images/logos/vercel.png",
+              "enabled": true
             },
             {
               "id": "1733657315009",
@@ -149,19 +151,6 @@
               "title": "tet",
               "href": "https://dh.leti.ltd/",
               "description": ""
-            },
-            {
-              "id": "1733665031305",
-              "title": "test",
-              "href": "https://dh.leti.ltd/",
-              "description": "werewrwer"
-            },
-            {
-              "id": "1733657315010",
-              "title": "Producthunt",
-              "href": "https://www.producthunt.com/",
-              "description": "发现新鲜有趣的产品",
-              "icon": "/assets/images/logos/vercel.png"
             },
             {
               "id": "1733665031305",
