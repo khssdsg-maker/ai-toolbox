@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import navigation from '@/navsphere/content/navigation.json'
+import { NavigationCategory } from '@/types/navigation'
 
 export async function GET() {
   try {
@@ -23,9 +24,11 @@ export async function GET() {
       const parentSites = category.items?.length || 0
       
       // 二级分类的站点
-      const subCategoriesSites = category.subCategories?.reduce((sum, subCategory) => {
-        return sum + (subCategory.items?.length || 0)
-      }, 0) || 0
+      const subCategoriesSites = Array.isArray(category.subCategories) 
+  ? (category.subCategories as NavigationCategory[]).reduce((sum, subCategory) => {
+      return sum + (subCategory.items?.length || 0);
+    }, 0)
+  : 0;
 
       return total + parentSites + subCategoriesSites
     }, 0)
