@@ -89,7 +89,11 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
                 {/* 子分类 */}
                 {category.subCategories && category.subCategories.length > 0 ? (
                   category.subCategories.map((subCategory) => (
-                    <div key={subCategory.id} id={subCategory.id} className="mb-6">
+                    <div 
+                      key={subCategory.id} 
+                      id={subCategory.id} 
+                      className="mb-6 scroll-mt-20"
+                    >
                       <h3 className="text-sm font-medium text-muted-foreground mb-3">
                         {subCategory.title}
                       </h3>

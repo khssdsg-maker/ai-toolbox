@@ -3,6 +3,7 @@ export const runtime = 'edge'
 import { NavigationContent } from '@/components/navigation-content'
 import { headers } from 'next/headers'
 import { Metadata, ResolvingMetadata } from 'next/types'
+import { ScrollToTop } from '@/components/ScrollToTop'
 
 
 async function getData() {
@@ -83,5 +84,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function HomePage() {
   const { navigationData, siteData } = await getData()
-  return <NavigationContent navigationData={navigationData} siteData={siteData} />
+  return (
+    <>
+      <NavigationContent navigationData={navigationData} siteData={siteData} />
+      <ScrollToTop />
+    </>
+  )
 }
