@@ -33,6 +33,14 @@ import { Input } from "@/registry/new-york/ui/input"
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd'
 import { Params } from 'next/dist/shared/lib/router/utils/route-matcher'
 import { Badge } from "@/registry/new-york/ui/badge"
+import { Skeleton } from "@/registry/new-york/ui/skeleton"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/registry/new-york/ui/select"
 
 export default function CategoriesPage() {
   const params = useParams<{ id: string }>()
@@ -42,6 +50,9 @@ export default function CategoriesPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [editingCategory, setEditingCategory] = useState<{ index: number; category: NavigationCategory } | null>(null)
   const [deletingCategory, setDeletingCategory] = useState<{ index: number; category: NavigationCategory } | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+  const [statusFilter, setStatusFilter] = useState<'all' | 'enabled' | 'disabled'>('all')
 
   useEffect(() => {
     if (!params?.id) {
@@ -57,6 +68,7 @@ export default function CategoriesPage() {
     }
 
     try {
+      setIsLoading(true)
       const response = await fetch(`/api/navigation/${params.id}`)
       if (!response.ok) throw new Error('Failed to fetch')
       const data = await response.json()
@@ -67,6 +79,8 @@ export default function CategoriesPage() {
         description: "加载数据失败",
         variant: "destructive"
       })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -106,6 +120,7 @@ export default function CategoriesPage() {
         title: "成功",
         description: "添加成功"
       })
+      setIsAddDialogOpen(false)
     } catch (error) {
       console.error('Save error:', error)
       toast({
@@ -300,9 +315,15 @@ export default function CategoriesPage() {
     }
   }
 
-  const filteredCategories = navigation?.subCategories?.filter(category =>
-    category.title.toLowerCase().includes(searchQuery.toLowerCase())
-  ) || []
+  const filteredCategories = navigation?.subCategories?.filter(category => {
+    const matchesSearch = category.title.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesStatus = statusFilter === 'all' 
+      ? true 
+      : statusFilter === 'enabled' 
+        ? category.enabled 
+        : !category.enabled
+    return matchesSearch && matchesStatus
+  }) || []
 
   return (
     <div className="space-y-4">
@@ -317,32 +338,54 @@ export default function CategoriesPage() {
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <h2 className="text-lg font-semibold flex items-center gap-2">
-            {navigation?.title || '加载中...'}
-          </h2>
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="搜索分类..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8"
-            />
-            {searchQuery && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSearchQuery("")}
-                className="absolute right-1 top-1 h-7 w-7 p-0"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
+          {isLoading ? (
+            <Skeleton className="h-7 w-32" />
+          ) : (
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              {navigation?.title || '未命名导航'}
+            </h2>
+          )}
+          <div className="flex items-center gap-4">
+            <div className="relative flex-1 max-w-sm">
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="搜索分类..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-8"
+                disabled={isLoading}
+              />
+              {searchQuery && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-1 top-1 h-7 w-7 p-0"
+                  disabled={isLoading}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+            <Select
+              value={statusFilter}
+              onValueChange={(value: 'all' | 'enabled' | 'disabled') => setStatusFilter(value)}
+              disabled={isLoading}
+            >
+              <SelectTrigger className="w-[140px]">
+                <SelectValue placeholder="按状态筛选" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">全部</SelectItem>
+                <SelectItem value="enabled">已启用</SelectItem>
+                <SelectItem value="disabled">已禁用</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
-        <Dialog>
+        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button>
+            <Button disabled={isLoading}>
               <Plus className="mr-2 h-4 w-4" />
               添加分类
             </Button>
@@ -353,122 +396,136 @@ export default function CategoriesPage() {
             </DialogHeader>
             <AddCategoryForm 
               onSubmit={addCategory} 
-              onCancel={() => setEditingCategory(null)} 
+              onCancel={() => setIsAddDialogOpen(false)} 
             />
           </DialogContent>
         </Dialog>
       </div>
 
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="droppable">
-          {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef} className="grid gap-2">
-              {filteredCategories.map((category, index) => (
-                <Draggable key={category.id} draggableId={category.id} index={index}>
-                  {(provided) => (
-                    <div
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      ref={provided.innerRef}
-                      className="group relative"
-                    >
-                      <div
-                        className="flex items-center justify-between py-2 px-4 bg-card rounded-lg border shadow-sm transition-colors hover:bg-accent/10"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
-                            <Folder className="w-5 h-5 text-primary" />
-                          </div>
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-medium leading-none">{category.title}</span>
-                              {!category.enabled && (
-                                <Badge variant="secondary" className="text-xs">已禁用</Badge>
-                              )}
-                            </div>
-                            {category.description && (
-                              <div className="text-xs text-muted-foreground mt-1">
-                                {category.description}
-                              </div>
-                            )}
-                            <div className="text-xs text-muted-foreground mt-1">
-                              {category.items?.length || 0} 个项目
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => {
-                              if (params?.id) {
-                                router.push(`/admin/navigation/${params.id}/categories/${category.id}/items`)
-                              }
-                            }}
-                            title="管理子项目"
-                          >
-                            <List className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setEditingCategory({ index, category })}
-                            title="编辑"
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setDeletingCategory({ index, category })}
-                            title="删除"
-                          >
-                            <Trash className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                      <div className="absolute right-0 top-1/2 -translate-y-1/2 pr-2 hidden group-hover:flex items-center gap-1">
-                        {index > 0 && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6"
-                            onClick={() => moveToTop(category.id)}
-                            title="置顶"
-                          >
-                            <ChevronsUp className="h-4 w-4" />
-                          </Button>
-                        )}
-                        {index < (navigation?.subCategories?.length || 0) - 1 && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6"
-                            onClick={() => moveToBottom(category.id)}
-                            title="置底"
-                          >
-                            <ChevronsDown className="h-4 w-4" />
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {filteredCategories.length === 0 && (
-                <div className="text-center py-10 text-muted-foreground">
-                  {navigation?.subCategories?.length === 0 ? (
-                    <p>暂无分类</p>
-                  ) : (
-                    <p>未找到匹配的分类</p>
-                  )}
-                </div>
-              )}
-              {provided.placeholder}
+      {isLoading ? (
+        <div className="grid gap-2">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex items-center gap-4 p-4 rounded-lg border">
+              <Skeleton className="h-8 w-8 rounded-lg" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-48" />
+                <Skeleton className="h-3 w-32" />
+              </div>
             </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+          ))}
+        </div>
+      ) : (
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="droppable">
+            {(provided) => (
+              <div {...provided.droppableProps} ref={provided.innerRef} className="grid gap-2">
+                {filteredCategories.map((category, index) => (
+                  <Draggable key={category.id} draggableId={category.id} index={index}>
+                    {(provided) => (
+                      <div
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        ref={provided.innerRef}
+                        className="group relative"
+                      >
+                        <div
+                          className="flex items-center justify-between py-2 px-4 bg-card rounded-lg border shadow-sm transition-colors hover:bg-accent/10"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
+                              <Folder className="w-5 h-5 text-primary" />
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-medium leading-none">{category.title}</span>
+                                {!category.enabled && (
+                                  <Badge variant="secondary" className="text-xs">已禁用</Badge>
+                                )}
+                              </div>
+                              {category.description && (
+                                <div className="text-xs text-muted-foreground mt-1">
+                                  {category.description}
+                                </div>
+                              )}
+                              <div className="text-xs text-muted-foreground mt-1">
+                                {category.items?.length || 0} 个项目
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => {
+                                if (params?.id) {
+                                  router.push(`/admin/navigation/${params.id}/categories/${category.id}/items`)
+                                }
+                              }}
+                              title="管理子项目"
+                            >
+                              <List className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => setEditingCategory({ index, category })}
+                              title="编辑"
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => setDeletingCategory({ index, category })}
+                              title="删除"
+                            >
+                              <Trash className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="absolute right-0 top-1/2 -translate-y-1/2 pr-2 hidden group-hover:flex items-center gap-1">
+                          {index > 0 && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-6 w-6"
+                              onClick={() => moveToTop(category.id)}
+                              title="置顶"
+                            >
+                              <ChevronsUp className="h-4 w-4" />
+                            </Button>
+                          )}
+                          {index < (navigation?.subCategories?.length || 0) - 1 && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-6 w-6"
+                              onClick={() => moveToBottom(category.id)}
+                              title="置底"
+                            >
+                              <ChevronsDown className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {filteredCategories.length === 0 && (
+                  <div className="text-center py-10 text-muted-foreground">
+                    {navigation?.subCategories?.length === 0 ? (
+                      <p>暂无分类</p>
+                    ) : (
+                      <p>未找到匹配的分类</p>
+                    )}
+                  </div>
+                )}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      )}
 
       <Dialog open={!!editingCategory} onOpenChange={(open) => !open && setEditingCategory(null)}>
         <DialogContent>
