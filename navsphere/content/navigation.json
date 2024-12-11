@@ -1,92 +1,6 @@
 {
   "navigationItems": [
     {
-      "id": "1733657315014",
-      "title": "常用AI",
-      "icon": "linecons-lightbulb",
-      "items": [
-        {
-          "id": "1733657315015",
-          "title": "ChatGPT",
-          "href": "https://chatgpt.com/",
-          "description": "OpenAI开发的人工智能聊天机器人程序",
-          "icon": "chatgpt",
-          "enabled": true
-        },
-        {
-          "id": "1733657315016",
-          "title": "Claude",
-          "href": "https://claude.ai/",
-          "description": "Claude是由Anthropic公司开发的先进人工智能模型，专注于创建安全、可靠且符合人类价值观的人工智能系统",
-          "icon": "claude"
-        },
-        {
-          "id": "1733657315017",
-          "title": "Gemini",
-          "href": "https://gemini.google.com/",
-          "description": "Google开发的生成式人工智能聊天机器人。它基于同名的Gemini系列大型语言模型。",
-          "icon": "gemini"
-        },
-        {
-          "id": "1733657315018",
-          "title": "Poe",
-          "href": "https://poe.com/",
-          "description": "Poe一款由Quora开发的应用程序。该应用程序集成了多种生成式人工智能，可使用户能够便利切换，比较和使用市场上主流的大型语言模型。",
-          "icon": "poe"
-        },
-        {
-          "id": "1733900823046",
-          "title": "testt",
-          "href": "https://dh.leti.ltd/",
-          "description": "",
-          "icon": "Search"
-        }
-      ],
-      "subCategories": [
-        {
-          "id": "3863513d-7a21-472b-ac51-cec41c1e8e12",
-          "title": "tese",
-          "icon": "Edit",
-          "description": "twetwe",
-          "enabled": false,
-          "items": []
-        },
-        {
-          "id": "1d52e958-8a86-4db8-be16-f54b12e4f797",
-          "title": "tese",
-          "icon": "Edit",
-          "description": "twetwe",
-          "enabled": true,
-          "items": []
-        },
-        {
-          "id": "4985dd8f-866b-4502-a329-eaef11579d49",
-          "title": "tese",
-          "icon": "Edit",
-          "description": "twetwe",
-          "enabled": true,
-          "items": []
-        },
-        {
-          "id": "33c2f64e-3424-4774-8ad0-da846fdd9d5d",
-          "title": "wwwe",
-          "icon": "BookOpen",
-          "description": "423423",
-          "enabled": true,
-          "items": []
-        },
-        {
-          "id": "1b025baa-b217-4541-a5fe-fb2135b2d5de",
-          "title": "tee",
-          "icon": "BookOpen",
-          "description": "fff",
-          "enabled": true,
-          "items": []
-        }
-      ],
-      "description": ""
-    },
-    {
       "id": "1733657315005",
       "title": "常用推荐",
       "icon": "bookmark",
@@ -254,6 +168,92 @@
       ],
       "description": "",
       "enabled": true
+    },
+    {
+      "id": "1733657315014",
+      "title": "常用AI",
+      "icon": "linecons-lightbulb",
+      "items": [
+        {
+          "id": "1733657315015",
+          "title": "ChatGPT",
+          "href": "https://chatgpt.com/",
+          "description": "OpenAI开发的人工智能聊天机器人程序",
+          "icon": "chatgpt",
+          "enabled": true
+        },
+        {
+          "id": "1733657315016",
+          "title": "Claude",
+          "href": "https://claude.ai/",
+          "description": "Claude是由Anthropic公司开发的先进人工智能模型，专注于创建安全、可靠且符合人类价值观的人工智能系统",
+          "icon": "claude"
+        },
+        {
+          "id": "1733657315017",
+          "title": "Gemini",
+          "href": "https://gemini.google.com/",
+          "description": "Google开发的生成式人工智能聊天机器人。它基于同名的Gemini系列大型语言模型。",
+          "icon": "gemini"
+        },
+        {
+          "id": "1733657315018",
+          "title": "Poe",
+          "href": "https://poe.com/",
+          "description": "Poe一款由Quora开发的应用程序。该应用程序集成了多种生成式人工智能，可使用户能够便利切换，比较和使用市场上主流的大型语言模型。",
+          "icon": "poe"
+        },
+        {
+          "id": "1733900823046",
+          "title": "testt",
+          "href": "https://dh.leti.ltd/",
+          "description": "",
+          "icon": "Search"
+        }
+      ],
+      "subCategories": [
+        {
+          "id": "3863513d-7a21-472b-ac51-cec41c1e8e12",
+          "title": "tese",
+          "icon": "Edit",
+          "description": "twetwe",
+          "enabled": false,
+          "items": []
+        },
+        {
+          "id": "1d52e958-8a86-4db8-be16-f54b12e4f797",
+          "title": "tese",
+          "icon": "Edit",
+          "description": "twetwe",
+          "enabled": true,
+          "items": []
+        },
+        {
+          "id": "4985dd8f-866b-4502-a329-eaef11579d49",
+          "title": "tese",
+          "icon": "Edit",
+          "description": "twetwe",
+          "enabled": true,
+          "items": []
+        },
+        {
+          "id": "33c2f64e-3424-4774-8ad0-da846fdd9d5d",
+          "title": "wwwe",
+          "icon": "BookOpen",
+          "description": "423423",
+          "enabled": true,
+          "items": []
+        },
+        {
+          "id": "1b025baa-b217-4541-a5fe-fb2135b2d5de",
+          "title": "tee",
+          "icon": "BookOpen",
+          "description": "fff",
+          "enabled": true,
+          "items": []
+        }
+      ],
+      "description": ""
     },
     {
       "id": "1733657315019",
