@@ -161,7 +161,7 @@ export default function SiteSettings() {
                         </FormItem>
                       )}
                     />
-                    <div className="flex justify-end">
+                    <div className="flex justify-start">
                       <Button 
                         type="submit"
                         className="w-[120px]"
@@ -225,7 +225,7 @@ export default function SiteSettings() {
                         </FormItem>
                       )}
                     />
-                    <div className="flex justify-end">
+                    <div className="flex justify-start">
                       <Button 
                         type="submit"
                         className="w-[120px]"

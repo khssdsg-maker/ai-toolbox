@@ -2,6 +2,17 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { AdminLayoutClient } from './AdminLayoutClient'
 import { Toaster } from "@/components/ui/toaster"
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'NavSphere Admin',
+  description: 'NavSphere Admin Dashboard',
+  icons: {
+    icon: '/assets/images/favicon.png',
+    shortcut: '/assets/images/favicon.png',
+    apple: '/assets/images/favicon.png',
+  }
+}
 
 export default async function AdminLayout({
   children,
