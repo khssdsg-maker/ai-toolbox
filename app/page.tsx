@@ -2,6 +2,7 @@ export const runtime = 'edge'
 
 import { NavigationContent } from '@/components/navigation-content'
 import { headers } from 'next/headers'
+import { Metadata, ResolvingMetadata } from 'next/types'
 
 
 async function getData() {
@@ -64,6 +65,19 @@ async function getData() {
         }
       }
     }
+  }
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { siteData } = await getData()
+  
+  return {
+    title: siteData.basic.title,
+    description: siteData.basic.description,
+    keywords: siteData.basic.keywords,
+    icons: {
+      icon: siteData.appearance.favicon,
+    },
   }
 }
 
