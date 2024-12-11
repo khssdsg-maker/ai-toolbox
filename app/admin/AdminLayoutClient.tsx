@@ -15,6 +15,7 @@ import {
   ChevronRight,
   ChevronDown,
   LogOut,
+  Home,
 } from "lucide-react"
 import { cn } from '@/lib/utils'
 import {
@@ -109,7 +110,7 @@ export function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute -right-3 top-[72px] z-50 border shadow-sm bg-background rounded-full hover:bg-muted w-6 h-6"
+                  className="absolute -right-3 top-[60px] z-50 border shadow-sm bg-background rounded-full hover:bg-muted w-6 h-6"
                   onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
                 >
                   {isSidebarCollapsed ? (
@@ -274,8 +275,20 @@ export function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
                         </div>
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link 
+                          href="/" 
+                          className="cursor-pointer"
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                        >
+                          <Home className="mr-2 h-4 w-4" />
+                          前台首页
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
                       <DropdownMenuItem
-                        className="cursor-pointer text-destructive hover:!text-destructive hover:!bg-destructive/10 focus:!text-destructive focus:!bg-destructive/10"
+                        className="cursor-pointer flex items-center text-red-600 focus:text-red-600 focus:bg-red-100"
                         onClick={() => signOut({ callbackUrl: '/' })}
                       >
                         <LogOut className="mr-2 h-4 w-4" />
