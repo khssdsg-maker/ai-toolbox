@@ -111,7 +111,7 @@
     {
       "id": "2",
       "title": "常用工具",
-      "icon": "linecons-diamond",
+      "icon": "Laptop",
       "items": [],
       "subCategories": [
         {
@@ -239,7 +239,9 @@
             }
           ]
         }
-      ]
+      ],
+      "description": "",
+      "enabled": true
     },
     {
       "id": "8",
