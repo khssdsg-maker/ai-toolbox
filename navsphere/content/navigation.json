@@ -3,7 +3,7 @@
     {
       "id": "1",
       "title": "常用推荐",
-      "icon": "linecons-star",
+      "icon": "Star",
       "items": [
         {
           "id": "1_1",
@@ -62,12 +62,14 @@
           "enabled": true
         }
       ],
-      "subCategories": []
+      "subCategories": [],
+      "description": "",
+      "enabled": true
     },
     {
       "id": "9",
       "title": "常用AI",
-      "icon": "linecons-lightbulb",
+      "icon": "Brain",
       "items": [
         {
           "id": "9_1",
@@ -90,7 +92,7 @@
           "title": "Gemini",
           "href": "https://gemini.google.com/",
           "description": "Google开发的生成式人工智能聊天机器人。它基于同名的Gemini系列大型语言模型。",
-          "icon": "../assets/images/logos/gemini.png",
+          "icon": "../assets/images/logos/gemini.svg",
           "enabled": true
         },
         {
@@ -98,16 +100,18 @@
           "title": "Poe",
           "href": "https://poe.com/",
           "description": "Poe一款由Quora开发的应用程序。该应用程序集成了多种生成式人工智能，可使用户能够便利切换，比较和使用市场上主流的大型语言模型。",
-          "icon": "../assets/images/logos/poe.png",
+          "icon": "../assets/images/logos/poe.svg",
           "enabled": true
         }
       ],
-      "subCategories": []
+      "subCategories": [],
+      "description": "",
+      "enabled": true
     },
     {
       "id": "2",
       "title": "常用工具",
-      "icon": "linecons-diamond",
+      "icon": "Laptop",
       "items": [],
       "subCategories": [
         {
@@ -275,7 +279,9 @@
             }
           ]
         }
-      ]
+      ],
+      "description": "",
+      "enabled": true
     },
     {
       "id": "8",
