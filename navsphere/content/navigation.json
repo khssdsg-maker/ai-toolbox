@@ -96,13 +96,6 @@
           "icon": "mail",
           "items": [
             {
-              "id": "1733657315010",
-              "title": "Producthunt",
-              "href": "https://www.producthunt.com/",
-              "description": "发现新鲜有趣的产品",
-              "icon": "/assets/images/logos/vercel.png"
-            },
-            {
               "id": "1733657315008",
               "title": "Cloudflare",
               "href": "https://dash.cloudflare.com/",
@@ -168,6 +161,13 @@
               "title": "test",
               "href": "https://dh.leti.ltd/",
               "description": "werewrwer"
+            },
+            {
+              "id": "1733657315010",
+              "title": "Producthunt",
+              "href": "https://www.producthunt.com/",
+              "description": "发现新鲜有趣的产品",
+              "icon": "/assets/images/logos/vercel.png"
             }
           ]
         },
