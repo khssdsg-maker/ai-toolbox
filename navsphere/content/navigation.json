@@ -96,13 +96,6 @@
           "icon": "mail",
           "items": [
             {
-              "id": "1733657315006",
-              "title": "Google Analytics",
-              "href": "https://analytics.google.com/",
-              "description": "Google分析（Google Analytics）是一个由Google所提供的网站流量统计服务。",
-              "icon": "/assets/images/logos/analytics.ico"
-            },
-            {
               "id": "1733657315008",
               "title": "Cloudflare",
               "href": "https://dash.cloudflare.com/",
@@ -168,6 +161,13 @@
               "href": "https://www.producthunt.com/",
               "description": "发现新鲜有趣的产品",
               "icon": "/assets/images/logos/vercel.png"
+            },
+            {
+              "id": "1733657315006",
+              "title": "Google Analytics",
+              "href": "https://analytics.google.com/",
+              "description": "Google分析（Google Analytics）是一个由Google所提供的网站流量统计服务。",
+              "icon": "/assets/images/logos/analytics.ico"
             }
           ]
         },
