@@ -1,375 +1,316 @@
 {
   "navigationItems": [
     {
-      "id": "1733657315005",
+      "id": "1",
       "title": "常用推荐",
-      "icon": "bookmark",
-      "items": [],
-      "subCategories": [
+      "icon": "linecons-star",
+      "items": [
         {
-          "id": "17336573150051",
-          "title": "常用推荐子级",
-          "icon": "mail",
-          "items": [
-            {
-              "id": "1733657315006",
-              "title": "Google Analytics",
-              "href": "https://analytics.google.com/",
-              "description": "Google分析（Google Analytics）是一个由Google所提供的网站流量统计服务。",
-              "icon": "/assets/images/logos/analytics.ico"
-            },
-            {
-              "id": "1733657315008",
-              "title": "Cloudflare",
-              "href": "https://dash.cloudflare.com/",
-              "description": "Cloudflare以向客户提供基于反向代理的内容分发网络及分布式域名解析服务为主要业务。",
-              "icon": "/assets/images/logos/vercel.png",
-              "enabled": true
-            },
-            {
-              "id": "1733657315007",
-              "title": "Vercel",
-              "href": "https://vercel.com/",
-              "description": "Vercel 提供开发者工具和云基础设施，帮助构建、扩展和保护更快、更个性化的网络应用。",
-              "icon": "/assets/images/logos/vercel.png",
-              "enabled": true
-            },
-            {
-              "id": "1733657315009",
-              "title": "Google AdSense",
-              "href": "https://www.google.com/adsense/",
-              "description": "Google AdSense广告服务。",
-              "icon": "/assets/images/logos/vercel.png"
-            },
-            {
-              "id": "1733657315011",
-              "title": "Leonardo.AI",
-              "href": "https://app.leonardo.ai/",
-              "description": "Leonardo.AI是一个人工智能绘图社区和工具。它基于Stable Diffusion人工智能模型,深度集成了其各种插件,提供强大的图片生成和创作功能。",
-              "icon": "/assets/images/logos/vercel.png"
-            },
-            {
-              "id": "1733657315013",
-              "title": "优设",
-              "href": "http://www.uisdc.com/",
-              "description": "设计师交流学习平台",
-              "icon": "uisdc"
-            },
-            {
-              "id": "1733657315012",
-              "title": "Tensor.art",
-              "href": "https://tensor.art/",
-              "description": "Tensor.art是一个免费的在线图像生成和模型托管平台。它允许用户在线运行模型来免费生成图像。",
-              "icon": "tensorart"
-            },
-            {
-              "id": "1733665081436",
-              "title": "tet",
-              "href": "https://dh.leti.ltd/",
-              "description": ""
-            },
-            {
-              "id": "1733665031305",
-              "title": "test",
-              "href": "https://dh.leti.ltd/",
-              "description": "werewrwer"
-            }
-          ]
+          "id": "1_1",
+          "title": "Google Analytics",
+          "href": "https://analytics.google.com/",
+          "description": "Google分析（Google Analytics）是一个由Google所提供的网站流量统计服务。",
+          "icon": "../assets/images/logos/analytics.ico",
+          "enabled": true
         },
         {
-          "id": "17336573150057",
-          "title": "常用推荐子级2",
-          "icon": "linecons-star",
-          "items": [
-            {
-              "id": "1733657315006",
-              "title": "Google Analytics",
-              "href": "https://analytics.google.com/",
-              "description": "Google分析（Google Analytics）是一个由Google所提供的网站流量统计服务。",
-              "icon": "analytics"
-            },
-            {
-              "id": "1733657315007",
-              "title": "Vercel",
-              "href": "https://vercel.com/",
-              "description": "Vercel 提供开发者工具和云基础设施，帮助构建、扩展和保护更快、更个性化的网络应用。",
-              "icon": "vercel"
-            },
-            {
-              "id": "1733657315008",
-              "title": "Cloudflare",
-              "href": "https://dash.cloudflare.com/",
-              "description": "Cloudflare以向客户提供基于反向代理的内容分发网络及分布式域名解析服务为主要业务。",
-              "icon": "vercel"
-            },
-            {
-              "id": "1733657315009",
-              "title": "Google AdSense",
-              "href": "https://www.google.com/adsense/",
-              "description": "Google AdSense广告服务。",
-              "icon": "https://www.google.com/adsense/start/images/favicon.ico"
-            },
-            {
-              "id": "1733657315010",
-              "title": "Producthunt",
-              "href": "https://www.producthunt.com/",
-              "description": "发现新鲜有趣的产品",
-              "icon": "https://ph-static.imgix.net/ph-favicon-coral.ico"
-            },
-            {
-              "id": "1733657315011",
-              "title": "Leonardo.AI",
-              "href": "https://app.leonardo.ai/",
-              "description": "Leonardo.AI是一个人工智能绘图社区和工具。它基于Stable Diffusion人工智能模型,深度集成了其各种插件,提供强大的图片生成和创作功能。",
-              "icon": "https://app.leonardo.ai/favicon.ico"
-            },
-            {
-              "id": "1733657315012",
-              "title": "Tensor.art",
-              "href": "https://tensor.art/",
-              "description": "Tensor.art是一个免费的在线图像生成和模型托管平台。它允许用户在线运行模型来免费生成图像。",
-              "icon": "tensorart"
-            },
-            {
-              "id": "1733657315013",
-              "title": "优设",
-              "href": "http://www.uisdc.com/",
-              "description": "设计师交流学习平台",
-              "icon": "uisdc"
-            },
-            {
-              "id": "1733665031305",
-              "title": "test",
-              "href": "https://dh.leti.ltd/",
-              "description": "werewrwer"
-            },
-            {
-              "id": "1733665031305",
-              "title": "test",
-              "href": "https://dh.leti.ltd/",
-              "description": "werewrwer"
-            },
-            {
-              "id": "1733665081436",
-              "title": "tet",
-              "href": "https://dh.leti.ltd/",
-              "description": ""
-            }
-          ]
+          "id": "1_2",
+          "title": "Vercel",
+          "href": "https://vercel.com/",
+          "description": "Vercel 提供开发者工具和云基础设施，帮助构建、扩展和保护更快、更个性化的网络应用。",
+          "icon": "../assets/images/logos/vercel.png",
+          "enabled": true
         },
         {
-          "id": "b0bb93e1-e284-45a9-a446-2302418093b6",
-          "title": "te",
-          "icon": "Edit",
-          "description": "te",
-          "enabled": true,
-          "items": []
+          "id": "1_3",
+          "title": "Cloudflare",
+          "href": "https://dash.cloudflare.com/",
+          "description": "Cloudflare以向客户提供基于反向代理的内容分发网络及分布式域名解析服务为主要业务。",
+          "icon": "../assets/images/logos/cloudflar.ico",
+          "enabled": true
+        },
+        {
+          "id": "1_4",
+          "title": "Google AdSense",
+          "href": "https://www.google.com/adsense/",
+          "description": "Google AdSense广告服务。",
+          "icon": "../assets/images/logos/gads.ico",
+          "enabled": true
+        },
+        {
+          "id": "1_5",
+          "title": "Producthunt",
+          "href": "https://www.producthunt.com/",
+          "description": "发现新鲜有趣的产品",
+          "icon": "../assets/images/logos/producthunt.png",
+          "enabled": true
+        },
+        {
+          "id": "1_6",
+          "title": "Leonardo.AI",
+          "href": "https://app.leonardo.ai/",
+          "description": "Leonardo.AI是一个人工智能绘图社区和工具。它基于Stable Diffusion人工智能模型,深度集成了其各种插件,提供强大的图片生成和创作功能。",
+          "icon": "../assets/images/logos/leonardo.ico",
+          "enabled": true
+        },
+        {
+          "id": "1_7",
+          "title": "Tensor.art",
+          "href": "https://tensor.art/",
+          "description": "Tensor.art是一个免费的在线图像生成和模型托管平台。",
+          "icon": "../assets/images/logos/tensorart.ico",
+          "enabled": true
         }
       ],
-      "description": "",
-      "enabled": true
+      "subCategories": []
     },
     {
-      "id": "1733657315014",
+      "id": "9",
       "title": "常用AI",
       "icon": "linecons-lightbulb",
       "items": [
         {
-          "id": "1733657315015",
+          "id": "9_1",
           "title": "ChatGPT",
-          "href": "https://chatgpt.com/",
-          "description": "OpenAI开发的人工智能聊天机器人程序",
-          "icon": "chatgpt",
+          "href": "https://chat.openai.com/",
+          "description": "OpenAI开发的人工智能聊天机器人程序。",
+          "icon": "../assets/images/logos/chatgpt.png",
           "enabled": true
         },
         {
-          "id": "1733657315016",
+          "id": "9_2",
           "title": "Claude",
           "href": "https://claude.ai/",
-          "description": "Claude是由Anthropic公司开发的先进人工智能模型，专注于创建安全、可靠且符合人类价值观的人工智能系统",
-          "icon": "claude"
+          "description": "Anthropic开发的AI助手，擅长分析和创作。",
+          "icon": "../assets/images/logos/claude.png",
+          "enabled": true
         },
         {
-          "id": "1733657315017",
+          "id": "9_3",
           "title": "Gemini",
           "href": "https://gemini.google.com/",
           "description": "Google开发的生成式人工智能聊天机器人。它基于同名的Gemini系列大型语言模型。",
-          "icon": "gemini"
+          "icon": "../assets/images/logos/gemini.png",
+          "enabled": true
         },
         {
-          "id": "1733657315018",
+          "id": "9_4",
           "title": "Poe",
           "href": "https://poe.com/",
           "description": "Poe一款由Quora开发的应用程序。该应用程序集成了多种生成式人工智能，可使用户能够便利切换，比较和使用市场上主流的大型语言模型。",
-          "icon": "poe"
-        },
-        {
-          "id": "1733900823046",
-          "title": "testt",
-          "href": "https://dh.leti.ltd/",
-          "description": "",
-          "icon": "Search"
+          "icon": "../assets/images/logos/poe.png",
+          "enabled": true
         }
       ],
+      "subCategories": []
+    },
+    {
+      "id": "2",
+      "title": "常用工具",
+      "icon": "linecons-diamond",
+      "items": [],
       "subCategories": [
         {
-          "id": "3863513d-7a21-472b-ac51-cec41c1e8e12",
-          "title": "tese",
-          "icon": "Edit",
-          "description": "twetwe",
-          "enabled": false,
-          "items": []
+          "id": "3",
+          "title": "在线工具",
+          "href": "#在线工具",
+          "icon": "",
+          "description": "",
+          "items": [
+            {
+              "id": "3_1",
+              "title": "TableConvert",
+              "href": "https://tableconvert.com/",
+              "description": "Excel转sql在线工具。将你的Excel数据转换成一个网络友好格式,包括HTML、JSON和XML,还可以把Excel 转换成Sql,excel 表格转成 Markdown",
+              "icon": "../assets/images/logos/tableconvert.png",
+              "enabled": true
+            },
+            {
+              "id": "3_2",
+              "title": "JSON Editor Online",
+              "href": "https://jsoneditoronline.org/",
+              "description": "在线的JSON编辑器，包括格式化，可视化，对比，显示行号功能。",
+              "icon": "../assets/images/logos/json.png",
+              "enabled": true
+            },
+            {
+              "id": "3_3",
+              "title": "Beautifier",
+              "href": "https://beautifier.io/",
+              "description": "Beautify JavaScript, JSON, React.js, HTML, CSS, SCSS, and SASS",
+              "icon": "../assets/images/logos/beautifier.png",
+              "enabled": true
+            },
+            {
+              "id": "3_4",
+              "title": "SQL格式化",
+              "href": "https://www.dpriver.com/pp/sqlformat.htm",
+              "description": "在线美化SQL语句的工具，格式化方便阅读",
+              "icon": "../assets/images/logos/sqlformat.ico",
+              "enabled": true
+            },
+            {
+              "id": "3_5",
+              "title": "TinyPNG",
+              "href": "https://tinypng.com/",
+              "description": "在线图片压缩工具",
+              "icon": "../assets/images/logos/tinypng.png",
+              "enabled": true
+            }
+          ]
         },
         {
-          "id": "1d52e958-8a86-4db8-be16-f54b12e4f797",
-          "title": "tese",
-          "icon": "Edit",
-          "description": "twetwe",
-          "enabled": true,
-          "items": []
+          "id": "4",
+          "title": "图形创意",
+          "href": "#图形创意",
+          "icon": "",
+          "description": "",
+          "items": [
+            {
+              "id": "4_1",
+              "title": "Photopea",
+              "href": "https://www.photopea.com/",
+              "description": "免费的在线图像编辑器",
+              "icon": "../assets/images/logos/photopea.png",
+              "enabled": true
+            },
+            {
+              "id": "4_2",
+              "title": "稿定设计",
+              "href": "https://www.gaoding.com/",
+              "description": "提供设计工具和海量设计素材的设计平台",
+              "icon": "../assets/images/logos/gaoding.png",
+              "enabled": true
+            }
+          ]
         },
         {
-          "id": "4985dd8f-866b-4502-a329-eaef11579d49",
-          "title": "tese",
-          "icon": "Edit",
-          "description": "twetwe",
-          "enabled": true,
-          "items": []
+          "id": "5",
+          "title": "界面设计",
+          "href": "#界面设计",
+          "icon": "",
+          "description": "",
+          "items": [
+            {
+              "id": "5_1",
+              "title": "Figma",
+              "href": "https://www.figma.com/",
+              "description": "在线UI设计工具",
+              "icon": "../assets/images/logos/figma.png",
+              "enabled": true
+            }
+          ]
         },
         {
-          "id": "33c2f64e-3424-4774-8ad0-da846fdd9d5d",
-          "title": "wwwe",
-          "icon": "BookOpen",
-          "description": "423423",
-          "enabled": true,
-          "items": []
+          "id": "6",
+          "title": "交互动效",
+          "href": "#交互动效",
+          "icon": "",
+          "description": "",
+          "items": [
+            {
+              "id": "6_1",
+              "title": "LottieFiles",
+              "href": "https://lottiefiles.com/",
+              "description": "轻量级动画文件",
+              "icon": "../assets/images/logos/lottiefiles.png",
+              "enabled": true
+            }
+          ]
         },
         {
-          "id": "1b025baa-b217-4541-a5fe-fb2135b2d5de",
-          "title": "tee",
-          "icon": "BookOpen",
-          "description": "fff",
-          "enabled": true,
-          "items": []
+          "id": "7",
+          "title": "在线配色",
+          "href": "#在线配色",
+          "icon": "",
+          "description": "",
+          "items": [
+            {
+              "id": "7_1",
+              "title": "Color Hunt",
+              "href": "https://colorhunt.co/",
+              "description": "色彩搭配",
+              "icon": "../assets/images/logos/colorhunt.png",
+              "enabled": true
+            }
+          ]
         }
-      ],
-      "description": ""
+      ]
     },
     {
-      "id": "1733657315019",
-      "title": "在线工具",
-      "icon": "linecons-diamond",
-      "items": [
-        {
-          "id": "1733657315020",
-          "title": "TableConvert",
-          "href": "https://tableconvert.com/",
-          "description": "Excel转sql在线工具。将你的Excel数据转换成一个网络友好格式,包括HTML、JSON和XML,还可以把Excel 转换成Sql,excel 表格转成 Markdown",
-          "icon": "tableconvert"
-        },
-        {
-          "id": "1733657315021",
-          "title": "JSON Editor Online",
-          "href": "https://jsoneditoronline.org/",
-          "description": "在线的JSON编辑器，包括格式化，可视化，对比，显示行号功能。",
-          "icon": "json"
-        },
-        {
-          "id": "1733657315022",
-          "title": "beautifier",
-          "href": "https://beautifier.io/",
-          "description": "Beautify JavaScript, JSON, React.js, HTML, CSS, SCSS, and SASS",
-          "icon": "beautifier"
-        },
-        {
-          "id": "1733657315023",
-          "title": "Sql 格式化",
-          "href": "https://www.dpriver.com/pp/sqlformat.htm",
-          "description": "在线美化SQL语句的工具，格式化方便阅读",
-          "icon": "sqlformat"
-        },
-        {
-          "id": "1733657315024",
-          "title": "TinyPng",
-          "href": "https://tinypng.com/",
-          "description": "TinyPNG为您的应用和站点压缩图片。 将会减少带宽占用，并更快加载。",
-          "icon": "tinypng"
-        },
-        {
-          "id": "1733657315025",
-          "title": "goqr",
-          "href": "http://goqr.me/",
-          "description": "create QR codes for free (Logo, T-Shirt, vCard, EPS)",
-          "icon": "goqr"
-        },
-        {
-          "id": "1733657315026",
-          "title": "ezgif",
-          "href": "https://ezgif.com",
-          "description": "simple online GIF maker and toolset for basic animated GIF editing.",
-          "icon": "ezgif"
-        },
-        {
-          "id": "1733657315027",
-          "title": "Android 9 patch",
-          "href": "http://inloop.github.io/shadow4android/",
-          "description": "Android 9-patch shadow generator fully customizable shadows",
-          "icon": "Android9patch"
-        }
-      ],
-      "subCategories": []
-    },
-    {
-      "id": "1733713196860",
-      "title": "数据库",
-      "icon": "Database",
+      "id": "8",
+      "title": "素材资源",
+      "icon": "linecons-thumbs-up",
       "items": [],
-      "subCategories": [],
-      "description": "",
-      "enabled": true
-    },
-    {
-      "id": "1733665151010",
-      "title": "test3",
-      "icon": "fileText",
-      "items": [
+      "subCategories": [
         {
-          "id": "1733665259756",
-          "title": "test",
-          "href": "https://dh.leti.ltd/",
-          "description": "1222"
+          "id": "8_1",
+          "title": "图标素材",
+          "href": "#图标素材",
+          "icon": "",
+          "description": "",
+          "items": [
+            {
+              "id": "8_1_1",
+              "title": "Iconfont",
+              "href": "https://www.iconfont.cn/",
+              "description": "阿里巴巴矢量图标库",
+              "icon": "../assets/images/logos/iconfont.png",
+              "enabled": true
+            },
+            {
+              "id": "8_1_2",
+              "title": "IconFinder",
+              "href": "https://www.iconfinder.com/",
+              "description": "高质量图标资源",
+              "icon": "../assets/images/logos/iconfinder.png",
+              "enabled": true
+            }
+          ]
         },
         {
-          "id": "1733665259756",
-          "title": "test",
-          "href": "https://dh.leti.ltd/",
-          "description": "1222"
+          "id": "8_2",
+          "title": "LOGO设计",
+          "href": "#LOGO设计",
+          "icon": "",
+          "description": "",
+          "items": [
+            {
+              "id": "8_2_1",
+              "title": "Logo Design Love",
+              "href": "https://www.logodesignlove.com/",
+              "description": "Logo设计灵感",
+              "icon": "../assets/images/logos/logodesignlove.png",
+              "enabled": true
+            }
+          ]
         },
         {
-          "id": "1733665259756",
-          "title": "test",
-          "href": "https://dh.leti.ltd/",
-          "description": "1222"
-        },
-        {
-          "id": "1733665259756",
-          "title": "test",
-          "href": "https://dh.leti.ltd/",
-          "description": "1222"
+          "id": "8_3",
+          "title": "平面素材",
+          "href": "#平面素材",
+          "icon": "",
+          "description": "",
+          "items": [
+            {
+              "id": "8_3_1",
+              "title": "Freepik",
+              "href": "https://www.freepik.com/",
+              "description": "免费矢量素材",
+              "icon": "../assets/images/logos/freepik.png",
+              "enabled": true
+            },
+            {
+              "id": "8_3_2",
+              "title": "Unsplash",
+              "href": "https://unsplash.com/",
+              "description": "免费高清图片",
+              "icon": "../assets/images/logos/unsplash.png",
+              "enabled": true
+            }
+          ]
         }
-      ],
-      "subCategories": [],
-      "description": "",
-      "enabled": false
-    },
-    {
-      "id": "1733725272901",
-      "title": "test2222",
-      "icon": "FolderKanban",
-      "description": "",
-      "enabled": true,
-      "items": [],
-      "subCategories": []
+      ]
     }
   ]
 }
