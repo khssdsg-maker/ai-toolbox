@@ -6,18 +6,19 @@
       "icon": "linecons-lightbulb",
       "items": [
         {
+          "id": "1733657315015",
+          "title": "ChatGPT",
+          "href": "https://chatgpt.com/",
+          "description": "OpenAI开发的人工智能聊天机器人程序",
+          "icon": "chatgpt",
+          "enabled": true
+        },
+        {
           "id": "1733657315016",
           "title": "Claude",
           "href": "https://claude.ai/",
           "description": "Claude是由Anthropic公司开发的先进人工智能模型，专注于创建安全、可靠且符合人类价值观的人工智能系统",
           "icon": "claude"
-        },
-        {
-          "id": "1733657315015",
-          "title": "ChatGPT",
-          "href": "https://chatgpt.com/",
-          "description": "OpenAI开发的人工智能聊天机器人程序",
-          "icon": "chatgpt"
         },
         {
           "id": "1733657315017",
@@ -47,7 +48,7 @@
           "title": "tese",
           "icon": "Edit",
           "description": "twetwe",
-          "enabled": true,
+          "enabled": false,
           "items": []
         },
         {
@@ -82,7 +83,8 @@
           "enabled": true,
           "items": []
         }
-      ]
+      ],
+      "description": ""
     },
     {
       "id": "1733657315005",
@@ -250,7 +252,8 @@
           "items": []
         }
       ],
-      "description": ""
+      "description": "",
+      "enabled": true
     },
     {
       "id": "1733657315019",
@@ -356,7 +359,8 @@
         }
       ],
       "subCategories": [],
-      "description": ""
+      "description": "",
+      "enabled": false
     },
     {
       "id": "1733725272901",
