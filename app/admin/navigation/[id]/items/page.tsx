@@ -20,10 +20,46 @@ import {
 } from "@/registry/new-york/ui/dialog"
 import { AddItemForm } from '../../components/AddItemForm'
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
+import { Skeleton } from "@/registry/new-york/ui/skeleton"
 
 interface EditingItem {
   index: number
   item: NavigationSubItem
+}
+
+function LoadingSkeleton() {
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-[200px]" />
+          <Skeleton className="h-4 w-[300px]" />
+        </div>
+        <Skeleton className="h-10 w-[100px]" />
+      </div>
+      <div className="grid gap-2">
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="flex items-center justify-between p-4 rounded-lg border"
+          >
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-8 w-8 rounded-lg" />
+              <div>
+                <Skeleton className="h-4 w-[200px] mb-2" />
+                <Skeleton className="h-3 w-[150px]" />
+              </div>
+            </div>
+            <div className="flex items-center gap-1">
+              <Skeleton className="h-8 w-8 rounded-md" />
+              <Skeleton className="h-8 w-8 rounded-md" />
+              <Skeleton className="h-8 w-8 rounded-md" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
 
 export default function ItemsPage() {
@@ -310,8 +346,16 @@ export default function ItemsPage() {
     item.description?.toLowerCase().includes(searchQuery.toLowerCase())
   ) || []
 
+  if (isLoading) {
+    return <LoadingSkeleton />
+  }
+
   if (!navigation) {
-    return <div>导航不存在</div>
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        <p className="text-muted-foreground">导航不存在</p>
+      </div>
+    )
   }
 
   return (
@@ -344,11 +388,7 @@ export default function ItemsPage() {
         </Dialog>
       </div>
 
-      {isLoading ? (
-        <div className="flex items-center justify-center h-32">
-          <Icons.loader2 className="h-6 w-6 animate-spin" />
-        </div>
-      ) : navigation?.items && navigation.items.length > 0 ? (
+      {navigation?.items && navigation.items.length > 0 ? (
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable">
             {(provided) => (
