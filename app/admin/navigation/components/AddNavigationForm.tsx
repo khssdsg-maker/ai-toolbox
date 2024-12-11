@@ -6,6 +6,7 @@ import * as z from "zod"
 import { Button } from "@/registry/new-york/ui/button"
 import { Input } from "@/registry/new-york/ui/input"
 import { Switch } from "@/registry/new-york/ui/switch"
+import { Textarea } from "@/registry/new-york/ui/textarea"
 
 import { IconSelector } from './IconSelector'
 import {
@@ -106,10 +107,15 @@ export function AddNavigationForm({
             <FormItem>
               <FormLabel>描述</FormLabel>
               <FormControl>
-                <Input placeholder="输入导航描述（可选）" {...field} />
+                <Textarea 
+                  placeholder="输入分类描述（可选）" 
+                  className="resize-none"
+                  rows={3}
+                  {...field} 
+                />
               </FormControl>
               <FormDescription>
-                简短描述该导航项的用途
+                简短描述该分类项的用途
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -119,7 +125,7 @@ export function AddNavigationForm({
           control={form.control}
           name="enabled"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+            <FormItem className="flex flex-row items-center justify-between rounded-lg p-4">
               <div className="space-y-0.5">
                 <FormLabel className="text-base">启用状态</FormLabel>
                 <FormDescription>
@@ -135,9 +141,23 @@ export function AddNavigationForm({
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? "提交中..." : defaultValues ? "更新" : "添加"}
-        </Button>
+        <div className="flex gap-4">
+          <Button 
+            type="submit" 
+            className="flex-1" 
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "提交中..." : defaultValues ? "更新" : "添加"}
+          </Button>
+          <Button 
+            type="button" 
+            variant="outline" 
+            className="flex-1"
+            onClick={onCancel}
+          >
+            取消
+          </Button>
+        </div>
       </form>
     </Form>
   )

@@ -162,7 +162,7 @@ export function NavigationCard({
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>子项目</p>
+                  <p>站点管理</p>
                 </TooltipContent>
               </Tooltip>
               {showMoveToTop && (
