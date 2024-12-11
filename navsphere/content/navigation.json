@@ -358,7 +358,8 @@
         }
       ],
       "subCategories": [],
-      "description": ""
+      "description": "",
+      "enabled": false
     },
     {
       "id": "1733725272901",
