@@ -48,7 +48,7 @@
           "title": "tese",
           "icon": "Edit",
           "description": "twetwe",
-          "enabled": true,
+          "enabled": false,
           "items": []
         },
         {
