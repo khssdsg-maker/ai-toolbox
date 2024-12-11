@@ -7,7 +7,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { Button } from "@/registry/new-york/ui/button"
 import { useToast } from "@/registry/new-york/hooks/use-toast"
 import { Icons } from "@/components/icons"
-import { NavigationItem, NavigationCategory, NavigationSubItem } from '@/types/navigation'
+import { NavigationItem, NavigationCategory } from '@/types/navigation'
 import { AddItemForm } from "../../../../components/AddItemForm"
 import {
   Dialog,
@@ -95,8 +95,8 @@ export default function CategoryItemsPage() {
       }
 
       const updatedNavigation = {
-        ...navigation,
-        subCategories: navigation.subCategories?.map(cat =>
+        ...(navigation as NavigationItem),
+        subCategories: (navigation as NavigationItem).subCategories?.map(cat =>
           cat.id === category.id ? updatedCategory : cat
         )
       }
@@ -138,12 +138,14 @@ export default function CategoryItemsPage() {
         items: updatedItems
       }
 
+      if (!navigation) return;
+
       const updatedNavigation = {
         ...navigation,
         subCategories: navigation.subCategories?.map(cat =>
           cat.id === category.id ? updatedCategory : cat
-        )
-      }
+        ),
+      };
 
       const response = await fetch(`/api/navigation/${params.id}`, {
         method: 'PUT',
@@ -239,6 +241,8 @@ export default function CategoryItemsPage() {
         items: newItems,
       };
 
+      if (!navigation) return;
+
       const updatedNavigation = {
         ...navigation,
         subCategories: navigation.subCategories?.map(cat =>
@@ -264,6 +268,51 @@ export default function CategoryItemsPage() {
       });
     }
   };
+
+  const moveItem = async (fromIndex: number, toIndex: number) => {
+    if (!params?.id || !navigation || !category?.items) return
+
+    try {
+      const newItems = [...category.items]
+      const [movedItem] = newItems.splice(fromIndex, 1)
+      newItems.splice(toIndex, 0, movedItem)
+
+      const updatedCategory = {
+        ...category,
+        items: newItems
+      }
+
+      const updatedNavigation = {
+        ...(navigation as NavigationItem),
+        subCategories: (navigation as NavigationItem).subCategories?.map(cat =>
+          cat.id === category.id ? updatedCategory : cat
+        )
+      }
+
+      const response = await fetch(`/api/navigation/${params.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedNavigation)
+      })
+
+      if (!response.ok) throw new Error('Failed to move item')
+
+      const data = await response.json()
+      setNavigation(data)
+      setCategory(updatedCategory)
+
+      toast({
+        title: "成功",
+        description: "移动成功"
+      })
+    } catch (error) {
+      toast({
+        title: "错误",
+        description: "移动失败",
+        variant: "destructive"
+      })
+    }
+  }
 
   const moveToTop = async (index: number) => {
     if (!category?.items || index <= 0) return
@@ -386,9 +435,9 @@ export default function CategoryItemsPage() {
                   <DialogTitle>添加站点</DialogTitle>
                 </DialogHeader>
                 <AddItemForm 
-                  onSubmit={(values) => {
-                    addItem(values)
-                    setIsAddDialogOpen(false)
+                  onSubmit={async (values) => {
+                    await addItem(values);
+                    setIsAddDialogOpen(false);
                   }}
                   onCancel={() => setIsAddDialogOpen(false)}
                 />

@@ -434,8 +434,8 @@ export default function ItemsPage() {
               <DialogTitle>添加站点</DialogTitle>
             </DialogHeader>
             <AddItemForm 
-              onSubmit={(values) => {
-                addItem(values)
+              onSubmit={async (values) => {
+                await addItem(values)
                 setIsAddDialogOpen(false)
               }}
               onCancel={() => setIsAddDialogOpen(false)}
