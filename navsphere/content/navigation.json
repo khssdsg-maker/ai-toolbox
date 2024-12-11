@@ -10,7 +10,7 @@
           "title": "Google Analytics",
           "href": "https://analytics.google.com/",
           "description": "Google分析（Google Analytics）是一个由Google所提供的网站流量统计服务。",
-          "icon": "../assets/images/logos/analytics.ico",
+          "icon": "/assets/images/logos/analytics.ico",
           "enabled": true
         },
         {
@@ -18,7 +18,7 @@
           "title": "Vercel",
           "href": "https://vercel.com/",
           "description": "Vercel 提供开发者工具和云基础设施，帮助构建、扩展和保护更快、更个性化的网络应用。",
-          "icon": "../assets/images/logos/vercel.png",
+          "icon": "/assets/images/logos/vercel.png",
           "enabled": true
         },
         {
@@ -26,7 +26,7 @@
           "title": "Cloudflare",
           "href": "https://dash.cloudflare.com/",
           "description": "Cloudflare以向客户提供基于反向代理的内容分发网络及分布式域名解析服务为主要业务。",
-          "icon": "../assets/images/logos/cloudflar.ico",
+          "icon": "/assets/images/logos/cloudflar.ico",
           "enabled": true
         },
         {
@@ -34,7 +34,7 @@
           "title": "Google AdSense",
           "href": "https://www.google.com/adsense/",
           "description": "Google AdSense广告服务。",
-          "icon": "../assets/images/logos/gads.ico",
+          "icon": "/assets/images/logos/gads.ico",
           "enabled": true
         },
         {
@@ -42,7 +42,7 @@
           "title": "Producthunt",
           "href": "https://www.producthunt.com/",
           "description": "发现新鲜有趣的产品",
-          "icon": "../assets/images/logos/producthunt.png",
+          "icon": "/assets/images/logos/producthunt.png",
           "enabled": true
         },
         {
@@ -50,7 +50,7 @@
           "title": "Leonardo.AI",
           "href": "https://app.leonardo.ai/",
           "description": "Leonardo.AI是一个人工智能绘图社区和工具。它基于Stable Diffusion人工智能模型,深度集成了其各种插件,提供强大的图片生成和创作功能。",
-          "icon": "../assets/images/logos/leonardo.ico",
+          "icon": "/assets/images/logos/leonardo.ico",
           "enabled": true
         },
         {
@@ -58,7 +58,7 @@
           "title": "Tensor.art",
           "href": "https://tensor.art/",
           "description": "Tensor.art是一个免费的在线图像生成和模型托管平台。",
-          "icon": "../assets/images/logos/tensorart.ico",
+          "icon": "/assets/images/logos/tensorart.ico",
           "enabled": true
         }
       ],
@@ -76,7 +76,7 @@
           "title": "ChatGPT",
           "href": "https://chat.openai.com/",
           "description": "OpenAI开发的人工智能聊天机器人程序。",
-          "icon": "../assets/images/logos/chatgpt.png",
+          "icon": "/assets/images/logos/chatgpt.png",
           "enabled": true
         },
         {
@@ -84,7 +84,7 @@
           "title": "Claude",
           "href": "https://claude.ai/",
           "description": "Anthropic开发的AI助手，擅长分析和创作。",
-          "icon": "../assets/images/logos/claude.png",
+          "icon": "/assets/images/logos/claude.png",
           "enabled": true
         },
         {
@@ -92,7 +92,7 @@
           "title": "Gemini",
           "href": "https://gemini.google.com/",
           "description": "Google开发的生成式人工智能聊天机器人。它基于同名的Gemini系列大型语言模型。",
-          "icon": "../assets/images/logos/gemini.svg",
+          "icon": "/assets/images/logos/gemini.svg",
           "enabled": true
         },
         {
@@ -100,7 +100,7 @@
           "title": "Poe",
           "href": "https://poe.com/",
           "description": "Poe一款由Quora开发的应用程序。该应用程序集成了多种生成式人工智能，可使用户能够便利切换，比较和使用市场上主流的大型语言模型。",
-          "icon": "../assets/images/logos/poe.svg",
+          "icon": "/assets/images/logos/poe.svg",
           "enabled": true
         }
       ],
@@ -126,7 +126,7 @@
               "title": "TableConvert",
               "href": "https://tableconvert.com/",
               "description": "Excel转sql在线工具。将你的Excel数据转换成一个网络友好格式,包括HTML、JSON和XML,还可以把Excel 转换成Sql,excel 表格转成 Markdown",
-              "icon": "../assets/images/logos/tableconvert.png",
+              "icon": "/assets/images/logos/tableconvert.png",
               "enabled": true
             },
             {
@@ -134,7 +134,7 @@
               "title": "JSON Editor Online",
               "href": "https://jsoneditoronline.org/",
               "description": "在线的JSON编辑器，包括格式化，可视化，对比，显示行号功能。",
-              "icon": "../assets/images/logos/json.png",
+              "icon": "/assets/images/logos/json.png",
               "enabled": true
             },
             {
@@ -142,7 +142,7 @@
               "title": "Beautifier",
               "href": "https://beautifier.io/",
               "description": "Beautify JavaScript, JSON, React.js, HTML, CSS, SCSS, and SASS",
-              "icon": "../assets/images/logos/beautifier.png",
+              "icon": "/assets/images/logos/beautifier.png",
               "enabled": true
             },
             {
@@ -150,7 +150,7 @@
               "title": "SQL格式化",
               "href": "https://www.dpriver.com/pp/sqlformat.htm",
               "description": "在线美化SQL语句的工具，格式化方便阅读",
-              "icon": "../assets/images/logos/sqlformat.ico",
+              "icon": "/assets/images/logos/sqlformat.ico",
               "enabled": true
             },
             {
@@ -158,7 +158,7 @@
               "title": "TinyPNG",
               "href": "https://tinypng.com/",
               "description": "在线图片压缩工具",
-              "icon": "../assets/images/logos/tinypng.png",
+              "icon": "/assets/images/logos/tinypng.png",
               "enabled": true
             }
           ]
@@ -175,7 +175,7 @@
               "title": "photoshop",
               "href": "https://www.adobe.com/cn/products/photoshop.html",
               "description": "Photoshop不需要解释",
-              "icon": "../assets/images/logos/photoshop.png",
+              "icon": "/assets/images/logos/photoshop.png",
               "enabled": true
             },
             {
@@ -183,7 +183,7 @@
               "title": "Affinity Designer",
               "href": "https://affinity.serif.com/",
               "description": "专业创意软件",
-              "icon": "../assets/images/logos/AffinityDesigner.png",
+              "icon": "/assets/images/logos/AffinityDesigner.png",
               "enabled": true
             },
             {
@@ -191,7 +191,7 @@
               "title": "Illustrator",
               "href": "https://www.adobe.com/cn/products/illustrator/",
               "description": "矢量图形和插图。",
-              "icon": "../assets/images/logos/Illustrator.png",
+              "icon": "/assets/images/logos/Illustrator.png",
               "enabled": true
             },
             {
@@ -199,7 +199,7 @@
               "title": "indesign",
               "href": "http://www.adobe.com/cn/products/indesign.html",
               "description": "页面设计、布局和出版。",
-              "icon": "../assets/images/logos/INDESIGN .png",
+              "icon": "/assets/images/logos/INDESIGN .png",
               "enabled": true
             }
           ]
@@ -216,7 +216,7 @@
               "title": "Figma",
               "href": "https://www.figma.com/",
               "description": "在线UI设计工具",
-              "icon": "../assets/images/logos/figma.png",
+              "icon": "/assets/images/logos/figma.png",
               "enabled": true
             }
           ]
@@ -233,7 +233,7 @@
               "title": "Adobe After Effects CC",
               "href": "https://www.adobe.com/cn/products/aftereffects/",
               "description": "电影般的视觉效果和动态图形。",
-              "icon": "../assets/images/logos/AdobeAfterEffectsCC.png",
+              "icon": "/assets/images/logos/AdobeAfterEffectsCC.png",
               "enabled": true
             },
             {
@@ -241,7 +241,7 @@
               "title": "principle",
               "href": "http://principleformac.com/",
               "description": "Animate Your Ideas, Design Better Apps",
-              "icon": "../assets/images/logos/principle.png",
+              "icon": "/assets/images/logos/principle.png",
               "enabled": true
             },
             {
@@ -249,7 +249,7 @@
               "title": "flinto",
               "href": "https://www.flinto.com/",
               "description": "Flinto is a Mac app used by top designers around the world to create interactive and animated prototypes of their app designs.",
-              "icon": "../assets/images/logos/flinto.png",
+              "icon": "/assets/images/logos/flinto.png",
               "enabled": true
             },
             {
@@ -257,7 +257,7 @@
               "title": "framer",
               "href": "https://framer.com/",
               "description": "Design everything from detailed icons to high-fidelity interactions—all in one place.",
-              "icon": "../assets/images/logos/framer.png",
+              "icon": "/assets/images/logos/framer.png",
               "enabled": true
             }
           ]
@@ -274,7 +274,7 @@
               "title": "Color Hunt",
               "href": "https://colorhunt.co/",
               "description": "色彩搭配",
-              "icon": "../assets/images/logos/colorhunt.png",
+              "icon": "/assets/images/logos/colorhunt.png",
               "enabled": true
             }
           ]
@@ -301,7 +301,7 @@
               "title": "Iconfont",
               "href": "https://www.iconfont.cn/",
               "description": "阿里巴巴矢量图标库",
-              "icon": "../assets/images/logos/iconfont.png",
+              "icon": "/assets/images/logos/iconfont.png",
               "enabled": true
             },
             {
@@ -309,7 +309,7 @@
               "title": "IconFinder",
               "href": "https://www.iconfinder.com/",
               "description": "高质量图标资源",
-              "icon": "../assets/images/logos/iconfinder.png",
+              "icon": "/assets/images/logos/iconfinder.png",
               "enabled": true
             }
           ]
@@ -326,7 +326,7 @@
               "title": "Iconsfeed",
               "href": "http://www.iconsfeed.com/",
               "description": "iOS icons gallery",
-              "icon": "../assets/images/logos/iconsfeed.png",
+              "icon": "/assets/images/logos/iconsfeed.png",
               "enabled": true
             },
             {
@@ -334,7 +334,7 @@
               "title": "iOS Icon Gallery",
               "href": "http://iosicongallery.com/",
               "description": "Showcasing beautiful icon designs from the iOS App Store",
-              "icon": "../assets/images/logos/iosicongallery.png",
+              "icon": "/assets/images/logos/iosicongallery.png",
               "enabled": true
             },
             {
@@ -342,7 +342,7 @@
               "title": "World Vector Logo",
               "href": "https://worldvectorlogo.com/",
               "description": "Brand logos free to download",
-              "icon": "../assets/images/logos/worldvectorlogo.png",
+              "icon": "/assets/images/logos/worldvectorlogo.png",
               "enabled": true
             },
             {
@@ -350,7 +350,7 @@
               "title": "Instant Logo Search",
               "href": "http://instantlogosearch.com/",
               "description": "Search & download thousands of logos instantly",
-              "icon": "../assets/images/logos/InstantLogoSearch.png",
+              "icon": "/assets/images/logos/InstantLogoSearch.png",
               "enabled": true
             }
           ]
@@ -367,7 +367,7 @@
               "title": "Freepik",
               "href": "https://www.freepik.com/",
               "description": "免费矢量素材",
-              "icon": "../assets/images/logos/freepik.png",
+              "icon": "/assets/images/logos/freepik.png",
               "enabled": true
             },
             {
@@ -375,7 +375,7 @@
               "title": "Unsplash",
               "href": "https://unsplash.com/",
               "description": "免费高清图片",
-              "icon": "../assets/images/logos/unsplash.png",
+              "icon": "/assets/images/logos/unsplash.png",
               "enabled": true
             }
           ]
