@@ -131,13 +131,6 @@
               "icon": "/assets/images/logos/vercel.png"
             },
             {
-              "id": "1733657315013",
-              "title": "优设",
-              "href": "http://www.uisdc.com/",
-              "description": "设计师交流学习平台",
-              "icon": "uisdc"
-            },
-            {
               "id": "1733657315011",
               "title": "Leonardo.AI",
               "href": "https://app.leonardo.ai/",
@@ -168,6 +161,13 @@
               "title": "tet",
               "href": "https://dh.leti.ltd/",
               "description": ""
+            },
+            {
+              "id": "1733657315013",
+              "title": "优设",
+              "href": "http://www.uisdc.com/",
+              "description": "设计师交流学习平台",
+              "icon": "uisdc"
             }
           ]
         },
