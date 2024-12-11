@@ -22,6 +22,7 @@ import { Input } from "@/registry/new-york/ui/input"
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd'
 import { Skeleton } from "@/registry/new-york/ui/skeleton"
 import { Badge } from "@/registry/new-york/ui/badge"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/registry/new-york/ui/select"
 
 interface EditingItem {
   index: number
@@ -47,6 +48,7 @@ export default function CategoryItemsPage() {
   const [editingItem, setEditingItem] = useState<EditingItem | null>(null)
   const [deletingItem, setDeletingItem] = useState<EditingItem | null>(null)
   const [loading, setLoading] = useState(true)
+  const [filter, setFilter] = useState<'all' | 'enabled' | 'disabled'>('all')
 
   useEffect(() => {
     if (!params?.id || !params?.categoryId) {
@@ -268,11 +270,13 @@ export default function CategoryItemsPage() {
     moveItem(index, category.items.length - 1)
   }
 
-  const filteredItems = category?.items?.filter(item =>
-    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.href.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.description?.toLowerCase().includes(searchQuery.toLowerCase())
-  ) || []
+  const filteredItems = category?.items?.filter(item => {
+    const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          item.href.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          item.description?.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesFilter = filter === 'all' ? true : filter === 'enabled' ? item.enabled : !item.enabled
+    return matchesSearch && matchesFilter
+  }) || []
 
   return (
     <div className="space-y-4">
@@ -335,7 +339,7 @@ export default function CategoryItemsPage() {
               <div className="relative flex-1 max-w-sm">
                 <Icons.search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="搜索项目..."
+                  placeholder="搜索站点..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-8"
@@ -351,6 +355,19 @@ export default function CategoryItemsPage() {
                   </Button>
                 )}
               </div>
+              <Select
+                value={filter}
+                onValueChange={(value: 'all' | 'enabled' | 'disabled') => setFilter(value)}
+              >
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue placeholder="按状态筛选" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">全部</SelectItem>
+                  <SelectItem value="enabled">已启用</SelectItem>
+                  <SelectItem value="disabled">已禁用</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <Dialog>
               <DialogTrigger asChild>
@@ -473,9 +490,9 @@ export default function CategoryItemsPage() {
                   {filteredItems.length === 0 && (
                     <div className="text-center py-10 text-muted-foreground">
                       {category?.items?.length === 0 ? (
-                        <p>暂无项目</p>
+                        <p>暂无站点</p>
                       ) : (
-                        <p>未找到匹配的项目</p>
+                        <p>未找到匹配的站点</p>
                       )}
                     </div>
                   )}
