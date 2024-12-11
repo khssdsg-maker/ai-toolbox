@@ -70,6 +70,8 @@ import {
   Video,
   X,
   Zap,
+  ChevronsUp,
+  ChevronsDown,
   type LucideIcon,
 } from "lucide-react"
 
@@ -151,4 +153,6 @@ export const Icons = {
   placeholder: Folder,
   logo: Navigation,
   spinner: Loader2,
+  chevronsUp: ChevronsUp,
+  chevronsDown: ChevronsDown,
 } as const

@@ -215,50 +215,54 @@ export default function CategoryItemsPage() {
     }
   }
 
-  const moveItem = async (fromIndex: number, toIndex: number) => {
-    if (!params?.id || !navigation || !category || !category.items) return
+  const handleDragEnd = (result: DropResult) => {
+    if (!result.destination) return;
 
-    const newItems = [...category.items]
-    const [removed] = newItems.splice(fromIndex, 1)
-    newItems.splice(toIndex, 0, removed)
+    const newItems = Array.from(category?.items || []);
+    const [movedItem] = newItems.splice(result.source.index, 1);
+    newItems.splice(result.destination.index, 0, movedItem);
 
-    const updatedCategory = {
-      ...category,
-      items: newItems
-    }
+    // Optimistically update the UI
+    setCategory((prevCategory) => prevCategory ? { ...prevCategory, items: newItems } : null);
 
-    const updatedNavigation = {
-      ...navigation,
-      subCategories: navigation.subCategories?.map(cat =>
-        cat.id === category.id ? updatedCategory : cat
-      )
-    }
+    // Update the server
+    updateItemsOrder(newItems);
+  };
+
+  const updateItemsOrder = async (newItems: NavigationSubItem[]) => {
+    if (!params?.id || !category) return;
 
     try {
+      const updatedCategory = {
+        ...category,
+        items: newItems,
+      };
+
+      const updatedNavigation = {
+        ...navigation,
+        subCategories: navigation.subCategories?.map(cat =>
+          cat.id === category.id ? updatedCategory : cat
+        ),
+      };
+
       const response = await fetch(`/api/navigation/${params.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedNavigation)
-      })
+        body: JSON.stringify(updatedNavigation),
+      });
 
-      if (!response.ok) throw new Error('Failed to save order')
+      if (!response.ok) throw new Error('Failed to update order');
 
-      const data = await response.json()
-      setNavigation(data)
-      setCategory(updatedCategory)
+      const data = await response.json();
+      setNavigation(data);
     } catch (error) {
       toast({
         title: "错误",
-        description: "保存顺序失败",
-        variant: "destructive"
-      })
+        description: "更新顺序失败",
+        variant: "destructive",
+      });
     }
-  }
-
-  const onDragEnd = (result: DropResult) => {
-    if (!result.destination) return
-    moveItem(result.source.index, result.destination.index)
-  }
+  };
 
   const moveToTop = async (index: number) => {
     if (!category?.items || index <= 0) return
@@ -393,7 +397,7 @@ export default function CategoryItemsPage() {
             </Dialog>
           </div>
 
-          <DragDropContext onDragEnd={onDragEnd}>
+          <DragDropContext onDragEnd={handleDragEnd}>
             <Droppable droppableId="droppable">
               {(provided) => (
                 <div {...provided.droppableProps} ref={provided.innerRef} className="grid gap-2">
@@ -457,31 +461,29 @@ export default function CategoryItemsPage() {
                               >
                                 <Icons.trash className="h-4 w-4" />
                               </Button>
+                              {index > 0 && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8"
+                                  onClick={() => moveToTop(index)}
+                                  title="置顶"
+                                >
+                                  <Icons.chevronsUp className="h-4 w-4" />
+                                </Button>
+                              )}
+                              {index < (category?.items?.length || 0) - 1 && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8"
+                                  onClick={() => moveToBottom(index)}
+                                  title="置底"
+                                >
+                                  <Icons.chevronsDown className="h-4 w-4" />
+                                </Button>
+                              )}
                             </div>
-                          </div>
-                          <div className="absolute right-0 top-1/2 -translate-y-1/2 pr-2 hidden group-hover:flex items-center gap-1">
-                            {index > 0 && (
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6"
-                                onClick={() => moveToTop(index)}
-                                title="置顶"
-                              >
-                                <Icons.chevronLeft className="h-4 w-4 -rotate-90" />
-                              </Button>
-                            )}
-                            {index < (category?.items?.length || 0) - 1 && (
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6"
-                                onClick={() => moveToBottom(index)}
-                                title="置底"
-                              >
-                                <Icons.chevronRight className="h-4 w-4 rotate-90" />
-                              </Button>
-                            )}
                           </div>
                         </div>
                       )}
