@@ -32,6 +32,13 @@
           "href": "https://poe.com/",
           "description": "Poe一款由Quora开发的应用程序。该应用程序集成了多种生成式人工智能，可使用户能够便利切换，比较和使用市场上主流的大型语言模型。",
           "icon": "poe"
+        },
+        {
+          "id": "1733900823046",
+          "title": "testt",
+          "href": "https://dh.leti.ltd/",
+          "description": "",
+          "icon": "Search"
         }
       ],
       "subCategories": [
@@ -244,6 +251,14 @@
               "description": ""
             }
           ]
+        },
+        {
+          "id": "b0bb93e1-e284-45a9-a446-2302418093b6",
+          "title": "te",
+          "icon": "Edit",
+          "description": "te",
+          "enabled": true,
+          "items": []
         }
       ],
       "description": ""
