@@ -165,21 +165,37 @@
           "href": "#图形创意",
           "icon": "",
           "description": "",
-          "items": [
+"items": [
             {
               "id": "4_1",
-              "title": "Photopea",
-              "href": "https://www.photopea.com/",
-              "description": "免费的在线图像编辑器",
-              "icon": "../assets/images/logos/photopea.png",
+              "title": "photoshop",
+              "href": "https://www.adobe.com/cn/products/photoshop.html",
+              "description": "Photoshop不需要解释",
+              "icon": "../assets/images/logos/photoshop.png",
               "enabled": true
             },
             {
               "id": "4_2",
-              "title": "稿定设计",
-              "href": "https://www.gaoding.com/",
-              "description": "提供设计工具和海量设计素材的设计平台",
-              "icon": "../assets/images/logos/gaoding.png",
+              "title": "Affinity Designer",
+              "href": "https://affinity.serif.com/",
+              "description": "专业创意软件",
+              "icon": "../assets/images/logos/AffinityDesigner.png",
+              "enabled": true
+            },
+            {
+              "id": "4_3",
+              "title": "Illustrator",
+              "href": "https://www.adobe.com/cn/products/illustrator/",
+              "description": "矢量图形和插图。",
+              "icon": "../assets/images/logos/Illustrator.png",
+              "enabled": true
+            },
+            {
+              "id": "4_4",
+              "title": "indesign",
+              "href": "http://www.adobe.com/cn/products/indesign.html",
+              "description": "页面设计、布局和出版。",
+              "icon": "../assets/images/logos/INDESIGN .png",
               "enabled": true
             }
           ]
@@ -210,10 +226,34 @@
           "items": [
             {
               "id": "6_1",
-              "title": "LottieFiles",
-              "href": "https://lottiefiles.com/",
-              "description": "轻量级动画文件",
-              "icon": "../assets/images/logos/lottiefiles.png",
+              "title": "Adobe After Effects CC",
+              "href": "https://www.adobe.com/cn/products/aftereffects/",
+              "description": "电影般的视觉效果和动态图形。",
+              "icon": "../assets/images/logos/AdobeAfterEffectsCC.png",
+              "enabled": true
+            },
+            {
+              "id": "6_2",
+              "title": "principle",
+              "href": "http://principleformac.com/",
+              "description": "Animate Your Ideas, Design Better Apps",
+              "icon": "../assets/images/logos/principle.png",
+              "enabled": true
+            },
+            {
+              "id": "6_3",
+              "title": "flinto",
+              "href": "https://www.flinto.com/",
+              "description": "Flinto is a Mac app used by top designers around the world to create interactive and animated prototypes of their app designs.",
+              "icon": "../assets/images/logos/flinto.png",
+              "enabled": true
+            },
+            {
+              "id": "6_4",
+              "title": "framer",
+              "href": "https://framer.com/",
+              "description": "Design everything from detailed icons to high-fidelity interactions—all in one place.",
+              "icon": "../assets/images/logos/framer.png",
               "enabled": true
             }
           ]
@@ -274,13 +314,37 @@
           "href": "#LOGO设计",
           "icon": "",
           "description": "",
-          "items": [
+"items": [
             {
               "id": "8_2_1",
-              "title": "Logo Design Love",
-              "href": "https://www.logodesignlove.com/",
-              "description": "Logo设计灵感",
-              "icon": "../assets/images/logos/logodesignlove.png",
+              "title": "Iconsfeed",
+              "href": "http://www.iconsfeed.com/",
+              "description": "iOS icons gallery",
+              "icon": "../assets/images/logos/iconsfeed.png",
+              "enabled": true
+            },
+            {
+              "id": "8_2_2",
+              "title": "iOS Icon Gallery",
+              "href": "http://iosicongallery.com/",
+              "description": "Showcasing beautiful icon designs from the iOS App Store",
+              "icon": "../assets/images/logos/iosicongallery.png",
+              "enabled": true
+            },
+            {
+              "id": "8_2_3",
+              "title": "World Vector Logo",
+              "href": "https://worldvectorlogo.com/",
+              "description": "Brand logos free to download",
+              "icon": "../assets/images/logos/worldvectorlogo.png",
+              "enabled": true
+            },
+            {
+              "id": "8_2_4",
+              "title": "Instant Logo Search",
+              "href": "http://instantlogosearch.com/",
+              "description": "Search & download thousands of logos instantly",
+              "icon": "../assets/images/logos/InstantLogoSearch.png",
               "enabled": true
             }
           ]
