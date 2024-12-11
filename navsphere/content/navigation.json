@@ -107,7 +107,8 @@
               "title": "Cloudflare",
               "href": "https://dash.cloudflare.com/",
               "description": "Cloudflare以向客户提供基于反向代理的内容分发网络及分布式域名解析服务为主要业务。",
-              "icon": "/assets/images/logos/vercel.png"
+              "icon": "/assets/images/logos/vercel.png",
+              "enabled": true
             },
             {
               "id": "1733657315007",
