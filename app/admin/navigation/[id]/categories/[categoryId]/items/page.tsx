@@ -20,10 +20,21 @@ import {
 } from "@/registry/new-york/ui/dialog"
 import { Input } from "@/registry/new-york/ui/input"
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd'
+import { Skeleton } from "@/registry/new-york/ui/skeleton"
+import { Badge } from "@/registry/new-york/ui/badge"
 
 interface EditingItem {
   index: number
   item: NavigationSubItem
+}
+
+interface NavigationSubItem {
+  id: string
+  title: string
+  href: string
+  icon?: string
+  description?: string
+  enabled: boolean
 }
 
 export default function CategoryItemsPage() {
@@ -35,6 +46,7 @@ export default function CategoryItemsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [editingItem, setEditingItem] = useState<EditingItem | null>(null)
   const [deletingItem, setDeletingItem] = useState<EditingItem | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (!params?.id || !params?.categoryId) {
@@ -48,6 +60,7 @@ export default function CategoryItemsPage() {
     if (!params?.id || !params?.categoryId) return
 
     try {
+      setLoading(true)
       const response = await fetch(`/api/navigation/${params.id}`)
       if (!response.ok) throw new Error('Failed to fetch')
       const data = await response.json()
@@ -64,6 +77,8 @@ export default function CategoryItemsPage() {
         description: "加载数据失败",
         variant: "destructive"
       })
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -261,225 +276,263 @@ export default function CategoryItemsPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => router.back()}
-            className="h-8 w-8"
-            title="返回"
-          >
-            <Icons.arrowLeft className="h-4 w-4" />
-          </Button>
-          <div>
-            <div className="text-sm text-muted-foreground mb-1">
-              {navigation?.title} {category?.parentId && navigation?.subCategories?.find(cat => cat.id === category.parentId)?.title && (
-                <>
-                  / {navigation.subCategories.find(cat => cat.id === category.parentId)?.title}
-                </>
-              )}
+      {loading ? (
+        <>
+          <div className="flex items-center gap-4 mb-4">
+            <Skeleton className="h-8 w-8" />
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-48" />
+              <Skeleton className="h-6 w-64" />
             </div>
-            <h2 className="text-lg font-semibold flex items-center gap-2">
-              {category?.title || '加载中...'} - 项目管理
-            </h2>
           </div>
-          <div className="relative flex-1 max-w-sm">
-            <Icons.search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="搜索项目..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8"
-            />
-            {searchQuery && (
+          
+          <div className="grid gap-2">
+            {[...Array(5)].map((_, index) => (
+              <div 
+                key={index} 
+                className="flex items-center justify-between py-2 px-4 bg-card rounded-lg border shadow-sm"
+              >
+                <div className="flex items-center gap-3">
+                  <Skeleton className="h-8 w-8 rounded-lg" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-48" />
+                    <Skeleton className="h-3 w-32" />
+                  </div>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Skeleton className="h-8 w-8" />
+                  <Skeleton className="h-8 w-8" />
+                  <Skeleton className="h-8 w-8" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
               <Button
                 variant="ghost"
-                size="sm"
-                onClick={() => setSearchQuery("")}
-                className="absolute right-1 top-1 h-7 w-7 p-0"
+                size="icon"
+                onClick={() => router.back()}
+                className="h-8 w-8"
+                title="返回"
               >
-                <Icons.x className="h-4 w-4" />
+                <Icons.arrowLeft className="h-4 w-4" />
               </Button>
-            )}
+              <div>
+                <div className="text-sm text-muted-foreground mb-1">
+                  {navigation?.title} 
+                  {category?.parentId && navigation?.subCategories?.find(cat => cat.id === category.parentId)?.title && (
+                    <>
+                      {' > '}{navigation.subCategories.find(cat => cat.id === category.parentId)?.title}
+                    </>
+                  )}
+                  {' > '}{category?.title}
+                </div>
+              </div>
+              <div className="relative flex-1 max-w-sm">
+                <Icons.search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="搜索项目..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-8"
+                />
+                {searchQuery && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-1 top-1 h-7 w-7 p-0"
+                  >
+                    <Icons.x className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            </div>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button>
+                  <Icons.plus className="mr-2 h-4 w-4" />
+                  添加站点
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>添加站点</DialogTitle>
+                </DialogHeader>
+                <AddItemForm 
+                  onSubmit={addItem} 
+                  onCancel={() => {
+                    const dialog = document.querySelector('dialog')
+                    if (dialog) {
+                      dialog.close()
+                    }
+                  }} 
+                />
+              </DialogContent>
+            </Dialog>
           </div>
-        </div>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>
-              <Icons.plus className="mr-2 h-4 w-4" />
-              添加项目
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>添加项目</DialogTitle>
-            </DialogHeader>
-            <AddItemForm 
-              onSubmit={addItem} 
-              onCancel={() => {
-                const dialog = document.querySelector('dialog')
-                if (dialog) {
-                  dialog.close()
-                }
-              }} 
-            />
-          </DialogContent>
-        </Dialog>
-      </div>
 
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="droppable">
-          {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef} className="grid gap-2">
-              {filteredItems.map((item, index) => (
-                <Draggable key={item.id} draggableId={item.id} index={index}>
-                  {(provided) => (
-                    <div
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      ref={provided.innerRef}
-                      className="group relative"
-                    >
-                      <div
-                        className="flex items-center justify-between py-2 px-4 bg-card rounded-lg border shadow-sm transition-colors hover:bg-accent/10"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
-                            {item.icon ? (
-                              <img src={item.icon} alt={item.title} className="w-4 h-4 object-contain" />
-                            ) : (
-                              <Icons.link className="h-4 w-4 text-primary" />
-                            )}
-                          </div>
-                          <div>
-                            <div className="font-medium leading-none mb-1">{item.title}</div>
-                            {item.description && (
-                              <div className="text-xs text-muted-foreground">
-                                {item.description}
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="droppable">
+              {(provided) => (
+                <div {...provided.droppableProps} ref={provided.innerRef} className="grid gap-2">
+                  {filteredItems.map((item, index) => (
+                    <Draggable key={item.id} draggableId={item.id} index={index}>
+                      {(provided) => (
+                        <div
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          ref={provided.innerRef}
+                          className="group relative"
+                        >
+                          <div className="flex items-center justify-between py-2 px-4 bg-card rounded-lg border shadow-sm transition-colors hover:bg-accent/10">
+                            <div className="flex items-center gap-3">
+                              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
+                                {item.icon ? (
+                                  <img src={item.icon} alt={item.title} className="w-4 h-4 object-contain" />
+                                ) : (
+                                  <Icons.link className="h-4 w-4 text-primary" />
+                                )}
                               </div>
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-medium leading-none">{item.title}</span>
+                                  {!item.enabled && (
+                                    <Badge variant="secondary" className="text-xs">已禁用</Badge>
+                                  )}
+                                </div>
+                                {item.description && (
+                                  <div className="text-xs text-muted-foreground mt-1">
+                                    {item.description}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={() => window.open(item.href, '_blank')}
+                                title="访问链接"
+                              >
+                                <Icons.globe className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={() => setEditingItem({ index, item })}
+                                title="编辑"
+                              >
+                                <Icons.pencil className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8"
+                                onClick={() => setDeletingItem({ index, item })}
+                                title="删除"
+                              >
+                                <Icons.trash className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="absolute right-0 top-1/2 -translate-y-1/2 pr-2 hidden group-hover:flex items-center gap-1">
+                            {index > 0 && (
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6"
+                                onClick={() => moveToTop(index)}
+                                title="置顶"
+                              >
+                                <Icons.chevronLeft className="h-4 w-4 -rotate-90" />
+                              </Button>
+                            )}
+                            {index < (category?.items?.length || 0) - 1 && (
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6"
+                                onClick={() => moveToBottom(index)}
+                                title="置底"
+                              >
+                                <Icons.chevronRight className="h-4 w-4 rotate-90" />
+                              </Button>
                             )}
                           </div>
                         </div>
-                        <div className="flex items-center gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() => window.open(item.href, '_blank')}
-                            title="访问链接"
-                          >
-                            <Icons.globe className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() => setEditingItem({ index, item })}
-                            title="编辑"
-                          >
-                            <Icons.pencil className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8"
-                            onClick={() => setDeletingItem({ index, item })}
-                            title="删除"
-                          >
-                            <Icons.trash className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                      <div className="absolute right-0 top-1/2 -translate-y-1/2 pr-2 hidden group-hover:flex items-center gap-1">
-                        {index > 0 && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6"
-                            onClick={() => moveToTop(index)}
-                            title="置顶"
-                          >
-                            <Icons.chevronLeft className="h-4 w-4 -rotate-90" />
-                          </Button>
-                        )}
-                        {index < (category?.items?.length || 0) - 1 && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6"
-                            onClick={() => moveToBottom(index)}
-                            title="置底"
-                          >
-                            <Icons.chevronRight className="h-4 w-4 rotate-90" />
-                          </Button>
-                        )}
-                      </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {filteredItems.length === 0 && (
+                    <div className="text-center py-10 text-muted-foreground">
+                      {category?.items?.length === 0 ? (
+                        <p>暂无项目</p>
+                      ) : (
+                        <p>未找到匹配的项目</p>
+                      )}
                     </div>
                   )}
-                </Draggable>
-              ))}
-              {filteredItems.length === 0 && (
-                <div className="text-center py-10 text-muted-foreground">
-                  {category?.items?.length === 0 ? (
-                    <p>暂无项目</p>
-                  ) : (
-                    <p>未找到匹配的项目</p>
-                  )}
+                  {provided.placeholder}
                 </div>
               )}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+            </Droppable>
+          </DragDropContext>
 
-      <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>编辑项目</DialogTitle>
-          </DialogHeader>
-          <AddItemForm
-            defaultValues={editingItem?.item}
-            onSubmit={(values) => {
-              if (editingItem) {
-                return updateItem(editingItem.index, values)
-              }
-              return Promise.resolve()
-            }}
-            onCancel={() => setEditingItem(null)}
-          />
-        </DialogContent>
-      </Dialog>
+          <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>编辑站点</DialogTitle>
+              </DialogHeader>
+              <AddItemForm
+                defaultValues={editingItem?.item}
+                onSubmit={(values) => {
+                  if (editingItem) {
+                    return updateItem(editingItem.index, values)
+                  }
+                  return Promise.resolve()
+                }}
+                onCancel={() => setEditingItem(null)}
+              />
+            </DialogContent>
+          </Dialog>
 
-      <Dialog open={!!deletingItem} onOpenChange={(open) => !open && setDeletingItem(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>删除确认</DialogTitle>
-            <DialogDescription>
-              确定要删除项目 "{deletingItem?.item.title}" 吗？此操作无法撤销。
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="ghost"
-              onClick={() => setDeletingItem(null)}
-            >
-              取消
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => {
-                if (deletingItem) {
-                  deleteItem(deletingItem.index)
-                }
-              }}
-            >
-              删除
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          <Dialog open={!!deletingItem} onOpenChange={(open) => !open && setDeletingItem(null)}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>删除确认</DialogTitle>
+                <DialogDescription>
+                  确定要删除站点 "{deletingItem?.item.title}" 吗？此操作无法撤销。
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <Button
+                  variant="ghost"
+                  onClick={() => setDeletingItem(null)}
+                >
+                  取消
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={() => {
+                    if (deletingItem) {
+                      deleteItem(deletingItem.index)
+                    }
+                  }}
+                >
+                  删除
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </>
+      )}
     </div>
   )
 }
