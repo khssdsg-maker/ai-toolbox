@@ -259,14 +259,6 @@
           "description": "te",
           "enabled": true,
           "items": []
-        },
-        {
-          "id": "4ff42c1f-4f04-4e4c-9d07-c1c1813f7698",
-          "title": "te2",
-          "icon": "Settings",
-          "description": "2223",
-          "enabled": true,
-          "items": []
         }
       ],
       "description": ""
