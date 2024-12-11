@@ -21,6 +21,9 @@ import {
 import { AddItemForm } from '../../components/AddItemForm'
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { Skeleton } from "@/registry/new-york/ui/skeleton"
+import { Label } from "@/registry/new-york/ui/label"
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/registry/new-york/ui/select"
+import { Badge } from "@/registry/new-york/ui/badge"
 
 interface EditingItem {
   index: number
@@ -68,10 +71,11 @@ export default function ItemsPage() {
   const { toast } = useToast()
   const [navigation, setNavigation] = useState<NavigationItem | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
+  const [enabledFilter, setEnabledFilter] = useState<'all' | 'enabled' | 'disabled'>('all')
   const [editingItem, setEditingItem] = useState<EditingItem | null>(null)
   const [deletingItem, setDeletingItem] = useState<EditingItem | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
 
   useEffect(() => {
     if (!params?.id) {
@@ -131,7 +135,7 @@ export default function ItemsPage() {
         title: "成功",
         description: "添加成功"
       })
-      setIsDialogOpen(false)
+      setIsAddDialogOpen(false)
     } catch (error) {
       toast({
         title: "错误",
@@ -340,11 +344,20 @@ export default function ItemsPage() {
     }
   }
 
-  const filteredItems = navigation?.items?.filter(item =>
-    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.href.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.description?.toLowerCase().includes(searchQuery.toLowerCase())
-  ) || []
+  const filteredItems = navigation?.items?.filter(item => {
+    const matchesSearch = 
+      item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.href.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.description?.toLowerCase().includes(searchQuery.toLowerCase())
+
+    const matchesEnabled = 
+      enabledFilter === "all" ? true :
+      enabledFilter === "enabled" ? item.enabled :
+      enabledFilter === "disabled" ? !item.enabled :
+      true
+
+    return matchesSearch && matchesEnabled
+  }) || []
 
   if (isLoading) {
     return <LoadingSkeleton />
@@ -361,29 +374,72 @@ export default function ItemsPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <h2 className="text-2xl font-semibold tracking-tight">
-            {navigation?.title}
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            管理导航项目列表
-          </p>
+        <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => router.back()}
+            className="h-8 w-8"
+            title="返回"
+          >
+            <Icons.arrowLeft className="h-4 w-4" />
+          </Button>
+          <div>
+            <div className="text-sm text-muted-foreground mb-1">
+              {navigation?.title}
+            </div>
+          </div>
+          <div className="relative flex-1 max-w-sm">
+            <Icons.search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="搜索站点..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-8"
+            />
+            {searchQuery && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSearchQuery("")}
+                className="absolute right-1 top-1 h-7 w-7 p-0"
+              >
+                <Icons.x className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+          <Select
+            value={enabledFilter}
+            onValueChange={(value: 'all' | 'enabled' | 'disabled') => setEnabledFilter(value)}
+          >
+            <SelectTrigger className="w-[140px]">
+              <SelectValue placeholder="按状态筛选" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">全部</SelectItem>
+              <SelectItem value="enabled">已启用</SelectItem>
+              <SelectItem value="disabled">已禁用</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button>
               <Icons.plus className="mr-2 h-4 w-4" />
-              添加项目
+              添加站点
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>添加导航项目</DialogTitle>
-              <DialogDescription>
-                添加一个新的导航项目到当前分类中
-              </DialogDescription>
+              <DialogTitle>添加站点</DialogTitle>
             </DialogHeader>
-            <AddItemForm onSubmit={addItem} onCancel={() => setIsDialogOpen(false)} />
+            <AddItemForm 
+              onSubmit={(values) => {
+                addItem(values)
+                setIsAddDialogOpen(false)
+              }}
+              onCancel={() => setIsAddDialogOpen(false)}
+            />
           </DialogContent>
         </Dialog>
       </div>
@@ -395,14 +451,12 @@ export default function ItemsPage() {
               <div {...provided.droppableProps} ref={provided.innerRef} className="grid gap-2">
                 {filteredItems.map((item, index) => (
                   <Draggable key={item.id} draggableId={item.id} index={index}>
-                    {(provided, snapshot) => (
+                    {(provided) => (
                       <div
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        className={`flex items-center justify-between p-4 rounded-lg border bg-card text-card-foreground shadow-sm hover:border-primary/50 transition-colors ${
-                          snapshot.isDragging ? 'bg-gray-50' : ''
-                        }`}
+                        className="flex items-center justify-between p-4 rounded-lg border bg-card text-card-foreground shadow-sm hover:border-primary/50 transition-colors"
                       >
                         <div className="flex items-center gap-3">
                           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10">
@@ -413,9 +467,14 @@ export default function ItemsPage() {
                             )}
                           </div>
                           <div>
-                            <div className="font-medium leading-none mb-1">{item.title}</div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium leading-none">{item.title}</span>
+                              {!item.enabled && (
+                                <Badge variant="secondary" className="text-xs">已禁用</Badge>
+                              )}
+                            </div>
                             {item.description && (
-                              <div className="text-xs text-muted-foreground">
+                              <div className="text-xs text-muted-foreground mt-1">
                                 {item.description}
                               </div>
                             )}
@@ -457,9 +516,9 @@ export default function ItemsPage() {
                 {filteredItems.length === 0 && (
                   <div className="text-center py-10 text-muted-foreground">
                     {navigation?.items?.length === 0 ? (
-                      <p>暂无子项目</p>
+                      <p>暂无站点</p>
                     ) : (
-                      <p>未找到匹配的子项目</p>
+                      <p>未找到匹配的站点</p>
                     )}
                   </div>
                 )}
@@ -470,20 +529,21 @@ export default function ItemsPage() {
         </DragDropContext>
       ) : (
         <div className="text-center py-10 text-muted-foreground">
-          暂无子项目
+          暂无站点
         </div>
       )}
       <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>编辑子项目</DialogTitle>
+            <DialogTitle>编辑站点</DialogTitle>
           </DialogHeader>
           <AddItemForm
             defaultValues={editingItem?.item}
-            onSubmit={async (values) => {
+            onSubmit={(values) => {
               if (editingItem) {
-                await updateItem(editingItem.index, values)
+                return updateItem(editingItem.index, values)
               }
+              return Promise.resolve()
             }}
             onCancel={() => setEditingItem(null)}
           />
@@ -495,7 +555,7 @@ export default function ItemsPage() {
           <DialogHeader>
             <DialogTitle>删除确认</DialogTitle>
             <DialogDescription>
-              确定要删除子项目 "{deletingItem?.item.title}" 吗？此操作无法撤销。
+              确定要删除站点 "{deletingItem?.item.title}" 吗？此操作无法撤销。
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
