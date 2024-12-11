@@ -17,6 +17,8 @@ import {
 import { NavigationSubItem } from "@/types/navigation"
 import { Icons } from "@/components/icons"
 import { IconSelector } from "./IconSelector"
+import { Textarea } from "@/registry/new-york/ui/textarea"
+import { Switch } from "@/registry/new-york/ui/switch"
 
 const formSchema = z.object({
   id: z.string().optional(),
@@ -24,6 +26,7 @@ const formSchema = z.object({
   href: z.string().url({ message: "请输入有效的网站链接" }),
   icon: z.string().optional(),
   description: z.string().optional(),
+  enabled: z.boolean().default(true),
 })
 
 interface AddItemFormProps {
@@ -41,6 +44,7 @@ export function AddItemForm({ onSubmit, onCancel, defaultValues }: AddItemFormPr
       href: "",
       icon: "",
       description: "",
+      enabled: true,
     }
   })
 
@@ -54,7 +58,8 @@ export function AddItemForm({ onSubmit, onCancel, defaultValues }: AddItemFormPr
           title: data.title,
           href: data.href,
           description: data.description,
-          icon: data.icon
+          icon: data.icon,
+          enabled: data.enabled
         }
         onSubmit(values)
       })} className="space-y-4">
@@ -119,13 +124,45 @@ export function AddItemForm({ onSubmit, onCancel, defaultValues }: AddItemFormPr
             <FormItem>
               <FormLabel>网站描述</FormLabel>
               <FormControl>
-                <Input placeholder="输入网站描述" {...field} />
+                <Textarea 
+                  placeholder="输入网站描述" 
+                  className="resize-none" 
+                  {...field} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="enabled"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg p-4">
+              <div className="space-y-0.5">
+                <FormLabel className="text-base">
+                  启用状态
+                </FormLabel>
+                <FormDescription>
+                  设置该导航项是否启用
+                </FormDescription>
+              </div>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
         <div className="flex justify-end space-x-2">
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting && (
+              <Icons.loader2 className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            保存
+          </Button>
           <Button 
             type="button" 
             variant="outline" 
@@ -133,12 +170,6 @@ export function AddItemForm({ onSubmit, onCancel, defaultValues }: AddItemFormPr
             disabled={isSubmitting}
           >
             取消
-          </Button>
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting && (
-              <Icons.loader2 className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            保存
           </Button>
         </div>
       </form>
