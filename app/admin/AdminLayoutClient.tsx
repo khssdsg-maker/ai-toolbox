@@ -109,13 +109,13 @@ export function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute -right-3 top-[40%] translate-y-[-50%] z-50 border shadow-md bg-background rounded-full hover:bg-muted"
+                  className="absolute -right-3 top-[72px] z-50 border shadow-sm bg-background rounded-full hover:bg-muted w-6 h-6"
                   onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
                 >
                   {isSidebarCollapsed ? (
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="h-3.5 w-3.5" />
                   ) : (
-                    <ChevronLeft className="h-4 w-4" />
+                    <ChevronLeft className="h-3.5 w-3.5" />
                   )}
                 </Button>
 
