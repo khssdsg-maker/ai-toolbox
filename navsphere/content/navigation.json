@@ -131,6 +131,13 @@
               "icon": "/assets/images/logos/vercel.png"
             },
             {
+              "id": "1733657315013",
+              "title": "优设",
+              "href": "http://www.uisdc.com/",
+              "description": "设计师交流学习平台",
+              "icon": "uisdc"
+            },
+            {
               "id": "1733657315011",
               "title": "Leonardo.AI",
               "href": "https://app.leonardo.ai/",
@@ -143,13 +150,6 @@
               "href": "https://tensor.art/",
               "description": "Tensor.art是一个免费的在线图像生成和模型托管平台。它允许用户在线运行模型来免费生成图像。",
               "icon": "tensorart"
-            },
-            {
-              "id": "1733657315013",
-              "title": "优设",
-              "href": "http://www.uisdc.com/",
-              "description": "设计师交流学习平台",
-              "icon": "uisdc"
             },
             {
               "id": "1733665031305",
