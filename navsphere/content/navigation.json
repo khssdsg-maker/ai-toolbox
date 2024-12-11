@@ -96,12 +96,6 @@
           "icon": "mail",
           "items": [
             {
-              "id": "1733665031305",
-              "title": "test",
-              "href": "https://dh.leti.ltd/",
-              "description": "werewrwer"
-            },
-            {
               "id": "1733657315006",
               "title": "Google Analytics",
               "href": "https://analytics.google.com/",
@@ -168,6 +162,12 @@
               "href": "https://www.producthunt.com/",
               "description": "发现新鲜有趣的产品",
               "icon": "/assets/images/logos/vercel.png"
+            },
+            {
+              "id": "1733665031305",
+              "title": "test",
+              "href": "https://dh.leti.ltd/",
+              "description": "werewrwer"
             }
           ]
         },
