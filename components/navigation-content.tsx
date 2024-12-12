@@ -78,7 +78,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
         <main className="flex-1 overflow-auto p-6">
           <div className="space-y-8">
             {filteredItems.map((category) => (
-              <section key={category.id} id={category.id}>
+              <section key={category.id} id={category.id} className="scroll-mt-16">
                 {/* 分类标题 */}
                 <div className="mb-4">
                   <h2 className="text-lg font-semibold flex items-center gap-2">
@@ -92,7 +92,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
                     <div 
                       key={subCategory.id} 
                       id={subCategory.id} 
-                      className="mb-6 scroll-mt-20"
+                      className="mb-6 scroll-mt-16"
                     >
                       <h3 className="text-sm font-medium text-muted-foreground mb-3">
                         {subCategory.title}
