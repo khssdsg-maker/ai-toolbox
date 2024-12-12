@@ -52,27 +52,29 @@ export function IconSelector({ value, onChange }: IconSelectorProps) {
             onValueChange={setSearchQuery}
           />
           <CommandEmpty>没有找到图标</CommandEmpty>
-          <CommandGroup>
-            {filteredIcons.map(([name]) => (
-              <CommandItem
-                key={name}
-                value={name}
-                onSelect={(currentValue) => {
-                  onChange(currentValue)
-                  setOpen(false)
-                }}
-              >
-                <Check
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    value === name ? "opacity-100" : "opacity-0"
-                  )}
-                />
-                {React.createElement(navigationIcons[name as IconType], { className: "mr-2 h-4 w-4" })}
-                {name}
-              </CommandItem>
-            ))}
-          </CommandGroup>
+          <div className="max-h-[200px] overflow-y-scroll">
+            <CommandGroup>
+              {filteredIcons.map(([name]) => (
+                <CommandItem
+                  key={name}
+                  value={name}
+                  onSelect={(currentValue) => {
+                    onChange(currentValue)
+                    setOpen(false)
+                  }}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      value === name ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                  {React.createElement(navigationIcons[name as IconType], { className: "mr-2 h-4 w-4" })}
+                  {name}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </div>
         </Command>
       </PopoverContent>
     </Popover>
