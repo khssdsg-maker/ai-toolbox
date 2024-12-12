@@ -18,7 +18,7 @@ import {
   FormMessage,
   FormDescription,
 } from "@/registry/new-york/ui/form"
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/registry/new-york/hooks/use-toast"
 
 const formSchema = z.object({
   title: z.string().min(2, { message: "标题至少需要2个字符" }),

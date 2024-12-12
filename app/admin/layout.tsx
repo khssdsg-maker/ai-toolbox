@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { AdminLayoutClient } from './AdminLayoutClient'
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/registry/new-york/ui/toaster"
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {

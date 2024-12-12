@@ -9,6 +9,7 @@ import { Input } from "@/registry/new-york/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/registry/new-york/ui/select"
 import { navigationIcons } from "@/lib/icons"
 import { Switch } from "@/registry/new-york/ui/switch"
+import { useToast } from "@/registry/new-york/hooks/use-toast"
 
 const formSchema = z.object({
   title: z.string().min(1, "标题不能为空"),
@@ -29,6 +30,7 @@ interface AddCategoryFormProps {
 }
 
 export function AddCategoryForm({ defaultValues, onSubmit, onCancel }: AddCategoryFormProps) {
+  const { toast } = useToast()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues || {
@@ -42,9 +44,16 @@ export function AddCategoryForm({ defaultValues, onSubmit, onCancel }: AddCatego
   const handleSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await onSubmit(values);
-      onCancel();
+      toast({
+        title: "保存成功",
+      });
+      setTimeout(onCancel, 0);
     } catch (error) {
       console.error('Failed to submit:', error);
+      toast({
+        title: "保存失败",
+        variant: "destructive",
+      });
     }
   };
 
@@ -111,7 +120,7 @@ export function AddCategoryForm({ defaultValues, onSubmit, onCancel }: AddCatego
           control={form.control}
           name="enabled"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
               <FormControl>
                 <Switch
                   checked={field.value}
