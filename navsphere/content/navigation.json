@@ -118,7 +118,7 @@
           "id": "3",
           "title": "在线工具",
           "href": "#在线工具",
-          "icon": "",
+          "icon": "Folder",
           "description": "",
           "items": [
             {
@@ -161,7 +161,8 @@
               "icon": "/assets/images/logos/tinypng.png",
               "enabled": true
             }
-          ]
+          ],
+          "enabled": true
         },
         {
           "id": "4",
