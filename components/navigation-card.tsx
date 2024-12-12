@@ -62,7 +62,7 @@ export function NavigationCard({ item }: NavigationCardProps) {
         <TooltipContent 
           side="bottom" 
           align="center"
-          sideOffset={10}
+          sideOffset={8}
           className="max-w-[280px]"
         >
           <p className="text-sm">{item.description}</p>

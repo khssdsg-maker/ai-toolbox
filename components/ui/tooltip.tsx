@@ -16,14 +16,18 @@ const TooltipContent = React.forwardRef<
     ref={ref}
     sideOffset={sideOffset}
     className={cn(
-      "z-50 overflow-hidden rounded-sm bg-black px-3 py-1.5 text-sm text-white",
+      "z-50 overflow-visible rounded-md bg-gray-100 px-3 py-2 text-sm text-gray-600",
       "animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
       "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
       className
     )}
     {...props}
   >
-    <TooltipPrimitive.Arrow className="fill-black" width={16} height={8} />
+    <TooltipPrimitive.Arrow 
+      className="fill-gray-100" 
+      width={14} 
+      height={12} 
+    />
     {props.children}
   </TooltipPrimitive.Content>
 ))
