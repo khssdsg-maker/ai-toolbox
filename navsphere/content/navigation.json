@@ -283,14 +283,6 @@
             }
           ],
           "enabled": true
-        },
-        {
-          "id": "3618f83f-9750-44e4-bb05-6c7514980bb2",
-          "title": "test",
-          "icon": "Book",
-          "description": "werewrwer",
-          "enabled": true,
-          "items": []
         }
       ],
       "description": "",
