@@ -83,10 +83,9 @@ export function Sidebar({ className, navigationData, siteInfo }: SidebarProps) {
                         <Button
                           key={subCategory.id}
                           variant="ghost"
-                          className="w-full justify-start gap-2 text-sm"
+                          className="w-full justify-start pl-6 text-sm"
                           onClick={() => scrollToSection(subCategory.id)}
                         >
-                          {renderIcon(subCategory.icon)}
                           <span>{subCategory.title}</span>
                         </Button>
                       ))}
