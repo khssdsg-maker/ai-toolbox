@@ -53,15 +53,19 @@ export function AddItemForm({ onSubmit, onCancel, defaultValues }: AddItemFormPr
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(async (data) => {
-        const values: NavigationSubItem = {
-          id: data.id || await crypto.randomUUID(),
-          title: data.title,
-          href: data.href,
-          description: data.description,
-          icon: data.icon,
-          enabled: data.enabled
+        try {
+          const values: NavigationSubItem = {
+            id: data.id || await crypto.randomUUID(),
+            title: data.title,
+            href: data.href,
+            description: data.description,
+            icon: data.icon,
+            enabled: data.enabled
+          }
+          await onSubmit(values)
+        } catch (error) {
+          console.error('保存失败:', error)
         }
-        onSubmit(values)
       })} className="space-y-4">
         <FormField
           control={form.control}
@@ -161,7 +165,7 @@ export function AddItemForm({ onSubmit, onCancel, defaultValues }: AddItemFormPr
             {isSubmitting && (
               <Icons.loader2 className="mr-2 h-4 w-4 animate-spin" />
             )}
-            保存
+            {isSubmitting ? "保存中..." : "保存"}
           </Button>
           <Button 
             type="button" 
