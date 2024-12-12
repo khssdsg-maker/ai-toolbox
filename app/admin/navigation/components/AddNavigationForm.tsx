@@ -18,6 +18,7 @@ import {
   FormMessage,
   FormDescription,
 } from "@/registry/new-york/ui/form"
+import { useToast } from "@/components/ui/use-toast"
 
 const formSchema = z.object({
   title: z.string().min(2, { message: "标题至少需要2个字符" }),
@@ -47,6 +48,7 @@ export function AddNavigationForm({
   defaultValues, 
   onCancel 
 }: AddNavigationFormProps) {
+  const { toast } = useToast()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues || {
@@ -59,13 +61,26 @@ export function AddNavigationForm({
 
   const { isSubmitting } = form.formState
 
-  const onSubmitHandler = (values: z.infer<typeof formSchema>) => {
-    onSubmit({
-      title: values.title,
-      icon: values.icon,
-      description: values.description,
-      enabled: values.enabled
-    })
+  const onSubmitHandler = async (values: z.infer<typeof formSchema>) => {
+    try {
+      await onSubmit({
+        title: values.title,
+        icon: values.icon,
+        description: values.description,
+        enabled: values.enabled
+      })
+      
+      toast({
+        title: defaultValues ? "更新成功" : "添加成功",
+        description: `导航项 "${values.title}" 已${defaultValues ? "更新" : "添加"}`,
+      })
+    } catch (error) {
+      toast({
+        title: "操作失败",
+        description: "请稍后重试",
+        variant: "destructive",
+      })
+    }
   }
 
   return (
