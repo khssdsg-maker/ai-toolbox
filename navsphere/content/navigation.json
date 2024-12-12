@@ -270,7 +270,7 @@
           "id": "7",
           "title": "在线配色",
           "href": "#在线配色",
-          "icon": "",
+          "icon": "Book",
           "description": "",
           "items": [
             {
@@ -281,7 +281,8 @@
               "icon": "/assets/images/logos/colorhunt.png",
               "enabled": true
             }
-          ]
+          ],
+          "enabled": true
         },
         {
           "id": "3618f83f-9750-44e4-bb05-6c7514980bb2",
