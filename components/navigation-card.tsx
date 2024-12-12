@@ -28,7 +28,7 @@ export function NavigationCard({ item }: NavigationCardProps) {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Card className="overflow-hidden">
+          <Card className="overflow-hidden transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg">
             <Link
               href={item.href}
               target="_blank"
@@ -62,6 +62,7 @@ export function NavigationCard({ item }: NavigationCardProps) {
         <TooltipContent 
           side="bottom" 
           align="center"
+          sideOffset={10}
           className="max-w-[280px]"
         >
           <p className="text-sm">{item.description}</p>
