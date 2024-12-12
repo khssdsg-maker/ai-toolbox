@@ -210,7 +210,7 @@
           "id": "5",
           "title": "界面设计",
           "href": "#界面设计",
-          "icon": "",
+          "icon": "Folder",
           "description": "",
           "items": [
             {
@@ -221,7 +221,8 @@
               "icon": "/assets/images/logos/figma.png",
               "enabled": true
             }
-          ]
+          ],
+          "enabled": true
         },
         {
           "id": "6",
