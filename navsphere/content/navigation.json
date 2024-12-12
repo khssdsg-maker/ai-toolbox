@@ -168,7 +168,7 @@
           "id": "4",
           "title": "图形创意",
           "href": "#图形创意",
-          "icon": "",
+          "icon": "Folder",
           "description": "",
           "items": [
             {
@@ -203,7 +203,8 @@
               "icon": "/assets/images/logos/INDESIGN .png",
               "enabled": true
             }
-          ]
+          ],
+          "enabled": true
         },
         {
           "id": "5",
