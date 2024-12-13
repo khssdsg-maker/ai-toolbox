@@ -21,7 +21,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/registry/new-york/ui/form"
-import { ResourceSection } from "@/types/resource-metadata" // Adjust the import based on your type
+import { ResourceMetadata } from "@/types/resource-metadata" // Ensure this path is correct
 import { Toaster } from "@/registry/new-york/ui/toaster"
 import {
   Dialog,
@@ -33,7 +33,6 @@ import {
   DialogDescription,
 } from "@/registry/new-york/ui/dialog"
 import { ResourceService } from "@/services/ResourceService"; // Adjust the path based on your project structure
-import { uploadImageToGitHub } from "@/services/ResourceService"; // Adjust the path based on your project structure
 
 const formSchema = z.object({
   resource: z.object({
@@ -49,6 +48,24 @@ const formSchema = z.object({
   }),
 })
 
+// 假设 ResourceMetadataItem 是 metadata 中每个项的类型
+interface ResourceMetadataItem {
+    hash: string;
+    path: string; // 根据实际结构添加其他属性
+}
+
+// Rename the local declaration
+interface LocalResourceMetadata {
+    id: string;
+    title: string;
+    items: Array<{
+        title: string;
+        description: string;
+        icon: string;
+        url: string;
+    }>;
+}
+
 export default function ResourceManagement() {
   const { toast } = useToast()
   const form = useForm<z.infer<typeof formSchema>>({
@@ -56,12 +73,12 @@ export default function ResourceManagement() {
     defaultValues: {
       resource: {
         path: "",
-        image: null,
+        image: undefined,
       },
     },
   })
 
-  const [resources, setResources] = useState<ResourceSection[]>([]);
+  const [resources, setResources] = useState<LocalResourceMetadata[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false); // State to control dialog visibility
   const [uploadProgress, setUploadProgress] = useState(0); // State to track upload progress
@@ -76,7 +93,7 @@ export default function ResourceManagement() {
         const data = await response.json();
         console.log(data);
         if (data.metadata && Array.isArray(data.metadata)) {
-          const transformedResources: ResourceSection[] = data.metadata.map((item, index) => ({
+          const transformedResources: LocalResourceMetadata[] = data.metadata.map((item: ResourceMetadataItem, index: number) => ({
             id: item.hash,
             title: `Resource ${index + 1}`,
             items: [{
@@ -91,7 +108,11 @@ export default function ResourceManagement() {
           throw new Error('Metadata is not available or is not an array');
         }
       } catch (error) {
-        setError(error.message);
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('An unknown error occurred');
+        }
       }
     };
 
@@ -109,11 +130,19 @@ export default function ResourceManagement() {
       setIsDialogOpen(false); // Close the dialog after successful submission
       form.reset(); // Reset the form
     } catch (error) {
-      toast({
-        title: "错误",
-        description: error.message || "添加资源失败",
-        variant: "destructive",
-      });
+      if (error instanceof Error) {
+        toast({
+          title: "错误",
+          description: error.message || "添加资源失败",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "错误",
+          description: "添加资源失败",
+          variant: "destructive",
+        });
+      }
     }
   }
 
@@ -121,14 +150,21 @@ export default function ResourceManagement() {
     try {
       const base64Image = await toBase64(file); // Convert file to Base64
       const response = await uploadImageWithProgress(base64Image); // Upload with progress tracking
-      const data = await response.json();
-      form.setValue("resource.path", data.imageUrl); // Set the path field to the uploaded image URL
+     
     } catch (error) {
-      toast({
-        title: "错误",
-        description: error.message || "上传图片失败",
-        variant: "destructive",
-      });
+      if (error instanceof Error) {
+        toast({
+          title: "错误",
+          description: error.message || "上传图片失败",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "错误",
+          description: "上传图片失败",
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -212,7 +248,6 @@ export default function ResourceManagement() {
                     <table className="min-w-full bg-white border border-gray-300">
                       <thead>
                         <tr className="bg-gray-100">
-                          <th className="py-2 px-4 border-b">资源标题</th>
                           <th className="py-2 px-4 border-b">图片</th>
                           <th className="py-2 px-4 border-b">路径</th>
                           <th className="py-2 px-4 border-b">操作</th>
@@ -221,10 +256,7 @@ export default function ResourceManagement() {
                       <tbody>
                         {resources.map((resource, index) => (
                           <tr key={index} className="hover:bg-gray-50">
-                            <td className="py-2 px-4 border-b">{resource.title}</td>
-                            <td className="py-2 px-4 border-b">
-                              <img src={resource.items[0].url} alt={resource.title} className="w-12 h-12 object-cover" />
-                            </td>
+                  
                             <td className="py-2 px-4 border-b">
                               <a href={resource.items[0].url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
                                 {resource.items[0].url}
@@ -291,8 +323,9 @@ export default function ResourceManagement() {
                         type="file" 
                         accept="image/*" 
                         onChange={(e) => {
-                          const file = e.target.files[0];
-                          if (file) {
+                          const files = e.target.files; // Get the files
+                          if (files && files.length > 0) { // Check if files is not null and has at least one file
+                            const file = files[0];
                             handleImageChange(file); // Upload image immediately
                           }
                         }} 

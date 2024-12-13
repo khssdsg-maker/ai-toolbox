@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     } catch (error) {
         console.error('Failed to save resource metadata:', error);
         return NextResponse.json(
-            { error: error.message || 'Failed to save resource metadata' },
+            { error: error instanceof Error ? error.message : 'Failed to save resource metadata' },
             { status: 500 }
         );
     }
