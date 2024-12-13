@@ -60,14 +60,6 @@
           "description": "Tensor.art是一个免费的在线图像生成和模型托管平台。",
           "icon": "/assets/images/logos/tensorart.ico",
           "enabled": true
-        },
-        {
-          "id": "1734068900294",
-          "title": "tetet",
-          "href": "https://dh.leti.ltd/",
-          "description": "",
-          "icon": "",
-          "enabled": true
         }
       ],
       "subCategories": [],
