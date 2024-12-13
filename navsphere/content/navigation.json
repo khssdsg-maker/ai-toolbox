@@ -68,6 +68,14 @@
           "description": "",
           "icon": "/werwer",
           "enabled": true
+        },
+        {
+          "id": "1734068714858",
+          "title": "tetet",
+          "href": "https://dh.leti.ltd/",
+          "description": "",
+          "icon": "",
+          "enabled": true
         }
       ],
       "subCategories": [],
