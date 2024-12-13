@@ -131,6 +131,11 @@
       "commit": "your_commit_hash",
       "hash": "your_commit_hash",
       "path": "asserts/image_1734101818804.png"
+    },
+    {
+      "commit": "your_commit_hash",
+      "hash": "your_commit_hash",
+      "path": "asserts/image_1734101906398.png"
     }
   ]
 }
