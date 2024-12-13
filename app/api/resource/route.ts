@@ -32,14 +32,14 @@ export async function POST(request: Request) {
         const base64Data = image.split(",")[1]; // Extract the Base64 part
         const binaryData = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0)); // Convert Base64 to binary
 
-        // Now you can use the binary data to upload to GitHub
-        const imageUrl = await uploadImageToGitHub(binaryData, session.user.accessToken); // Pass Uint8Array directly
+        // 获取上传结果，包含路径和 commit hash
+        const { path: imageUrl, commitHash } = await uploadImageToGitHub(binaryData, session.user.accessToken);
 
         // Handle metadata
         const metadata = await getFileContent('navsphere/content/resource-metadata.json') as ResourceMetadata;
         metadata.metadata.push({ 
-            commit: 'your_commit_hash', // Replace with actual commit hash
-            hash: 'your_commit_hash',    // Replace with actual hash
+            commit: commitHash,  // 使用实际的 commit hash
+            hash: commitHash,    // 使用相同的 hash 作为资源标识
             path: imageUrl 
         });
 
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
 }
 
 // Function to upload image to GitHub
-async function uploadImageToGitHub(binaryData: Uint8Array, token: string): Promise<string> {
+async function uploadImageToGitHub(binaryData: Uint8Array, token: string): Promise<{ path: string, commitHash: string }> {
     const owner = process.env.GITHUB_OWNER!;
     const repo = process.env.GITHUB_REPO!;
     const branch = process.env.GITHUB_BRANCH || 'main'
@@ -89,5 +89,8 @@ async function uploadImageToGitHub(binaryData: Uint8Array, token: string): Promi
         throw new Error(`Failed to upload image to GitHub: ${errorData.message || 'Unknown error'}`);
     }
 
-    return path; // Return the URL of the uploaded image
+    const responseData = await response.json();
+    const commitHash = responseData.commit.sha; // 获取 commit hash
+
+    return { path, commitHash }; // Return the URL of the uploaded image
 }
