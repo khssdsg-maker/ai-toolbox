@@ -70,6 +70,10 @@ const menuItems = [
       {
         title: "资源项目",
         href: "/admin/resources/items"
+      },
+      {
+        title: "网站图标下载",
+        href: "/admin/resources/load"
       }
     ]
   },
