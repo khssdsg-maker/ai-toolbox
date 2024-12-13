@@ -142,6 +142,8 @@ export default function ItemsPage() {
         description: "保存失败",
         variant: "destructive"
       })
+    } finally {
+      setIsAddDialogOpen(false)
     }
   }
 
@@ -223,6 +225,7 @@ export default function ItemsPage() {
         title: "成功",
         description: "删除成功"
       })
+      setDeletingItem(null)
     } catch (error) {
       toast({
         title: "错误",
