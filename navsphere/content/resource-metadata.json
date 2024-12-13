@@ -46,6 +46,11 @@
       "commit": "your_commit_hash",
       "hash": "your_commit_hash",
       "path": "https://raw.githubusercontent.com/tianyaxiang/NavSphere/main/public/image_1734084686022.png?token=ABBV5QR2UPL53KQCHLC5VQ3HLQEIU"
+    },
+    {
+      "commit": "your_commit_hash",
+      "hash": "your_commit_hash",
+      "path": "asserts/image_1734085251859.png"
     }
   ]
 }
