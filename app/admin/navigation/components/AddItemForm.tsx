@@ -18,7 +18,6 @@ import { NavigationSubItem } from "@/types/navigation"
 import { Icons } from "@/components/icons"
 import { Textarea } from "@/registry/new-york/ui/textarea"
 import { Switch } from "@/registry/new-york/ui/switch"
-import { IconUploader } from './IconUploader'
 
 const formSchema = z.object({
   id: z.string().optional(),
@@ -87,18 +86,48 @@ export function AddItemForm({ onSubmit, onCancel, defaultValues }: AddItemFormPr
             <FormItem>
               <FormLabel>网站链接</FormLabel>
               <FormControl>
-                <Input 
-                  placeholder="输入网站链接" 
-                  {...field} 
-                />
+                <Input placeholder="输入网站链接" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <IconUploader 
-          onChange={(icon) => form.setValue('icon', icon)}
-          value={form.watch('icon')}
+        <FormField
+          control={form.control}
+          name="icon"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>图标</FormLabel>
+              <FormControl>
+                <div className="flex items-center">
+                  <Input
+                    placeholder="输入图标URL"
+                    {...field}
+                    className="flex-1"
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          field.onChange(reader.result as string); // 将Base64字符串设置为图标URL
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                    className="ml-2"
+                  />
+                </div>
+              </FormControl>
+              <FormDescription>
+                支持 URL 或 Base64 图标名称
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
         />
         <FormField
           control={form.control}
