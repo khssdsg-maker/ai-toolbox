@@ -97,7 +97,6 @@ export default function ResourceManagement() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       resource: {
-        path: "",
         image: undefined,
       },
     },
