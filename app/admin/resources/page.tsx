@@ -11,7 +11,25 @@ import { Input } from "@/registry/new-york/ui/input"
 import { Button } from "@/registry/new-york/ui/button"
 import { useToast } from "@/registry/new-york/hooks/use-toast"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/new-york/ui/tabs"
-import { Icons } from "@/components/icons"
+import {
+  Loader2,
+  Plus,
+  Upload,
+  X,
+  AlertCircle,
+  Copy,
+  Inbox,
+  Search
+} from "lucide-react"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/registry/new-york/ui/dialog"
+
 import {
   Form,
   FormControl,
@@ -21,50 +39,57 @@ import {
   FormLabel,
   FormMessage,
 } from "@/registry/new-york/ui/form"
-import { ResourceMetadata } from "@/types/resource-metadata" // Ensure this path is correct
 import { Toaster } from "@/registry/new-york/ui/toaster"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-  DialogDescription,
-} from "@/registry/new-york/ui/dialog"
-import { ResourceService } from "@/services/ResourceService"; // Adjust the path based on your project structure
+
+const Icons = {
+  loader2: Loader2,
+  plus: Plus,
+  upload: Upload,
+  x: X,
+  alertCircle: AlertCircle,
+  copy: Copy,
+  inbox: Inbox,
+  search: Search
+}
 
 const formSchema = z.object({
   resource: z.object({
-    path: z.string().url({
-      message: "请输入有效的URL地址",
-    }),
-    image: z.instanceof(File).refine(file => {
-      if (!file) return false; // Check if file is provided
-      return file.size <= 5 * 1024 * 1024; // Check file size
-    }, {
-      message: "文件大小不能超过 5MB",
-    }),
+    image: z.string().optional(),
   }),
 })
 
 // 假设 ResourceMetadataItem 是 metadata 中每个项的类型
 interface ResourceMetadataItem {
-    hash: string;
-    path: string; // 根据实际结构添加其他属性
+  hash: string;
+  path: string; // 根据实际结构添加其他属性
 }
 
 // Rename the local declaration
 interface LocalResourceMetadata {
-    id: string;
+  id: string;
+  title: string;
+  items: Array<{
     title: string;
-    items: Array<{
-        title: string;
-        description: string;
-        icon: string;
-        url: string;
-    }>;
+    description: string;
+    icon: string;
+    url: string;
+  }>;
 }
+
+// 修改骨架屏组件，进一步调整大小
+const ResourceGridSkeleton = () => (
+  <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2">
+    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((index) => (
+      <div key={index} className="bg-white rounded-lg border shadow-sm animate-pulse">
+        <div className="aspect-square bg-gray-200 rounded-t-lg" />
+        <div className="p-2 space-y-1">
+          <div className="h-2 w-3/4 bg-gray-200 rounded" />
+          <div className="h-2 w-1/2 bg-gray-200 rounded" />
+        </div>
+      </div>
+    ))}
+  </div>
+);
 
 export default function ResourceManagement() {
   const { toast } = useToast()
@@ -82,16 +107,24 @@ export default function ResourceManagement() {
   const [error, setError] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false); // State to control dialog visibility
   const [uploadProgress, setUploadProgress] = useState(0); // State to track upload progress
+  const [isUploading, setIsUploading] = useState(false); // State to track if an upload is in progress
+  const [selectedImage, setSelectedImage] = useState<string | null>(null); // State to hold the selected image for preview
+  const [uploadSpeed, setUploadSpeed] = useState<number>(0);
+  const [uploadStartTime, setUploadStartTime] = useState<number>(0);
+  const [abortController, setAbortController] = useState<AbortController | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null); // 新增文件状态
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchResources = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch('/api/resource');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        console.log(data);
         if (data.metadata && Array.isArray(data.metadata)) {
           const transformedResources: LocalResourceMetadata[] = data.metadata.map((item: ResourceMetadataItem, index: number) => ({
             id: item.hash,
@@ -113,33 +146,49 @@ export default function ResourceManagement() {
         } else {
           setError('An unknown error occurred');
         }
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchResources();
   }, []);
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit() {
     try {
-      const resourceService = new ResourceService();
-      await resourceService.addResource({ path: values.resource.path }); // Adjust based on your service method
+      if (!selectedFile) {
+        toast({
+          title: "错误",
+          description: "请先选择图片",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Upload the image after modifying the resource
+      if (selectedImage) {
+        await uploadImageWithProgress(selectedImage);
+      }
+
       toast({
         title: "成功",
-        description: "资源已添加",
+        description: "资源已上传",
       });
-      setIsDialogOpen(false); // Close the dialog after successful submission
-      form.reset(); // Reset the form
+      setIsDialogOpen(false);
+      form.reset();
+      setSelectedImage(null);
+      setSelectedFile(null);
     } catch (error) {
       if (error instanceof Error) {
         toast({
           title: "错误",
-          description: error.message || "添加资源失败",
+          description: error.message || "上传资源失败",
           variant: "destructive",
         });
       } else {
         toast({
           title: "错误",
-          description: "添加资源失败",
+          description: "上传资源失败",
           variant: "destructive",
         });
       }
@@ -147,54 +196,117 @@ export default function ResourceManagement() {
   }
 
   const handleImageChange = async (file: File) => {
-    try {
-      const base64Image = await toBase64(file); // Convert file to Base64
-      const response = await uploadImageWithProgress(base64Image); // Upload with progress tracking
-     
-    } catch (error) {
-      if (error instanceof Error) {
-        toast({
-          title: "错误",
-          description: error.message || "上传图片失败",
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "错误",
-          description: "上传图片失败",
-          variant: "destructive",
-        });
-      }
+    // Check file size (5MB limit)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "错误",
+        description: "文件大小不能超过 5MB",
+        variant: "destructive",
+      });
+      return;
     }
+
+    // Check file type
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "错误",
+        description: "请选择有效的图片文件",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSelectedFile(file); // 保存文件对象
+    const base64Image = await toBase64(file);
+    setSelectedImage(base64Image);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      handleImageChange(file);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
   };
 
   const uploadImageWithProgress = (base64Image: string) => {
     return new Promise((resolve, reject) => {
+      const controller = new AbortController();
+      setAbortController(controller);
+      
       const xhr = new XMLHttpRequest();
       xhr.open("POST", "/api/resource", true);
       xhr.setRequestHeader("Content-Type", "application/json");
 
-      // Track upload progress
+      let startTime = Date.now();
+      setUploadStartTime(startTime);
+
       xhr.upload.onprogress = (event) => {
         if (event.lengthComputable) {
-          const percentComplete = (event.loaded / event.total) * 100;
-          setUploadProgress(percentComplete); // Update progress state
+          const percentComplete = (Number(event.loaded) / Number(event.total)) * 100;
+          setUploadProgress(Math.round(percentComplete));
+          setIsUploading(true);
+
+          // Calculate upload speed (bytes per second)
+          const currentTime = Date.now();
+          const elapsedTime = (currentTime - startTime) / 1000; // Convert to seconds
+          const speed = event.loaded / elapsedTime; // bytes per second
+          setUploadSpeed(speed);
         }
       };
 
       xhr.onload = () => {
+        setIsUploading(false);
+        setUploadProgress(0);
+        setUploadSpeed(0);
+        setAbortController(null);
+        
         if (xhr.status >= 200 && xhr.status < 300) {
+          toast({
+            title: "成功",
+            description: "图片上传成功",
+          });
           resolve(xhr.response);
         } else {
-          reject(new Error("Upload failed"));
+          reject(new Error(`上传失败: ${xhr.statusText}`));
         }
       };
 
-      xhr.onerror = () => reject(new Error("Upload failed"));
+      xhr.onerror = () => {
+        setIsUploading(false);
+        setUploadProgress(0);
+        setUploadSpeed(0);
+        setAbortController(null);
+        reject(new Error("网络错误，上传失败"));
+      };
 
-      // Send the request with the Base64 image
+      xhr.onabort = () => {
+        setIsUploading(false);
+        setUploadProgress(0);
+        setUploadSpeed(0);
+        setAbortController(null);
+        toast({
+          title: "已取消",
+          description: "上传已取消",
+        });
+      };
+
       xhr.send(JSON.stringify({ image: base64Image }));
     });
+  };
+
+  // 添加取消上传函数
+  const cancelUpload = () => {
+    if (abortController) {
+      abortController.abort();
+    }
   };
 
   // Helper function to convert file to Base64
@@ -224,126 +336,262 @@ export default function ResourceManagement() {
     });
   };
 
+  // 添加搜索过滤函数
+  const filteredResources = resources.filter((resource) => 
+    resource.items[0].url.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <>
-      <div className="space-y-6 p-6">
-        <h1 className="text-2xl font-bold">资源管理</h1>
-        <Button onClick={() => setIsDialogOpen(true)} className="mb-4">
-          <Icons.plus className="mr-2 h-4 w-4" />
-          添加资源
-        </Button>
-        <Tabs defaultValue="resource" className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="resource">资源管理</TabsTrigger>
-          </TabsList>
-          <TabsContent value="resource">
-            <Card>
-              <CardHeader>
-                <CardTitle>现有资源</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {error && <div className="text-red-500">{error}</div>}
-                {resources.length > 0 ? (
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full bg-white border border-gray-300">
-                      <thead>
-                        <tr className="bg-gray-100">
-                          <th className="py-2 px-4 border-b">图片</th>
-                          <th className="py-2 px-4 border-b">路径</th>
-                          <th className="py-2 px-4 border-b">操作</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {resources.map((resource, index) => (
-                          <tr key={index} className="hover:bg-gray-50">
-                  
-                            <td className="py-2 px-4 border-b">
-                              <a href={resource.items[0].url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                                {resource.items[0].url}
-                              </a>
-                            </td>
-                            <td className="py-2 px-4 border-b">
-                              <Button 
-                                variant="outline" 
-                                onClick={() => copyToClipboard(resource.items[0].url)}
-                                className="text-sm"
-                              >
-                                复制链接
-                              </Button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+      {/* 顶部进度条 - 优化样式 */}
+      {isUploading && (
+        <div className="fixed top-0 left-0 right-0 z-[100]">
+          <div className="bg-white/80 backdrop-blur-sm shadow-lg border-b px-4 py-3">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <Icons.upload className="h-4 w-4 animate-pulse text-blue-600" />
+                  <span className="text-sm font-medium text-gray-700">正在上传...</span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <span className="font-medium">{uploadProgress}%</span>
+                    <span className="text-gray-400">•</span>
+                    <span>{(uploadSpeed / (1024 * 1024)).toFixed(2)} MB/s</span>
                   </div>
-                ) : (
-                  <div className="text-gray-500">没有可用的资源。</div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                  <Button 
+                    variant="ghost" 
+                    onClick={cancelUpload}
+                    size="sm"
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  >
+                    <Icons.x className="h-4 w-4 mr-1" />
+                    取消
+                  </Button>
+                </div>
+              </div>
+              <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                <div 
+                  className="bg-blue-600 h-1.5 rounded-full transition-all duration-300 ease-in-out"
+                  style={{ 
+                    width: `${uploadProgress}%`,
+                    boxShadow: '0 0 10px rgba(37, 99, 235, 0.5)'
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="space-y-4 p-6">
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+          <div className="relative">
+            <Icons.search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              placeholder="搜索资源..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 max-w-md"
+            />
+          </div>            <Button onClick={() => setIsDialogOpen(true)}>
+              <Icons.plus className="mr-2 h-4 w-4" />
+              上传资源
+            </Button>
+          </div>
+          
+          {/* 添加搜索框 */}
+         
+        </div>
+
+        {error && (
+          <div className="bg-red-50 border-l-4 border-red-400 p-4">
+            <div className="flex items-center">
+              <Icons.alertCircle className="h-5 w-5 text-red-400 mr-2" />
+              <p className="text-red-700">{error}</p>
+            </div>
+          </div>
+        )}
+
+        {isLoading ? (
+          <ResourceGridSkeleton />
+        ) : filteredResources.length > 0 ? (
+          <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2">
+            {filteredResources.map((resource, index) => (
+              <div 
+                key={index}
+                className="group bg-white rounded-lg border shadow-sm hover:shadow-md transition-shadow duration-200"
+              >
+                <div className="relative aspect-square">
+                  <img
+                    src={resource.items[0].url}
+                    alt={`Resource ${index + 1}`}
+                    className="w-full h-full object-cover rounded-t-lg"
+                    loading="lazy"
+                  />
+                  {/* 图片遮罩层和预览按钮 - 进一步缩小 */}
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                    <a 
+                      href={resource.items[0].url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-white/10 backdrop-blur-sm text-white px-1.5 py-0.5 rounded-full 
+                               hover:bg-white/20 transition-colors duration-200 flex items-center gap-0.5 text-[10px]"
+                    >
+                      <Icons.upload className="h-2 w-2" />
+                      查看
+                    </a>
+                  </div>
+                </div>
+                <div className="p-1.5 space-y-1">
+                  {/* 文件名和上传时间 */}
+                  <div className="space-y-0.5">
+                    <p className="text-[10px] text-gray-500 truncate" title={resource.items[0].url}>
+                      {resource.items[0].url.split('/').pop()}
+                    </p>
+                    <p className="text-[8px] text-gray-400">
+                      {new Date().toLocaleDateString()}
+                    </p>
+                  </div>
+                  {/* 复制链接按钮 - 进一步缩小 */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => copyToClipboard(resource.items[0].url)}
+                    className="w-full h-5 text-[8px] flex items-center justify-center gap-0.5 hover:bg-gray-50"
+                  >
+                    <Icons.copy className="h-2 w-2" />
+                    复制链接
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center h-64 border-2 border-dashed rounded-lg bg-muted/50">
+            <Icons.inbox className="h-10 w-10 text-gray-400 mb-2" />
+            <p className="text-gray-500">
+              {searchQuery ? '未找到匹配的资源' : '暂无资源'}
+            </p>
+            {!searchQuery && (
+              <Button 
+                variant="outline"
+                onClick={() => setIsDialogOpen(true)}
+                className="mt-4"
+              >
+                上传第一个资源
+              </Button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Dialog for adding resources */}
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
+      <Dialog open={isDialogOpen} onOpenChange={(open) => {
+        setIsDialogOpen(open);
+        if (!open) {
+          // 关闭对话框时重置状态
+          setSelectedImage(null);
+          setSelectedFile(null);
+          form.reset();
+        }
+      }}>
+        <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>添加资源</DialogTitle>
+            <DialogTitle>上传资源</DialogTitle>
             <DialogDescription>
-              请填写以下信息以添加新资源。
+              请选择或拖拽图片文件到此处上传。
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="resource.path"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>资源路径</FormLabel>
-                    <FormControl>
-                      <Input placeholder="输入资源路径" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      请输入资源的有效URL
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name="resource.image"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>上传图片</FormLabel>
+                    <FormLabel>选择图片</FormLabel>
                     <FormControl>
-                      <Input 
-                        type="file" 
-                        accept="image/*" 
-                        onChange={(e) => {
-                          const files = e.target.files; // Get the files
-                          if (files && files.length > 0) { // Check if files is not null and has at least one file
-                            const file = files[0];
-                            handleImageChange(file); // Upload image immediately
-                          }
-                        }} 
-                      />
+                      <Card
+                        className={`border-2 border-dashed ${
+                          selectedImage ? 'border-blue-400' : 'border-gray-200'
+                        } hover:border-blue-400 transition-colors duration-200`}
+                      >
+                        <CardContent
+                          className="flex flex-col items-center justify-center p-6 cursor-pointer"
+                          onDrop={handleDrop}
+                          onDragOver={handleDragOver}
+                          onClick={() => {
+                            const input = document.createElement('input');
+                            input.type = 'file';
+                            input.accept = 'image/*';
+                            input.onchange = (e) => {
+                              const files = (e.target as HTMLInputElement).files;
+                              if (files && files[0]) {
+                                handleImageChange(files[0]);
+                              }
+                            };
+                            input.click();
+                          }}
+                        >
+                          {selectedImage ? (
+                            <div className="relative w-full">
+                              <img
+                                src={selectedImage}
+                                alt="Preview"
+                                className="w-full h-48 object-cover rounded-lg"
+                              />
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="icon"
+                                className="absolute top-2 right-2"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSelectedImage(null);
+                                }}
+                              >
+                                <Icons.x className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          ) : (
+                            <>
+                              <Icons.upload className="h-12 w-12 text-gray-400 mb-4" />
+                              <div className="space-y-2 text-center">
+                                <p className="text-sm text-gray-600">
+                                  点击或拖拽图片到此处
+                                </p>
+                                <p className="text-xs text-gray-400">
+                                  支持 JPG、PNG 格式，最大 5MB
+                                </p>
+                              </div>
+                            </>
+                          )}
+                        </CardContent>
+                      </Card>
                     </FormControl>
                     <FormDescription>
-                      请选择要上传的图片（最大 5MB）
+                      选择图片后，点击下方按钮开始上传
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <DialogFooter>
-                <Button type="submit">
-                  添加资源
-                </Button>
-                <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                  取消
+                <Button
+                  type="submit"
+                  disabled={!selectedFile || isUploading}
+                  className="w-full"
+                >
+                  {isUploading ? (
+                    <>
+                      <Icons.loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      上传中...
+                    </>
+                  ) : (
+                    '开始上传'
+                  )}
                 </Button>
               </DialogFooter>
             </form>
@@ -352,16 +600,6 @@ export default function ResourceManagement() {
       </Dialog>
 
       <Toaster />
-
-      {/* Progress Bar */}
-      {uploadProgress > 0 && (
-        <div className="progress-bar">
-          <div
-            className="progress"
-            style={{ width: `${uploadProgress}%` }}
-          />
-        </div>
-      )}
     </>
   )
 } 
