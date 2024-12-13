@@ -16,9 +16,9 @@ import {
 } from "@/registry/new-york/ui/form"
 import { NavigationSubItem } from "@/types/navigation"
 import { Icons } from "@/components/icons"
-import { IconSelector } from "./IconSelector"
 import { Textarea } from "@/registry/new-york/ui/textarea"
 import { Switch } from "@/registry/new-york/ui/switch"
+import { IconUploader } from './IconUploader'
 
 const formSchema = z.object({
   id: z.string().optional(),
@@ -87,39 +87,18 @@ export function AddItemForm({ onSubmit, onCancel, defaultValues }: AddItemFormPr
             <FormItem>
               <FormLabel>网站链接</FormLabel>
               <FormControl>
-                <Input placeholder="输入网站链接" {...field} />
+                <Input 
+                  placeholder="输入网站链接" 
+                  {...field} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="icon"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>图标</FormLabel>
-              <FormControl>
-                <div className="flex gap-2">
-                  <Input 
-                    placeholder="输入图标URL或选择Lucide图标" 
-                    {...field} 
-                    className="flex-1"
-                  />
-                  <div className="w-[200px]">
-                    <IconSelector 
-                      value={field.value} 
-                      onChange={field.onChange}
-                    />
-                  </div>
-                </div>
-              </FormControl>
-              <FormDescription>
-                支持 URL、Base64 或 Lucide 图标名称
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
+        <IconUploader 
+          onChange={(icon) => form.setValue('icon', icon)}
+          value={form.watch('icon')}
         />
         <FormField
           control={form.control}
