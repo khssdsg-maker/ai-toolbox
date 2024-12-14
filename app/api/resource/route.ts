@@ -1,4 +1,3 @@
-// app/api/resource-metadata/route.ts
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { commitFile, getFileContent } from '@/lib/github'
@@ -65,7 +64,7 @@ async function uploadImageToGitHub(binaryData: Uint8Array, token: string): Promi
     const owner = process.env.GITHUB_OWNER!;
     const repo = process.env.GITHUB_REPO!;
     const branch = process.env.GITHUB_BRANCH || 'main'
-    const path = `asserts/image_${Date.now()}.png`; // Generate a unique path for the image
+    const path = `public/assets/img_${Date.now()}.png`; // Generate a unique path for the image
 
     // Convert Uint8Array to Base64
     const base64String = Buffer.from(binaryData).toString('base64'); // Use Buffer to convert to Base64
