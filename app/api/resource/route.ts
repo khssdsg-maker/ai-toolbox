@@ -64,12 +64,12 @@ async function uploadImageToGitHub(binaryData: Uint8Array, token: string): Promi
     const owner = process.env.GITHUB_OWNER!;
     const repo = process.env.GITHUB_REPO!;
     const branch = process.env.GITHUB_BRANCH || 'main'
-    const rootPath = 'public'
     const path = `/assets/img_${Date.now()}.png`; // Generate a unique path for the image
+    const githubPath = 'public'+path;
 
     // Convert Uint8Array to Base64
     const base64String = Buffer.from(binaryData).toString('base64'); // Use Buffer to convert to Base64
-    const currentFileUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`
+    const currentFileUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${githubPath}?ref=${branch}`
     // Use fetch to upload the file to GitHub
     const response = await fetch(currentFileUrl, {
         method: 'PUT',
@@ -78,7 +78,7 @@ async function uploadImageToGitHub(binaryData: Uint8Array, token: string): Promi
             'Accept': 'application/vnd.github.v3+json',
         },
         body: JSON.stringify({
-            message: `Upload ${rootPath} ${path}`,
+            message: `Upload ${rootPath} ${githubPath}`,
             content: base64String, // Send only the Base64 string
             branch: branch, // Explicitly specify the branch
         }),
