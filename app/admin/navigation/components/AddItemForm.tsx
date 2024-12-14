@@ -18,6 +18,7 @@ import { NavigationSubItem } from "@/types/navigation"
 import { Icons } from "@/components/icons"
 import { Textarea } from "@/registry/new-york/ui/textarea"
 import { Switch } from "@/registry/new-york/ui/switch"
+import { useState } from "react"
 
 const formSchema = z.object({
   id: z.string().optional(),
@@ -48,6 +49,7 @@ export function AddItemForm({ onSubmit, onCancel, defaultValues }: AddItemFormPr
   })
 
   const isSubmitting = form.formState.isSubmitting
+  const [isUploading, setIsUploading] = useState(false)
 
   return (
     <Form {...form}>
@@ -99,31 +101,93 @@ export function AddItemForm({ onSubmit, onCancel, defaultValues }: AddItemFormPr
             <FormItem>
               <FormLabel>图标</FormLabel>
               <FormControl>
-                <div className="flex items-center">
+                <div className="flex items-center space-x-2">
                   <Input
                     placeholder="输入图标URL"
                     {...field}
                     className="flex-1"
                   />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={async (e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        const reader = new FileReader();
-                        reader.onloadend = () => {
-                          field.onChange(reader.result as string); // 将Base64字符串设置为图标URL
-                        };
-                        reader.readAsDataURL(file);
-                      }
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="relative"
+                    disabled={isUploading}
+                    onClick={() => {
+                      const fileInput = document.getElementById('icon-upload');
+                      fileInput?.click();
                     }}
-                    className="ml-2"
-                  />
+                  >
+                    {isUploading ? (
+                      <>
+                        <Icons.loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        上传中...
+                      </>
+                    ) : (
+                      <>
+                        <Icons.upload className="mr-2 h-4 w-4" />
+                        上传图片
+                      </>
+                    )}
+                    <input
+                      id="icon-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          try {
+                            setIsUploading(true);
+                            
+                            // 将文件转换为 base64
+                            const base64 = await new Promise<string>((resolve, reject) => {
+                              const reader = new FileReader();
+                              reader.onload = () => resolve(reader.result as string);
+                              reader.onerror = reject;
+                              reader.readAsDataURL(file);
+                            });
+
+                            const response = await fetch('/api/resource', {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json',
+                              },
+                              body: JSON.stringify({
+                                image: base64 // 直接发送 base64 字符串
+                              }),
+                            });
+
+                            if (!response.ok) {
+                              throw new Error(`上传失败: ${response.status} ${response.statusText}`);
+                            }
+
+                            const data = await response.json();
+                            
+                            if (data.imageUrl) {
+                              field.onChange(`/${data.imageUrl}`); // 使用返回的图片URL
+                            } else {
+                              throw new Error('未获取到上传后的图片URL');
+                            }
+                            
+                          } catch (error) {
+                            console.error('上传失败:', error);
+                            alert(error instanceof Error ? error.message : '上传失败，请重试');
+                          } finally {
+                            setIsUploading(false);
+                            // 清空文件输入
+                            const fileInput = document.getElementById('icon-upload') as HTMLInputElement;
+                            if (fileInput) {
+                              fileInput.value = '';
+                            }
+                          }
+                        }
+                      }}
+                      className="hidden"
+                    />
+                  </Button>
                 </div>
               </FormControl>
               <FormDescription>
-                支持 URL 或 Base64 图标名称
+                支持 URL 或上传本地图片
               </FormDescription>
               <FormMessage />
             </FormItem>
