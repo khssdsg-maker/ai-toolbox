@@ -143,7 +143,6 @@ export default function ResourceManagement() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null); // 新增文件状态
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Add a function to fetch resources
   const fetchResources = async () => {
     try {
       setIsLoading(true);
