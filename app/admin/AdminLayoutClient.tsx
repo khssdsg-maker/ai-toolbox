@@ -49,10 +49,6 @@ const menuItems = [
         href: "/admin/navigation"
       },
       {
-        title: "子分类管理",
-        href: "/admin/navigation/categories"
-      },
-      {
         title: "站点管理",
         href: "/admin/sitelist"
       }
@@ -64,12 +60,8 @@ const menuItems = [
     icon: Settings,
     subItems: [
       {
-        title: "资源分类",
+        title: "资源管理",
         href: "/admin/resources"
-      },
-      {
-        title: "资源项目",
-        href: "/admin/resources/items"
       },
       {
         title: "网站图标下载",

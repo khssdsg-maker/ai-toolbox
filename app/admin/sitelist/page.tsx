@@ -209,12 +209,14 @@ export default function SiteListPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <h2 className="text-2xl font-semibold tracking-tight">
-            站点管理
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            管理所有站点列表
-          </p>
+        <div>
+        <Input
+          placeholder="搜索站点..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="max-w-sm"
+        />
+      </div>
         </div>
         <div className="flex items-center space-x-2">
           {selectedSites.length > 0 && (
@@ -227,21 +229,15 @@ export default function SiteListPage() {
               删除选中 ({selectedSites.length})
             </Button>
           )}
-          <Button onClick={() => router.push('/admin/sitelist/new')}>
+          
+          <Button>
             <Icons.plus className="mr-2 h-4 w-4" />
             添加站点
           </Button>
         </div>
       </div>
 
-      <div>
-        <Input
-          placeholder="搜索站点..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="max-w-sm"
-        />
-      </div>
+     
 
       {isLoading ? (
         <div className="flex items-center justify-center h-32">
@@ -301,6 +297,7 @@ export default function SiteListPage() {
                       >
                         <Icons.globe className="h-4 w-4" />
                       </Button>
+                      {/*注释掉编辑按钮
                       <Button
                         variant="ghost"
                         size="icon"
@@ -309,7 +306,7 @@ export default function SiteListPage() {
                         title="编辑"
                       >
                         <Icons.pencil className="h-4 w-4" />
-                      </Button>
+                      </Button>*/}
                     </div>
                   </TableCell>
                 </TableRow>
