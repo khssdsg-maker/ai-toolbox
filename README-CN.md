@@ -1,91 +1,58 @@
+
 # NavSphere
 
-<p align="center">
-  <img src="[logo-url]" alt="NavSphere Logo" width="200"/>
-</p>
+## Overview
+NavSphere is a web application designed for managing navigation items and categories. It provides an intuitive interface for adding, editing, and organizing navigation entries, including site icons and descriptions.
 
-<p align="center">
-  <a href="https://github.com/tianyaxiang/NavSphere/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/tianyaxiang/NavSphere"></a>
-  <a href="https://github.com/tianyaxiang/NavSphere/network"><img alt="GitHub forks" src="https://img.shields.io/github/forks/tianyaxiang/NavSphere"></a>
-  <a href="https://github.com/tianyaxiang/NavSphere/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/tianyaxiang/NavSphere"></a>
-  <a href="https://github.com/tianyaxiang/NavSphere/blob/main/LICENSE"><img alt="GitHub license" src="https://img.shields.io/github/license/tianyaxiang/NavSphere"></a>
-</p>
+## Features
+- **Add/Edit Navigation Items**: Easily add or modify navigation items with titles, links, icons, and descriptions.
+- **Icon Management**: Upload or fetch icons for each navigation item.
+- **Drag-and-Drop Interface**: Reorder navigation items and categories using drag-and-drop functionality.
+- **Responsive Design**: Works seamlessly on various devices and screen sizes.
 
-## 📖 Overview
-
-NavSphere is a modern web application built with Next.js for managing and organizing navigation items and categories. Perfect for creating personal navigation portals or bookmark management systems.
-
-## ✨ Features
-
-- 🚀 **Modern Tech Stack**: Built with Next.js 13+, React 18, and TypeScript
-- 🔐 **Authentication**: GitHub OAuth integration for secure access
-- 💾 **Git-based Storage**: Uses GitHub as a backend for data storage
-- 🎨 **Responsive Design**: Mobile-first approach with Tailwind CSS
-- 🌐 **Internationalization**: Support for multiple languages
-- 🎯 **Drag and Drop**: Intuitive interface for organizing navigation items
-- 🔍 **Search Functionality**: Quick access to navigation items
-- 🌓 **Dark Mode**: Built-in dark mode support
-
-## 🛠️ Tech Stack
-
-- **Framework:** Next.js 13+
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS
-- **Authentication:** NextAuth.js
-- **State Management:** React Context
-- **Data Storage:** GitHub API
-- **Deployment:** Cloudflare Pages
-- **Icons:** Heroicons
-
-## 🚀 Quick Start
+## Installation
 
 ### Prerequisites
+- Node.js (version x.x.x)
+- npm or yarn
 
-- Node.js 16.8 or later
-- pnpm 7.0 or later
-- GitHub account
+### Steps
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/tianyaxiang/NavSphere.git
 
-### Installation
-
-1. Clone the repository
 ```bash
-git clone https://github.com/tianyaxiang/NavSphere.git
-cd NavSphere
-```
-
-2. Install dependencies
-```bash
-pnpm install
-```
-
-3. Configure environment variables
-```bash
-cp .env.example .env.local
-```
-
-4. Start the development server
-```bash
+npm run dev
+# or
+yarn dev
+# or
 pnpm dev
+# or
+bun dev
 ```
 
-## 🔧 Configuration
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### Environment Variables
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-Create a `.env.local` file with the following variables:
+This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-```env
-# Authentication
-GITHUB_ID=your-github-oauth-app-id
-GITHUB_SECRET=your-github-oauth-app-secret
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your-nextauth-secret
+## Learn More
 
-# GitHub Configuration
-GITHUB_OWNER=your-github-username
-GITHUB_REPO=your-repo-name
-GITHUB_BRANCH=main
-```
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## 本地开发配置
 
 ### 1. GitHub OAuth App 配置
 
@@ -161,7 +128,7 @@ NEXTAUTH_SECRET=使用以下命令生成:
 1. 本地开发和生产环境使用不同的 OAuth App
 2. 生产环境需要更新回调 URL 为实际域名
 3. 确保 `.env.local` 不被提交到 Git
-4. 生产环境使用 Cloudflare Pages 的环
+4. 生产环境使用 Cloudflare Pages 的环��
 5. 定期轮换 Client Secret 以提高安全性
 
 ## Cloudflare Pages 部署
@@ -296,26 +263,3 @@ pnpm dev
    - 检查 API 请求是否成功
    - 检查错误信息
    - 检查返回的数据格式
-
-## 📚 Documentation
-
-Detailed documentation is available in the [docs](./docs) directory:
-
-- [Authentication Setup](./docs/authentication.md)
-- [Data Structure](./docs/data-structure.md)
-- [Deployment Guide](./docs/deployment.md)
-- [API Reference](./docs/api-reference.md)
-
-## 🤝 Contributing
-
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details.
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Next.js team for the amazing framework
-- Vercel for the deployment platform
-- All contributors who have helped this project
