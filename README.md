@@ -317,5 +317,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - Next.js team for the amazing framework
-- Vercel for the deployment platform
+- Cloudflare for the deployment platform
 - All contributors who have helped this project
