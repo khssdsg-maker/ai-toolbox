@@ -78,7 +78,7 @@ async function uploadImageToGitHub(binaryData: Uint8Array, token: string): Promi
             'Accept': 'application/vnd.github.v3+json',
         },
         body: JSON.stringify({
-            message: `Upload ${rootPath} ${githubPath}`,
+            message: `Upload ${githubPath}`,
             content: base64String, // Send only the Base64 string
             branch: branch, // Explicitly specify the branch
         }),
