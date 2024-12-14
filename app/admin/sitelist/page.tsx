@@ -80,6 +80,7 @@ export default function SiteListPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [selectedSites, setSelectedSites] = useState<string[]>([])
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [isInitialLoading, setIsInitialLoading] = useState(true)
   
 
   useEffect(() => {
@@ -126,7 +127,7 @@ export default function SiteListPage() {
   };
 
   const fetchSites = async () => {
-    setIsLoading(true);
+    if (!isInitialLoading) setIsLoading(true);
     try {
       console.log('Making API request');
       const response = await fetch('/api/navigation');
@@ -149,6 +150,7 @@ export default function SiteListPage() {
       setSites([]);
     } finally {
       setIsLoading(false);
+      setIsInitialLoading(false);
     }
   };
 
@@ -239,9 +241,82 @@ export default function SiteListPage() {
 
      
 
-      {isLoading ? (
-        <div className="flex items-center justify-center h-32">
-          <Icons.loader2 className="h-6 w-6 animate-spin" />
+      {isInitialLoading ? (
+        <div className="flex items-center justify-center h-[400px]">
+          <Icons.loader2 className="h-8 w-8 animate-spin" />
+        </div>
+      ) : isLoading ? (
+        <div className="opacity-50 pointer-events-none">
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[50px]">
+                    <Checkbox
+                      checked={
+                        filteredSites.length > 0 &&
+                        selectedSites.length === filteredSites.length
+                      }
+                      onCheckedChange={handleSelectAll}
+                      aria-label="Select all"
+                    />
+                  </TableHead>
+                  <TableHead>名称</TableHead>
+                  <TableHead>链接</TableHead>
+                  <TableHead>描述</TableHead>
+                  <TableHead className="w-[100px]">操作</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredSites.map((site) => (
+                  <TableRow key={site.id}>
+                    <TableCell>
+                      <Checkbox
+                        checked={selectedSites.includes(site.id)}
+                        onCheckedChange={(checked) => handleSelectOne(checked, site.id)}
+                        aria-label={`Select ${site.name}`}
+                      />
+                    </TableCell>
+                    <TableCell className="font-medium">{site.name}</TableCell>
+                    <TableCell>
+                      <a 
+                        href={site.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:text-blue-700 hover:underline"
+                      >
+                        {site.url}
+                      </a>
+                    </TableCell>
+                    <TableCell>{site.description}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => window.open(site.url, '_blank')}
+                          title="访问站点"
+                        >
+                          <Icons.globe className="h-4 w-4" />
+                        </Button>
+                        {/*注释掉编辑按钮
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => router.push(`/admin/sitelist/${site.id}`)}
+                          title="编辑"
+                        >
+                          <Icons.pencil className="h-4 w-4" />
+                        </Button>*/}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       ) : filteredSites.length > 0 ? (
         <div className="rounded-md border">

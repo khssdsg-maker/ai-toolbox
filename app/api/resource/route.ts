@@ -36,7 +36,7 @@ export async function POST(request: Request) {
 
         // Handle metadata
         const metadata = await getFileContent('navsphere/content/resource-metadata.json') as ResourceMetadata;
-        metadata.metadata.push({ 
+        metadata.metadata.unshift({ 
             commit: commitHash,  // 使用实际的 commit hash
             hash: commitHash,    // 使用相同的 hash 作为资源标识
             path: imageUrl 

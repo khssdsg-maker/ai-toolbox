@@ -2,20 +2,5 @@
   "commit": "5f6a88320da27c4d284996d498842939ad1d8d19",
   "generated": "Sun, 11 Feb 2024 21:48:22 GMT",
   "metadata": [
-    {
-      "commit": "ca44b97ede4ca3ba1959aed84db2f2e9111dda4f",
-      "hash": "ca44b97ede4ca3ba1959aed84db2f2e9111dda4f",
-      "path": "asserts/image_1734102974004.png"
-    },
-    {
-      "commit": "ead611601ed4b08860fb9da8eea6bad6bd8f5671",
-      "hash": "ead611601ed4b08860fb9da8eea6bad6bd8f5671",
-      "path": "asserts/image_1734139951702.png"
-    },
-    {
-      "commit": "8e8d00989334319da93ac91ec24f3fe1c3401594",
-      "hash": "8e8d00989334319da93ac91ec24f3fe1c3401594",
-      "path": "public/assets/img_1734148106269.png"
-    }
   ]
 }
