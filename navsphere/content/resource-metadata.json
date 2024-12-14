@@ -2,35 +2,5 @@
   "commit": "5f6a88320da27c4d284996d498842939ad1d8d19",
   "generated": "Sun, 11 Feb 2024 21:48:22 GMT",
   "metadata": [
-    {
-      "commit": "8c6ca176ba880f38a42b9fbc267f0fe05b780ebe",
-      "hash": "8c6ca176ba880f38a42b9fbc267f0fe05b780ebe",
-      "path": "assets/img_1734149971743.png"
-    },
-    {
-      "commit": "cc68f51129d9a2251228bdc7e79b5e53bdac6b34",
-      "hash": "cc68f51129d9a2251228bdc7e79b5e53bdac6b34",
-      "path": "assets/img_1734149937691.png"
-    },
-    {
-      "commit": "db498f6e389129f032542f9aaef2cdf5945ff188",
-      "hash": "db498f6e389129f032542f9aaef2cdf5945ff188",
-      "path": "assets/img_1734149850749.png"
-    },
-    {
-      "commit": "d230e53e6165eef1451b57dc559293ff1952b8cd",
-      "hash": "d230e53e6165eef1451b57dc559293ff1952b8cd",
-      "path": "assets/img_1734149724927.png"
-    },
-    {
-      "commit": "30eb16083790e1fb37a4d57b0fad1fcfb0b33e8f",
-      "hash": "30eb16083790e1fb37a4d57b0fad1fcfb0b33e8f",
-      "path": "assets/img_1734149672321.png"
-    },
-    {
-      "commit": "bb6c8b66a9ab0f6fd393d39e56738d432f63f29b",
-      "hash": "bb6c8b66a9ab0f6fd393d39e56738d432f63f29b",
-      "path": "assets/img_1734149583379.png"
-    }
   ]
 }
