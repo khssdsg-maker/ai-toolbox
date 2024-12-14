@@ -91,6 +91,34 @@ const ResourceGridSkeleton = () => (
   </div>
 );
 
+// Add styles
+const styles = {
+  '@keyframes shimmer': {
+    '0%': {
+      transform: 'translateX(-100%) skewX(-12deg)',
+    },
+    '100%': {
+      transform: 'translateX(200%) skewX(-12deg)',
+    },
+  },
+} as const;
+
+// Add style tag to the document
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement('style');
+  styleSheet.textContent = `
+    @keyframes shimmer {
+      0% {
+        transform: translateX(-100%) skewX(-12deg);
+      }
+      100% {
+        transform: translateX(200%) skewX(-12deg);
+      }
+    }
+  `;
+  document.head.appendChild(styleSheet);
+}
+
 export default function ResourceManagement() {
   const { toast } = useToast()
   const form = useForm<z.infer<typeof formSchema>>({
@@ -115,41 +143,43 @@ export default function ResourceManagement() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null); // 新增文件状态
   const [searchQuery, setSearchQuery] = useState("");
 
-  useEffect(() => {
-    const fetchResources = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch('/api/resource');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        if (data.metadata && Array.isArray(data.metadata)) {
-          const transformedResources: LocalResourceMetadata[] = data.metadata.map((item: ResourceMetadataItem, index: number) => ({
-            id: item.hash,
-            title: `Resource ${index + 1}`,
-            items: [{
-              title: item.path,
-              description: '',
-              icon: '',
-              url: item.path
-            }]
-          }));
-          setResources(transformedResources);
-        } else {
-          throw new Error('Metadata is not available or is not an array');
-        }
-      } catch (error) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError('An unknown error occurred');
-        }
-      } finally {
-        setIsLoading(false);
+  // Add a function to fetch resources
+  const fetchResources = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/resource');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
       }
-    };
+      const data = await response.json();
+      if (data.metadata && Array.isArray(data.metadata)) {
+        const transformedResources: LocalResourceMetadata[] = data.metadata.map((item: ResourceMetadataItem, index: number) => ({
+          id: item.hash,
+          title: `Resource ${index + 1}`,
+          items: [{
+            title: item.path,
+            description: '',
+            icon: '',
+            url: item.path.startsWith('/') ? item.path : `/${item.path}`
+          }]
+        }));
+        setResources(transformedResources);
+      } else {
+        throw new Error('Metadata is not available or is not an array');
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unknown error occurred');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  // Update useEffect to use the new fetchResources function
+  useEffect(() => {
     fetchResources();
   }, []);
 
@@ -164,9 +194,10 @@ export default function ResourceManagement() {
         return;
       }
 
-      // Upload the image after modifying the resource
       if (selectedImage) {
         await uploadImageWithProgress(selectedImage);
+        // Refresh the resources list after successful upload
+        await fetchResources();
       }
 
       toast({
@@ -268,11 +299,12 @@ export default function ResourceManagement() {
         setAbortController(null);
         
         if (xhr.status >= 200 && xhr.status < 300) {
-          toast({
-            title: "成功",
-            description: "图片上传成功",
-          });
-          resolve(xhr.response);
+          try {
+            const response = JSON.parse(xhr.response);
+            resolve(response);
+          } catch (e) {
+            resolve(xhr.response);
+          }
         } else {
           reject(new Error(`上传失败: ${xhr.statusText}`));
         }
@@ -369,14 +401,24 @@ export default function ResourceManagement() {
                   </Button>
                 </div>
               </div>
-              <div className="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+              <div className="relative w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                {/* 背景动画效果 */}
                 <div 
-                  className="bg-blue-600 h-1.5 rounded-full transition-all duration-300 ease-in-out"
+                  className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 animate-pulse opacity-20"
+                />
+                {/* 主进度条 */}
+                <div 
+                  className="relative h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transition-all duration-300 ease-out"
                   style={{ 
                     width: `${uploadProgress}%`,
                     boxShadow: '0 0 10px rgba(37, 99, 235, 0.5)'
                   }}
-                />
+                >
+                  {/* 光晕效果 */}
+                  <div 
+                    className="absolute right-0 top-0 h-full w-4 bg-white opacity-30 transform -skew-x-12 animate-[shimmer_1s_infinite]"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -448,9 +490,6 @@ export default function ResourceManagement() {
                   <div className="space-y-0.5">
                     <p className="text-[10px] text-gray-500 truncate" title={resource.items[0].url}>
                       {resource.items[0].url.split('/').pop()}
-                    </p>
-                    <p className="text-[8px] text-gray-400">
-                      {new Date().toLocaleDateString()}
                     </p>
                   </div>
                   {/* 复制链接按钮 - 进一步缩小 */}
