@@ -38,7 +38,20 @@ export default function SignInPage() {
       <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
         <div className="absolute inset-0 bg-zinc-900" />
         <div className="relative z-20 flex items-center text-lg font-medium">
-          <img src="/assets/images/logo@2x.png" alt="Logo" className="h-8" />
+          <div className="flex items-center gap-2">
+            <div className="relative w-8 h-8 overflow-hidden rounded-md">
+              <img 
+                src="/assets/images/alogo.png" 
+                alt="Logo"
+                className="object-cover"
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-lg font-semibold leading-none tracking-tight text-white">
+                NavSphere
+              </span>
+            </div>
+          </div>
         </div>
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
