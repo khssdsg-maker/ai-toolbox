@@ -66,7 +66,7 @@
           "title": "截图美化工具",
           "href": "https://shots.so/",
           "description": "截图美化，套上不同设备的壳，浏览器、iPhone、iPad、MacBook，Apple Watch",
-          "icon": "../assets/images/logos/shots.webp",
+          "icon": "/assets/images/logos/shots.webp",
           "enabled": true
         }
       ],
