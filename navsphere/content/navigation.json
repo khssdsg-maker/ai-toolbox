@@ -168,6 +168,14 @@
               "description": "在线图片压缩工具",
               "icon": "/assets/images/logos/tinypng.png",
               "enabled": true
+            },
+            {
+              "id": "1735256523960",
+              "title": "ScreenShots.pro",
+              "href": "https://screenshots.pro/",
+              "description": "App Screenshot Generator for App Store&Google Play,Create panoramic screenshots for iOS and Android apps. No account needed.",
+              "icon": "/assets/img_1735256532235.png",
+              "enabled": true
             }
           ],
           "enabled": true
