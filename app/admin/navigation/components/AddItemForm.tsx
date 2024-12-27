@@ -163,7 +163,7 @@ export function AddItemForm({ onSubmit, onCancel, defaultValues }: AddItemFormPr
                             const data = await response.json();
                             
                             if (data.imageUrl) {
-                              field.onChange(`/${data.imageUrl}`); // 使用返回的图片URL
+                              field.onChange(`${data.imageUrl}`); // 使用返回的图片URL
                             } else {
                               throw new Error('未获取到上传后的图片URL');
                             }
