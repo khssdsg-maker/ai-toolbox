@@ -60,6 +60,14 @@
           "description": "Tensor.art是一个免费的在线图像生成和模型托管平台。",
           "icon": "/assets/images/logos/tensorart.ico",
           "enabled": true
+        },
+        {
+          "id": "1735119857233",
+          "title": "截图美化工具",
+          "href": "https://shots.so/",
+          "description": "截图美化，套上不同设备的壳，浏览器、iPhone、iPad、MacBook，Apple Watch",
+          "icon": "/assets/images/logos/shots.webp",
+          "enabled": true
         }
       ],
       "subCategories": [],
@@ -159,6 +167,14 @@
               "href": "https://tinypng.com/",
               "description": "在线图片压缩工具",
               "icon": "/assets/images/logos/tinypng.png",
+              "enabled": true
+            },
+            {
+              "id": "1735256523960",
+              "title": "ScreenShots.pro",
+              "href": "https://screenshots.pro/",
+              "description": "App Screenshot Generator for App Store&Google Play,Create panoramic screenshots for iOS and Android apps. No account needed.",
+              "icon": "/assets/img_1735258064656.png",
               "enabled": true
             }
           ],
@@ -469,6 +485,33 @@
               "href": "https://unsplash.com/",
               "description": "免费高清图片",
               "icon": "/assets/images/logos/unsplash.png",
+              "enabled": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1735265493940",
+      "title": "开发者工具包",
+      "icon": "Box",
+      "description": "开发者工具，工具包",
+      "enabled": true,
+      "items": [],
+      "subCategories": [
+        {
+          "id": "2ac7e66f-d3ff-4cec-85f9-c2af42c85608",
+          "title": "UI",
+          "icon": "Files",
+          "description": "",
+          "enabled": true,
+          "items": [
+            {
+              "id": "1735265532154",
+              "title": "shadcn ",
+              "href": "https://ui.shadcn.com/",
+              "description": "Build your component library\nBeautifully designed components that you can copy and paste into your apps. Made with Tailwind CSS. Open source.",
+              "icon": "/assets/img_1735265752690.png",
               "enabled": true
             }
           ]
