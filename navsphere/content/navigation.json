@@ -149,7 +149,16 @@
       "icon": "Laptop",
       "description": "自媒体工具包",
       "enabled": true,
-      "items": [],
+      "items": [
+        {
+          "id": "1735433584619",
+          "title": "公众号排版",
+          "href": "https://doocs.github.io/md/",
+          "description": "WeChat Markdown Editor | 一款高度简洁的微信 Markdown 编辑器：支持 Markdown 语法、色盘取色、多图上传、一键下载文档、自定义 CSS 样式、一键重置等特性",
+          "icon": "/assets/img_1735433660193.png",
+          "enabled": true
+        }
+      ],
       "subCategories": []
     },
     {
