@@ -144,6 +144,15 @@
       ]
     },
     {
+      "id": "1735433560958",
+      "title": "自媒体工具包",
+      "icon": "Laptop",
+      "description": "自媒体工具包",
+      "enabled": true,
+      "items": [],
+      "subCategories": []
+    },
+    {
       "id": "2",
       "title": "常用工具",
       "icon": "Laptop",
@@ -517,15 +526,6 @@
           ]
         }
       ]
-    },
-    {
-      "id": "1735433560958",
-      "title": "自媒体工具包",
-      "icon": "Laptop",
-      "description": "自媒体工具包",
-      "enabled": true,
-      "items": [],
-      "subCategories": []
     }
   ]
 }
