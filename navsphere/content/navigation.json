@@ -420,14 +420,6 @@
               "enabled": true
             },
             {
-              "id": "8_1_7",
-              "title": "easyicon",
-              "href": "http://www.easyicon.net/",
-              "description": "PNG、ICO、ICNS格式图标搜索、图标下载服务",
-              "icon": "/assets/images/logos/easyicon.png",
-              "enabled": true
-            },
-            {
               "id": "8_1_8",
               "title": "flaticon",
               "href": "https://www.flaticon.com/",
