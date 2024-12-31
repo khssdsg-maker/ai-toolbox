@@ -140,6 +140,14 @@
               "enabled": true
             }
           ]
+        },
+        {
+          "id": "4da4ad49-4cfe-4e78-992b-af84a1d6c0ad",
+          "title": "托管平台",
+          "icon": "Book",
+          "description": "",
+          "enabled": true,
+          "items": []
         }
       ]
     },
