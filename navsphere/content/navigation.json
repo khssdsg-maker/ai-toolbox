@@ -117,6 +117,93 @@
       "enabled": true
     },
     {
+      "id": "1735265493940",
+      "title": "开发者工具包",
+      "icon": "Box",
+      "description": "开发者工具，工具包",
+      "enabled": true,
+      "items": [],
+      "subCategories": [
+        {
+          "id": "2ac7e66f-d3ff-4cec-85f9-c2af42c85608",
+          "title": "UI框架",
+          "icon": "Files",
+          "description": "",
+          "enabled": true,
+          "items": [
+            {
+              "id": "1735265532154",
+              "title": "shadcn ",
+              "href": "https://ui.shadcn.com/",
+              "description": "Build your component library\nBeautifully designed components that you can copy and paste into your apps. Made with Tailwind CSS. Open source.",
+              "icon": "/assets/img_1735265752690.png",
+              "enabled": true
+            }
+          ]
+        },
+        {
+          "id": "4da4ad49-4cfe-4e78-992b-af84a1d6c0ad",
+          "title": "托管平台",
+          "icon": "Book",
+          "description": "",
+          "enabled": true,
+          "items": [
+            {
+              "id": "1735612561958",
+              "title": "Cloudflare",
+              "href": "https://dash.cloudflare.com/",
+              "description": "Cloudflare以向客户提供基于反向代理的内容分发网络及分布式域名解析服务为主要业务。",
+              "icon": "/assets/images/logos/cloudflar.ico",
+              "enabled": true
+            },
+            {
+              "id": "1735612588184",
+              "title": "Vercel",
+              "href": "https://vercel.com/",
+              "description": "Vercel 提供开发者工具和云基础设施，帮助构建、扩展和保护更快、更个性化的网络应用。",
+              "icon": "/assets/images/logos/vercel.png",
+              "enabled": true
+            },
+            {
+              "id": "1735612629450",
+              "title": "netlify",
+              "href": "https://www.netlify.com/",
+              "description": "Netlify is the essential platform for the delivery of exceptional and dynamic web experiences, without limitations.",
+              "icon": "/assets/img_1735612745862.png",
+              "enabled": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1735433560958",
+      "title": "自媒体工具包",
+      "icon": "Video",
+      "description": "自媒体工具包",
+      "enabled": true,
+      "items": [],
+      "subCategories": [
+        {
+          "id": "2d33f756-959e-4171-9e0e-b616bcd274be",
+          "title": "公众号排版",
+          "icon": "Edit",
+          "description": "",
+          "enabled": true,
+          "items": [
+            {
+              "id": "1735456910129",
+              "title": "WeChat Markdown Editor",
+              "href": "https://doocs.github.io/md/",
+              "description": "WeChat Markdown Editor | 一款高度简洁的微信 Markdown 编辑器：支持 Markdown 语法、色盘取色、多图上传、一键下载文档、自定义 CSS 样式、一键重置等特性",
+              "icon": "/assets/img_1735433660193.png",
+              "enabled": true
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "2",
       "title": "常用工具",
       "icon": "Laptop",
@@ -366,14 +453,6 @@
               "enabled": true
             },
             {
-              "id": "8_1_7",
-              "title": "easyicon",
-              "href": "http://www.easyicon.net/",
-              "description": "PNG、ICO、ICNS格式图标搜索、图标下载服务",
-              "icon": "/assets/images/logos/easyicon.png",
-              "enabled": true
-            },
-            {
               "id": "8_1_8",
               "title": "flaticon",
               "href": "https://www.flaticon.com/",
@@ -485,33 +564,6 @@
               "href": "https://unsplash.com/",
               "description": "免费高清图片",
               "icon": "/assets/images/logos/unsplash.png",
-              "enabled": true
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "1735265493940",
-      "title": "开发者工具包",
-      "icon": "Box",
-      "description": "开发者工具，工具包",
-      "enabled": true,
-      "items": [],
-      "subCategories": [
-        {
-          "id": "2ac7e66f-d3ff-4cec-85f9-c2af42c85608",
-          "title": "UI",
-          "icon": "Files",
-          "description": "",
-          "enabled": true,
-          "items": [
-            {
-              "id": "1735265532154",
-              "title": "shadcn ",
-              "href": "https://ui.shadcn.com/",
-              "description": "Build your component library\nBeautifully designed components that you can copy and paste into your apps. Made with Tailwind CSS. Open source.",
-              "icon": "/assets/img_1735265752690.png",
               "enabled": true
             }
           ]
