@@ -20,14 +20,10 @@ async function getData() {
 
     const [navigationRes, siteRes] = await Promise.all([
       fetch(new URL('/api/home/navigation', baseUrl).toString(), { 
-        next: { 
-          revalidate: 3600 // 1 hour 
-        } 
+        cache: 'force-cache'
       }),
       fetch(new URL('/api/home/site', baseUrl).toString(), { 
-        next: { 
-          revalidate: 3600 // 1 hour 
-        } 
+        cache: 'force-cache'
       })
     ])
 
@@ -80,6 +76,10 @@ export async function generateMetadata(): Promise<Metadata> {
       icon: siteData.appearance.favicon,
     },
   }
+}
+
+export function generateStaticParams() {
+  return [{}]
 }
 
 export default async function HomePage() {
