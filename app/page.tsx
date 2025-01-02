@@ -9,35 +9,23 @@ import { ScrollToTop } from '@/components/ScrollToTop'
 
 async function getData() {
   try {
-    // Dynamically construct base URL
-    const host = headers().get('host')
-    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'
-    
-    // Fallback to a complete URL if environment variables are not set
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 
-                    (host ? `${protocol}://${host}` : 'http://localhost:3000')
-
-    console.log('Base URL:', baseUrl)
+    // 使用绝对 URL，确保构建时可以访问
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+    console.log('Building with base URL:', baseUrl) // 添加构建日志
 
     const [navigationRes, siteRes] = await Promise.all([
       fetch(new URL('/api/home/navigation', baseUrl).toString(), { 
-        cache: 'force-cache'
+        cache: 'force-cache',
+        next: { tags: ['navigation'] }  // 添加缓存标签
       }),
       fetch(new URL('/api/home/site', baseUrl).toString(), { 
-        cache: 'force-cache'
+        cache: 'force-cache',
+        next: { tags: ['site'] }  // 添加缓存标签
       })
     ])
 
-    // Log status codes for debugging
-    console.log('Navigation response status:', navigationRes.status)
-    console.log('Site response status:', siteRes.status)
-
     if (!navigationRes.ok || !siteRes.ok) {
-      console.error('Failed to fetch data', {
-        navigationStatus: navigationRes.status,
-        siteStatus: siteRes.status
-      })
-      throw new Error('Failed to fetch data')
+      throw new Error(`Failed to fetch data: Navigation ${navigationRes.status}, Site ${siteRes.status}`)
     }
 
     const [navigationData, siteData] = await Promise.all([
@@ -45,16 +33,35 @@ async function getData() {
       siteRes.json()
     ])
 
-    return { navigationData, siteData }
+    // 添加数据验证日志
+    console.log('Navigation data received:', !!navigationData)
+    console.log('Site data received:', !!siteData)
+
+    return { 
+      navigationData: navigationData || { navigationItems: [] }, 
+      siteData: siteData || {
+        basic: {
+          title: 'NavSphere',
+          description: '',
+          keywords: ''
+        },
+        appearance: {
+          logo: '',
+          favicon: '',
+          theme: 'system'
+        }
+      }
+    }
   } catch (error) {
     console.error('Error in getData:', error)
+    // 返回默认数据而不是空值
     return {
       navigationData: { navigationItems: [] },
       siteData: {
         basic: {
           title: 'NavSphere',
-          description: '',
-          keywords: ''
+          description: 'Default description',
+          keywords: 'default keywords'
         },
         appearance: {
           logo: '',
@@ -85,6 +92,13 @@ export function generateStaticParams() {
 
 export default async function HomePage() {
   const { navigationData, siteData } = await getData()
+  
+  // 添加调试日志
+  console.log('Rendering HomePage with data:', { 
+    hasNavigation: !!navigationData?.navigationItems,
+    hasSiteData: !!siteData?.basic 
+  })
+
   return (
     <>
       <NavigationContent navigationData={navigationData} siteData={siteData} />
