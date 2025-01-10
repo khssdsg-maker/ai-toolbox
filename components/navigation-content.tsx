@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import type { NavigationData } from '@/types/navigation'
 import type { SiteConfig } from '@/types/site'
 import { NavigationCard } from '@/components/navigation-card'
@@ -11,6 +11,8 @@ import { Footer } from '@/components/footer'
 import { Github } from 'lucide-react'
 import { Button } from "@/registry/new-york/ui/button"
 import Link from 'next/link'
+import { cn } from '@/lib/utils'
+import { Menu } from 'lucide-react'
 
 interface NavigationContentProps {
   navigationData: NavigationData
@@ -18,106 +20,129 @@ interface NavigationContentProps {
 }
 
 export function NavigationContent({ navigationData, siteData }: NavigationContentProps) {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
-  // Filter navigation items based on search query
-  const filteredItems = navigationData.navigationItems.map(category => ({
-    ...category,
-    subCategories: category.subCategories?.map(subCategory => ({
-      ...subCategory,
-      items: subCategory.items?.filter(item =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.description?.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    })).filter(subCategory => subCategory.items && subCategory.items.length > 0),
-    items: category.items?.filter(item =>
-      item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.description?.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  })).filter(category => 
-    (category.subCategories && category.subCategories.length > 0) ||
-    (category.items && category.items.length > 0)
-  )
+  // 扁平化并分类搜索结果
+  const searchResults = useMemo(() => {
+    const query = searchQuery.toLowerCase().trim()
+    if (!query) return []
+
+    return navigationData.navigationItems.map(category => {
+      // 搜索主分类下的项目
+      const items = (category.items || []).filter(item => {
+        const titleMatch = item.title.toLowerCase().includes(query)
+        const descMatch = item.description?.toLowerCase().includes(query)
+        return titleMatch || descMatch
+      })
+
+      // 搜索子分类下的项目
+      const subResults = (category.subCategories || []).map(sub => {
+        const subItems = sub.items.filter(item => {
+          const titleMatch = item.title.toLowerCase().includes(query)
+          const descMatch = item.description?.toLowerCase().includes(query)
+          return titleMatch || descMatch
+        })
+        return { ...sub, items: subItems }
+      }).filter(sub => sub.items.length > 0)
+
+      return {
+        category,
+        items,
+        subCategories: subResults
+      }
+    }).filter(result => result.items.length > 0 || result.subCategories.length > 0)
+  }, [navigationData, searchQuery])
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query)
+  }
 
   return (
-    <div className="flex min-h-screen">
-      {/* 固定高度的左侧边栏 */}
-      <div className="fixed left-0 top-0 bottom-0 w-60 overflow-y-auto">
-        <Sidebar navigationData={navigationData} siteInfo={siteData} />
-      </div>
-      
-      {/* 主内容区域，向右偏移 */}
-      <div className="ml-60 flex-1 flex flex-col min-h-screen">
-        {/* 顶部搜索栏 */}
-        <div className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="flex h-14 items-center gap-4 px-4">
+    <div className="flex flex-col sm:flex-row min-h-screen">
+      <main className="flex-1">
+        <div className="sticky top-0 bg-background/90 backdrop-blur-sm z-10 px-3 sm:px-6 py-2">
+          <div className="flex items-center gap-3">
             <div className="flex-1">
-              <SearchBar onSearch={setSearchQuery} />
+              <SearchBar 
+                navigationData={navigationData} 
+                onSearch={handleSearch}
+                searchResults={searchResults}
+                searchQuery={searchQuery}
+              />
             </div>
             <div className="flex items-center gap-1">
+              <ModeToggle />
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-7 w-7 border-0 [&_svg]:h-3.5 [&_svg]:w-3.5"
-                asChild
+                className="sm:hidden"
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               >
-                <Link 
-                  href="https://github.com/tianyaxiang/navsphere" 
-                  target="_blank"
-                >
-                  <Github />
-                  <span className="sr-only">GitHub</span>
-                </Link>
+                <Menu className="h-5 w-5" />
               </Button>
-              <ModeToggle />
             </div>
           </div>
         </div>
-
-        {/* 可滚动的主内容 */}
-        <main className="flex-1 overflow-auto p-6">
-          <div className="space-y-8">
-            {filteredItems.map((category) => (
-              <section key={category.id} id={category.id} className="scroll-mt-16">
-                {/* 分类标题 */}
-                <div className="mb-4">
-                  <h2 className="text-lg font-semibold flex items-center gap-2">
+        
+        <div className="px-3 sm:px-6 py-3 sm:py-6">
+          <div className="space-y-6">
+            {navigationData.navigationItems.map((category) => (
+              <section key={category.id} id={category.id} className="scroll-m-16">
+                <div className="space-y-4">
+                  <h2 className="text-base font-medium tracking-tight">
                     {category.title}
                   </h2>
-                </div>
 
-                {/* 子分类 */}
-                {category.subCategories && category.subCategories.length > 0 ? (
-                  category.subCategories.map((subCategory) => (
-                    <div 
-                      key={subCategory.id} 
-                      id={subCategory.id} 
-                      className="mb-6 scroll-mt-16"
-                    >
-                      <h3 className="text-sm font-medium text-muted-foreground mb-3">
-                        {subCategory.title}
-                      </h3>
-                      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                        {subCategory.items?.map((item) => (
-                          <NavigationCard key={item.id} item={item} />
-                        ))}
+                  {category.subCategories && category.subCategories.length > 0 ? (
+                    category.subCategories.map((subCategory) => (
+                      <div key={subCategory.id} id={subCategory.id} className="space-y-3">
+                        <h3 className="text-sm font-medium text-muted-foreground">
+                          {subCategory.title}
+                        </h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                          {subCategory.items.map((item) => (
+                            <NavigationCard key={item.id} item={item} />
+                          ))}
+                        </div>
                       </div>
+                    ))
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {category.items.map((item) => (
+                        <NavigationCard key={item.id} item={item} />
+                      ))}
                     </div>
-                  ))
-                ) : (
-                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {category.items?.map((item) => (
-                      <NavigationCard key={item.id} item={item} />
-                    ))}
-                  </div>
-                )}
+                  )}
+                </div>
               </section>
             ))}
           </div>
-        </main>
+        </div>
+      </main>
 
-        {/* 页脚 */}
-        <Footer siteInfo={siteData} />
+      <div className={cn(
+        "fixed inset-0 z-50 bg-background/80 backdrop-blur-sm transition-all sm:hidden",
+        isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+      )}>
+        <div className={cn(
+          "fixed inset-y-0 right-0 w-3/4 max-w-xs bg-background shadow-lg transform transition-transform duration-200 ease-in-out",
+          isSidebarOpen ? "translate-x-0" : "translate-x-full"
+        )}>
+          <Sidebar 
+            navigationData={navigationData} 
+            siteInfo={siteData}
+            onClose={() => setIsSidebarOpen(false)}
+          />
+        </div>
+      </div>
+
+      <div className="hidden sm:block">
+        <Sidebar 
+          navigationData={navigationData} 
+          siteInfo={siteData} 
+          className="sticky top-0 h-screen"
+        />
       </div>
     </div>
   )

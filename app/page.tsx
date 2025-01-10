@@ -5,6 +5,7 @@ import { NavigationContent } from '@/components/navigation-content'
 import { headers } from 'next/headers'
 import { Metadata, ResolvingMetadata } from 'next/types'
 import { ScrollToTop } from '@/components/ScrollToTop'
+import { Container } from '@/components/ui/container'
 
 
 async function getData() {
@@ -95,16 +96,15 @@ export function generateStaticParams() {
 export default async function HomePage() {
   const { navigationData, siteData } = await getData()
   
-  // 添加调试日志
   console.log('Rendering HomePage with data:', { 
     hasNavigation: !!navigationData?.navigationItems,
     hasSiteData: !!siteData?.basic 
   })
 
   return (
-    <>
+    <Container>
       <NavigationContent navigationData={navigationData} siteData={siteData} />
       <ScrollToTop />
-    </>
+    </Container>
   )
 }

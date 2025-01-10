@@ -36,9 +36,9 @@ export function NavigationCard({ item }: NavigationCardProps) {
               className="block h-full"
             >
               <CardHeader>
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-2 sm:gap-4">
                   {item.icon && (
-                    <div className="flex-shrink-0 w-11 h-11">
+                    <div className="flex-shrink-0 w-8 h-8 sm:w-11 sm:h-11">
                       <img
                         src={item.icon}
                         alt={`${item.title} icon`}
@@ -46,10 +46,10 @@ export function NavigationCard({ item }: NavigationCardProps) {
                       />
                     </div>
                   )}
-                  <div className="space-y-1">
-                    <CardTitle className="text-base">{item.title}</CardTitle>
+                  <div className="space-y-0.5 sm:space-y-1">
+                    <CardTitle className="text-sm sm:text-base">{item.title}</CardTitle>
                     {item.description && (
-                      <CardDescription className="line-clamp-1">
+                      <CardDescription className="text-xs sm:text-sm line-clamp-1">
                         {item.description}
                       </CardDescription>
                     )}
@@ -63,9 +63,9 @@ export function NavigationCard({ item }: NavigationCardProps) {
           side="bottom" 
           align="center"
           sideOffset={8}
-          className="max-w-[280px]"
+          className="max-w-[280px] text-xs sm:text-sm"
         >
-          <p className="text-sm">{item.description}</p>
+          <p>{item.description}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
