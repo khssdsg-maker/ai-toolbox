@@ -10,17 +10,19 @@ import { ScrollToTop } from '@/components/ScrollToTop'
 async function getData() {
   try {
     // 使用绝对 URL，确保构建时可以访问
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL
     console.log('Building with base URL:', baseUrl) // 添加构建日志
 
     const [navigationRes, siteRes] = await Promise.all([
       fetch(new URL('/api/home/navigation', baseUrl).toString(), { 
-        cache: 'force-cache',
-        next: { tags: ['navigation'] }  // 添加缓存标签
+        next: {
+                  revalidate: 3600*24 // 1 hour
+                }
       }),
       fetch(new URL('/api/home/site', baseUrl).toString(), { 
-        cache: 'force-cache',
-        next: { tags: ['site'] }  // 添加缓存标签
+       next: {
+                 revalidate: 3600*24 // 1 hour
+               }
       })
     ])
 
