@@ -60,6 +60,30 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
 
   return (
     <div className="flex flex-col sm:flex-row min-h-screen">
+      <div className="hidden sm:block">
+        <Sidebar 
+          navigationData={navigationData} 
+          siteInfo={siteData} 
+          className="sticky top-0 h-screen"
+        />
+      </div>
+
+      <div className={cn(
+        "fixed inset-0 z-50 bg-background/80 backdrop-blur-sm transition-all sm:hidden",
+        isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+      )}>
+        <div className={cn(
+          "fixed inset-y-0 right-0 sm:left-0 w-3/4 max-w-xs bg-background shadow-lg transform transition-transform duration-200 ease-in-out",
+          isSidebarOpen ? "translate-x-0" : "translate-x-full sm:-translate-x-full"
+        )}>
+          <Sidebar 
+            navigationData={navigationData} 
+            siteInfo={siteData}
+            onClose={() => setIsSidebarOpen(false)}
+          />
+        </div>
+      </div>
+
       <main className="flex-1">
         <div className="sticky top-0 bg-background/90 backdrop-blur-sm z-10 px-3 sm:px-6 py-2">
           <div className="flex items-center gap-3">
@@ -120,30 +144,6 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
           </div>
         </div>
       </main>
-
-      <div className={cn(
-        "fixed inset-0 z-50 bg-background/80 backdrop-blur-sm transition-all sm:hidden",
-        isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-      )}>
-        <div className={cn(
-          "fixed inset-y-0 right-0 w-3/4 max-w-xs bg-background shadow-lg transform transition-transform duration-200 ease-in-out",
-          isSidebarOpen ? "translate-x-0" : "translate-x-full"
-        )}>
-          <Sidebar 
-            navigationData={navigationData} 
-            siteInfo={siteData}
-            onClose={() => setIsSidebarOpen(false)}
-          />
-        </div>
-      </div>
-
-      <div className="hidden sm:block">
-        <Sidebar 
-          navigationData={navigationData} 
-          siteInfo={siteData} 
-          className="sticky top-0 h-screen"
-        />
-      </div>
     </div>
   )
 }
