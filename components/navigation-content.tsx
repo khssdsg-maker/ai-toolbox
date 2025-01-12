@@ -23,7 +23,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
-  // 扁平化并分类搜索结果
+  // 修复类型检查
   const searchResults = useMemo(() => {
     const query = searchQuery.toLowerCase().trim()
     if (!query) return []
@@ -38,7 +38,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
 
       // 搜索子分类下的项目
       const subResults = (category.subCategories || []).map(sub => {
-        const subItems = sub.items.filter(item => {
+        const subItems = (sub.items || []).filter(item => {
           const titleMatch = item.title.toLowerCase().includes(query)
           const descMatch = item.description?.toLowerCase().includes(query)
           return titleMatch || descMatch
@@ -125,7 +125,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
                           {subCategory.title}
                         </h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                          {subCategory.items.map((item) => (
+                          {(subCategory.items || []).map((item) => (
                             <NavigationCard key={item.id} item={item} />
                           ))}
                         </div>
@@ -133,7 +133,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
                     ))
                   ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                      {category.items.map((item) => (
+                      {(category.items || []).map((item) => (
                         <NavigationCard key={item.id} item={item} />
                       ))}
                     </div>

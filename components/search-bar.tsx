@@ -3,16 +3,17 @@ import { Input } from '@/registry/new-york/ui/input'
 import { Icons } from '@/components/icons'
 import { Command, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from '@/registry/new-york/ui/command'
 import { useRouter } from 'next/navigation'
+import type { NavigationData, NavigationItem, NavigationSubItem } from '@/types/navigation'
 
 interface SearchBarProps {
   navigationData: NavigationData
   onSearch: (query: string) => void
   searchResults: Array<{
     category: NavigationItem
-    items: NavigationItem[]
+    items: (NavigationItem | NavigationSubItem)[]
     subCategories: Array<{
       title: string
-      items: NavigationItem[]
+      items: (NavigationItem | NavigationSubItem)[]
     }>
   }>
   searchQuery: string
@@ -49,7 +50,12 @@ export function SearchBar({ navigationData, onSearch, searchResults, searchQuery
                 <CommandItem
                   key={item.id}
                   value={item.title}
-                  onSelect={() => router.push(item.href)}
+                  onSelect={() => {
+                    const itemWithHref = item as NavigationSubItem;
+                    if (itemWithHref.href) {
+                      router.push(itemWithHref.href);
+                    }
+                  }}
                   className="flex items-center gap-3 py-3"
                 >
                   <div className="flex-shrink-0 w-8 h-8">
@@ -79,7 +85,12 @@ export function SearchBar({ navigationData, onSearch, searchResults, searchQuery
                     <CommandItem
                       key={item.id}
                       value={item.title}
-                      onSelect={() => router.push(item.href)}
+                      onSelect={() => {
+                        const itemWithHref = item as NavigationSubItem;
+                        if (itemWithHref.href) {
+                          router.push(itemWithHref.href);
+                        }
+                      }}
                       className="flex items-center gap-3 py-3"
                     >
                       <div className="flex-shrink-0 w-8 h-8">
