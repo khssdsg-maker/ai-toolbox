@@ -207,6 +207,14 @@
               "enabled": true
             }
           ]
+        },
+        {
+          "id": "2040df1a-cbcd-40fa-a85c-151b5735fbd2",
+          "title": "画图工具",
+          "icon": "Book",
+          "description": "架构图，流程图",
+          "enabled": true,
+          "items": []
         }
       ]
     },
