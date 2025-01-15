@@ -214,7 +214,16 @@
           "icon": "Book",
           "description": "架构图，流程图",
           "enabled": true,
-          "items": []
+          "items": [
+            {
+              "id": "1736921962115",
+              "title": "drawio",
+              "href": "https://www.drawio.com/",
+              "description": "可以绘制架构图、流程图，软件周期内的其它设计图。为团队绘制安全第一的图表。\n将您的存储带到我们的在线工具，或使用桌面应用程序在本地保存。",
+              "icon": "/assets/img_1736922080517.png",
+              "enabled": true
+            }
+          ]
         }
       ]
     },
