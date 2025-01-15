@@ -226,6 +226,14 @@
           "enabled": true,
           "items": [
             {
+              "id": "1736913194873",
+              "title": "公众号助手",
+              "href": "https://mp.weixin.qq.com/",
+              "description": "公众号管理平台",
+              "icon": "/assets/img_1736913249592.png",
+              "enabled": true
+            },
+            {
               "id": "1736912680039",
               "title": "小红书创作中心",
               "href": "https://creator.xiaohongshu.com/",
@@ -239,14 +247,6 @@
               "href": "https://channels.weixin.qq.com",
               "description": "视频号助手，视频号创作站点",
               "icon": "/assets/img_1736912962033.png",
-              "enabled": true
-            },
-            {
-              "id": "1736913194873",
-              "title": "公众号助手",
-              "href": "https://mp.weixin.qq.com/",
-              "description": "公众号管理平台",
-              "icon": "/assets/img_1736913249592.png",
               "enabled": true
             }
           ]
