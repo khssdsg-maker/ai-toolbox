@@ -249,6 +249,14 @@
               "description": "小红书创作中心",
               "icon": "/assets/img_1736912766835.png",
               "enabled": true
+            },
+            {
+              "id": "1736912858570",
+              "title": "视频号助手",
+              "href": "https://channels.weixin.qq.com",
+              "description": "视频号助手，视频号创作站点",
+              "icon": "/assets/img_1736912962033.png",
+              "enabled": true
             }
           ]
         }
