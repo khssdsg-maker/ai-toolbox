@@ -305,14 +305,6 @@
               "description": "矢量图形和插图。",
               "icon": "/assets/images/logos/Illustrator.png",
               "enabled": true
-            },
-            {
-              "id": "4_4",
-              "title": "indesign",
-              "href": "http://www.adobe.com/cn/products/indesign.html",
-              "description": "页面设计、布局和出版。",
-              "icon": "/assets/images/logos/INDESIGN .png",
-              "enabled": true
             }
           ],
           "enabled": true
