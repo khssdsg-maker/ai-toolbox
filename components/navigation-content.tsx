@@ -143,6 +143,8 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
             ))}
           </div>
         </div>
+        {/* 页脚 */}
+        <Footer siteInfo={siteData} />
       </main>
     </div>
   )
