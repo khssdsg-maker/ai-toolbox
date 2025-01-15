@@ -222,6 +222,14 @@
               "description": "可以绘制架构图、流程图，软件周期内的其它设计图。为团队绘制安全第一的图表。\n将您的存储带到我们的在线工具，或使用桌面应用程序在本地保存。",
               "icon": "/assets/img_1736922080517.png",
               "enabled": true
+            },
+            {
+              "id": "1736922183993",
+              "title": "ProccessOn",
+              "href": "https://www.processon.com/",
+              "description": "ProccessOn是一款优秀的国产在线协作画图软件，非常好用，也非常漂亮。专业强大的作图工具，支持多人实时在线协作，可用于原型图、UML、BPMN、网络拓扑图等多种图形绘制\n",
+              "icon": "/assets/img_1736922262462.png",
+              "enabled": true
             }
           ]
         }
