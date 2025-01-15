@@ -230,6 +230,14 @@
               "description": "ProccessOn是一款优秀的国产在线协作画图软件，非常好用，也非常漂亮。专业强大的作图工具，支持多人实时在线协作，可用于原型图、UML、BPMN、网络拓扑图等多种图形绘制\n",
               "icon": "/assets/img_1736922262462.png",
               "enabled": true
+            },
+            {
+              "id": "1736922380901",
+              "title": "Excalidraw",
+              "href": "https://excalidraw.com/",
+              "description": "Excalidraw是免费的在线协作画图工具。\n\n手写风格的草图非常好看；\n漂亮的图库。",
+              "icon": "/assets/img_1736922499401.png",
+              "enabled": true
             }
           ]
         }
