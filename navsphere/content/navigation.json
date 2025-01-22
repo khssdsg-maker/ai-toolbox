@@ -263,6 +263,14 @@
               "description": "Introducing the Windsurf Editor\nThe new purpose-built IDE to harness magic",
               "icon": "/assets/img_1737529843741.png",
               "enabled": true
+            },
+            {
+              "id": "1737529887245",
+              "title": "GitHub Copilot",
+              "href": "https://github.com/features/copilot",
+              "description": "The AI editor for everyone",
+              "icon": "/assets/img_1737530043708.png",
+              "enabled": true
             }
           ]
         }
