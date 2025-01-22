@@ -247,7 +247,16 @@
           "icon": "Edit",
           "description": "",
           "enabled": true,
-          "items": []
+          "items": [
+            {
+              "id": "1737529639971",
+              "title": "Cursor",
+              "href": "https://www.cursor.com/",
+              "description": "The AI Code Editor Built to make you extraordinarily productive, Cursor is the best way to code with AI.",
+              "icon": "/assets/img_1737529713172.png",
+              "enabled": true
+            }
+          ]
         }
       ]
     },
