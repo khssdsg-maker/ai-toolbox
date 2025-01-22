@@ -240,6 +240,14 @@
               "enabled": true
             }
           ]
+        },
+        {
+          "id": "62f10118-6926-4ea5-bb65-14adc90a29d2",
+          "title": "AI编程工具",
+          "icon": "Edit",
+          "description": "",
+          "enabled": true,
+          "items": []
         }
       ]
     },
