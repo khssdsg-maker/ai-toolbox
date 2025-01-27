@@ -339,6 +339,14 @@
               "description": "WeChat Markdown Editor | 一款高度简洁的微信 Markdown 编辑器：支持 Markdown 语法、色盘取色、多图上传、一键下载文档、自定义 CSS 样式、一键重置等特性",
               "icon": "/assets/img_1735433660193.png",
               "enabled": true
+            },
+            {
+              "id": "1737961258110",
+              "title": "mdnice",
+              "href": "https://editor.mdnice.com/",
+              "description": "微信公众号样式一键转换，知乎/语雀专属排版优化",
+              "icon": "/assets/img_1737961266055.png",
+              "enabled": true
             }
           ]
         }
