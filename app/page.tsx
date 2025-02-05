@@ -1,5 +1,6 @@
-export const runtime = 'edge'
-export const dynamic = 'force-static'
+// export const runtime = 'edge'
+export const dynamic = 'force-dynamic'
+export const revalidate = 3600 // Revalidate every hour
 
 import { NavigationContent } from '@/components/navigation-content'
 import { headers } from 'next/headers'
@@ -15,16 +16,8 @@ async function getData() {
     console.log('Building with base URL:', baseUrl) // 添加构建日志
 
     const [navigationRes, siteRes] = await Promise.all([
-      fetch(new URL('/api/home/navigation', baseUrl).toString(), { 
-        next: {
-                  revalidate: 3600*24 // 1 hour
-                }
-      }),
-      fetch(new URL('/api/home/site', baseUrl).toString(), { 
-       next: {
-                 revalidate: 3600*24 // 1 hour
-               }
-      })
+      fetch(new URL('/api/home/navigation', baseUrl).toString()),
+      fetch(new URL('/api/home/site', baseUrl).toString())
     ])
 
     if (!navigationRes.ok || !siteRes.ok) {
