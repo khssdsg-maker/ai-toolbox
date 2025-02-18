@@ -118,6 +118,14 @@
               "description": "Poe一款由Quora开发的应用程序。该应用程序集成了多种生成式人工智能，可使用户能够便利切换，比较和使用市场上主流的大型语言模型。",
               "icon": "/assets/images/logos/poe.svg",
               "enabled": true
+            },
+            {
+              "id": "1739871926277",
+              "title": "perplexity",
+              "href": "https://www.perplexity.ai/",
+              "description": "一个人工智能助手，旨在为您提供信息、解答问题和帮助您完成各种任务。",
+              "icon": "/assets/img_1739871936809.png",
+              "enabled": true
             }
           ]
         },
