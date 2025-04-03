@@ -68,6 +68,14 @@
           "description": "截图美化，套上不同设备的壳，浏览器、iPhone、iPad、MacBook，Apple Watch",
           "icon": "/assets/images/logos/shots.webp",
           "enabled": true
+        },
+        {
+          "id": "1741747111596",
+          "title": "PostSpark",
+          "href": "https://postspark.app/",
+          "description": "Beautiful Screenshots and Mockups\nCusomizable, eye-catching presentation for any content",
+          "icon": "/assets/img_1741747241014.png",
+          "enabled": true
         }
       ],
       "subCategories": [],
@@ -117,6 +125,14 @@
               "href": "https://poe.com/",
               "description": "Poe一款由Quora开发的应用程序。该应用程序集成了多种生成式人工智能，可使用户能够便利切换，比较和使用市场上主流的大型语言模型。",
               "icon": "/assets/images/logos/poe.svg",
+              "enabled": true
+            },
+            {
+              "id": "1739871926277",
+              "title": "perplexity",
+              "href": "https://www.perplexity.ai/",
+              "description": "一个人工智能助手，旨在为您提供信息、解答问题和帮助您完成各种任务。",
+              "icon": "/assets/img_1739871936809.png",
               "enabled": true
             }
           ]
