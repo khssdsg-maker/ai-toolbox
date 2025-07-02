@@ -205,6 +205,14 @@
               "description": "Build your component library\nBeautifully designed components that you can copy and paste into your apps. Made with Tailwind CSS. Open source.",
               "icon": "/assets/img_1735265752690.png",
               "enabled": true
+            },
+            {
+              "id": "1751433573273",
+              "title": "shadcn ui  Theme",
+              "href": "https://tweakcn.com/",
+              "description": "Design Your Perfect \nshadcn/ui\n Theme\nCustomize colors, typography, and layouts with a real-time preview. No signup required.",
+              "icon": "/assets/img_1751433579053.png",
+              "enabled": true
             }
           ]
         },
