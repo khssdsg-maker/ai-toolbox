@@ -345,6 +345,14 @@
               "description": "The AI IDE for prototype to production\n",
               "icon": "/assets/img_1752662633580.png",
               "enabled": true
+            },
+            {
+              "id": "1752662747639",
+              "title": "Claude code",
+              "href": "https://www.anthropic.com/claude-code",
+              "description": "Unleash Claude’s raw power directly in your terminal. Search million-line codebases instantly. Turn hours-long workflows into a single command. Your tools. Your workflow. Your codebase, evolving at thought speed.",
+              "icon": "/assets/img_1752662771107.png",
+              "enabled": true
             }
           ]
         }
