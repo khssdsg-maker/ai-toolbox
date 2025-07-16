@@ -337,6 +337,14 @@
               "description": "字节新出的 Cursor 竞品 Trae ，可以用 claude3.5，限时免费\n，它的 Builder 相当于 Cursor 的 Composer 和 Agent 合体，建议默认使用 Builder。",
               "icon": "/assets/img_1737530421138.png",
               "enabled": true
+            },
+            {
+              "id": "1752662613676",
+              "title": "Kiro",
+              "href": "https://kiro.dev/",
+              "description": "The AI IDE for prototype to production\n",
+              "icon": "/assets/img_1752662633580.png",
+              "enabled": true
             }
           ]
         }
