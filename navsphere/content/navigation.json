@@ -161,6 +161,23 @@
               "enabled": true
             }
           ]
+        },
+        {
+          "id": "21bf96f3-acb0-4e28-aaa8-2759ac55d278",
+          "title": "MCP Server",
+          "icon": "Edit",
+          "description": "",
+          "enabled": true,
+          "items": [
+            {
+              "id": "1752554261491",
+              "title": "MCP Server 集合站",
+              "href": "https://smithery.ai/",
+              "description": "各种各样的 MCP Server",
+              "icon": "/assets/img_1752554273115.png",
+              "enabled": true
+            }
+          ]
         }
       ],
       "description": "",
@@ -175,6 +192,23 @@
       "items": [],
       "subCategories": [
         {
+          "id": "85e2f8e6-8b32-4452-9022-2ff45065ecf9",
+          "title": "ICON",
+          "icon": "BookOpen",
+          "description": "站点图标",
+          "enabled": true,
+          "items": [
+            {
+              "id": "1750831228317",
+              "title": "lucide",
+              "href": "https://lucide.dev/icons/house",
+              "description": "Beautiful &\nconsistent icons",
+              "icon": "/assets/img_1750831362985.png",
+              "enabled": true
+            }
+          ]
+        },
+        {
           "id": "2ac7e66f-d3ff-4cec-85f9-c2af42c85608",
           "title": "UI框架",
           "icon": "Files",
@@ -187,6 +221,14 @@
               "href": "https://ui.shadcn.com/",
               "description": "Build your component library\nBeautifully designed components that you can copy and paste into your apps. Made with Tailwind CSS. Open source.",
               "icon": "/assets/img_1735265752690.png",
+              "enabled": true
+            },
+            {
+              "id": "1751433573273",
+              "title": "shadcn ui  Theme",
+              "href": "https://tweakcn.com/",
+              "description": "Design Your Perfect \nshadcn/ui\n Theme\nCustomize colors, typography, and layouts with a real-time preview. No signup required.",
+              "icon": "/assets/img_1751433579053.png",
               "enabled": true
             }
           ]
@@ -294,6 +336,22 @@
               "href": "https://www.trae.ai/",
               "description": "字节新出的 Cursor 竞品 Trae ，可以用 claude3.5，限时免费\n，它的 Builder 相当于 Cursor 的 Composer 和 Agent 合体，建议默认使用 Builder。",
               "icon": "/assets/img_1737530421138.png",
+              "enabled": true
+            },
+            {
+              "id": "1752662613676",
+              "title": "Kiro",
+              "href": "https://kiro.dev/",
+              "description": "The AI IDE for prototype to production\n",
+              "icon": "/assets/img_1752662633580.png",
+              "enabled": true
+            },
+            {
+              "id": "1752662747639",
+              "title": "Claude code",
+              "href": "https://www.anthropic.com/claude-code",
+              "description": "Unleash Claude’s raw power directly in your terminal. Search million-line codebases instantly. Turn hours-long workflows into a single command. Your tools. Your workflow. Your codebase, evolving at thought speed.",
+              "icon": "/assets/img_1752662771107.png",
               "enabled": true
             }
           ]
