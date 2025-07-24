@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import navigation from '@/navsphere/content/navigation.json'
 import { NavigationCategory } from '@/types/navigation'
+export const runtime = 'edge'
 
 export async function GET() {
   try {
