@@ -8,7 +8,7 @@ import { Sidebar } from '@/components/sidebar'
 import { SearchBar } from '@/components/search-bar'
 import { ModeToggle } from '@/components/mode-toggle'
 import { Footer } from '@/components/footer'
-import { Github } from 'lucide-react'
+import { Github, HelpCircle } from 'lucide-react'
 import { Button } from "@/registry/new-york/ui/button"
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
@@ -61,9 +61,9 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
   return (
     <div className="flex flex-col sm:flex-row min-h-screen">
       <div className="hidden sm:block">
-        <Sidebar 
-          navigationData={navigationData} 
-          siteInfo={siteData} 
+        <Sidebar
+          navigationData={navigationData}
+          siteInfo={siteData}
           className="sticky top-0 h-screen"
         />
       </div>
@@ -76,8 +76,8 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
           "fixed inset-y-0 right-0 sm:left-0 w-3/4 max-w-xs bg-background shadow-lg transform transition-transform duration-200 ease-in-out",
           isSidebarOpen ? "translate-x-0" : "translate-x-full sm:-translate-x-full"
         )}>
-          <Sidebar 
-            navigationData={navigationData} 
+          <Sidebar
+            navigationData={navigationData}
             siteInfo={siteData}
             onClose={() => setIsSidebarOpen(false)}
           />
@@ -88,8 +88,8 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
         <div className="sticky top-0 bg-background/90 backdrop-blur-sm z-10 px-3 sm:px-6 py-2">
           <div className="flex items-center gap-3">
             <div className="flex-1">
-              <SearchBar 
-                navigationData={navigationData} 
+              <SearchBar
+                navigationData={navigationData}
                 onSearch={handleSearch}
                 searchResults={searchResults}
                 searchQuery={searchQuery}
@@ -97,6 +97,34 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
             </div>
             <div className="flex items-center gap-1">
               <ModeToggle />
+              <Link
+                href="https://github.com/tianyaxiang/NavSphere"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="访问 GitHub 仓库"
+              >
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="hover:bg-accent hover:text-accent-foreground"
+                >
+                  <Github className="h-5 w-5" />
+                </Button>
+              </Link>
+              <Link
+                href="https://mp.weixin.qq.com/s/90LUmKilfLZfc5L63Ej3Sg"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="查看帮助文档"
+              >
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="hover:bg-accent hover:text-accent-foreground"
+                >
+                  <HelpCircle className="h-5 w-5" />
+                </Button>
+              </Link>
               <Button
                 variant="ghost"
                 size="icon"
@@ -108,7 +136,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
             </div>
           </div>
         </div>
-        
+
         <div className="px-3 sm:px-6 py-3 sm:py-6">
           <div className="space-y-6">
             {navigationData.navigationItems.map((category) => (
