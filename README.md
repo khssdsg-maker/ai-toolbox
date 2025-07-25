@@ -242,6 +242,59 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
    
    项目已包含 `wrangler.toml` 配置文件，确保 Cloudflare Pages 兼容性。
 
+### Docker 部署
+
+项目支持 Docker 容器化部署，适合自托管环境。
+
+#### 快速部署
+
+1. **克隆项目**
+```bash
+git clone https://github.com/tianyaxiang/NavSphere.git
+cd NavSphere
+```
+
+2. **配置环境变量**
+```bash
+cp .env.example .env.local
+# 编辑 .env.local 文件，配置必要的环境变量
+```
+
+#### 手动部署
+
+1. **构建镜像**
+```bash
+docker build -f docker/Dockerfile -t navsphere:latest .
+```
+
+2. **使用 Docker Compose**
+```bash
+# 开发环境
+docker-compose -f docker/docker-compose.yml up -d
+
+# 生产环境
+docker-compose -f docker/docker-compose.prod.yml up -d
+```
+
+3. **检查服务状态**
+```bash
+# 查看容器状态
+docker-compose -f docker/docker-compose.yml ps
+
+# 查看日志
+docker-compose -f docker/docker-compose.yml logs -f
+
+# 停止服务
+docker-compose -f docker/docker-compose.yml down
+```
+
+#### Docker 配置说明
+
+- **端口映射**: 容器内部端口 3000 映射到主机端口 3000
+- **环境变量**: 通过 `.env.local` 文件注入
+- **健康检查**: 内置健康检查端点 `/api/health`
+- **自动重启**: 容器异常退出时自动重启
+
 ### 其他部署平台
 
 - **Netlify**: 需要配置构建命令  
