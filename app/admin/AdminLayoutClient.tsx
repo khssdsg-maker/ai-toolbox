@@ -18,6 +18,7 @@ import {
   Moon,
   Sun,
   Monitor,
+  Database,
 } from "lucide-react"
 import { cn } from '@/lib/utils'
 import {
@@ -74,6 +75,11 @@ const menuItems = [
         href: "/admin/resources/load"
       }
     ]
+  },
+  {
+    title: "数据管理",
+    href: "/admin/data",
+    icon: Database
   },
   {
     title: "站点设置",
