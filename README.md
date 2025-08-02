@@ -468,6 +468,19 @@ NavSphere/
 6. **查看构建日志**: 在 Cloudflare Pages Dashboard 中查看详细的构建和部署日志
 </details>
 
+
+## 💖 支持我们
+
+如果这个项目对你有帮助，欢迎支持我们的开发工作！
+
+<p align="center">
+  <img src="doc/a.jpg" alt="打赏码" width="200" />
+</p>
+
+<p align="center">
+  <strong>扫码支持 | 您的支持是我们持续开发的动力</strong>
+</p>
+
 ## 🤝 贡献指南
 
 我们欢迎所有形式的贡献！
@@ -498,6 +511,7 @@ NavSphere/
 - [Radix UI](https://www.radix-ui.com/) - 无障碍组件库
 - [Cloudflare Pages](https://pages.cloudflare.com/) - 可靠的部署平台
 - 所有为项目做出贡献的开发者
+
 
 ---
 
