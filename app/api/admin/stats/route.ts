@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server'
-import navigation from '@/navsphere/content/navigation.json'
+import { getFileContent } from '@/lib/github'
 import { NavigationCategory } from '@/types/navigation'
 export const runtime = 'edge'
 
 export async function GET() {
   try {
-    const navigationItems = navigation.navigationItems || []
+    // 动态读取最新的导航数据，而不是静态导入
+    const navigationData = await getFileContent('navsphere/content/navigation.json')
+    const navigationItems = navigationData.navigationItems || []
     
     // 计算一级分类数量
     const parentCategories = navigationItems.length
