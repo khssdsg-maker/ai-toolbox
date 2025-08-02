@@ -474,7 +474,7 @@ NavSphere/
 如果这个项目对你有帮助，欢迎支持我们的开发工作！
 
 <p align="center">
-  <img src="doc/a.jpg" alt="打赏码" width="200" />
+  <img src="doc/a.jpg" alt="打赏码" width="300" />
 </p>
 
 <p align="center">
