@@ -412,9 +412,16 @@ export default function CategoriesPage() {
                             <div>
                               <div className="flex items-center gap-2">
                                 <span className="font-medium leading-none">{category.title}</span>
-                                {!category.enabled && (
-                                  <Badge variant="secondary" className="text-xs">已禁用</Badge>
-                                )}
+                                <Badge 
+                                  variant={(category.enabled ?? true) ? "default" : "secondary"}
+                                  className={
+                                    (category.enabled ?? true)
+                                      ? "text-xs bg-green-100 text-green-800 hover:bg-green-100" 
+                                      : "text-xs bg-gray-100 text-gray-600 hover:bg-gray-100"
+                                  }
+                                >
+                                  {(category.enabled ?? true) ? "已启用" : "已禁用"}
+                                </Badge>
                               </div>
                               {category.description && (
                                 <div className="text-xs text-muted-foreground mt-1">
@@ -513,7 +520,7 @@ export default function CategoriesPage() {
               title: editingCategory?.category.title || '',
               icon: editingCategory?.category.icon || '',
               description: editingCategory?.category.description || '',
-              enabled: editingCategory?.category.enabled || true
+              enabled: editingCategory?.category.enabled ?? true
             }}
             onSubmit={editCategory}
             onCancel={() => setEditingCategory(null)}
