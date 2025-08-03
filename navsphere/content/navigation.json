@@ -79,11 +79,11 @@
         },
         {
           "id": "item-1754203752738",
-          "enabled": true,
           "title": "Any Router",
-          "href": "https://anyrouter.top/console/log",
+          "href": "https://anyrouter.top/",
           "description": "",
-          "icon": "https://anyrouter.top/logo.png"
+          "icon": "https://anyrouter.top/logo.png",
+          "enabled": true
         }
       ],
       "subCategories": [],
