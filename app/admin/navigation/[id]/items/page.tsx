@@ -21,7 +21,7 @@ import {
 import { AddItemForm } from '../../components/AddItemForm'
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { Skeleton } from "@/registry/new-york/ui/skeleton"
-import { Label } from "@/registry/new-york/ui/label"
+
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/registry/new-york/ui/select"
 import { Badge } from "@/registry/new-york/ui/badge"
 
