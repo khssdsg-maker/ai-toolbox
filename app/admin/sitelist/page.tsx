@@ -2,7 +2,7 @@
 
 export const runtime = 'edge'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from "@/registry/new-york/ui/button"
 import { useToast } from "@/registry/new-york/hooks/use-toast"
@@ -103,6 +103,10 @@ export default function SiteListPage() {
   const [isUploadingAddIcon, setIsUploadingAddIcon] = useState(false)
   const [isUploadingEditIcon, setIsUploadingEditIcon] = useState(false)
   const [isBatchDeleting, setIsBatchDeleting] = useState(false)
+  const [isFetchingAddMetadata, setIsFetchingAddMetadata] = useState(false)
+  const [isFetchingEditMetadata, setIsFetchingEditMetadata] = useState(false)
+  const lastFetchedAddUrl = useRef<string>('')
+  const lastFetchedEditUrl = useRef<string>('')
   const [newSite, setNewSite] = useState({
     name: '',
     url: '',
@@ -125,6 +129,42 @@ export default function SiteListPage() {
     console.log('useEffect triggered')
     fetchSites()
   }, [])
+
+  // 监听添加站点URL变化，自动获取网站信息
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (newSite.url &&
+        isValidUrl(newSite.url) &&
+        showAddDialog &&
+        !isFetchingAddMetadata &&
+        newSite.url !== lastFetchedAddUrl.current) {
+        lastFetchedAddUrl.current = newSite.url
+        fetchWebsiteMetadata(newSite.url, false, true)
+      }
+    }, 1000) // 延迟1秒执行，避免频繁请求
+
+    return () => clearTimeout(timeoutId)
+  }, [newSite.url, showAddDialog])
+
+  // 监听编辑站点URL变化，自动获取网站信息
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (editSite.url &&
+        isValidUrl(editSite.url) &&
+        showEditDialog &&
+        editingSite &&
+        !isFetchingEditMetadata &&
+        editSite.url !== lastFetchedEditUrl.current) {
+        // 只有当URL与原始URL不同时才自动获取
+        if (editSite.url !== editingSite.url) {
+          lastFetchedEditUrl.current = editSite.url
+          fetchWebsiteMetadata(editSite.url, true, true)
+        }
+      }
+    }, 1000)
+
+    return () => clearTimeout(timeoutId)
+  }, [editSite.url, showEditDialog, editingSite])
 
 
 
@@ -804,6 +844,79 @@ export default function SiteListPage() {
     )
   }
 
+  const isValidUrl = (string: string): boolean => {
+    try {
+      new URL(string)
+      return true
+    } catch (_) {
+      return false
+    }
+  }
+
+  const fetchWebsiteMetadata = async (url: string, isEdit: boolean = false, forceUpdate: boolean = false) => {
+    const setFetching = isEdit ? setIsFetchingEditMetadata : setIsFetchingAddMetadata
+    const setSite = isEdit ? setEditSite : setNewSite
+    const site = isEdit ? editSite : newSite
+
+    const isFetching = isEdit ? isFetchingEditMetadata : isFetchingAddMetadata
+    if (isFetching) return
+
+    setFetching(true)
+    try {
+      const response = await fetch('/api/website-metadata', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url }),
+      })
+
+      if (!response.ok) {
+        throw new Error('获取网站信息失败')
+      }
+
+      const metadata = await response.json()
+
+      // 根据forceUpdate决定是否覆盖已有信息
+      const updates: any = {}
+      if (forceUpdate || !site.name) {
+        updates.name = metadata.title
+      }
+      if (forceUpdate || !site.description) {
+        updates.description = metadata.description
+      }
+      if ((forceUpdate || !site.icon) && metadata.icon) {
+        updates.icon = metadata.icon
+      }
+
+      if (Object.keys(updates).length > 0) {
+        setSite({ ...site, ...updates })
+        toast({
+          title: "成功",
+          description: "已自动获取网站信息"
+        })
+      } else {
+        toast({
+          title: "提示",
+          description: "网站信息已是最新，无需更新"
+        })
+      }
+    } catch (error) {
+      console.error('Failed to fetch website metadata:', error)
+      toast({
+        title: "提示",
+        description: "自动获取网站信息失败，请手动填写",
+        variant: "destructive"
+      })
+    }
+
+    // 确保在所有操作完成后设置loading状态为false
+    // 使用setTimeout确保状态更新不被批处理影响
+    setTimeout(() => {
+      setFetching(false)
+    }, 0)
+  }
+
   const handleIconUpload = async (file: File, isEdit: boolean = false) => {
     const setUploading = isEdit ? setIsUploadingEditIcon : setIsUploadingAddIcon
     const setSite = isEdit ? setEditSite : setNewSite
@@ -954,6 +1067,16 @@ export default function SiteListPage() {
 
             <Dialog open={showAddDialog} onOpenChange={(open) => {
               if (open) {
+                // 重置表单
+                setNewSite({
+                  name: '',
+                  url: '',
+                  description: '',
+                  icon: '',
+                  categoryId: '',
+                  subCategoryId: ''
+                })
+                lastFetchedAddUrl.current = ''
                 setShowAddDialog(true)
               } else if (!isAddingSubmitting) {
                 setShowAddDialog(false)
@@ -968,42 +1091,78 @@ export default function SiteListPage() {
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                   <DialogTitle>添加站点</DialogTitle>
-                  <DialogDescription>
-                    添加新的站点到导航中
-                  </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="url">站点链接 *</Label>
+                    <div className="flex items-center space-x-2">
+                      <div className="relative flex-1">
+                        <Input
+                          id="url"
+                          value={newSite.url}
+                          onChange={(e) => setNewSite({ ...newSite, url: e.target.value })}
+                          placeholder="输入网站链接，将自动获取网站信息"
+                          disabled={isAddingSubmitting}
+                        />
+                        {isFetchingAddMetadata && (
+                          <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                            <Icons.loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                          </div>
+                        )}
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        disabled={!newSite.url || !isValidUrl(newSite.url) || isFetchingAddMetadata || isAddingSubmitting}
+                        onClick={() => fetchWebsiteMetadata(newSite.url, false, true)}
+                      >
+                        {isFetchingAddMetadata ? (
+                          <Icons.loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Icons.refresh className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      输入完整的网站链接后，系统将自动获取网站标题、描述和图标
+                    </div>
+                  </div>
                   <div className="grid gap-2">
                     <Label htmlFor="name">站点名称 *</Label>
                     <Input
                       id="name"
                       value={newSite.name}
                       onChange={(e) => setNewSite({ ...newSite, name: e.target.value })}
-                      placeholder="输入站点名称"
-                      disabled={isAddingSubmitting}
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="url">站点链接 *</Label>
-                    <Input
-                      id="url"
-                      value={newSite.url}
-                      onChange={(e) => setNewSite({ ...newSite, url: e.target.value })}
-                      placeholder="https://example.com"
+                      placeholder="站点名称（可自动获取）"
                       disabled={isAddingSubmitting}
                     />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="icon">站点图标</Label>
                     <div className="flex items-center space-x-2">
-                      <Input
-                        id="icon"
-                        value={newSite.icon}
-                        onChange={(e) => setNewSite({ ...newSite, icon: e.target.value })}
-                        placeholder="输入图标URL（可选）"
-                        disabled={isAddingSubmitting}
-                        className="flex-1"
-                      />
+                      <div className="flex-1 relative">
+                        <Input
+                          id="icon"
+                          value={newSite.icon}
+                          onChange={(e) => setNewSite({ ...newSite, icon: e.target.value })}
+                          placeholder="图标URL（可自动获取）"
+                          disabled={isAddingSubmitting}
+                        />
+                        {newSite.icon && (
+                          <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                            <img
+                              src={newSite.icon}
+                              alt="图标预览"
+                              className="w-4 h-4 object-contain"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement
+                                target.style.display = 'none'
+                              }}
+                            />
+                          </div>
+                        )}
+                      </div>
                       <Button
                         type="button"
                         variant="outline"
@@ -1043,6 +1202,9 @@ export default function SiteListPage() {
                           className="hidden"
                         />
                       </Button>
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      系统会自动获取网站图标，也可手动输入URL或上传本地图片
                     </div>
                   </div>
                   <div className="grid gap-2">
@@ -1130,42 +1292,78 @@ export default function SiteListPage() {
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                   <DialogTitle>编辑站点</DialogTitle>
-                  <DialogDescription>
-                    修改站点信息
-                  </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="edit-url">站点链接 *</Label>
+                    <div className="flex items-center space-x-2">
+                      <div className="relative flex-1">
+                        <Input
+                          id="edit-url"
+                          value={editSite.url}
+                          onChange={(e) => setEditSite({ ...editSite, url: e.target.value })}
+                          placeholder="输入网站链接，将自动获取网站信息"
+                          disabled={isEditingSubmitting}
+                        />
+                        {isFetchingEditMetadata && (
+                          <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                            <Icons.loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                          </div>
+                        )}
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        disabled={!editSite.url || !isValidUrl(editSite.url) || isFetchingEditMetadata || isEditingSubmitting}
+                        onClick={() => fetchWebsiteMetadata(editSite.url, true, true)}
+                      >
+                        {isFetchingEditMetadata ? (
+                          <Icons.loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Icons.refresh className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      输入完整的网站链接后，系统将自动获取网站标题、描述和图标
+                    </div>
+                  </div>
                   <div className="grid gap-2">
                     <Label htmlFor="edit-name">站点名称 *</Label>
                     <Input
                       id="edit-name"
                       value={editSite.name}
                       onChange={(e) => setEditSite({ ...editSite, name: e.target.value })}
-                      placeholder="输入站点名称"
-                      disabled={isEditingSubmitting}
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="edit-url">站点链接 *</Label>
-                    <Input
-                      id="edit-url"
-                      value={editSite.url}
-                      onChange={(e) => setEditSite({ ...editSite, url: e.target.value })}
-                      placeholder="https://example.com"
+                      placeholder="站点名称（可自动获取）"
                       disabled={isEditingSubmitting}
                     />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="edit-icon">站点图标</Label>
                     <div className="flex items-center space-x-2">
-                      <Input
-                        id="edit-icon"
-                        value={editSite.icon}
-                        onChange={(e) => setEditSite({ ...editSite, icon: e.target.value })}
-                        placeholder="输入图标URL（可选）"
-                        disabled={isEditingSubmitting}
-                        className="flex-1"
-                      />
+                      <div className="flex-1 relative">
+                        <Input
+                          id="edit-icon"
+                          value={editSite.icon}
+                          onChange={(e) => setEditSite({ ...editSite, icon: e.target.value })}
+                          placeholder="图标URL（可自动获取）"
+                          disabled={isEditingSubmitting}
+                        />
+                        {editSite.icon && (
+                          <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                            <img
+                              src={editSite.icon}
+                              alt="图标预览"
+                              className="w-4 h-4 object-contain"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement
+                                target.style.display = 'none'
+                              }}
+                            />
+                          </div>
+                        )}
+                      </div>
                       <Button
                         type="button"
                         variant="outline"
@@ -1205,6 +1403,9 @@ export default function SiteListPage() {
                           className="hidden"
                         />
                       </Button>
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      系统会自动获取网站图标，也可手动输入URL或上传本地图片
                     </div>
                   </div>
                   <div className="grid gap-2">
