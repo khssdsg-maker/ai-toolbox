@@ -378,7 +378,16 @@
           "icon": "Files",
           "description": "",
           "enabled": true,
-          "items": []
+          "items": [
+            {
+              "id": "1754295485849",
+              "title": "Buy a domain name - Register cheap domain names from $0.99 - Namecheap",
+              "href": "https://www.namecheap.com/",
+              "description": "Register domain names at Namecheap. Buy cheap domain names and enjoy 24/7 support. With over 18 million domains under management, you know you’re in good hands.",
+              "icon": "/assets/favicon_1754295511938.ico",
+              "enabled": true
+            }
+          ]
         }
       ]
     },
