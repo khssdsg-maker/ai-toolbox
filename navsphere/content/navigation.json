@@ -371,6 +371,14 @@
               "enabled": true
             }
           ]
+        },
+        {
+          "id": "47206329-6eed-422c-bdc9-c7cec1eb5190",
+          "title": "域名注册",
+          "icon": "Files",
+          "description": "",
+          "enabled": true,
+          "items": []
         }
       ]
     },
