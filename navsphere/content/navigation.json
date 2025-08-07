@@ -481,6 +481,14 @@
               "enabled": true
             }
           ]
+        },
+        {
+          "id": "0ed6d8b1-effe-4535-8cde-60ec38f9c96c",
+          "title": "AI 检测工具",
+          "icon": "BookOpen",
+          "description": "",
+          "enabled": true,
+          "items": []
         }
       ]
     },
