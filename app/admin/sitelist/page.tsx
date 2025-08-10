@@ -985,12 +985,24 @@ export default function SiteListPage() {
               </span>
             </div>
             <div className="flex gap-4">
-              <Input
-                placeholder="搜索站点..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="max-w-sm"
-              />
+              <div className="relative max-w-sm">
+                <Input
+                  placeholder="搜索站点..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pr-8"
+                />
+                {searchQuery && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 p-0 hover:bg-muted"
+                    onClick={() => setSearchQuery('')}
+                  >
+                    <Icons.x className="h-3 w-3" />
+                  </Button>
+                )}
+              </div>
               <Select
                 value={categoryFilter}
                 onValueChange={(value) => {
