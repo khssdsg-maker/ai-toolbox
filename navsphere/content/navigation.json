@@ -462,6 +462,14 @@
               "description": "微信公众号样式一键转换，知乎/语雀专属排版优化",
               "icon": "/assets/img_1737961266055.png",
               "enabled": true
+            },
+            {
+              "id": "1754791158725",
+              "title": "NeuraPress",
+              "href": "https://md.leti.ltd/",
+              "description": "Markdown 转微信公众号内容神器",
+              "icon": "/assets/favicon_1754791168416.svg",
+              "enabled": true
             }
           ]
         },
