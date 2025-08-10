@@ -440,6 +440,14 @@
           "enabled": true,
           "items": [
             {
+              "id": "1754791068961",
+              "title": "NeuraPress Pro Markdown Editor",
+              "href": "https://mp.leti.ltd/",
+              "description": "NeuraPress 是一个现代化的 Markdown 编辑器，专注于提供优质的内容排版体验。 响应式设计，支持移动设备，让创作变得更加高效。\n\n",
+              "icon": "/assets/favicon_1754791082337.svg",
+              "enabled": true
+            },
+            {
               "id": "1735456910129",
               "title": "WeChat Markdown Editor",
               "href": "https://doocs.github.io/md/",
@@ -453,14 +461,6 @@
               "href": "https://editor.mdnice.com/",
               "description": "微信公众号样式一键转换，知乎/语雀专属排版优化",
               "icon": "/assets/img_1737961266055.png",
-              "enabled": true
-            },
-            {
-              "id": "1754791068961",
-              "title": "NeuraPress Pro Markdown Editor",
-              "href": "https://mp.leti.ltd/",
-              "description": "NeuraPress 是一个现代化的 Markdown 编辑器，专注于提供优质的内容排版体验。 响应式设计，支持移动设备，让创作变得更加高效。\n\n",
-              "icon": "/assets/favicon_1754791082337.svg",
               "enabled": true
             }
           ]
