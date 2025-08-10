@@ -330,10 +330,25 @@ export default function SiteListPage() {
         event.preventDefault()
         setSelectedSites([])
       }
-      // Ctrl+A 全选
-      if (event.ctrlKey && event.key === 'a' && filteredSites.length > 0) {
-        event.preventDefault()
-        setSelectedSites(filteredSites.map(site => site.id))
+      // Ctrl+A 处理
+      if (event.ctrlKey && event.key === 'a') {
+        const activeElement = document.activeElement
+        const isInputFocused = activeElement && (
+          activeElement.tagName === 'INPUT' ||
+          activeElement.tagName === 'TEXTAREA' ||
+          activeElement.hasAttribute('contenteditable')
+        )
+
+        // 如果有弹窗打开或者输入框有焦点，让浏览器处理默认行为（选中输入框内容）
+        if (showAddDialog || showEditDialog || isInputFocused) {
+          return // 不阻止默认行为，让输入框正常选中内容
+        }
+
+        // 只有在主列表区域且有站点时才全选站点
+        if (filteredSites.length > 0) {
+          event.preventDefault()
+          setSelectedSites(filteredSites.map(site => site.id))
+        }
       }
     }
 
@@ -341,7 +356,7 @@ export default function SiteListPage() {
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [selectedSites, showDeleteDialog, filteredSites])
+  }, [selectedSites, showDeleteDialog, filteredSites, showAddDialog, showEditDialog])
 
   const handleSelectAll = (checked: boolean | string) => {
     if (checked === true) {
