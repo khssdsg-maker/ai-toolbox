@@ -29,6 +29,17 @@ export function Sidebar({ className, navigationData, siteInfo, onClose }: Sideba
     }
   }
 
+  const handleCategoryClick = (categoryId: string) => {
+    // 先跳转到对应区域
+    scrollToSection(categoryId)
+    
+    // 如果有子分类，切换展开/收起状态
+    const category = navigationData.navigationItems.find(cat => cat.id === categoryId)
+    if (category?.subCategories && category.subCategories.length > 0) {
+      toggleCategory(categoryId)
+    }
+  }
+
   const renderIcon = (iconName?: string) => {
     if (!iconName) return <LucideIcons.Folder className="h-4 w-4" />;
     
@@ -91,7 +102,7 @@ export function Sidebar({ className, navigationData, siteInfo, onClose }: Sideba
                 <Button
                   variant="ghost"
                   className="flex-1 justify-start gap-2 font-medium text-muted-foreground hover:text-foreground"
-                  onClick={() => scrollToSection(category.id)}
+                  onClick={() => handleCategoryClick(category.id)}
                 >
                   {renderIcon(category.icon)}
                   <span>{category.title}</span>
