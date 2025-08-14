@@ -1,0 +1,10 @@
+# Cloudflare Pages redirects and rewrites
+
+# Handle Next.js API routes
+/api/* /api/:splat 200
+
+# Handle authentication routes
+/auth/* /auth/:splat 200
+
+# SPA fallback for client-side routing
+/* /index.html 200
