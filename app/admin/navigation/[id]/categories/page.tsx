@@ -533,7 +533,7 @@ export default function CategoriesPage() {
           <DialogHeader>
             <DialogTitle>删除确认</DialogTitle>
             <DialogDescription>
-              确定要删除分类 "{deletingCategory?.category.title}" 吗？此操作无法撤销，分类下的所有项目也将被删除。
+              确定要删除分类 &ldquo;{deletingCategory?.category.title}&rdquo; 吗？此操作无法撤销，分类下的所有项目也将被删除。
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

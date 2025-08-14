@@ -1828,7 +1828,7 @@ export default function SiteListPage() {
             <AlertDialogHeader>
               <AlertDialogTitle>确认删除站点</AlertDialogTitle>
               <AlertDialogDescription>
-                确定要删除站点 "{deletingSite?.name}" 吗？此操作无法撤销。
+                确定要删除站点 &ldquo;{deletingSite?.name}&rdquo; 吗？此操作无法撤销。
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

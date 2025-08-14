@@ -1,4 +1,3 @@
-export const runtime = 'edge'
 export const dynamic = 'force-dynamic'
 export const revalidate = 3600 // Revalidate every hour
 
@@ -80,10 +79,6 @@ export async function generateMetadata(): Promise<Metadata> {
       icon: siteData.appearance.favicon,
     },
   }
-}
-
-export function generateStaticParams() {
-  return [{}]
 }
 
 export default async function HomePage() {

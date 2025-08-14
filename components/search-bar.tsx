@@ -122,7 +122,7 @@ export function SearchBar({ onSearch, searchResults, searchQuery }: SearchBarPro
               {searchResults.length === 0 ? (
                 <div className="py-8 text-center">
                   <div className="text-muted-foreground text-sm">
-                    未找到与 "<span className="font-medium">{searchQuery}</span>" 相关的导航
+                    未找到与 &ldquo;<span className="font-medium">{searchQuery}</span>&rdquo; 相关的导航
                   </div>
                   <div className="text-xs text-muted-foreground/70 mt-1">
                     尝试使用不同的关键词搜索
