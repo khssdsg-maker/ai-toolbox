@@ -1,10 +1,10 @@
-export const runtime = 'edge';
+//
 export const dynamic = 'force-dynamic'
 export const revalidate = 3600 // Revalidate every hour
+export const runtime = 'edge';
 
 import { NavigationContent } from '@/components/navigation-content'
-import { headers } from 'next/headers'
-import { Metadata, ResolvingMetadata } from 'next/types'
+import { Metadata } from 'next/types'
 import { ScrollToTop } from '@/components/ScrollToTop'
 import { Container } from '@/components/ui/container'
 
