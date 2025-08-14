@@ -438,7 +438,16 @@
           "icon": "Book",
           "description": "",
           "enabled": true,
-          "items": []
+          "items": [
+            {
+              "id": "1755168164096",
+              "title": "Reddit - The heart of the internet",
+              "href": "https://www.reddit.com/",
+              "description": "Reddit is where millions of people gather for conversations about the things they care about, in over 100,000 subreddit communities.",
+              "icon": "/assets/favicon_1755168414977.png",
+              "enabled": true
+            }
+          ]
         },
         {
           "id": "2d33f756-959e-4171-9e0e-b616bcd274be",
