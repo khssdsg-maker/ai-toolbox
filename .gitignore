@@ -37,3 +37,4 @@ next-env.d.ts
 
 # 环境变量
 .env*.local
+/.cloudflare/
