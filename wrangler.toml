@@ -2,11 +2,6 @@ name = "navsphere"
 compatibility_date = "2024-11-11"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".next"
-[build]
-command = "pnpm build"
-cwd = "."
-watch_dir = "."
-
 
 [env.production.vars]
 GITHUB_ID = "Ov23lig3bTXpZHrPO1c8"
