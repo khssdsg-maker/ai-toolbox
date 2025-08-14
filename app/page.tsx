@@ -2,10 +2,24 @@ import { NavigationContent } from '@/components/navigation-content'
 import { Metadata } from 'next/types'
 import { ScrollToTop } from '@/components/ScrollToTop'
 import { Container } from '@/components/ui/container'
+import type { SiteConfig } from '@/types/site'
 import navigationData from '@/navsphere/content/navigation.json'
-import siteData from '@/navsphere/content/site.json'
+import siteDataRaw from '@/navsphere/content/site.json'
 
 function getData() {
+  // 确保 theme 类型正确
+  const siteData: SiteConfig = {
+    ...siteDataRaw,
+    appearance: {
+      ...siteDataRaw.appearance,
+      theme: (siteDataRaw.appearance.theme === 'light' ||
+        siteDataRaw.appearance.theme === 'dark' ||
+        siteDataRaw.appearance.theme === 'system')
+        ? siteDataRaw.appearance.theme
+        : 'system'
+    }
+  }
+
   return {
     navigationData: navigationData || { navigationItems: [] },
     siteData: siteData || {
@@ -17,7 +31,7 @@ function getData() {
       appearance: {
         logo: '',
         favicon: '',
-        theme: 'system'
+        theme: 'system' as const
       }
     }
   }
