@@ -433,6 +433,14 @@
           ]
         },
         {
+          "id": "5737638e-0c17-4377-9e67-12cf0fb2acd5",
+          "title": "国外平台",
+          "icon": "Book",
+          "description": "",
+          "enabled": true,
+          "items": []
+        },
+        {
           "id": "0ed6d8b1-effe-4535-8cde-60ec38f9c96c",
           "title": "AI 检测工具",
           "icon": "BookOpen",
@@ -448,14 +456,6 @@
               "enabled": true
             }
           ]
-        },
-        {
-          "id": "5737638e-0c17-4377-9e67-12cf0fb2acd5",
-          "title": "国外平台",
-          "icon": "Book",
-          "description": "",
-          "enabled": true,
-          "items": []
         },
         {
           "id": "2d33f756-959e-4171-9e0e-b616bcd274be",
