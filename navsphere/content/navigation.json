@@ -433,12 +433,45 @@
           ]
         },
         {
+          "id": "5737638e-0c17-4377-9e67-12cf0fb2acd5",
+          "title": "国外平台",
+          "icon": "Book",
+          "description": "",
+          "enabled": true,
+          "items": [
+            {
+              "id": "1755168164096",
+              "title": "Reddit - The heart of the internet",
+              "href": "https://www.reddit.com/",
+              "description": "Reddit is where millions of people gather for conversations about the things they care about, in over 100,000 subreddit communities.",
+              "icon": "/assets/favicon_1755168414977.png",
+              "enabled": true
+            }
+          ]
+        },
+        {
           "id": "2d33f756-959e-4171-9e0e-b616bcd274be",
           "title": "公众号排版",
           "icon": "Edit",
           "description": "",
           "enabled": true,
           "items": [
+            {
+              "id": "1754791068961",
+              "title": "NeuraPress Pro Markdown Editor",
+              "href": "https://mp.leti.ltd/",
+              "description": "NeuraPress 是一个现代化的 Markdown 编辑器，专注于提供优质的内容排版体验。 响应式设计，支持移动设备，让创作变得更加高效。\n\n",
+              "icon": "/assets/favicon_1754791082337.svg",
+              "enabled": true
+            },
+            {
+              "id": "1754791158725",
+              "title": "NeuraPress",
+              "href": "https://md.leti.ltd/",
+              "description": "Markdown 转微信公众号内容神器",
+              "icon": "/assets/favicon_1754791168416.svg",
+              "enabled": true
+            },
             {
               "id": "1735456910129",
               "title": "WeChat Markdown Editor",
