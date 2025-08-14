@@ -514,6 +514,14 @@
               "enabled": true
             }
           ]
+        },
+        {
+          "id": "5737638e-0c17-4377-9e67-12cf0fb2acd5",
+          "title": "国外平台",
+          "icon": "Book",
+          "description": "",
+          "enabled": true,
+          "items": []
         }
       ]
     },
