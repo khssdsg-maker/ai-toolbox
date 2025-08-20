@@ -102,7 +102,19 @@
       "id": "9",
       "title": "AI工具包",
       "icon": "Brain",
-      "items": [],
+      "items": [
+        {
+          "id": "9",
+          "subCategories": {
+            "id": "item-1755657354030",
+            "enabled": true,
+            "title": "‎Google Gemini",
+            "href": "https://gemini.google.com/",
+            "description": "访问 gemini.google.com",
+            "icon": "/assets/favicon_1755657340654.png"
+          }
+        }
+      ],
       "subCategories": [
         {
           "id": "cbb3e33d-408b-41ba-9e9a-e0444303e3fd",
