@@ -60,8 +60,10 @@ export async function PUT(
             acc.set(sub.id, {
               ...exist,
               ...sub,
-              items: sub.items || exist?.items || []
-            });
+              items: [
+                ...(exist?.items || []),
+                ...(sub.items || [])
+              ]            });
             return acc;
           }, new Map<string, NavigationItem>())
         ).values()
