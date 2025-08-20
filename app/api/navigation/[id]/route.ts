@@ -50,8 +50,23 @@ export async function PUT(
       ...updatedItem,
       id: id,
       items: updatedItem.items || existingItem.items || [],
-      subCategories: updatedItem.subCategories || existingItem.subCategories || []
-    }
+      subCategories: [
+        ...(
+          [
+            ...(existingItem.subCategories || []),
+            ...(updatedItem.subCategories || [])
+          ].reduce((acc, sub) => {
+            const exist = acc.get(sub.id);
+            acc.set(sub.id, {
+              ...exist,
+              ...sub,
+              items: sub.items || exist?.items || []
+            });
+            return acc;
+          }, new Map<string, NavigationItem>())
+        ).values()
+      ]   
+     }
 
     const updatedItems = data.navigationItems.map(item => 
       item.id === id ? mergedItem : item
