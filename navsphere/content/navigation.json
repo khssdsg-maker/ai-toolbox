@@ -503,6 +503,14 @@
               "description": "微信公众号样式一键转换，知乎/语雀专属排版优化",
               "icon": "/assets/img_1737961266055.png",
               "enabled": true
+            },
+            {
+              "id": "item-1756116137255",
+              "enabled": true,
+              "title": "MD2Card - Markdown 转知识卡片工具",
+              "href": "https://md2card.com/zh/editor",
+              "description": "MD2Card 是一个免费的 Markdown 转知识卡片工具，支持一键生成小红书风格海报、社交媒体文案排版，让创作者轻松制作精美的图文内容。支持多种主题风格、长文自动拆分、一键导出图片，让你的创作更加高效。",
+              "icon": "/assets/favicon_1756116123667.ico"
             }
           ]
         },
