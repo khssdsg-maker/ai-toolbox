@@ -48,13 +48,13 @@ export async function PUT(
     const mergedItem: NavigationItem = {
       ...existingItem,
       ...updatedItem,
-      id: params.id,
+      id: id,
       items: updatedItem.items || existingItem.items || [],
       subCategories: updatedItem.subCategories || existingItem.subCategories || []
     }
 
     const updatedItems = data.navigationItems.map(item => 
-      item.id === params.id ? mergedItem : item
+      item.id === id ? mergedItem : item
     )
 
     await commitFile(
