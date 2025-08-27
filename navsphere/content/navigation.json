@@ -1012,7 +1012,16 @@
       "description": "",
       "enabled": true,
       "items": [],
-      "subCategories": []
+      "subCategories": [
+        {
+          "id": "39271935-0566-4618-b968-d8f706318c88",
+          "title": "test2",
+          "icon": "BookOpen",
+          "description": "test2",
+          "enabled": true,
+          "items": []
+        }
+      ]
     }
   ]
 }
