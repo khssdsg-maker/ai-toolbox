@@ -1004,6 +1004,15 @@
           ]
         }
       ]
+    },
+    {
+      "id": "1756262816669",
+      "title": "test",
+      "icon": "FolderKanban",
+      "description": "",
+      "enabled": true,
+      "items": [],
+      "subCategories": []
     }
   ]
 }
