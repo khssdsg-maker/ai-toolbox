@@ -7,9 +7,10 @@ export const runtime = 'edge'
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const data = await getFileContent('navsphere/content/navigation.json') as NavigationData
     const item = data.navigationItems.find(item => item.id === params.id)
     
@@ -25,9 +26,10 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await auth()
     if (!session?.user?.accessToken) {
       return new Response('Unauthorized', { status: 401 })
@@ -71,9 +73,10 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const session = await auth()
     if (!session?.user?.accessToken) {
       return new Response('Unauthorized', { status: 401 })
