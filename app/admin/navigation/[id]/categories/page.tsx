@@ -187,20 +187,11 @@ export default function CategoriesPage() {
       throw new Error('Navigation ID not found')
     }
 
-    if (!navigation) return
-
     try {
-      const updatedNavigation: NavigationItem = {
-        id: navigation.id || params.id,
-        title: navigation.title || '',
-        description: navigation.description || '',
-        subCategories: navigation.subCategories?.filter(cat => cat.id !== categoryId) || []
-      }
-
-      const response = await fetch(`/api/navigation/${params.id}`, {
-        method: 'PUT',
+      const response = await fetch(`/api/navigation/${params.id}/categories`, {
+        method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedNavigation)
+        body: JSON.stringify({ categoryId })
       })
 
       if (!response.ok) throw new Error('Failed to delete')
