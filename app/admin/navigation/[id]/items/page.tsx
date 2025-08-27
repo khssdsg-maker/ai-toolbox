@@ -98,7 +98,7 @@ export default function ItemsPage() {
       }
       const response = await fetch(`/api/navigation/${navigationId}`)
       if (!response.ok) throw new Error('Failed to fetch')
-      
+
       const data = await response.json()
       setNavigation(data)
     } catch (error) {
@@ -193,34 +193,24 @@ export default function ItemsPage() {
 
   const deleteItem = async (index: number) => {
     try {
-      if (!params?.id || !navigation) {
-        throw new Error('Navigation ID or data not found')
+      if (!params?.id) {
+        throw new Error('Navigation ID not found')
       }
 
       const navigationId = params?.id
       if (!navigationId) {
         throw new Error('Navigation ID is missing')
       }
-      const items = [...(navigation.items || [])]
-      items.splice(index, 1)
 
-      const updatedNavigation: NavigationItem = {
-        id: navigation.id || navigationId,
-        title: navigation.title || '',
-        description: navigation.description || '',
-        items,
-        subCategories: navigation.subCategories || []
-      }
-
-      const response = await fetch(`/api/navigation/${navigationId}`, {
-        method: 'PUT',
+      const response = await fetch(`/api/navigation/${navigationId}/items`, {
+        method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedNavigation)
+        body: JSON.stringify({ index })
       })
 
       if (!response.ok) throw new Error('Failed to delete')
 
-      setNavigation(updatedNavigation)
+      await fetchNavigation()
       toast({
         title: "成功",
         description: "删除成功"
@@ -348,16 +338,16 @@ export default function ItemsPage() {
   }
 
   const filteredItems = navigation?.items?.filter(item => {
-    const matchesSearch = 
+    const matchesSearch =
       item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.href.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.description?.toLowerCase().includes(searchQuery.toLowerCase())
 
-    const matchesEnabled = 
+    const matchesEnabled =
       enabledFilter === "all" ? true :
-      enabledFilter === "enabled" ? item.enabled :
-      enabledFilter === "disabled" ? !item.enabled :
-      true
+        enabledFilter === "enabled" ? item.enabled :
+          enabledFilter === "disabled" ? !item.enabled :
+            true
 
     return matchesSearch && matchesEnabled
   }) || []
@@ -436,7 +426,7 @@ export default function ItemsPage() {
             <DialogHeader>
               <DialogTitle>添加站点</DialogTitle>
             </DialogHeader>
-            <AddItemForm 
+            <AddItemForm
               onSubmit={async (values) => {
                 await addItem(values)
                 setIsAddDialogOpen(false)
