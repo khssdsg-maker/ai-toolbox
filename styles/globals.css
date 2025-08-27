@@ -90,6 +90,17 @@
   }
 }
 
+/* 确保 cursor 样式正常工作 */
+@layer utilities {
+  .cursor-pointer {
+    cursor: pointer;
+  }
+
+  .hover\:cursor-pointer:hover {
+    cursor: pointer;
+  }
+}
+
 @utility step {
   counter-increment: step;
 
@@ -210,6 +221,29 @@
     /* font-feature-settings: "rlig" 1, "calt" 1; */
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
+
+  a {
+    @apply cursor-pointer;
+  }
+
+  /* 为带有 onClick 的元素添加手型光标 */
+  [onclick] {
+    @apply cursor-pointer;
+  }
+
+  /* 为带有 role="button" 的元素添加手型光标 */
+  [role="button"] {
+    @apply cursor-pointer;
+  }
+
+  /* 为可点击的交互元素添加手型光标 */
+  [tabindex]:not([tabindex="-1"]) {
+    @apply cursor-pointer;
   }
 
   @supports (font: -apple-system-body) and (-webkit-appearance: none) {
