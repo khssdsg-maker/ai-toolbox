@@ -1004,33 +1004,6 @@
           ]
         }
       ]
-    },
-    {
-      "id": "1756262816669",
-      "title": "test",
-      "icon": "FolderKanban",
-      "description": "",
-      "enabled": true,
-      "items": [],
-      "subCategories": [
-        {
-          "id": "39271935-0566-4618-b968-d8f706318c88",
-          "title": "test2",
-          "icon": "BookOpen",
-          "description": "test2",
-          "enabled": true,
-          "items": [
-            {
-              "id": "1756262848695",
-              "title": "ArchitectX",
-              "href": "https://www.architectx.top/",
-              "description": "ArchitectX ~ 个人博客 | 软件架构学习记录",
-              "icon": "/assets/favicon_1756262851765.png",
-              "enabled": true
-            }
-          ]
-        }
-      ]
     }
   ]
 }
