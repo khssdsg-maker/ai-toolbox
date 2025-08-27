@@ -1004,24 +1004,6 @@
           ]
         }
       ]
-    },
-    {
-      "id": "1756262697629",
-      "title": "test",
-      "icon": "FolderKanban",
-      "description": "",
-      "enabled": true,
-      "items": [
-        {
-          "id": "1756262711079",
-          "title": "ArchitectX",
-          "href": "https://www.architectx.top/",
-          "description": "ArchitectX ~ 个人博客 | 软件架构学习记录",
-          "icon": "/assets/favicon_1756262743616.png",
-          "enabled": true
-        }
-      ],
-      "subCategories": []
     }
   ]
 }
