@@ -7,12 +7,11 @@ export const runtime = 'edge'
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = await params
     const data = await getFileContent('navsphere/content/navigation.json') as NavigationData
-    const item = data.navigationItems.find(item => item.id === id)
+    const item = data.navigationItems.find(item => item.id === params.id)
     
     if (!item) {
       return new Response('Not Found', { status: 404 })
@@ -26,10 +25,9 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = await params
     const session = await auth()
     if (!session?.user?.accessToken) {
       return new Response('Unauthorized', { status: 401 })
@@ -39,7 +37,7 @@ export async function PUT(
     const data = await getFileContent('navsphere/content/navigation.json') as NavigationData
     
     // 确保更新的导航项包含所有必需的字段
-    const existingItem = data.navigationItems.find(item => item.id === id)
+    const existingItem = data.navigationItems.find(item => item.id === params.id)
     if (!existingItem) {
       return new Response('Navigation item not found', { status: 404 })
     }
@@ -48,30 +46,13 @@ export async function PUT(
     const mergedItem: NavigationItem = {
       ...existingItem,
       ...updatedItem,
-      id: id,
+      id: params.id,
       items: updatedItem.items || existingItem.items || [],
-      subCategories: [
-        ...(
-          [
-            ...(existingItem.subCategories || []),
-            ...(updatedItem.subCategories || [])
-          ].reduce((acc, sub) => {
-            const exist = acc.get(sub.id);
-            acc.set(sub.id, {
-              ...exist,
-              ...sub,
-              items: [
-                ...(exist?.items || []),
-                ...(sub.items || [])
-              ]            });
-            return acc;
-          }, new Map<string, NavigationItem>())
-        ).values()
-      ]   
-     }
+      subCategories: updatedItem.subCategories || existingItem.subCategories || []
+    }
 
     const updatedItems = data.navigationItems.map(item => 
-      item.id === id ? mergedItem : item
+      item.id === params.id ? mergedItem : item
     )
 
     await commitFile(
@@ -90,17 +71,16 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = await params
     const session = await auth()
     if (!session?.user?.accessToken) {
       return new Response('Unauthorized', { status: 401 })
     }
 
     const data = await getFileContent('navsphere/content/navigation.json') as NavigationData
-    const updatedItems = data.navigationItems.filter(item => item.id !== id)
+    const updatedItems = data.navigationItems.filter(item => item.id !== params.id)
 
     await commitFile(
       'navsphere/content/navigation.json',
