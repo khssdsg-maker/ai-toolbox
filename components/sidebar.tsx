@@ -10,7 +10,7 @@ import { ScrollArea } from '@/registry/new-york/ui/scroll-area'
 import type { NavigationData } from '@/types/navigation'
 import type { SiteConfig } from '@/types/site'
 import * as LucideIcons from 'lucide-react'
-import { ChevronDown, ChevronRight } from 'lucide-react'
+import { ChevronDown, ChevronRight, X } from 'lucide-react'
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   navigationData: NavigationData
@@ -92,6 +92,19 @@ export function Sidebar({ className, navigationData, siteInfo, onClose }: Sideba
           )}
           <span>{siteInfo.basic.title}</span>
         </Link>
+        
+        {/* 移动模式下的关闭按钮 */}
+        {onClose && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="ml-auto sm:hidden"
+            onClick={onClose}
+            aria-label="关闭侧边栏"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        )}
       </div>
 
       <ScrollArea className="h-[calc(100vh-3.5rem)] px-3 py-2">
