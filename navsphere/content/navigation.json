@@ -816,14 +816,6 @@
               "enabled": true
             },
             {
-              "id": "8_1_12",
-              "title": "ion icons",
-              "href": "http://ionicons.com/",
-              "description": "The premium icon font for Ionic Framework.",
-              "icon": "/assets/images/logos/ionicons.png",
-              "enabled": true
-            },
-            {
               "id": "8_1_13",
               "title": "Simpleline Icons",
               "href": "http://simplelineicons.com/",
