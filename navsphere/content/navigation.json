@@ -1019,7 +1019,16 @@
           "icon": "BookOpen",
           "description": "test2",
           "enabled": true,
-          "items": []
+          "items": [
+            {
+              "id": "1756262848695",
+              "title": "ArchitectX",
+              "href": "https://www.architectx.top/",
+              "description": "ArchitectX ~ 个人博客 | 软件架构学习记录",
+              "icon": "/assets/favicon_1756262851765.png",
+              "enabled": true
+            }
+          ]
         }
       ]
     }
