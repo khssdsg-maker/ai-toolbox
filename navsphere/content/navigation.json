@@ -92,6 +92,14 @@
           "description": "Beautiful & consistent icon toolkit made by the community.",
           "icon": "/assets/favicon_1754229702059.ico",
           "enabled": true
+        },
+        {
+          "id": "item-1756709697247",
+          "enabled": true,
+          "title": "我的首页 - 雪球",
+          "href": "https://xueqiu.com/?md5__1038=28178cb220-lUSUsPJxPrciUMhyTSTrPg_ST9%3DpEEluZPB2ld7s6gShnen6JBqEjxxDqjRKSgh6g%2FTrUTIeTJSJMjT7lTuQO6TETicJdTliTRTTcJ8TOcTBN3J_TH67_MqY3PDsSeliP7rY3geTxEyJXtIi6T1d_HMUVNHg3z7Tvrk6P%2FPqys7cdgJ6%2Fv8P3TPSv3T",
+          "description": "",
+          "icon": "/assets/favicon_1756709686551.png"
         }
       ],
       "subCategories": [],
