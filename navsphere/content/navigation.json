@@ -92,14 +92,6 @@
           "description": "Beautiful & consistent icon toolkit made by the community.",
           "icon": "/assets/favicon_1754229702059.ico",
           "enabled": true
-        },
-        {
-          "id": "item-1756709697247",
-          "enabled": true,
-          "title": "我的首页 - 雪球",
-          "href": "https://xueqiu.com/?md5__1038=28178cb220-lUSUsPJxPrciUMhyTSTrPg_ST9%3DpEEluZPB2ld7s6gShnen6JBqEjxxDqjRKSgh6g%2FTrUTIeTJSJMjT7lTuQO6TETicJdTliTRTTcJ8TOcTBN3J_TH67_MqY3PDsSeliP7rY3geTxEyJXtIi6T1d_HMUVNHg3z7Tvrk6P%2FPqys7cdgJ6%2Fv8P3TPSv3T",
-          "description": "",
-          "icon": "/assets/favicon_1756709686551.png"
         }
       ],
       "subCategories": [],
@@ -503,6 +495,14 @@
               "description": "微信公众号样式一键转换，知乎/语雀专属排版优化",
               "icon": "/assets/img_1737961266055.png",
               "enabled": true
+            },
+            {
+              "id": "item-1756907352615",
+              "enabled": true,
+              "title": "MD2Card - Markdown 转知识卡片工具",
+              "href": "https://md2card.com/zh/editor",
+              "description": "MD2Card 是一个免费的 Markdown 转知识卡片工具，支持一键生成小红书风格海报、社交媒体文案排版，让创作者轻松制作精美的图文内容。支持多种主题风格、长文自动拆分、一键导出图片，让你的创作更加高效。",
+              "icon": "/assets/favicon_1756907338099.ico"
             }
           ]
         },
@@ -821,6 +821,14 @@
               "href": "fontawesomeicon",
               "description": "The complete set of 675 icons in Font Awesome",
               "icon": "/assets/images/logos/fontawesomeicon.png",
+              "enabled": true
+            },
+            {
+              "id": "8_1_12",
+              "title": "ion icons",
+              "href": "http://ionicons.com/",
+              "description": "The premium icon font for Ionic Framework.",
+              "icon": "/assets/images/logos/ionicons.png",
               "enabled": true
             },
             {
