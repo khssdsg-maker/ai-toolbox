@@ -481,6 +481,10 @@ NavSphere/
   <strong>扫码支持 | 您的支持是我们持续开发的动力</strong>
 </p>
 
+## 🌐 Community
+
+ [Email](mailto:tianyaxiang@qq.com) | [Twitter](https://x.com/tianyaxiang)
+
 ## 🤝 贡献指南
 
 我们欢迎所有形式的贡献！
