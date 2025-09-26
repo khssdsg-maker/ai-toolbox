@@ -33,14 +33,15 @@ NavSphere 是一个基于 Next.js 14 构建的现代化导航管理平台，专�
 
 - 🚀 **现代技术栈**: Next.js 14 + React 18 + TypeScript + Tailwind CSS
 - 🔐 **GitHub 认证**: 基于 NextAuth.js 的 GitHub OAuth 安全登录
-- � **Git 数h据存储**: 使用 GitHub 仓库作为数据后端，版本可控
-- � **响应式设 计**: 移动优先的设计理念，完美适配各种设备
+- 📊 **Git 数据存储**: 使用 GitHub 仓库作为数据后端，版本可控
+- 📱 **响应式设计**: 移动优先的设计理念，完美适配各种设备
 - 🌓 **主题切换**: 内置深色/浅色主题支持
 - 🎯 **拖拽排序**: 直观的拖拽界面，轻松管理导航项目
 - 🔍 **智能搜索**: 快速定位和访问导航项目
 - 📱 **PWA 支持**: 渐进式 Web 应用体验
 - 🌐 **多语言支持**: 中英文界面切换
 - ⚡ **边缘计算**: Cloudflare Pages 部署，全球加速
+- 🔌 **浏览器插件**: 配套浏览器扩展，一键收藏网站到导航
 
 ## 🛠️ 技术架构
 
@@ -56,6 +57,32 @@ NavSphere 是一个基于 Next.js 14 构建的现代化导航管理平台，专�
 | **React Query**     | 5.62.2        | 数据获取和状态管理    |
 | **React Hook Form** | 7.53.2        | 表单处理              |
 | **Zod**             | 3.22.4        | 数据验证              |
+
+## � 浏速览器插件
+
+为了提供更便捷的使用体验，我们开发了配套的浏览器扩展插件，让你可以一键收藏网站到 NavSphere 导航。
+
+### 插件特性
+
+- 🚀 **一键收藏**: 在任意网页上一键添加到 NavSphere 导航
+- 🎯 **智能识别**: 自动获取网站标题、描述和图标
+- 📂 **分类管理**: 支持选择或创建分类目录
+- 🔄 **实时同步**: 与 NavSphere 平台实时同步数据
+- 🌐 **多浏览器支持**: 支持 Chrome、Firefox、Edge 等主流浏览器
+
+### 安装使用
+
+1. **获取插件**
+   - 访问 [NavSphere Extension](https://github.com/tianyaxiang/navsphere-extension)
+   - 下载最新版本或从应用商店安装（暂时未上架）
+
+2. **配置连接**
+   - 在插件设置中配置你的 NavSphere 站点地址
+   - 完成 GitHub 授权连接
+
+3. **开始使用**
+   - 浏览任意网站时，点击插件图标
+   - 选择分类并一键添加到导航
 
 ## 🚀 快速开始
 
@@ -503,6 +530,11 @@ NavSphere/
 ## 📄 许可证
 
 本项目基于 [MIT License](LICENSE) 开源协议。
+
+## � 相关项目
+
+- **[NavSphere Extension](https://github.com/tianyaxiang/navsphere-extension)** - 配套浏览器扩展插件
+- **[NavSphere Docs](https://github.com/tianyaxiang/NavSphere/tree/main/docs)** - 详细文档和教程
 
 ## 🙏 致谢
 
