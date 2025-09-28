@@ -403,7 +403,16 @@
           "icon": "BookOpen",
           "description": "",
           "enabled": true,
-          "items": []
+          "items": [
+            {
+              "id": "1759044488616",
+              "title": "wordpress",
+              "href": "https://wordpress.org/",
+              "description": "Open source software which you can use to easily create a beautiful website, blog, or app.",
+              "icon": "/assets/favicon_1759044512474.ico",
+              "enabled": true
+            }
+          ]
         }
       ]
     },
