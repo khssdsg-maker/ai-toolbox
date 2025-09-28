@@ -150,6 +150,14 @@
               "description": "一个人工智能助手，旨在为您提供信息、解答问题和帮助您完成各种任务。",
               "icon": "/assets/img_1739871936809.png",
               "enabled": true
+            },
+            {
+              "id": "1759046285125",
+              "title": "Grok",
+              "href": "https://grok.com/",
+              "description": "Grok is a free AI assistant designed by xAI to maximize truth and objectivity. Grok offers real-time search, image generation, trend analysis, and more.",
+              "icon": "/assets/favicon_1759046289851.png",
+              "enabled": true
             }
           ]
         },
