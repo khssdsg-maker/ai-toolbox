@@ -454,6 +454,14 @@
               "description": "Reddit is where millions of people gather for conversations about the things they care about, in over 100,000 subreddit communities.",
               "icon": "/assets/favicon_1755168414977.png",
               "enabled": true
+            },
+            {
+              "id": "1759031046821",
+              "title": "Hacker News",
+              "href": "https://news.ycombinator.com/",
+              "description": "Hacker News 是一家关于计算机黑客和创业公司的社会化新闻网站，由保罗·格雷厄姆的创业孵化器 Y Combinator 创建。与其它社会化新闻网站不同的是 Hacker News 未登录访客没有赞成或反对一条提交新闻的选项，不过还是可以被有足够 Karma 的用户投赞成或反对票。简而言之，Hacker News 允许提交任何可以被理解为“任何满足人们求知欲”的新闻",
+              "icon": "/assets/favicon_1759031156358.svg",
+              "enabled": true
             }
           ]
         },
