@@ -411,6 +411,14 @@
               "description": "Open source software which you can use to easily create a beautiful website, blog, or app.",
               "icon": "/assets/favicon_1759044512474.ico",
               "enabled": true
+            },
+            {
+              "id": "1759044534148",
+              "title": "listmonk",
+              "href": "https://listmonk.app/",
+              "description": " Free and open source self-hosted newsletter, mailing list manager, and transactional mails",
+              "icon": "/assets/favicon_1759044556303.png",
+              "enabled": true
             }
           ]
         }
