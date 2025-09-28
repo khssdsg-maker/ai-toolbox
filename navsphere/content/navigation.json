@@ -456,6 +456,14 @@
               "enabled": true
             },
             {
+              "id": "1_11_5",
+              "title": "Producthunt",
+              "href": "https://www.producthunt.com/",
+              "description": "发现新鲜有趣的产品",
+              "icon": "/assets/images/logos/producthunt.png",
+              "enabled": true
+            },
+            {
               "id": "1759031046821",
               "title": "Hacker News",
               "href": "https://news.ycombinator.com/",
