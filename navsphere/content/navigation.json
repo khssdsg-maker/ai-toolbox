@@ -586,6 +586,14 @@
               "description": "On Medium, anyone can share insightful perspectives, useful knowledge, and life wisdom with the world.",
               "icon": "/assets/favicon_1759043298903.png",
               "enabled": true
+            },
+            {
+              "id": "1759043324693",
+              "title": "Substack",
+              "href": "https://substack.com/",
+              "description": "The app for independent voices",
+              "icon": "/assets/favicon_1759043330135.svg",
+              "enabled": true
             }
           ]
         }
