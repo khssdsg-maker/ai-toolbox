@@ -396,6 +396,14 @@
               "enabled": true
             }
           ]
+        },
+        {
+          "id": "457c35b5-fcfb-4c72-8a9a-af21f9371e6b",
+          "title": "付费订阅托管平台",
+          "icon": "BookOpen",
+          "description": "",
+          "enabled": true,
+          "items": []
         }
       ]
     },
