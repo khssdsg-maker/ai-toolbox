@@ -419,6 +419,14 @@
               "description": " Free and open source self-hosted newsletter, mailing list manager, and transactional mails",
               "icon": "/assets/favicon_1759044556303.png",
               "enabled": true
+            },
+            {
+              "id": "1759044578679",
+              "title": "Ghost",
+              "href": "https://ghost.org/",
+              "description": "Beautiful, modern publishing with email newsletters and paid subscriptions built-in. Used by Platformer, 404Media, Lever News, Tangle, The Browser, and thousands more.",
+              "icon": "/assets/favicon_1759044603255.png",
+              "enabled": true
             }
           ]
         }
