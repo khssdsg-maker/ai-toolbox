@@ -578,6 +578,14 @@
               "description": "Quaily 是一个现代化的，基于 AI 的，新闻订阅服务。它支持多种推送渠道，包括邮件，telegram 和 discord。它与流行的编辑器（如 Obsidian 和 VScode）有很好的集成。",
               "icon": "/assets/favicon_1759043242645.png",
               "enabled": true
+            },
+            {
+              "id": "1759043258513",
+              "title": "Medium: Read and write stories.",
+              "href": "https://medium.com/",
+              "description": "On Medium, anyone can share insightful perspectives, useful knowledge, and life wisdom with the world.",
+              "icon": "/assets/favicon_1759043298903.png",
+              "enabled": true
             }
           ]
         }
