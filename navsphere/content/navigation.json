@@ -437,6 +437,14 @@
               "enabled": true
             }
           ]
+        },
+        {
+          "id": "2d7d4354-20f1-41a5-beeb-068031113bca",
+          "title": "视频制作",
+          "icon": "BookOpen",
+          "description": "",
+          "enabled": true,
+          "items": []
         }
       ]
     },
