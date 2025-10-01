@@ -444,7 +444,16 @@
           "icon": "BookOpen",
           "description": "",
           "enabled": true,
-          "items": []
+          "items": [
+            {
+              "id": "1759282146186",
+              "title": "Remotion",
+              "href": "https://www.remotion.dev/",
+              "description": "Make videos programmatically",
+              "icon": "/assets/favicon_1759282148802.png",
+              "enabled": true
+            }
+          ]
         }
       ]
     },
