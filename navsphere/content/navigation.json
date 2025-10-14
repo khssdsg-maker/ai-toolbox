@@ -493,6 +493,14 @@
               "description": "Make videos programmatically，用代码制作视频",
               "icon": "/assets/favicon_1760429458803.png",
               "enabled": true
+            },
+            {
+              "id": "1760429617715",
+              "title": "Motion Canvas",
+              "href": "https://motioncanvas.io/",
+              "description": "A TypeScript library for creating animated videos using the Canvas API.",
+              "icon": "/assets/favicon_1760429621544.svg",
+              "enabled": true
             }
           ]
         }
