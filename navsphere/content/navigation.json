@@ -209,7 +209,16 @@
           "icon": "BookOpen",
           "description": "",
           "enabled": true,
-          "items": []
+          "items": [
+            {
+              "id": "1760435371540",
+              "title": "Suno | AI Music",
+              "href": "https://suno.com/home",
+              "description": "Create stunning original music for free in seconds using AI. Make your own masterpieces, share with friends, and discover music from artists worldwide.",
+              "icon": "/assets/favicon_1760435376153.ico",
+              "enabled": true
+            }
+          ]
         }
       ],
       "description": "",
