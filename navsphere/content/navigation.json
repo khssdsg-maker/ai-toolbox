@@ -328,6 +328,14 @@
               "description": "Excalidraw是免费的在线协作画图工具。\n\n手写风格的草图非常好看；\n漂亮的图库。",
               "icon": "/assets/img_1736922499401.png",
               "enabled": true
+            },
+            {
+              "id": "1760427418959",
+              "title": "Node-Based UIs in React - React Flow",
+              "href": "https://reactflow.dev/",
+              "description": "Highly customizable React library for workflow builders, no-code apps, image processing, visualizers, and more",
+              "icon": "/assets/favicon_1760427423590.ico",
+              "enabled": true
             }
           ]
         },
