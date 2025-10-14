@@ -478,6 +478,14 @@
               "enabled": true
             }
           ]
+        },
+        {
+          "id": "b0806415-2e79-465d-9abf-f23c22028f36",
+          "title": "动画工具",
+          "icon": "Book",
+          "description": "",
+          "enabled": true,
+          "items": []
         }
       ]
     },
