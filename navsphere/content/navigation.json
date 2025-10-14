@@ -336,6 +336,14 @@
               "description": "Highly customizable React library for workflow builders, no-code apps, image processing, visualizers, and more",
               "icon": "/assets/favicon_1760427423590.ico",
               "enabled": true
+            },
+            {
+              "id": "1760427440146",
+              "title": "LottieFiles: Download Free lightweight animations",
+              "href": "https://lottiefiles.com/",
+              "description": "Effortlessly bring the smallest, free, ready-to-use motion graphics for the web, app, social, and designs. Create, edit, test, collaborate, and ship Lottie animations in no time!",
+              "icon": "/assets/favicon_1760427449858.png",
+              "enabled": true
             }
           ]
         },
