@@ -510,7 +510,16 @@
           "icon": "Book",
           "description": "",
           "enabled": true,
-          "items": []
+          "items": [
+            {
+              "id": "1760433270740",
+              "title": "AI SDK",
+              "href": "https://ai-sdk.dev/",
+              "description": "The AI Toolkit for TypeScript, from the creators of Next.js.",
+              "icon": "/assets/favicon_1760433274445.ico",
+              "enabled": true
+            }
+          ]
         }
       ]
     },
