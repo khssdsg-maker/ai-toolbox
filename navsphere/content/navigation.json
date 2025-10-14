@@ -385,6 +385,14 @@
               "description": "Unleash Claude’s raw power directly in your terminal. Search million-line codebases instantly. Turn hours-long workflows into a single command. Your tools. Your workflow. Your codebase, evolving at thought speed.",
               "icon": "/assets/img_1752662771107.png",
               "enabled": true
+            },
+            {
+              "id": "1760422942439",
+              "title": "Codex | OpenAI",
+              "href": "https://openai.com/zh-Hans-CN/codex/",
+              "description": "Codex 是 OpenAI 推出的一系列人工智能编码工具，通过将任务委托给强大的云端和本地编码代理，帮助开发人员提升工作效率。",
+              "icon": "/assets/favicon_1760422969029.ico",
+              "enabled": true
             }
           ]
         },
