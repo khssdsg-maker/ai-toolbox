@@ -503,6 +503,14 @@
               "enabled": true
             }
           ]
+        },
+        {
+          "id": "e4c71dbf-d8c2-4dba-8c7e-b9cef0366a84",
+          "title": "开源组件&SDK",
+          "icon": "Book",
+          "description": "",
+          "enabled": true,
+          "items": []
         }
       ]
     },
