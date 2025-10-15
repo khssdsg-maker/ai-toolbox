@@ -250,7 +250,16 @@
           "icon": "Book",
           "description": "",
           "enabled": true,
-          "items": []
+          "items": [
+            {
+              "id": "1760513538759",
+              "title": "v0 by Vercel",
+              "href": "https://v0.app/",
+              "description": "Your collaborative AI assistant to design, iterate, and scale full-stack applications for the web.",
+              "icon": "/assets/favicon_1760513560381.png",
+              "enabled": true
+            }
+          ]
         }
       ],
       "description": "",
