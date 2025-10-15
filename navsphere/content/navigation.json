@@ -243,6 +243,14 @@
               "enabled": true
             }
           ]
+        },
+        {
+          "id": "eb656a11-5442-4670-9cb6-9ba9bd08682f",
+          "title": "AI 代码生成助手",
+          "icon": "Book",
+          "description": "",
+          "enabled": true,
+          "items": []
         }
       ],
       "description": "",
