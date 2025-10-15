@@ -1178,7 +1178,16 @@
           "icon": "Edit",
           "description": "",
           "enabled": true,
-          "items": []
+          "items": [
+            {
+              "id": "1760512389014",
+              "title": "Docusaurus",
+              "href": "https://docusaurus.io/",
+              "description": "Build optimized websites quickly, focus on your content.",
+              "icon": "/assets/favicon_1760512394163.png",
+              "enabled": true
+            }
+          ]
         }
       ]
     }
