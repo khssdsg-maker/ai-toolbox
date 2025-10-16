@@ -628,6 +628,14 @@
               "description": "Where the world charts, chats, and trades markets. We&#39;re a supercharged super-charting platform and social network for traders and investors. Free to sign up.",
               "icon": "/assets/favicon_1760611123647.ico",
               "enabled": true
+            },
+            {
+              "id": "1760611134039",
+              "title": "巨潮资讯网",
+              "href": "https://www.cninfo.com.cn/",
+              "description": "巨潮资讯网",
+              "icon": "/assets/favicon_1760611181157.png",
+              "enabled": true
             }
           ]
         },
