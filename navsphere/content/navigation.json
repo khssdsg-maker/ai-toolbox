@@ -620,7 +620,16 @@
           "icon": "Book",
           "description": "",
           "enabled": true,
-          "items": []
+          "items": [
+            {
+              "id": "1760611119341",
+              "title": "TradingView",
+              "href": "https://www.tradingview.com/",
+              "description": "Where the world charts, chats, and trades markets. We&#39;re a supercharged super-charting platform and social network for traders and investors. Free to sign up.",
+              "icon": "/assets/favicon_1760611123647.ico",
+              "enabled": true
+            }
+          ]
         },
         {
           "id": "a45066a4-3622-43a4-acbb-873da6268788",
