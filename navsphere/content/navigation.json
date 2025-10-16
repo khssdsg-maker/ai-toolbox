@@ -628,7 +628,24 @@
           "icon": "Database",
           "description": "",
           "enabled": true,
-          "items": []
+          "items": [
+            {
+              "id": "1760611489487",
+              "title": "集思录-实时数据",
+              "href": "https://www.jisilu.cn/data/cbnew/#cb",
+              "description": "集思录-实时数据",
+              "icon": "/assets/favicon_1760611535023.png",
+              "enabled": true
+            },
+            {
+              "id": "1760611595643",
+              "title": "palmmicro",
+              "href": "https://palmmicro.com/woody/res/chinafuturecn.php",
+              "description": "A股商品等基金净值计算工具",
+              "icon": "/assets/favicon_1760611626932.png",
+              "enabled": true
+            }
+          ]
         }
       ]
     },
