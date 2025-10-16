@@ -620,7 +620,40 @@
           "icon": "Book",
           "description": "",
           "enabled": true,
-          "items": []
+          "items": [
+            {
+              "id": "1760611119341",
+              "title": "TradingView",
+              "href": "https://www.tradingview.com/",
+              "description": "Where the world charts, chats, and trades markets. We&#39;re a supercharged super-charting platform and social network for traders and investors. Free to sign up.",
+              "icon": "/assets/favicon_1760611123647.ico",
+              "enabled": true
+            },
+            {
+              "id": "1760611134039",
+              "title": "巨潮资讯网",
+              "href": "https://www.cninfo.com.cn/",
+              "description": "巨潮资讯网",
+              "icon": "/assets/favicon_1760611181157.png",
+              "enabled": true
+            },
+            {
+              "id": "1760611219040",
+              "title": "价值投资导航数据",
+              "href": "http://value500.com/",
+              "description": "坚守了十四年的投资数据与资讯网站",
+              "icon": "/assets/favicon_1760611256663.png",
+              "enabled": true
+            },
+            {
+              "id": "1760611357060",
+              "title": "集思录",
+              "href": "https://www.jisilu.cn/",
+              "description": "集思录，一个以数据为本的投资社区",
+              "icon": "/assets/favicon_1760611378684.png",
+              "enabled": true
+            }
+          ]
         },
         {
           "id": "a45066a4-3622-43a4-acbb-873da6268788",
