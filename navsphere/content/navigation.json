@@ -613,7 +613,16 @@
       "description": "",
       "enabled": true,
       "items": [],
-      "subCategories": []
+      "subCategories": [
+        {
+          "id": "a45066a4-3622-43a4-acbb-873da6268788",
+          "title": "套利工具",
+          "icon": "Database",
+          "description": "",
+          "enabled": true,
+          "items": []
+        }
+      ]
     },
     {
       "id": "1735433560958",
