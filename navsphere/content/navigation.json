@@ -628,7 +628,16 @@
           "icon": "Database",
           "description": "",
           "enabled": true,
-          "items": []
+          "items": [
+            {
+              "id": "1760611489487",
+              "title": "集思录-实时数据",
+              "href": "https://www.jisilu.cn/data/cbnew/#cb",
+              "description": "集思录-实时数据",
+              "icon": "/assets/favicon_1760611535023.png",
+              "enabled": true
+            }
+          ]
         }
       ]
     },
