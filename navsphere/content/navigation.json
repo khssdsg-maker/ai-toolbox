@@ -636,6 +636,14 @@
               "description": "巨潮资讯网",
               "icon": "/assets/favicon_1760611181157.png",
               "enabled": true
+            },
+            {
+              "id": "1760611219040",
+              "title": "价值投资导航数据",
+              "href": "http://value500.com/",
+              "description": "坚守了十四年的投资数据与资讯网站",
+              "icon": "/assets/favicon_1760611256663.png",
+              "enabled": true
             }
           ]
         },
