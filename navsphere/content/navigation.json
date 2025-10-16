@@ -621,6 +621,14 @@
           "description": "",
           "enabled": true,
           "items": []
+        },
+        {
+          "id": "1cf1cbfa-1a31-4b39-a6ca-a05f153ccbf5",
+          "title": "数据与分析",
+          "icon": "Book",
+          "description": "",
+          "enabled": true,
+          "items": []
         }
       ]
     },
