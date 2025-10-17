@@ -652,6 +652,14 @@
               "description": "集思录，一个以数据为本的投资社区",
               "icon": "/assets/favicon_1760611378684.png",
               "enabled": true
+            },
+            {
+              "id": "1760669308127",
+              "title": "看财报-价值投资分析工具",
+              "href": "https://www.kancaibao.com/",
+              "description": "看财报为价值投资者提供上市公司财务数据,各项基本面分析指标,同时提供DCF折现工具、杜邦分析表、历史PE（市盈率）和PB（市净率）数据、还有多家公司对比和企业估值功能",
+              "icon": "/assets/favicon_1760669311999.png",
+              "enabled": true
             }
           ]
         },
