@@ -618,6 +618,14 @@
               "description": "国内用户量很大的一家服务器运维面板",
               "icon": "/assets/favicon_1761279490427.png",
               "enabled": true
+            },
+            {
+              "id": "1761279549812",
+              "title": "1panel",
+              "href": "https://1panel.cn/",
+              "description": "1Panel 提供了一个直观的 Web 界面，帮助用户轻松管理 Linux 服务器中的应用、网站、文件、数据库以及大语言模型（LLMs）等。",
+              "icon": "/assets/favicon_1761279574408.png",
+              "enabled": true
             }
           ]
         }
