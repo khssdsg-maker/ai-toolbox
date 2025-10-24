@@ -626,6 +626,14 @@
               "description": "1Panel 提供了一个直观的 Web 界面，帮助用户轻松管理 Linux 服务器中的应用、网站、文件、数据库以及大语言模型（LLMs）等。",
               "icon": "/assets/favicon_1761279574408.png",
               "enabled": true
+            },
+            {
+              "id": "1761279603255",
+              "title": "Dokploy",
+              "href": "https://dokploy.com/zh-Hans",
+              "description": "以前所未有的简洁和高效提供一站式项目、数据的管理以及系统监控。",
+              "icon": "/assets/favicon_1761279607527.svg",
+              "enabled": true
             }
           ]
         }
