@@ -603,6 +603,14 @@
               "enabled": true
             }
           ]
+        },
+        {
+          "id": "044a42a2-b7be-4a19-bce8-1bc3fd98f052",
+          "title": "运维工具",
+          "icon": "Book",
+          "description": "",
+          "enabled": true,
+          "items": []
         }
       ]
     },
