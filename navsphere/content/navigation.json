@@ -610,7 +610,16 @@
           "icon": "Book",
           "description": "",
           "enabled": true,
-          "items": []
+          "items": [
+            {
+              "id": "1761279460902",
+              "title": "宝塔",
+              "href": "https://www.bt.cn/new/index.html",
+              "description": "国内用户量很大的一家服务器运维面板",
+              "icon": "/assets/favicon_1761279490427.png",
+              "enabled": true
+            }
+          ]
         }
       ]
     },
