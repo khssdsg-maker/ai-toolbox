@@ -634,6 +634,14 @@
               "description": "以前所未有的简洁和高效提供一站式项目、数据的管理以及系统监控。",
               "icon": "/assets/favicon_1761279607527.svg",
               "enabled": true
+            },
+            {
+              "id": "1761279682720",
+              "title": "Coolify",
+              "href": "https://coolify.io/",
+              "description": "Self-hosting platform with superpowers. Deploy apps, databases &#38; 280+ services to your server. Open-source alternative to Heroku.",
+              "icon": "/assets/favicon_1761279686786.png",
+              "enabled": true
             }
           ]
         }
