@@ -120,7 +120,16 @@
       "icon": "Coffee",
       "description": "",
       "enabled": true,
-      "items": [],
+      "items": [
+        {
+          "id": "1761724973240",
+          "title": "Hacker News",
+          "href": "https://news.ycombinator.com/",
+          "description": "",
+          "icon": "/assets/favicon_1761724976680.svg",
+          "enabled": true
+        }
+      ],
       "subCategories": []
     },
     {
