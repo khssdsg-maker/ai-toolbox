@@ -136,6 +136,14 @@
           "description": "Product Hunt is a curation of the best new products, every day. Discover the latest mobile apps, websites, and technology products that everyone&#x27;s talking about.",
           "icon": "/assets/favicon_1761725042705.ico",
           "enabled": true
+        },
+        {
+          "id": "1761725058490",
+          "title": "Reddit",
+          "href": "https://www.reddit.com/",
+          "description": "Reddit 拥有超过 100,000 个 subreddit 社区，数百万用户在此聚集，讨论各自关心的话题。",
+          "icon": "/assets/favicon_1761725100238.png",
+          "enabled": true
         }
       ],
       "subCategories": []
