@@ -100,6 +100,14 @@
           "description": "Developers and Open Source authors now have a massive amount of services offering free tiers, but it can be hard to find them all to make informed decisions.",
           "icon": "/assets/favicon_1760507241370.png",
           "enabled": true
+        },
+        {
+          "id": "1761724833829",
+          "title": "Hacker News",
+          "href": "https://news.ycombinator.com/",
+          "description": "",
+          "icon": "/assets/favicon_1761724837449.svg",
+          "enabled": true
         }
       ],
       "subCategories": [],
