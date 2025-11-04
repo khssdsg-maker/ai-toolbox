@@ -20,7 +20,7 @@
 
 ## 📖 项目简介
 
-NavSphere 是一个基于 Next.js 14 构建的现代化导航管理平台，专为个人和团队打造的书签管理和导航门户解决方案。通过 GitHub 作为数据存储后端，提供安全、可靠的导航数据管理体验。<a href="https://mp.weixin.qq.com/s/90LUmKilfLZfc5L63Ej3Sg" target="_blank">[手把手快速部署教程]</a>
+NavSphere 是一个基于 Next.js 15 构建的现代化导航管理平台，专为个人和团队打造的书签管理和导航门户解决方案。通过 GitHub 作为数据存储后端，提供安全、可靠的导航数据管理体验。<a href="https://mp.weixin.qq.com/s/90LUmKilfLZfc5L63Ej3Sg" target="_blank">[手把手快速部署教程]</a>
 
 <p align="center">
   <img src="doc/n.png" alt="NavSphere Logo" />
@@ -511,6 +511,10 @@ NavSphere/
 ## 🌐 Community
 
  [Email](mailto:tianyaxiang@qq.com) | [Twitter](https://x.com/tianyaxiang)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=tianyaxiang/NavSphere&type=date&legend=top-left)](https://www.star-history.com/#tianyaxiang/NavSphere&type=date&legend=top-left)
 
 ## 🤝 贡献指南
 
