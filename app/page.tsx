@@ -26,8 +26,24 @@ function getData() {
     }
   }
 
+  // 过滤只显示启用的分类和网站
+  const filteredNavigationData = {
+    navigationItems: navigationData.navigationItems
+      .filter(category => (category as any).enabled !== false) // 过滤启用的分类
+      .map(category => ({
+        ...category,
+        items: category.items?.filter(item => item.enabled !== false), // 过滤启用的网站
+        subCategories: category.subCategories
+          ?.filter(sub => (sub as any).enabled !== false) // 过滤启用的子分类
+          .map(sub => ({
+            ...sub,
+            items: sub.items?.filter(item => item.enabled !== false) // 过滤启用的网站
+          }))
+      }))
+  }
+
   return {
-    navigationData: navigationData || { navigationItems: [] },
+    navigationData: filteredNavigationData || { navigationItems: [] },
     siteData: siteData || {
       basic: {
         title: 'NavSphere',
