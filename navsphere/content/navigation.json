@@ -362,6 +362,14 @@
               "description": "Design Your Perfect \nshadcn/ui\n Theme\nCustomize colors, typography, and layouts with a real-time preview. No signup required.",
               "icon": "/assets/img_1751433579053.png",
               "enabled": true
+            },
+            {
+              "id": "1763352554793",
+              "title": "Shadcn Marketing Blocks | Tailark",
+              "href": "https://tailark.com/",
+              "description": "Speed up your workflow with responsive, pre-built UI blocks designed for marketing websites.",
+              "icon": "/assets/favicon_1763352557389.svg",
+              "enabled": true
             }
           ]
         },
