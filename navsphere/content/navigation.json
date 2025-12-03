@@ -216,6 +216,14 @@
               "description": "Grok is a free AI assistant designed by xAI to maximize truth and objectivity. Grok offers real-time search, image generation, trend analysis, and more.",
               "icon": "/assets/favicon_1759046289851.png",
               "enabled": true
+            },
+            {
+              "id": "item-1764762513556",
+              "enabled": true,
+              "title": "Google AI Studio",
+              "href": "https://aistudio.google.com/prompts/new_chat",
+              "description": "Google AI Studio",
+              "icon": "/assets/favicon_1764762488719.png"
             }
           ]
         },
