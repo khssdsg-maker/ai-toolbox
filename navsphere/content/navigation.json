@@ -1467,6 +1467,14 @@
               "description": "Vue 驱动的静态网站生成器",
               "icon": "/assets/favicon_1760512644195.png",
               "enabled": true
+            },
+            {
+              "id": "1765310098728",
+              "title": "mdBook Documentation",
+              "href": "https://rust-lang.github.io/mdBook/index.html",
+              "description": "Create book from markdown files. Like Gitbook but implemented in Rust",
+              "icon": "https://rust-lang.github.io/favicon-de23e50b.svg",
+              "enabled": true
             }
           ]
         }
