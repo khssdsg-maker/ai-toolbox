@@ -350,6 +350,14 @@
               "enabled": true
             }
           ]
+        },
+        {
+          "id": "8f5e0374-2ee9-4012-acac-baecb515d826",
+          "title": "提示词助手",
+          "icon": "Book",
+          "description": "",
+          "enabled": true,
+          "items": []
         }
       ],
       "description": "",
