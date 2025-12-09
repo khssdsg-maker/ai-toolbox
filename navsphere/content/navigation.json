@@ -357,7 +357,16 @@
           "icon": "Book",
           "description": "",
           "enabled": true,
-          "items": []
+          "items": [
+            {
+              "id": "1765285549189",
+              "title": "Share and Discover anything to do with AI | Snack Prompt",
+              "href": "https://snackprompt.com/",
+              "description": "A platform to share and discover amazing AI prompts and resources.",
+              "icon": "/assets/favicon_1765285552557.ico",
+              "enabled": true
+            }
+          ]
         }
       ],
       "description": "",
