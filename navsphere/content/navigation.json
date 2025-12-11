@@ -790,7 +790,16 @@
           "icon": "Files",
           "description": "",
           "enabled": true,
-          "items": []
+          "items": [
+            {
+              "id": "1765453428896",
+              "title": "AGENTS.md",
+              "href": "https://agents.md/",
+              "description": "AGENTS.md is a simple, open format for guiding coding agents, used by over 60k open-source projects. Think of it as a README for agents.",
+              "icon": "/assets/favicon_1765453432472.png",
+              "enabled": true
+            }
+          ]
         }
       ]
     },
