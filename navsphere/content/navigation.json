@@ -443,6 +443,14 @@
               "description": "IndieHub is a community for Indie Makers to discover tools, launch products, and ship applications faster and better.",
               "icon": "/assets/favicon_1763380043621.ico",
               "enabled": true
+            },
+            {
+              "id": "1765416694684",
+              "title": "Find your Template",
+              "href": "https://vercel.com/templates",
+              "description": "Jumpstart your app development process with pre-built solutions from Vercel and our community.",
+              "icon": "/assets/favicon_1765416698840.png",
+              "enabled": true
             }
           ]
         },
