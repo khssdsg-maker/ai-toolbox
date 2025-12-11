@@ -783,6 +783,14 @@
               "enabled": true
             }
           ]
+        },
+        {
+          "id": "baf3db58-404b-4385-80cb-c2ddcf5747fc",
+          "title": "经验技巧",
+          "icon": "Files",
+          "description": "",
+          "enabled": true,
+          "items": []
         }
       ]
     },
