@@ -140,6 +140,22 @@
           "href": "https://dh.leti.ltd/",
           "description": "收集国内外优秀设计网站、UI设计资源网站、灵感创意网站、素材资源网站，定时更新分享优质产品设计书签。",
           "icon": "/assets/favicon_1765355057814.png"
+        },
+        {
+          "id": "item-1765686645674",
+          "enabled": true,
+          "title": "Google 趋势",
+          "href": "https://trends.google.com/trends/",
+          "description": "",
+          "icon": "/assets/favicon_1765686636721.ico"
+        },
+        {
+          "id": "item-1765687115114",
+          "enabled": true,
+          "title": "PageSpeed Insights",
+          "href": "https://pagespeed.web.dev/",
+          "description": "",
+          "icon": "/assets/favicon_1765687105275.png"
         }
       ],
       "subCategories": [],
@@ -451,6 +467,14 @@
               "description": "Jumpstart your app development process with pre-built solutions from Vercel and our community.",
               "icon": "/assets/favicon_1765416698840.png",
               "enabled": true
+            },
+            {
+              "id": "item-1765594481103",
+              "enabled": true,
+              "title": "Multi-Platform Theme Generator & Converter",
+              "href": "https://www.tinte.dev/",
+              "description": "Create, convert, and export beautiful themes for VS Code, shadcn/ui, Rayso, TweakCN, terminals, and more. Generate semantic color palettes using OKLCH color space with live previews.",
+              "icon": "/assets/favicon_1765594470605.png"
             }
           ]
         },
@@ -1506,7 +1530,7 @@
               "title": "mdBook Documentation",
               "href": "https://rust-lang.github.io/mdBook/index.html",
               "description": "Create book from markdown files. Like Gitbook but implemented in Rust",
-              "icon": "https://rust-lang.github.io/favicon-de23e50b.svg",
+              "icon": "/assets/img_1765686772245.png",
               "enabled": true
             }
           ]
