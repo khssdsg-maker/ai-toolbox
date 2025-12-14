@@ -148,6 +148,14 @@
           "href": "https://trends.google.com/trends/",
           "description": "",
           "icon": "/assets/favicon_1765686636721.ico"
+        },
+        {
+          "id": "item-1765687115114",
+          "enabled": true,
+          "title": "PageSpeed Insights",
+          "href": "https://pagespeed.web.dev/",
+          "description": "",
+          "icon": "/assets/favicon_1765687105275.png"
         }
       ],
       "subCategories": [],
