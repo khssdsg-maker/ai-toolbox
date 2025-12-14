@@ -1522,7 +1522,7 @@
               "title": "mdBook Documentation",
               "href": "https://rust-lang.github.io/mdBook/index.html",
               "description": "Create book from markdown files. Like Gitbook but implemented in Rust",
-              "icon": "https://rust-lang.github.io/favicon-de23e50b.svg",
+              "icon": "/assets/img_1765686772245.png",
               "enabled": true
             }
           ]
