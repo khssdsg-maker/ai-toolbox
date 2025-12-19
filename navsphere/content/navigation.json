@@ -822,6 +822,14 @@
               "description": "AGENTS.md is a simple, open format for guiding coding agents, used by over 60k open-source projects. Think of it as a README for agents.",
               "icon": "/assets/favicon_1765453432472.png",
               "enabled": true
+            },
+            {
+              "id": "1766148040930",
+              "title": "Website Authority Checker: Check the &quot;Authority&quot; Of Any Domain",
+              "href": "https://ahrefs.com/website-authority-checker",
+              "description": "Free tool to check the &quot;authority&quot; of any website based on the quality and quantity of its external backlinks.",
+              "icon": "/assets/favicon_1766148043836.ico",
+              "enabled": true
             }
           ]
         }
