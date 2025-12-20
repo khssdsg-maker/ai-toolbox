@@ -10,7 +10,7 @@
           "title": "Vercel",
           "href": "https://vercel.com/",
           "description": "Vercel 提供开发者工具和云基础设施，帮助构建、扩展和保护更快、更个性化的网络应用。",
-          "icon": "/assets/images/logos/vercel.png",
+          "icon": "/assets/images/logos/vercel.webp",
           "enabled": true
         },
         {
@@ -26,7 +26,7 @@
           "title": "Cloudflare",
           "href": "https://dash.cloudflare.com/",
           "description": "Cloudflare以向客户提供基于反向代理的内容分发网络及分布式域名解析服务为主要业务。",
-          "icon": "/assets/images/logos/cloudflar.ico",
+          "icon": "/assets/images/logos/cloudflar.webp",
           "enabled": true
         },
         {
@@ -58,7 +58,7 @@
           "title": "Tensor.art",
           "href": "https://tensor.art/",
           "description": "Tensor.art是一个免费的在线图像生成和模型托管平台。",
-          "icon": "/assets/images/logos/tensorart.ico",
+          "icon": "/assets/images/logos/tensorart.webp",
           "enabled": true
         },
         {
@@ -74,7 +74,7 @@
           "title": "PostSpark",
           "href": "https://postspark.app/",
           "description": "Beautiful Screenshots and Mockups\nCusomizable, eye-catching presentation for any content",
-          "icon": "/assets/img_1741747241014.png",
+          "icon": "/assets/img_1741747241014.webp",
           "enabled": true
         },
         {
@@ -90,7 +90,7 @@
           "title": "Lucide",
           "href": "https://lucide.dev/",
           "description": "Beautiful & consistent icon toolkit made by the community.",
-          "icon": "/assets/favicon_1754229702059.ico",
+          "icon": "/assets/favicon_1754229702059.webp",
           "enabled": true
         },
         {
@@ -134,7 +134,7 @@
           "title": "Product Hunt",
           "href": "https://www.producthunt.com/",
           "description": "Product Hunt is a curation of the best new products, every day. Discover the latest mobile apps, websites, and technology products that everyone&#x27;s talking about.",
-          "icon": "/assets/favicon_1761725042705.ico",
+          "icon": "/assets/favicon_1761725042705.webp",
           "enabled": true
         },
         {
@@ -265,7 +265,7 @@
               "title": "Suno | AI Music",
               "href": "https://suno.com/home",
               "description": "Create stunning original music for free in seconds using AI. Make your own masterpieces, share with friends, and discover music from artists worldwide.",
-              "icon": "/assets/favicon_1760435376153.ico",
+              "icon": "/assets/favicon_1760435376153.webp",
               "enabled": true
             },
             {
@@ -273,7 +273,7 @@
               "title": "Sora",
               "href": "https://sora.chatgpt.com/",
               "description": "Transform text and images into immersive videos. Animate stories, visualize ideas, and bring your concepts to life.",
-              "icon": "/assets/favicon_1760435422176.ico",
+              "icon": "/assets/favicon_1760435422176.webp",
               "enabled": true
             },
             {
@@ -360,7 +360,7 @@
               "title": "shadcn ui  Theme",
               "href": "https://tweakcn.com/",
               "description": "Design Your Perfect \nshadcn/ui\n Theme\nCustomize colors, typography, and layouts with a real-time preview. No signup required.",
-              "icon": "/assets/img_1751433579053.png",
+              "icon": "/assets/img_1751433579053.webp",
               "enabled": true
             }
           ]
@@ -377,7 +377,7 @@
               "title": "Cloudflare",
               "href": "https://dash.cloudflare.com/",
               "description": "Cloudflare以向客户提供基于反向代理的内容分发网络及分布式域名解析服务为主要业务。",
-              "icon": "/assets/images/logos/cloudflar.ico",
+              "icon": "/assets/images/logos/cloudflar.webp",
               "enabled": true
             },
             {
@@ -385,7 +385,7 @@
               "title": "Vercel",
               "href": "https://vercel.com/",
               "description": "Vercel 提供开发者工具和云基础设施，帮助构建、扩展和保护更快、更个性化的网络应用。",
-              "icon": "/assets/images/logos/vercel.png",
+              "icon": "/assets/images/logos/vercel.webp",
               "enabled": true
             },
             {
@@ -401,7 +401,7 @@
               "title": "Tencent -  EdgeOne亚洲最佳CDN、边缘和安全解决方案",
               "href": "https://edgeone.ai/zh",
               "description": "Tencent EdgeOne，亚洲领先的CDN，利用腾讯先进的边缘节点提供卓越的边缘解决方案，用于加速、安全、无服务器和视频。",
-              "icon": "/assets/favicon_1755225933031.ico",
+              "icon": "/assets/favicon_1755225933031.webp",
               "enabled": true
             }
           ]
@@ -418,7 +418,7 @@
               "title": "draw.io",
               "href": "https://www.drawio.com/",
               "description": "可以绘制架构图、流程图，软件周期内的其它设计图。为团队绘制安全第一的图表。\n将您的存储带到我们的在线工具，或使用桌面应用程序在本地保存。",
-              "icon": "/assets/img_1736922080517.png",
+              "icon": "/assets/img_1736922080517.webp",
               "enabled": true
             },
             {
@@ -426,7 +426,7 @@
               "title": "ProccessOn",
               "href": "https://www.processon.com/",
               "description": "ProccessOn是一款优秀的国产在线协作画图软件，非常好用，也非常漂亮。专业强大的作图工具，支持多人实时在线协作，可用于原型图、UML、BPMN、网络拓扑图等多种图形绘制\n",
-              "icon": "/assets/img_1736922262462.png",
+              "icon": "/assets/img_1736922262462.webp",
               "enabled": true
             },
             {
@@ -442,7 +442,7 @@
               "title": "Node-Based UIs in React - React Flow",
               "href": "https://reactflow.dev/",
               "description": "Highly customizable React library for workflow builders, no-code apps, image processing, visualizers, and more",
-              "icon": "/assets/favicon_1760427423590.ico",
+              "icon": "/assets/favicon_1760427423590.webp",
               "enabled": true
             },
             {
@@ -475,7 +475,7 @@
               "title": "Windsurf",
               "href": "https://codeium.com/",
               "description": "Introducing the Windsurf Editor\nThe new purpose-built IDE to harness magic",
-              "icon": "/assets/img_1737529843741.png",
+              "icon": "/assets/img_1737529843741.webp",
               "enabled": true
             },
             {
@@ -491,7 +491,7 @@
               "title": "Trae",
               "href": "https://www.trae.ai/",
               "description": "字节新出的 Cursor 竞品 Trae ，可以用 claude3.5，限时免费\n，它的 Builder 相当于 Cursor 的 Composer 和 Agent 合体，建议默认使用 Builder。",
-              "icon": "/assets/img_1737530421138.png",
+              "icon": "/assets/img_1737530421138.webp",
               "enabled": true
             },
             {
@@ -499,7 +499,7 @@
               "title": "Kiro",
               "href": "https://kiro.dev/",
               "description": "The AI IDE for prototype to production\n",
-              "icon": "/assets/img_1752662633580.png",
+              "icon": "/assets/img_1752662633580.webp",
               "enabled": true
             },
             {
@@ -515,7 +515,7 @@
               "title": "Codex | OpenAI",
               "href": "https://openai.com/zh-Hans-CN/codex/",
               "description": "Codex 是 OpenAI 推出的一系列人工智能编码工具，通过将任务委托给强大的云端和本地编码代理，帮助开发人员提升工作效率。",
-              "icon": "/assets/favicon_1760422969029.ico",
+              "icon": "/assets/favicon_1760422969029.webp",
               "enabled": true
             }
           ]
@@ -532,7 +532,7 @@
               "title": "namecheap",
               "href": "https://www.namecheap.com/",
               "description": "Register domain names at Namecheap. Buy cheap domain names and enjoy 24/7 support. With over 18 million domains under management, you know you’re in good hands.",
-              "icon": "/assets/favicon_1754295511938.ico",
+              "icon": "/assets/favicon_1754295511938.webp",
               "enabled": true
             }
           ]
@@ -549,7 +549,7 @@
               "title": "wordpress",
               "href": "https://wordpress.org/",
               "description": "Open source software which you can use to easily create a beautiful website, blog, or app.",
-              "icon": "/assets/favicon_1759044512474.ico",
+              "icon": "/assets/favicon_1759044512474.webp",
               "enabled": true
             },
             {
@@ -624,7 +624,7 @@
               "title": "AI SDK",
               "href": "https://ai-sdk.dev/",
               "description": "The AI Toolkit for TypeScript, from the creators of Next.js.",
-              "icon": "/assets/favicon_1760433274445.ico",
+              "icon": "/assets/favicon_1760433274445.webp",
               "enabled": true
             }
           ]
@@ -709,7 +709,7 @@
               "title": "TradingView",
               "href": "https://www.tradingview.com/",
               "description": "Where the world charts, chats, and trades markets. We&#39;re a supercharged super-charting platform and social network for traders and investors. Free to sign up.",
-              "icon": "/assets/favicon_1760611123647.ico",
+              "icon": "/assets/favicon_1760611123647.webp",
               "enabled": true
             },
             {
@@ -809,7 +809,7 @@
               "title": "小红书创作中心",
               "href": "https://creator.xiaohongshu.com/",
               "description": "小红书创作中心",
-              "icon": "/assets/img_1736912766835.png",
+              "icon": "/assets/img_1736912766835.webp",
               "enabled": true
             }
           ]
@@ -892,7 +892,7 @@
               "title": "MD2Card - Markdown 转知识卡片工具",
               "href": "https://md2card.com/zh/editor",
               "description": "MD2Card 是一个免费的 Markdown 转知识卡片工具，支持一键生成小红书风格海报、社交媒体文案排版，让创作者轻松制作精美的图文内容。支持多种主题风格、长文自动拆分、一键导出图片，让你的创作更加高效。",
-              "icon": "/assets/favicon_1756907338099.ico"
+              "icon": "/assets/favicon_1756907338099.webp"
             }
           ]
         },
@@ -990,7 +990,7 @@
               "title": "知识星球",
               "href": "https://zsxq.com/",
               "description": "知识星球是创作者连接铁杆粉丝，实现知识变现的工具。任何从事创作或艺术的人，例如艺术家、工匠、教师、学术研究、科普等，只要能获得一千位铁杆粉丝，就足够生计无忧，自由创作。社群管理、内容沉淀、链接粉丝等就在知识星球。",
-              "icon": "/assets/favicon_1759043590213.ico",
+              "icon": "/assets/favicon_1759043590213.webp",
               "enabled": true
             }
           ]
@@ -1039,7 +1039,7 @@
               "title": "SQL格式化",
               "href": "https://www.dpriver.com/pp/sqlformat.htm",
               "description": "在线美化SQL语句的工具，格式化方便阅读",
-              "icon": "/assets/images/logos/sqlformat.ico",
+              "icon": "/assets/images/logos/sqlformat.webp",
               "enabled": true
             },
             {
