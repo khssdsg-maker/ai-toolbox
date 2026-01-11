@@ -156,6 +156,14 @@
           "href": "https://pagespeed.web.dev/",
           "description": "",
           "icon": "/assets/favicon_1765687105275.webp"
+        },
+        {
+          "id": "1768145641850",
+          "title": "microsoft 开发者",
+          "href": "https://partner.microsoft.com/zh-cn/dashboard/microsoftedge/overview",
+          "description": "edge 插件上传地址",
+          "icon": "/assets/favicon_1768145646425.png",
+          "enabled": true
         }
       ],
       "subCategories": [],
