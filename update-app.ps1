@@ -1,4 +1,4 @@
-﻿# ============================================================
+# ============================================================
 # AI万能工具箱 - 一键静默更新脚本
 # 功能：重新构建 → 生成安装包 → 静默覆盖安装 → 更新桌面快捷方式
 # 用法：powershell -WindowStyle Hidden -File update-app.ps1
@@ -36,11 +36,11 @@ finally {
 
 # 6. 打包安装程序
 & node node_modules\electron-builder\out\cli\cli.js --win | Out-Null
-$installer = "dist-electron\AI万能工具箱-安装程序.exe"
-if (-not (Test-Path $installer)) { throw "打包失败" }
+$installer = Get-ChildItem "dist-electron\*.exe" | Where-Object { $_.Name -notmatch "blockmap|uninstaller" } | Select-Object -First 1 -ExpandProperty FullName
+if (-not $installer) { throw "打包失败" }
 
 # 7. 静默安装（覆盖旧版本，无弹窗）
-$p = Start-Process -FilePath (Resolve-Path $installer) -ArgumentList "/S" -Wait -PassThru -WindowStyle Hidden
+$p = Start-Process -FilePath $installer -ArgumentList "/S" -Wait -PassThru -WindowStyle Hidden
 
 # 8. 确保桌面快捷方式存在
 $installDir = Join-Path $env:LOCALAPPDATA "Programs\navsphere"

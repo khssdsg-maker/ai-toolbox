@@ -17,6 +17,12 @@
     }
   ],
   "asar": true,
+  "publish": {
+    "provider": "github",
+    "owner": "khssdsg-maker",
+    "repo": "ai-toolbox",
+    "releaseType": "release"
+  },
   "win": {
     "target": ["nsis"]
   },
@@ -30,5 +36,6 @@
     "artifactName": "AI万能工具箱-安装程序.exe"
   }
 }
+
 
 

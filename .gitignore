@@ -58,3 +58,8 @@ launch.log
 
 # 环境变量（含密钥，永不提交）
 .env
+
+# 构建产物，不提交
+dist-electron/
+dist2/
+out/
