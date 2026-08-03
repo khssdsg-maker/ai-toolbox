@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, session } from 'electron'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { spawn } from 'child_process'
@@ -53,6 +53,10 @@ async function createWindow() {
   if (isDev) {
     // 开发模式：连接本地 dev server
     await mainWindow.loadURL('http://localhost:3000')
+    // 加载失败时自动重试（服务器可能还在编译）
+    mainWindow.webContents.on('did-fail-load', () => {
+      setTimeout(() => mainWindow && mainWindow.loadURL('http://localhost:3000'), 2000)
+    })
   } else {
     // 生产模式：启动 Next.js 服务
     const port = await startNextServer()
@@ -64,7 +68,9 @@ async function createWindow() {
   })
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  // 每次启动强制清除缓存，防止样式加载旧版本
+  await session.defaultSession.clearCache()
   createWindow()
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
@@ -79,4 +85,6 @@ app.on('window-all-closed', () => {
 app.on('quit', () => {
   if (nextProcess) nextProcess.kill()
 })
+
+
 
