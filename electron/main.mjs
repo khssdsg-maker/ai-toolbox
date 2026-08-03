@@ -276,6 +276,9 @@ ipcMain.handle('settings:get', () => {
 ipcMain.on('settings:set', (e, s) => {
   saveSettings(s)
 })
+ipcMain.on('settings:clear-favorites', () => {
+  writeFavFile([])
+})
 
 // 处理外部链接点击
 async function handleExternalLink(url) {
@@ -425,6 +428,7 @@ app.on('window-all-closed', () => {
 app.on('quit', () => {
   if (server) server.close()
 })
+
 
 
 

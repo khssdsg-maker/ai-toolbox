@@ -10,8 +10,9 @@ import { ScrollArea } from '@/registry/new-york/ui/scroll-area'
 import type { NavigationData } from '@/types/navigation'
 import type { SiteConfig } from '@/types/site'
 import * as LucideIcons from 'lucide-react'
-import { ChevronDown, ChevronRight, X } from 'lucide-react'
+import { ChevronDown, ChevronRight, X, Settings } from 'lucide-react'
 import { useLanguage } from '@/lib/language-context'
+import { SettingsDialog } from '@/components/settings-dialog'
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   navigationData: NavigationData
@@ -22,6 +23,7 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 export function Sidebar({ className, navigationData, siteInfo, onClose }: SidebarProps) {
   const pathname = usePathname()
   const { locale } = useLanguage()
+  const [showSettings, setShowSettings] = useState(false)
 
 
 
@@ -111,7 +113,7 @@ export function Sidebar({ className, navigationData, siteInfo, onClose }: Sideba
         )}
       </div>
 
-      <ScrollArea className="h-[calc(100vh-3.5rem)] px-3 py-2">
+      <ScrollArea className="h-[calc(100vh-7rem)] px-3 py-2">
         <div className="space-y-1">
           {navigationData.navigationItems.map((category) => (
             <div key={category.id} className="py-2">
@@ -169,8 +171,23 @@ export function Sidebar({ className, navigationData, siteInfo, onClose }: Sideba
           ))}
         </div>
       </ScrollArea>
+
+      {/* 左下角设置入口 */}
+      <div className="h-14 flex items-center px-3 border-t border-border/40">
+        <Button
+          variant="ghost"
+          className="gap-2 w-full justify-start text-muted-foreground hover:text-foreground hover:bg-muted/60 cursor-pointer"
+          onClick={() => setShowSettings(true)}
+        >
+          <Settings className="h-4 w-4" />
+          <span>{locale === 'en' ? 'Settings' : '设置'}</span>
+        </Button>
+      </div>
+
+      <SettingsDialog open={showSettings} onClose={() => setShowSettings(false)} />
     </div>
   )
 }
+
 
 

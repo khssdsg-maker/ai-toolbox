@@ -19,6 +19,8 @@ const TOOLS = [
   { id: 'json-format', name: 'JSON 格式化', desc: '美化或压缩 JSON', icon: FileJson },
   { id: 'base64', name: 'Base64 编解码', desc: '文本和 Base64 互转', icon: Hash },
   { id: 'url', name: 'URL 编解码', desc: 'URL 编码和解码', icon: Link2 },
+  { id: 'pdf-word', name: 'PDF ↔ Word', desc: 'PDF 和 Word 文档互转', icon: FileText },
+  { id: 'markdown', name: 'Markdown 转换', desc: 'Markdown 和 HTML 互转', icon: FileJson },
 ] as const
 
 type ToolId = typeof TOOLS[number]['id']
@@ -74,6 +76,8 @@ export function ConvertCenter() {
           {activeTool === 'json-format' && <JsonFormatter />}
           {activeTool === 'base64' && <Base64Converter />}
           {activeTool === 'url' && <UrlConverter />}
+          {activeTool === 'pdf-word' && <PdfWordConverter />}
+          {activeTool === 'markdown' && <MarkdownConverter />}
         </div>
       </div>
     </div>
@@ -392,6 +396,137 @@ function UrlConverter() {
           <Button onClick={() => { navigator.clipboard.writeText(output) }} variant="outline" size="sm" className="mt-2">复制结果</Button>
         </div>
       )}
+    </div>
+  )
+}
+
+// ============ PDF ↔ Word ============
+function PdfWordConverter() {
+  const [direction, setDirection] = useState<'pdf-word' | 'word-pdf'>('pdf-word')
+  const [file, setFile] = useState<File | null>(null)
+  const [result, setResult] = useState<{ blob: Blob; filename: string } | null>(null)
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const handleConvert = async () => {
+    if (!file) return
+    setLoading(true)
+    setError('')
+    setResult(null)
+    try {
+      const { pdfFileToWord, wordFileToPdf } = await import('@/lib/doc-converters')
+      const res = direction === 'pdf-word' ? await pdfFileToWord(file) : await wordFileToPdf(file)
+      setResult(res)
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : '转换失败')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDownload = () => {
+    if (result) downloadBlob(result.blob, result.filename)
+  }
+
+  const accept = direction === 'pdf-word' ? '.pdf' : '.docx'
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-xl font-bold">PDF ↔ Word</h2>
+      <p className="text-sm text-muted-foreground">
+        PDF 转 Word 会提取文字内容；Word 转 PDF 保留文字排版。
+      </p>
+      <div className="flex gap-2">
+        <Button variant={direction === 'pdf-word' ? 'default' : 'outline'} size="sm" onClick={() => { setDirection('pdf-word'); setFile(null); setResult(null); setError('') }}>PDF → Word</Button>
+        <Button variant={direction === 'word-pdf' ? 'default' : 'outline'} size="sm" onClick={() => { setDirection('word-pdf'); setFile(null); setResult(null); setError('') }}>Word → PDF</Button>
+      </div>
+      <div>
+        <label className="block text-sm font-medium mb-2">选择文件</label>
+        <input
+          type="file"
+          accept={accept}
+          onChange={(e) => { setFile(e.target.files?.[0] || null); setResult(null) }}
+          className="block text-sm text-muted-foreground file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-muted file:text-foreground hover:file:bg-muted/80 file:cursor-pointer"
+        />
+        {file && <p className="text-xs text-muted-foreground mt-1">{file.name} ({(file.size / 1024).toFixed(1)} KB)</p>}
+      </div>
+      <Button onClick={handleConvert} disabled={!file || loading}>
+        {loading ? '转换中，请稍候...' : '开始转换'}
+      </Button>
+      {error && <p className="text-sm text-red-500">{error}</p>}
+      {result && (
+        <div className="flex items-center gap-4 p-4 rounded-lg bg-muted/30 border border-border/30">
+          <div className="flex-1">
+            <p className="text-sm font-medium">{result.filename}</p>
+            <p className="text-xs text-muted-foreground">{(result.blob.size / 1024).toFixed(1)} KB · 转换完成</p>
+          </div>
+          <Button onClick={handleDownload} variant="outline" size="sm" className="gap-1.5">
+            <Download className="h-4 w-4" />下载
+          </Button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ============ Markdown 转换 ============
+function MarkdownConverter() {
+  const [direction, setDirection] = useState<'md-html' | 'html-md'>('md-html')
+  const [input, setInput] = useState('')
+  const [output, setOutput] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const handleConvert = async () => {
+    setLoading(true)
+    setError('')
+    try {
+      const { markdownToHtml, htmlToMarkdown } = await import('@/lib/doc-converters')
+      setOutput(direction === 'md-html' ? await markdownToHtml(input) : await htmlToMarkdown(input))
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : '转换失败')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDownload = () => {
+    const ext = direction === 'md-html' ? 'html' : 'md'
+    const blob = new Blob([output], { type: 'text/plain;charset=utf-8' })
+    downloadBlob(blob, `converted.${ext}`)
+  }
+
+  return (
+    <div className="space-y-6">
+      <h2 className="text-xl font-bold">Markdown 转换</h2>
+      <div className="flex gap-2">
+        <Button variant={direction === 'md-html' ? 'default' : 'outline'} size="sm" onClick={() => { setDirection('md-html'); setOutput('') }}>Markdown → HTML</Button>
+        <Button variant={direction === 'html-md' ? 'default' : 'outline'} size="sm" onClick={() => { setDirection('html-md'); setOutput('') }}>HTML → Markdown</Button>
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium mb-2">输入 {direction === 'md-html' ? 'Markdown' : 'HTML'}</label>
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={direction === 'md-html' ? '# 标题\n\n**加粗** 文字...' : '<h1>标题</h1><p>文字...</p>'}
+            className="w-full h-48 rounded-lg border border-border/60 bg-background p-3 text-sm font-mono resize-none"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-2">输出</label>
+          <textarea
+            value={output}
+            readOnly
+            className="w-full h-48 rounded-lg border border-border/60 bg-muted/30 p-3 text-sm font-mono resize-none"
+          />
+        </div>
+      </div>
+      {error && <p className="text-sm text-red-500">{error}</p>}
+      <div className="flex gap-3">
+        <Button onClick={handleConvert} disabled={!input.trim() || loading}>{loading ? '转换中...' : '转换'}</Button>
+        {output && <Button onClick={handleDownload} variant="outline" size="sm" className="gap-1.5"><Download className="h-4 w-4" />下载</Button>}
+      </div>
     </div>
   )
 }
