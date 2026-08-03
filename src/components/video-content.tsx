@@ -91,7 +91,7 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
 
     return (
         <div className="flex flex-col sm:flex-row min-h-screen bg-background">
-            <div className="hidden sm:block">
+            <div className="hidden sm:block desktop-sidebar">
                 <Sidebar
                     navigationData={navigationData}
                     siteInfo={siteData}
@@ -100,7 +100,7 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
             </div>
 
             <div className={cn(
-                "fixed inset-0 z-50 bg-background/80 backdrop-blur-sm transition-all sm:hidden",
+                "fixed inset-0 z-50 bg-background/80 backdrop-blur-sm transition-all sm:hidden mobile-sidebar-overlay",
                 isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
             )}>
                 <div className={cn(
@@ -207,3 +207,4 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
         </div>
     )
 }
+

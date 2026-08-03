@@ -28,20 +28,9 @@ export function NavigationCard({ item, siteConfig, featured = false }: Navigatio
       className="group block"
       title={displayDesc || displayTitle}
     >
-      <div className={`
-        relative flex items-start gap-4 rounded-xl px-4 py-4
-        transition-all duration-200 ease-out
-        border border-transparent
-        hover:bg-card hover:border-border/60 hover:shadow-sm
-        ${featured ? 'sm:px-5 sm:py-5' : ''}
-      `}>
+      <div className="relative flex items-start gap-4 rounded-xl bg-card border border-border/40 px-4 py-4 transition-all duration-200 ease-out hover:border-border/70 hover:shadow-md">
         {/* 图标 */}
-        <div className={`
-          flex-shrink-0 rounded-lg
-          transition-transform duration-300 ease-out
-          group-hover:scale-105
-          ${featured ? 'w-12 h-12' : 'w-10 h-10'}
-        `}>
+        <div className="flex-shrink-0 w-10 h-10 rounded-lg transition-transform duration-300 ease-out group-hover:scale-105">
           <SiteFavicon
             title={displayTitle}
             icon={item.icon}
@@ -53,27 +42,13 @@ export function NavigationCard({ item, siteConfig, featured = false }: Navigatio
         {/* 文字 */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
-            <h3 className={`
-              font-semibold text-foreground truncate leading-snug
-              transition-colors duration-200
-              group-hover:text-primary
-              ${featured ? 'text-base sm:text-lg' : 'text-[15px]'}
-            `}>
+            <h3 className="font-semibold text-[15px] text-foreground truncate leading-snug transition-colors duration-200 group-hover:text-primary">
               {displayTitle}
             </h3>
-            <ArrowUpRight className="
-              w-3.5 h-3.5 flex-shrink-0 text-muted-foreground/30
-              transition-all duration-300 ease-out
-              opacity-0 -translate-x-1 translate-y-0.5
-              group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0
-              group-hover:text-primary
-            " />
+            <ArrowUpRight className="w-3.5 h-3.5 flex-shrink-0 opacity-0 -translate-x-1 translate-y-0.5 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:text-primary text-muted-foreground/30" />
           </div>
           {displayDesc && (
-            <p className={`
-              text-muted-foreground/80 leading-relaxed mt-0.5
-              ${featured ? 'line-clamp-2 text-sm' : 'line-clamp-1 text-[13px]'}
-            `}>
+            <p className="text-muted-foreground/80 text-[13px] leading-relaxed mt-0.5 line-clamp-1">
               {displayDesc}
             </p>
           )}

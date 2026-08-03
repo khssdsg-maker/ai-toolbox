@@ -152,3 +152,12 @@
 @media (max-width: 640px) {
   .container { @apply px-4; }
 }
+
+/* 显式控制侧边栏显示 - 防止 Tailwind v4 响应式类失效 */
+@media (min-width: 640px) {
+  .desktop-sidebar { display: block !important; }
+  .mobile-sidebar-overlay { display: none !important; }
+}
+@media (max-width: 639px) {
+  .desktop-sidebar { display: none !important; }
+}

@@ -8,7 +8,7 @@ import { Sidebar } from '@/components/sidebar'
 import { SearchBar } from '@/components/search-bar'
 import { ModeToggle } from '@/components/mode-toggle'
 import { Footer } from '@/components/footer'
-import { MonitorPlay, Menu, ArrowRightLeft } from 'lucide-react'
+import { MonitorPlay, Menu, ArrowRightLeft, Globe } from 'lucide-react'
 import { Button } from "@/registry/new-york/ui/button"
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
@@ -92,7 +92,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
 
   return (
     <div className="flex flex-col sm:flex-row min-h-screen bg-background">
-      <div className="hidden sm:block">
+      <div className="hidden sm:block desktop-sidebar">
         <Sidebar
           navigationData={navigationData}
           siteInfo={siteData}
@@ -101,7 +101,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
       </div>
 
       <div className={cn(
-        "fixed inset-0 z-50 bg-background/80 backdrop-blur-sm transition-all sm:hidden",
+        "fixed inset-0 z-50 bg-background/80 backdrop-blur-sm transition-all sm:hidden mobile-sidebar-overlay",
         isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
       )}>
         <div className={cn(
@@ -132,6 +132,11 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
             <div className="flex items-center gap-1">
               <LanguageToggle />
               <ModeToggle />
+              <Link href="/tools" aria-label="网络工具箱">
+                <Button variant="ghost" size="icon" className="hover:bg-accent/50">
+                  <Globe className="h-[18px] w-[18px]" />
+                </Button>
+              </Link>
               <Link href="/convert" aria-label="文件转换">
                 <Button variant="ghost" size="icon" className="hover:bg-accent/50">
                   <ArrowRightLeft className="h-[18px] w-[18px]" />
@@ -179,17 +184,17 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
                       {locale === 'en' && category.titleEn ? category.titleEn : category.title}
                     </h2>
                     {category.items && category.items.length > 0 && (
-                      <span className="text-xs text-muted-foreground/60 tabular-nums font-medium">
+                      <span className="text-xs text-muted-foreground tabular-nums font-medium">
                         {category.items.length}
                       </span>
                     )}
                   </div>
-                  <div className="mt-2.5 h-px bg-border/60" />
+                  <div className="mt-3 border-b border-border/40" />
                 </div>
 
                 {/* 工具卡片列表 */}
                 {category.items && category.items.length > 0 && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-0">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     {category.items.map((item, itemIndex) => (
                       <NavigationCard
                         key={item.id}
@@ -208,7 +213,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
                       <h3 className="text-sm font-medium text-muted-foreground/70 mb-2 pl-4">
                         {subCategory.title}
                       </h3>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-0">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         {(subCategory.items || []).map((item) => (
                           <NavigationCard key={item.id} item={item} siteConfig={siteData} />
                         ))}
@@ -226,4 +231,8 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
     </div>
   )
 }
+
+
+
+
 
