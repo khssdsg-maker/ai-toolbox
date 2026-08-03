@@ -2,10 +2,11 @@
 
 import { useState } from 'react'
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog'
-import { PlayCircle } from 'lucide-react'
+import { PlayCircle, Star } from 'lucide-react'
 import type { NavigationSubItem } from '@/types/navigation'
 import type { SiteConfig } from '@/types/site'
 import Image from 'next/image'
+import { favoriteVideo, isFavorited } from '@/lib/favorites'
 
 interface VideoCardProps {
     item: NavigationSubItem
@@ -17,6 +18,25 @@ export function VideoCard({ item }: VideoCardProps) {
     const [imageLoaded, setImageLoaded] = useState(false)
     const [imageError, setImageError] = useState(false)
     const { videoConfig } = item
+    const [favMsg, setFavMsg] = useState('')
+
+    // 收藏当前正在播放的视频
+    const handleFavCurrent = () => {
+        const result = favoriteVideo({
+            title: item.title,
+            href: item.href,
+            description: item.description,
+            icon: item.icon,
+            platform: videoConfig?.type === 'bilibili' ? '哔哩哔哩' : videoConfig?.type === 'youtube' ? 'YouTube' : undefined,
+            videoConfig,
+        })
+        if (result === 'duplicate') {
+            setFavMsg('已在收藏夹')
+        } else {
+            setFavMsg('收藏成功 ✓')
+        }
+        setTimeout(() => setFavMsg(''), 2000)
+    }
 
     const isExternalIcon = item.icon?.startsWith('http') || item.icon?.startsWith('//')
     const isLocalIcon = item.icon && !isExternalIcon
@@ -184,9 +204,18 @@ export function VideoCard({ item }: VideoCardProps) {
 
                         {/* 视频信息 */}
                         <div className="p-4 bg-zinc-900">
-                            <h3 className="text-white font-medium text-base line-clamp-2">
+                            <div className="flex items-start justify-between gap-3">
+                            <h3 className="text-white font-medium text-base line-clamp-2 flex-1">
                                 {item.title}
                             </h3>
+                            <button
+                                onClick={handleFavCurrent}
+                                className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/30 border border-amber-500/40 text-amber-400 text-sm transition-colors"
+                            >
+                                <Star className="w-4 h-4" />
+                                {favMsg || '收藏此视频'}
+                            </button>
+                            </div>
                             {item.description && (
                                 <p className="text-zinc-400 text-sm mt-2 line-clamp-2">
                                     {item.description}
@@ -199,6 +228,7 @@ export function VideoCard({ item }: VideoCardProps) {
         </>
     )
 }
+
 
 
 
