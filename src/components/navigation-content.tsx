@@ -8,7 +8,7 @@ import { Sidebar } from '@/components/sidebar'
 import { SearchBar } from '@/components/search-bar'
 import { ModeToggle } from '@/components/mode-toggle'
 import { Footer } from '@/components/footer'
-import { MonitorPlay, Menu, ArrowRightLeft, Globe } from 'lucide-react'
+import { MonitorPlay, Menu, ArrowRightLeft, Globe, Star } from 'lucide-react'
 import { Button } from "@/registry/new-york/ui/button"
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
@@ -143,6 +143,11 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
             <div className="flex items-center gap-1">
               <LanguageToggle />
               <ModeToggle />
+              <Link href="/favorites" aria-label="我的收藏">
+                <Button variant="ghost" size="icon" className="hover:bg-accent/50">
+                  <Star className="h-[18px] w-[18px]" />
+                </Button>
+              </Link>
               <Link href="/tools" aria-label="网络工具箱">
                 <Button variant="ghost" size="icon" className="hover:bg-accent/50">
                   <Globe className="h-[18px] w-[18px]" />
@@ -242,6 +247,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
     </div>
   )
 }
+
 
 
 

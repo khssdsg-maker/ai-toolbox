@@ -1,6 +1,51 @@
 {
   "navigationItems": [
     {
+      "description": "精选优质视频内容",
+      "title": "精选视频",
+      "titleEn": "Featured Videos",
+      "enabled": true,
+      "subCategories": [],
+      "id": "featured-videos",
+      "icon": "Star",
+      "items": [
+        {
+          "description": "周星驰 巩俐 陈百祥 郑佩佩 经典喜剧 4K修复",
+          "enabled": true,
+          "href": "https://www.bilibili.com/video/BV1ADzkBoEDS/",
+          "titleEn": "Flirting Scholar 4K Remastered",
+          "id": "video-tangbohu-1",
+          "title": "【唐伯虎点秋香】4K 自购原碟修复 全网最清晰版本 国语中字",
+          "videoConfig": {
+            "bvid": "BV1ADzkBoEDS",
+            "p": 1,
+            "cid": "35585262359",
+            "aid": "115949621610277",
+            "type": "bilibili"
+          },
+          "icon": "/assets/cover/cover_1769518829333.jpg",
+          "descriptionEn": "Stephen Chow classic comedy, 4K remastered"
+        },
+        {
+          "description": "读书分享：《沃尔特·施洛斯访谈资料集》",
+          "enabled": true,
+          "href": "https://www.bilibili.com/video/BV1pM411i7a1/",
+          "titleEn": "Walter Schloss Interview 1985",
+          "id": "video-schloss",
+          "title": "《沃尔特·施洛斯访谈资料集》1985年：真材实料",
+          "videoConfig": {
+            "bvid": "BV1pM411i7a1",
+            "p": 1,
+            "cid": "986768320",
+            "aid": "523604377",
+            "type": "bilibili"
+          },
+          "icon": "/assets/cover/cover_1769595135900.jpg",
+          "descriptionEn": "Book sharing: Walter Schloss interview collection"
+        }
+      ]
+    },
+    {
       "id": "video-platforms",
       "title": "视频平台",
       "titleEn": "Video Platforms",

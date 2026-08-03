@@ -4,11 +4,12 @@ import { useState, useMemo, useEffect } from 'react'
 import type { NavigationData, NavigationItem, NavigationSubItem } from '@/types/navigation'
 import type { SiteConfig } from '@/types/site'
 import { NavigationCard } from '@/components/navigation-card'
+import { VideoCard } from '@/components/video-card'
 import { Sidebar } from '@/components/sidebar'
 import { SearchBar } from '@/components/search-bar'
 import { ModeToggle } from '@/components/mode-toggle'
 import { Footer } from '@/components/footer'
-import { MonitorPlay, Menu, Home, ArrowRightLeft, Globe } from 'lucide-react'
+import { MonitorPlay, Menu, Home, ArrowRightLeft, Globe, Star } from 'lucide-react'
 import { Button } from "@/registry/new-york/ui/button"
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
@@ -136,6 +137,11 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
                             />
                         </div>
                         <div className="flex items-center gap-1">
+                            <Link href="/favorites" aria-label="我的收藏">
+                                <Button variant="ghost" size="icon" className="hover:bg-accent/50">
+                                    <Star className="h-[18px] w-[18px]" />
+                                </Button>
+                            </Link>
                             <Link href="/tools" aria-label="网络工具箱">
                                 <Button variant="ghost" size="icon" className="hover:bg-accent/50">
                                     <Globe className="h-[18px] w-[18px]" />
@@ -200,12 +206,16 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
                                     {category.items && category.items.length > 0 && (
                                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                                             {category.items.map((item, itemIndex) => (
-                                                <NavigationCard
-                                                    key={item.id}
-                                                    item={item}
-                                                    siteConfig={siteData}
-                                                    featured={itemIndex === 0 && category.items!.length > 3}
-                                                />
+                                                item.videoConfig ? (
+                                                    <VideoCard key={item.id} item={item} siteConfig={siteData} />
+                                                ) : (
+                                                    <NavigationCard
+                                                        key={item.id}
+                                                        item={item}
+                                                        siteConfig={siteData}
+                                                        featured={itemIndex === 0 && category.items!.length > 3}
+                                                    />
+                                                )
                                             ))}
                                         </div>
                                     )}
@@ -220,3 +230,5 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
         </div>
     )
 }
+
+

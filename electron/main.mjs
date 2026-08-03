@@ -53,7 +53,6 @@ async function createWindow() {
   if (isDev) {
     // 开发模式：连接本地 dev server
     await mainWindow.loadURL('http://localhost:3000')
-    mainWindow.webContents.openDevTools()
   } else {
     // 生产模式：启动 Next.js 服务
     const port = await startNextServer()
@@ -80,3 +79,4 @@ app.on('window-all-closed', () => {
 app.on('quit', () => {
   if (nextProcess) nextProcess.kill()
 })
+
