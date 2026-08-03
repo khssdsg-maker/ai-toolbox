@@ -1,89 +1,153 @@
 {
   "navigationItems": [
     {
-      "id": "1769515180615",
-      "title": "精选视频",
-      "icon": "Home",
-      "description": "",
+      "id": "video-platforms",
+      "title": "视频平台",
+      "titleEn": "Video Platforms",
+      "icon": "PlayCircle",
+      "description": "主流视频平台入口",
       "enabled": true,
       "items": [
         {
-          "id": "1769518082194",
-          "title": "【唐伯虎点秋香】 4K 自购原碟修复 全网最清晰版本 国语中字周星驰 巩俐 陈百祥 郑佩佩 朱咪咪 梁家仁 苑琼丹 梁荣忠 黄一山 黄霑 吴镇宇",
-          "href": "https://www.bilibili.com/video/BV1ADzkBoEDS/?spm_id_from=333.1007.tianma.1-2-2.click&vd_source=3e256028a6bd06a466a4ca2412cd6f21",
-          "description": "",
-          "icon": "/assets/cover/cover_1769518085708.jpg",
+          "id": "bilibili",
+          "title": "哔哩哔哩",
+          "titleEn": "Bilibili",
+          "href": "https://www.bilibili.com",
+          "description": "国内最大的年轻人社区，弹幕视频平台",
+          "descriptionEn": "China's largest youth community with bullet comments",
+          "icon": "https://www.bilibili.com/favicon.ico",
           "enabled": true
         },
         {
-          "id": "1769518825534",
-          "title": "【唐伯虎点秋香】 4K 自购原碟修复 全网最清晰版本 国语中字周星驰 巩俐 陈百祥 郑佩佩 朱咪咪 梁家仁 苑琼丹 梁荣忠 黄一山 黄霑 吴镇宇",
-          "href": "https://www.bilibili.com/video/BV1ADzkBoEDS/?spm_id_from=333.1007.tianma.1-2-2.click&vd_source=3e256028a6bd06a466a4ca2412cd6f21",
-          "description": "",
-          "icon": "/assets/cover/cover_1769518829333.jpg",
-          "enabled": true,
-          "videoConfig": {
-            "type": "bilibili",
-            "bvid": "BV1ADzkBoEDS",
-            "aid": "115949621610277",
-            "cid": "35585262359",
-            "p": 1
-          }
-        }
-      ],
-      "subCategories": []
-    },
-    {
-      "id": "1769594403680",
-      "title": "七年级",
-      "icon": "PlayCircle",
-      "description": "",
-      "enabled": true,
-      "items": [],
-      "subCategories": [
+          "id": "youtube",
+          "title": "YouTube",
+          "href": "https://www.youtube.com",
+          "description": "全球最大的视频分享平台",
+          "descriptionEn": "World's largest video sharing platform",
+          "icon": "https://www.youtube.com/favicon.ico",
+          "enabled": true
+        },
         {
-          "id": "61ed43d7-78f6-4eaa-881b-973c16a77f91",
-          "title": "语文",
-          "icon": "PlayCircle",
-          "description": "",
-          "enabled": true,
-          "items": [
-            {
-              "id": "1769595108871",
-              "title": "《沃尔特·施洛斯访谈资料集》  1985年：真材实料",
-              "href": "https://www.bilibili.com/video/BV1pM411i7a1/?spm_id_from=333.337.search-card.all.click",
-              "description": "读书分享：《沃尔特·施洛斯访谈资料集》 作者：不详",
-              "icon": "/assets/cover/cover_1769595135900.jpg",
-              "enabled": true,
-              "videoConfig": {
-                "type": "bilibili",
-                "bvid": "BV1pM411i7a1",
-                "aid": "523604377",
-                "cid": "986768320",
-                "p": 1
-              }
-            }
-          ]
+          "id": "douyin",
+          "title": "抖音",
+          "href": "https://www.douyin.com",
+          "description": "短视频社交平台，记录美好生活",
+          "descriptionEn": "Short video social platform",
+          "icon": "https://www.douyin.com/favicon.ico",
+          "enabled": true
+        },
+        {
+          "id": "kuaishou",
+          "title": "快手",
+          "href": "https://www.kuaishou.com",
+          "description": "短视频社区平台，记录世界记录你",
+          "descriptionEn": "Short video community platform",
+          "icon": "https://www.kuaishou.com/favicon.ico",
+          "enabled": true
+        },
+        {
+          "id": "iqiyi",
+          "title": "爱奇艺",
+          "href": "https://www.iqiyi.com",
+          "description": "综合视频平台，影视剧集综艺节目",
+          "descriptionEn": "Comprehensive video platform for movies and shows",
+          "icon": "https://www.iqiyi.com/favicon.ico",
+          "enabled": true
+        },
+        {
+          "id": "youku",
+          "title": "优酷",
+          "href": "https://www.youku.com",
+          "description": "阿里巴巴旗下综合视频平台",
+          "descriptionEn": "Alibaba's video platform",
+          "icon": "https://www.youku.com/favicon.ico",
+          "enabled": true
         }
       ]
     },
     {
-      "id": "1769594423824",
-      "title": "八年级",
-      "icon": "PlayCircle",
-      "description": "",
+      "id": "video-tools",
+      "title": "视频工具",
+      "titleEn": "Video Tools",
+      "icon": "Film",
+      "description": "视频创作和编辑工具",
       "enabled": true,
-      "items": [],
-      "subCategories": []
+      "items": [
+        {
+          "id": "jianying",
+          "title": "剪映",
+          "href": "https://www.capcut.cn",
+          "description": "字节跳动推出的视频编辑工具，AI剪辑",
+          "icon": "https://www.capcut.cn/favicon.ico",
+          "enabled": true
+        },
+        {
+          "id": "handbrake",
+          "title": "HandBrake",
+          "href": "https://handbrake.fr",
+          "description": "开源视频转码工具，免费转换视频格式",
+          "icon": "https://handbrake.fr/favicon.ico",
+          "enabled": true
+        },
+        {
+          "id": "obs",
+          "title": "OBS Studio",
+          "href": "https://obsproject.com",
+          "description": "开源录屏和直播推流软件",
+          "icon": "https://obsproject.com/favicon.ico",
+          "enabled": true
+        },
+        {
+          "id": "vimeo",
+          "title": "Vimeo",
+          "href": "https://vimeo.com",
+          "description": "高质量视频托管平台，创作者首选",
+          "icon": "https://vimeo.com/favicon.ico",
+          "enabled": true
+        }
+      ]
     },
     {
-      "id": "1769594436386",
-      "title": "九年级",
-      "icon": "PlayCircle",
-      "description": "",
+      "id": "video-ai",
+      "title": "AI 视频生成",
+      "titleEn": "AI Video Generation",
+      "icon": "Sparkles",
+      "description": "AI驱动的视频生成工具",
       "enabled": true,
-      "items": [],
-      "subCategories": []
+      "items": [
+        {
+          "id": "runway",
+          "title": "Runway",
+          "href": "https://runwayml.com",
+          "description": "AI视频生成和编辑平台，文字生成视频",
+          "icon": "https://runwayml.com/favicon.ico",
+          "enabled": true
+        },
+        {
+          "id": "pika",
+          "title": "Pika",
+          "href": "https://pika.art",
+          "description": "AI视频创作工具，文字或图片生成短视频",
+          "icon": "https://pika.art/favicon.ico",
+          "enabled": true
+        },
+        {
+          "id": "klingai",
+          "title": "可灵AI",
+          "href": "https://klingai.com",
+          "description": "快手推出的AI视频生成工具",
+          "icon": "https://klingai.com/favicon.ico",
+          "enabled": true
+        },
+        {
+          "id": "heygen",
+          "title": "HeyGen",
+          "href": "https://www.heygen.com",
+          "description": "AI数字人视频生成平台",
+          "icon": "https://www.heygen.com/favicon.ico",
+          "enabled": true
+        }
+      ]
     }
   ]
 }
