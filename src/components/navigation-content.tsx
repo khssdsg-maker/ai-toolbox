@@ -8,12 +8,13 @@ import { Sidebar } from '@/components/sidebar'
 import { SearchBar } from '@/components/search-bar'
 import { ModeToggle } from '@/components/mode-toggle'
 import { Footer } from '@/components/footer'
-import { MonitorPlay, Menu, ArrowRightLeft, Globe, Star } from 'lucide-react'
+import { MonitorPlay, Menu, ArrowRightLeft, Globe, Star, Settings2 } from 'lucide-react'
 import { Button } from "@/registry/new-york/ui/button"
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { LanguageToggle } from '@/components/language-toggle'
 import { useLanguage } from '@/lib/language-context'
+import { SettingsDialog } from '@/components/settings-dialog'
 
 interface NavigationContentProps {
   navigationData: NavigationData
@@ -35,6 +36,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
   
   
   const [searchQuery, setSearchQuery] = useState('')
+  const [showSettings, setShowSettings] = useState(false)
 
   const searchResults = useMemo(() => {
     const query = searchQuery.toLowerCase().trim()
@@ -143,6 +145,9 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
             <div className="flex items-center gap-1">
               <LanguageToggle />
               <ModeToggle />
+              <Button variant="ghost" size="icon" className="hover:bg-accent/50" onClick={() => setShowSettings(true)} aria-label="设置">
+                <Settings2 className="h-[18px] w-[18px]" />
+              </Button>
               <Link href="/favorites" aria-label="我的收藏">
                 <Button variant="ghost" size="icon" className="hover:bg-accent/50">
                   <Star className="h-[18px] w-[18px]" />
@@ -243,10 +248,14 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
         </div>
 
         <Footer siteInfo={siteData} />
+
+        {/* 设置弹窗 */}
+        <SettingsDialog open={showSettings} onClose={() => setShowSettings(false)} />
       </main>
     </div>
   )
 }
+
 
 
 

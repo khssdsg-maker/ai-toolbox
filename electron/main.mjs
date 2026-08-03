@@ -24,6 +24,23 @@ function saveSettings(s) {
   try { fs.writeFileSync(settingsFile(), JSON.stringify(s, null, 2)) } catch {}
 }
 
+// ============ 收藏文件（主进程直接管理，可靠不丢） ============
+function favFile() {
+  return path.join(app.getPath('userData'), 'favorites.json')
+}
+function readFavFile() {
+  try { return JSON.parse(fs.readFileSync(favFile(), 'utf8')) } catch { return [] }
+}
+function writeFavFile(list) {
+  try { fs.writeFileSync(favFile(), JSON.stringify(list, null, 2)) } catch {}
+}
+function normUrl(u) {
+  try {
+    const x = new URL(u)
+    return (x.origin + x.pathname).replace(/\/+$/, '')
+  } catch { return u }
+}
+
 // 检测已安装的浏览器
 function detectBrowsers() {
   const pf = process.env['ProgramFiles'] || 'C:\\Program Files'
@@ -229,25 +246,35 @@ ipcMain.on('tab:favlink', async () => {
     if (response === 1) return
   }
 
-  // 发给主应用保存收藏（不切换窗口，结果回传到标签栏提示）
-  if (mainWindow && !mainWindow.isDestroyed()) {
-    mainWindow.webContents.send('app:favorite-video', {
-      title,
-      href: url,
-      icon: cover,
-      platform: parsed ? parsed.platform : undefined,
-      videoConfig: parsed ? parsed.videoConfig : undefined,
-    })
-  } else {
-    dialog.showMessageBox(browserWin, { type: 'info', title: '收藏链接', message: '主窗口未就绪，请稍后重试', buttons: ['知道了'] })
+  // 主进程直接保存收藏文件（查重）
+  const list = readFavFile()
+  const exists = list.some((f) => normUrl(f.href) === normUrl(url))
+  if (exists) {
+    if (browserWin && !browserWin.isDestroyed()) {
+      browserWin.webContents.send('favlink-result', { status: 'duplicate', title })
+    }
+    return
+  }
+  list.unshift({
+    id: av- + Date.now(),
+    title,
+    href: url,
+    icon: cover,
+    platform: parsed ? parsed.platform : undefined,
+    videoConfig: parsed ? parsed.videoConfig : undefined,
+  })
+  writeFavFile(list)
+  if (browserWin && !browserWin.isDestroyed()) {
+    browserWin.webContents.send('favlink-result', { status: 'added', title })
   }
 })
 
-// 收藏保存结果回传：转发到浏览器窗口标签栏显示提示
-ipcMain.on('favorite:result', (e, result) => {
-  if (browserWin && !browserWin.isDestroyed()) {
-    browserWin.webContents.send('favlink-result', result)
-  }
+// ============ 设置功能（主页面设置弹窗用） ============
+ipcMain.handle('settings:get', () => {
+  return { settings: loadSettings(), browsers: detectBrowsers() }
+})
+ipcMain.on('settings:set', (e, s) => {
+  saveSettings(s)
 })
 
 // 处理外部链接点击
@@ -311,6 +338,20 @@ function startStaticServer(rootDir) {
   return new Promise((resolve) => {
     server = http.createServer((req, res) => {
       let urlPath = decodeURIComponent(req.url.split('?')[0])
+
+      // 收藏数据接口：读取/删除主进程保存的收藏
+      if (urlPath === '/favorites-data') {
+        if (req.method === 'DELETE') {
+          const qid = new URL(req.url, 'http://localhost').searchParams.get('id')
+          writeFavFile(readFavFile().filter((f) => f.id !== qid))
+          res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' })
+          res.end(JSON.stringify({ ok: true }))
+          return
+        }
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' })
+        res.end(JSON.stringify(readFavFile()))
+        return
+      }
       let filePath = path.join(rootDir, urlPath)
       if (urlPath.endsWith('/') || !path.extname(urlPath)) {
         filePath = path.join(filePath, 'index.html')
@@ -384,5 +425,7 @@ app.on('window-all-closed', () => {
 app.on('quit', () => {
   if (server) server.close()
 })
+
+
 
 

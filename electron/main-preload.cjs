@@ -5,3 +5,4 @@ contextBridge.exposeInMainWorld('appAPI', {
   sendFavoriteResult: (result) => ipcRenderer.send('favorite:result', result),
 })
 
+
