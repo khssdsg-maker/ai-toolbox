@@ -6,7 +6,7 @@ import { Button } from '@/registry/new-york/ui/button'
 import Link from 'next/link'
 import { VideoCard } from '@/components/video-card'
 import {
-  getFavorites, addFavorite, removeFavorite, parseBilibiliUrl,
+  getFavorites, addFavorite, removeFavorite, parseVideoUrl,
   type FavoriteVideo,
 } from '@/lib/favorites'
 
@@ -26,11 +26,14 @@ export function FavoritesCenter() {
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault()
     if (!title.trim() || !url.trim()) return
-    const videoConfig = parseBilibiliUrl(url)
+    const parsed = parseVideoUrl(url)
+    const videoConfig = parsed?.videoConfig
     const updated = addFavorite({
       title: title.trim(),
       href: url.trim(),
       description: description.trim() || undefined,
+      icon: parsed?.cover,
+      platform: parsed?.platform,
       videoConfig,
     })
     setFavorites(updated)
@@ -157,3 +160,4 @@ export function FavoritesCenter() {
     </div>
   )
 }
+

@@ -1,11 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog'
-import { PlayCircle } from 'lucide-react'
+import { PlayCircle, Star } from 'lucide-react'
 import type { NavigationSubItem } from '@/types/navigation'
 import type { SiteConfig } from '@/types/site'
 import Image from 'next/image'
+import { useToast } from '@/components/ui/use-toast'
+import { favoriteVideo, isFavorited, parseVideoUrl, fetchBilibiliCover } from '@/lib/favorites'
 
 interface VideoCardProps {
     item: NavigationSubItem
@@ -13,7 +15,48 @@ interface VideoCardProps {
 }
 
 export function VideoCard({ item }: VideoCardProps) {
+    const { toast } = useToast()
     const [isOpen, setIsOpen] = useState(false)
+    const [favorited, setFavorited] = useState(false)
+
+    // 初始化收藏状态
+    useEffect(() => {
+        setFavorited(isFavorited(item.href))
+    }, [item.href])
+
+    // 收藏当前视频：自动识别来源、查重、提取封面
+    const handleFavorite = async (e: React.MouseEvent) => {
+        e.stopPropagation()
+        if (favorited) {
+            toast({ title: '已收藏', description: '这个视频已经在收藏夹里了' })
+            return
+        }
+        const parsed = parseVideoUrl(item.href)
+        let cover = item.icon
+        // B站视频没有封面时尝试自动获取
+        const bvid = parsed?.videoConfig?.bvid || videoConfig?.bvid
+        if (!cover && parsed?.videoConfig?.type === 'bilibili' && bvid) {
+            cover = await fetchBilibiliCover(bvid)
+        }
+        const platform = parsed?.platform
+            || (videoConfig?.type === 'bilibili' ? '哔哩哔哩' : undefined)
+            || (videoConfig?.type === 'youtube' ? 'YouTube' : undefined)
+        const result = favoriteVideo({
+            title: item.title,
+            href: item.href,
+            description: item.description,
+            icon: cover,
+            platform,
+            videoConfig: videoConfig || parsed?.videoConfig,
+        })
+        if (result === 'duplicate') {
+            setFavorited(true)
+            toast({ title: '已收藏', description: '这个视频已经在收藏夹里了' })
+        } else {
+            setFavorited(true)
+            toast({ title: '收藏成功', description: '已加入收藏，可在收藏页查看和播放' })
+        }
+    }
     const [imageLoaded, setImageLoaded] = useState(false)
     const [imageError, setImageError] = useState(false)
     const { videoConfig } = item
@@ -197,5 +240,6 @@ export function VideoCard({ item }: VideoCardProps) {
         </>
     )
 }
+
 
 
