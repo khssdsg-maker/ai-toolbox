@@ -191,6 +191,15 @@ export function VideoCard({ item }: VideoCardProps) {
                     {/* 平台标识 */}
                     {getPlatformBadge()}
 
+                    {/* 收藏按钮 */}
+                    <button
+                        onClick={handleFavorite}
+                        title={favorited ? '已收藏' : '收藏这个视频'}
+                        className={"absolute top-2 right-2 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all " + (favorited ? "bg-amber-500/90 hover:bg-amber-600" : "bg-black/50 hover:bg-black/70 backdrop-blur-sm")}
+                    >
+                        <Star className={"w-4 h-4 " + (favorited ? "text-white fill-white" : "text-white")} />
+                    </button>
+
                     {/* 渐变遮罩 - 底部 */}
                     <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60 to-transparent" />
                 </div>
@@ -240,6 +249,7 @@ export function VideoCard({ item }: VideoCardProps) {
         </>
     )
 }
+
 
 
 

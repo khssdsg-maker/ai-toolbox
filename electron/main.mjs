@@ -165,6 +165,84 @@ ipcMain.on('tab:activate', (e, id) => activateTab(id))
 ipcMain.on('tab:close', (e, id) => closeTab(id))
 ipcMain.on('tab:new', () => addTab('about:blank'))
 
+// ============ 标签栏"收藏链接"功能 ============
+function parseVideoInMain(url) {
+  const bvMatch = url.match(/bilibili\.com\/video\/(BV[a-zA-Z0-9]+)/)
+  if (bvMatch) return { platform: '哔哩哔哩', videoConfig: { type: 'bilibili', bvid: bvMatch[1] } }
+  const ytMatch =
+    url.match(/[?&]v=([a-zA-Z0-9_-]{6,})/) ||
+    url.match(/youtu\.be\/([a-zA-Z0-9_-]{6,})/) ||
+    url.match(/youtube\.com\/(?:shorts|embed)\/([a-zA-Z0-9_-]{6,})/)
+  if (ytMatch && /youtube\.com|youtu\.be/.test(url)) {
+    return { platform: 'YouTube', videoConfig: { type: 'youtube', videoId: ytMatch[1] }, cover: `https://img.youtube.com/vi/${ytMatch[1]}/hqdefault.jpg` }
+  }
+  return undefined
+}
+
+async function fetchBilibiliInfo(bvid) {
+  try {
+    const res = await fetch(`https://api.bilibili.com/x/web-interface/view?bvid=${bvid}`, { signal: AbortSignal.timeout(6000) })
+    const data = await res.json()
+    if (data && data.code === 0 && data.data) {
+      return { title: data.data.title, cover: String(data.data.pic || '').replace(/^http:/, 'https:') }
+    }
+  } catch {}
+  return {}
+}
+
+ipcMain.on('tab:favlink', async () => {
+  const tab = tabs.find((t) => t.id === activeTabId)
+  const url = tab ? tab.view.webContents.getURL() : ''
+
+  if (!tab || !url || url === 'about:blank') {
+    dialog.showMessageBox(browserWin, {
+      type: 'info',
+      title: '收藏链接',
+      message: '当前标签页没有内容',
+      detail: '请先打开一个视频或网页，再点击"收藏链接"。',
+      buttons: ['知道了'],
+    })
+    return
+  }
+
+  const parsed = parseVideoInMain(url)
+  let title = tab.title || url
+  let cover = parsed ? parsed.cover : undefined
+
+  // B站视频自动获取标题和封面
+  if (parsed && parsed.videoConfig && parsed.videoConfig.type === 'bilibili' && parsed.videoConfig.bvid) {
+    const info = await fetchBilibiliInfo(parsed.videoConfig.bvid)
+    if (info.title) title = info.title
+    if (info.cover) cover = info.cover
+  }
+
+  // 不是视频链接时询问是否收藏为普通链接
+  if (!parsed) {
+    const { response } = await dialog.showMessageBox(browserWin, {
+      type: 'question',
+      title: '收藏链接',
+      message: '这个链接不是B站/YouTube视频',
+      detail: url,
+      buttons: ['仍然收藏这个链接', '取消'],
+      cancelId: 1,
+    })
+    if (response === 1) return
+  }
+
+  // 发给主应用窗口保存收藏（前端会弹提示）
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('app:favorite-video', {
+      title,
+      href: url,
+      icon: cover,
+      platform: parsed ? parsed.platform : undefined,
+      videoConfig: parsed ? parsed.videoConfig : undefined,
+    })
+    mainWindow.show()
+    mainWindow.focus()
+  }
+})
+
 // 处理外部链接点击
 async function handleExternalLink(url) {
   const settings = loadSettings()
@@ -254,7 +332,7 @@ async function createWindow() {
     minWidth: 800,
     minHeight: 600,
     title: 'AI万能工具箱',
-    webPreferences: { nodeIntegration: false, contextIsolation: true },
+    webPreferences: { nodeIntegration: false, contextIsolation: true, preload: path.join(__dirname, 'main-preload.cjs') },
     autoHideMenuBar: true,
     backgroundColor: '#faf9f7',
     show: false,
@@ -299,3 +377,4 @@ app.on('window-all-closed', () => {
 app.on('quit', () => {
   if (server) server.close()
 })
+

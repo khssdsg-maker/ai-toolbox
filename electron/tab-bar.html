@@ -89,14 +89,31 @@
     flex-shrink: 0;
   }
   .newtab:hover { background: var(--hover); color: var(--accent); }
+  .favlink {
+    display: flex; align-items: center; gap: 5px;
+    height: 30px; padding: 0 10px;
+    margin-right: 10px;
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-size: 12px;
+    cursor: pointer;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+  .favlink:hover { background: var(--hover); color: var(--accent); border-color: var(--accent); }
+  .favlink .star { color: var(--accent); font-size: 14px; }
 </style>
 </head>
 <body>
   <div class="tabs" id="tabs"></div>
   <div class="newtab" id="newtab" title="新建标签页">+</div>
+  <div class="favlink" id="favlink" title="粘贴视频链接，自动识别并收藏">
+    <span class="star">&#9733;</span><span>收藏链接</span>
+  </div>
 <script>
   const tabsEl = document.getElementById('tabs')
   document.getElementById('newtab').addEventListener('click', () => window.tabAPI.newTab())
+  document.getElementById('favlink').addEventListener('click', () => window.tabAPI.favLink())
 
   function render(data) {
     tabsEl.innerHTML = ''
@@ -122,3 +139,4 @@
 </script>
 </body>
 </html>
+
