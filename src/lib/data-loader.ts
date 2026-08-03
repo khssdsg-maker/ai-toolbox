@@ -52,7 +52,7 @@ export function processNavigationSubItem(item: NavigationSubItemRaw): Navigation
 }
 
 export function processNavigationData(navigationDataRaw: NavigationDataRaw): NavigationData {
-    const processedItems = navigationDataRaw.navigationItems.map(category => ({
+    const processedItems = navigationDataRaw.navigationItems.filter(Boolean).map(category => ({
         ...category,
         items: category.items?.map(processNavigationSubItem),
         subCategories: category.subCategories?.map(sub => ({

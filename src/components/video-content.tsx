@@ -12,6 +12,7 @@ import { MonitorPlay, Menu, Home } from 'lucide-react'
 import { Button } from "@/registry/new-york/ui/button"
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/lib/language-context'
 
 interface VideoContentProps {
     navigationData: NavigationData
@@ -19,10 +20,10 @@ interface VideoContentProps {
 }
 
 export function VideoContent({ navigationData, siteData }: VideoContentProps) {
+    const { locale } = useLanguage()
     const [isSidebarOpen, setIsSidebarOpen] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
 
-    // 修复类型检查和搜索逻辑
     const searchResults = useMemo(() => {
         const query = searchQuery.toLowerCase().trim()
         if (!query) return []
@@ -37,15 +38,15 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
         }> = []
 
         navigationData.navigationItems.forEach(category => {
-            // 搜索主分类下的项目（只搜索启用的）
             const items = (category.items || []).filter(item => {
                 if (item.enabled === false) return false
                 const titleMatch = item.title.toLowerCase().includes(query)
-                const descMatch = item.description?.toLowerCase().includes(query)
-                return titleMatch || descMatch
+                const titleEnMatch = item.titleEn?.toLowerCase().includes(query) || false
+                const descMatch = item.description?.toLowerCase().includes(query) || false
+                const descEnMatch = item.descriptionEn?.toLowerCase().includes(query) || false
+                return titleMatch || titleEnMatch || descMatch || descEnMatch
             })
 
-            // 搜索子分类下的项目（只搜索启用的）
             const subResults: Array<{
                 title: string
                 items: (NavigationItem | NavigationSubItem)[]
@@ -57,8 +58,10 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
                     const subItems = (sub.items || []).filter(item => {
                         if (item.enabled === false) return false
                         const titleMatch = item.title.toLowerCase().includes(query)
-                        const descMatch = item.description?.toLowerCase().includes(query)
-                        return titleMatch || descMatch
+                        const titleEnMatch = item.titleEn?.toLowerCase().includes(query) || false
+                        const descMatch = item.description?.toLowerCase().includes(query) || false
+                        const descEnMatch = item.descriptionEn?.toLowerCase().includes(query) || false
+                        return titleMatch || titleEnMatch || descMatch || descEnMatch
                     })
 
                     if (subItems.length > 0) {
@@ -70,7 +73,6 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
                 })
             }
 
-            // 只有当主分类或子分类有匹配结果时才添加到结果中
             if (items.length > 0 || subResults.length > 0) {
                 results.push({
                     category,
@@ -88,7 +90,7 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
     }
 
     return (
-        <div className="flex flex-col sm:flex-row min-h-screen">
+        <div className="flex flex-col sm:flex-row min-h-screen bg-background">
             <div className="hidden sm:block">
                 <Sidebar
                     navigationData={navigationData}
@@ -102,7 +104,7 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
                 isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
             )}>
                 <div className={cn(
-                    "fixed inset-y-0 right-0 sm:left-0 w-3/4 max-w-xs bg-background shadow-lg transform transition-transform duration-200 ease-in-out",
+                    "fixed inset-y-0 right-0 sm:left-0 w-3/4 max-w-xs bg-background shadow-2xl transform transition-transform duration-300 ease-out",
                     isSidebarOpen ? "translate-x-0" : "translate-x-full sm:-translate-x-full"
                 )}>
                     <Sidebar
@@ -113,10 +115,11 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
                 </div>
             </div>
 
-            <main className="flex-1">
-                <div className="sticky top-0 bg-background/90 backdrop-blur-sm z-30 px-3 sm:px-6 py-2">
-                    <div className="flex items-center gap-3">
-                        <div className="flex-1">
+            <main className="flex-1 min-w-0">
+                {/* 顶部导航栏 - 与首页一致 */}
+                <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border/40">
+                    <div className="flex items-center gap-4 px-5 sm:px-10 h-14">
+                        <div className="flex-1 min-w-0">
                             <SearchBar
                                 navigationData={navigationData}
                                 onSearch={handleSearch}
@@ -126,79 +129,79 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
                             />
                         </div>
                         <div className="flex items-center gap-1">
-                            <Link
-                                href="/videos/player"
-                                aria-label="Player Mode"
-                            >
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="hover:bg-accent hover:text-accent-foreground"
-                                    title="播放器模式"
-                                >
-                                    <MonitorPlay className="h-5 w-5" />
+                            <Link href="/videos/player" aria-label="播放器模式">
+                                <Button variant="ghost" size="icon" className="hover:bg-accent/50">
+                                    <MonitorPlay className="h-[18px] w-[18px]" />
                                 </Button>
                             </Link>
-                            <Link
-                                href="/"
-                                aria-label="Back to Home"
-                            >
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="hover:bg-accent hover:text-accent-foreground"
-                                >
-                                    <Home className="h-5 w-5" />
+                            <Link href="/" aria-label="返回首页">
+                                <Button variant="ghost" size="icon" className="hover:bg-accent/50">
+                                    <Home className="h-[18px] w-[18px]" />
                                 </Button>
                             </Link>
                             <ModeToggle />
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                className="sm:hidden"
+                                className="sm:hidden hover:bg-accent/50"
                                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
                             >
                                 <Menu className="h-5 w-5" />
                             </Button>
                         </div>
                     </div>
-                </div>
+                </header>
 
-                <div className="px-3 sm:px-6 py-3 sm:py-6">
-                    <div className="space-y-6">
-                        {navigationData.navigationItems.map((category) => (
-                            <section key={category.id} id={category.id} className="scroll-m-16">
-                                <div className="space-y-4">
-                                    <h2 className="text-base font-medium tracking-tight">
-                                        {category.title}
-                                    </h2>
+                {/* 视频内容区 */}
+                <div className="px-5 sm:px-10 pt-10 pb-8">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="space-y-14 sm:space-y-20">
+                            {navigationData.navigationItems.map((category) => (
+                                <section key={category.id} id={category.id} className="scroll-m-20">
+                                    {/* 分类标题 - 与首页一致的风格 */}
+                                    <div className="mb-5">
+                                        <div className="flex items-baseline gap-3">
+                                            <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
+                                                {locale === 'en' && category.titleEn ? category.titleEn : category.title}
+                                            </h2>
+                                            {(category.items?.length || 0) > 0 && (
+                                                <span className="text-xs text-muted-foreground/60 tabular-nums font-medium">
+                                                    {category.items!.length}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className="mt-2.5 h-px bg-border/60" />
+                                    </div>
 
+                                    {/* 子分类 */}
                                     {category.subCategories && category.subCategories.length > 0 ? (
-                                        category.subCategories.map((subCategory) => (
-                                            <div key={subCategory.id} id={subCategory.id} className="space-y-3">
-                                                <h3 className="text-sm font-medium text-muted-foreground">
-                                                    {subCategory.title}
-                                                </h3>
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                                                    {(subCategory.items || []).map((item) => (
-                                                        <VideoCard key={item.id} item={item} siteConfig={siteData} />
-                                                    ))}
+                                        <div className="space-y-10">
+                                            {category.subCategories.map((subCategory) => (
+                                                <div key={subCategory.id} id={subCategory.id}>
+                                                    <h3 className="text-sm font-medium text-muted-foreground/70 mb-3 pl-1">
+                                                        {subCategory.title}
+                                                    </h3>
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+                                                        {(subCategory.items || []).map((item) => (
+                                                            <VideoCard key={item.id} item={item} siteConfig={siteData} />
+                                                        ))}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        ))
+                                            ))}
+                                        </div>
                                     ) : (
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                                             {(category.items || []).map((item) => (
                                                 <VideoCard key={item.id} item={item} siteConfig={siteData} />
                                             ))}
                                         </div>
                                     )}
-                                </div>
-                            </section>
-                        ))}
+                                </section>
+                            ))}
+                        </div>
                     </div>
                 </div>
-                {/* 页脚 */}
+
                 <Footer siteInfo={siteData} />
             </main>
         </div>

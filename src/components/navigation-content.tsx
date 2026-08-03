@@ -8,11 +8,12 @@ import { Sidebar } from '@/components/sidebar'
 import { SearchBar } from '@/components/search-bar'
 import { ModeToggle } from '@/components/mode-toggle'
 import { Footer } from '@/components/footer'
-import { Github, HelpCircle, Puzzle, MonitorPlay, Send } from 'lucide-react'
+import { MonitorPlay, Menu, ArrowRightLeft } from 'lucide-react'
 import { Button } from "@/registry/new-york/ui/button"
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
-import { Menu } from 'lucide-react'
+import { LanguageToggle } from '@/components/language-toggle'
+import { useLanguage } from '@/lib/language-context'
 
 interface NavigationContentProps {
   navigationData: NavigationData
@@ -20,10 +21,10 @@ interface NavigationContentProps {
 }
 
 export function NavigationContent({ navigationData, siteData }: NavigationContentProps) {
+  const { t, locale } = useLanguage()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
-  // 修复类型检查和搜索逻辑
   const searchResults = useMemo(() => {
     const query = searchQuery.toLowerCase().trim()
     if (!query) return []
@@ -38,15 +39,15 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
     }> = []
 
     navigationData.navigationItems.forEach(category => {
-      // 搜索主分类下的项目（只搜索启用的）
       const items = (category.items || []).filter(item => {
         if (item.enabled === false) return false
         const titleMatch = item.title.toLowerCase().includes(query)
-        const descMatch = item.description?.toLowerCase().includes(query)
-        return titleMatch || descMatch
+        const titleEnMatch = item.titleEn?.toLowerCase().includes(query) || false
+        const descMatch = item.description?.toLowerCase().includes(query) || false
+        const descEnMatch = item.descriptionEn?.toLowerCase().includes(query) || false
+        return titleMatch || titleEnMatch || descMatch || descEnMatch
       })
 
-      // 搜索子分类下的项目（只搜索启用的）
       const subResults: Array<{
         title: string
         items: (NavigationItem | NavigationSubItem)[]
@@ -58,8 +59,10 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
           const subItems = (sub.items || []).filter(item => {
             if (item.enabled === false) return false
             const titleMatch = item.title.toLowerCase().includes(query)
-            const descMatch = item.description?.toLowerCase().includes(query)
-            return titleMatch || descMatch
+            const titleEnMatch = item.titleEn?.toLowerCase().includes(query) || false
+            const descMatch = item.description?.toLowerCase().includes(query) || false
+            const descEnMatch = item.descriptionEn?.toLowerCase().includes(query) || false
+            return titleMatch || titleEnMatch || descMatch || descEnMatch
           })
 
           if (subItems.length > 0) {
@@ -71,7 +74,6 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
         })
       }
 
-      // 只有当主分类或子分类有匹配结果时才添加到结果中
       if (items.length > 0 || subResults.length > 0) {
         results.push({
           category,
@@ -81,22 +83,6 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
       }
     })
 
-    // 调试信息
-    if (query && results.length > 0) {
-      console.log('搜索结果:', {
-        query,
-        totalResults: results.length,
-        results: results.map(r => ({
-          category: r.category.title,
-          mainItems: r.items.length,
-          subCategories: r.subCategories.map(s => ({
-            title: s.title,
-            items: s.items.length
-          }))
-        }))
-      })
-    }
-
     return results
   }, [navigationData, searchQuery])
 
@@ -105,7 +91,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
   }
 
   return (
-    <div className="flex flex-col sm:flex-row min-h-screen">
+    <div className="flex flex-col sm:flex-row min-h-screen bg-background">
       <div className="hidden sm:block">
         <Sidebar
           navigationData={navigationData}
@@ -119,7 +105,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
         isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
       )}>
         <div className={cn(
-          "fixed inset-y-0 right-0 sm:left-0 w-3/4 max-w-xs bg-background shadow-lg transform transition-transform duration-200 ease-in-out",
+          "fixed inset-y-0 right-0 sm:left-0 w-3/4 max-w-xs bg-background shadow-2xl transform transition-transform duration-300 ease-out",
           isSidebarOpen ? "translate-x-0" : "translate-x-full sm:-translate-x-full"
         )}>
           <Sidebar
@@ -130,10 +116,11 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
         </div>
       </div>
 
-      <main className="flex-1">
-        <div className="sticky top-0 bg-background/90 backdrop-blur-sm z-30 px-3 sm:px-6 py-2">
-          <div className="flex items-center gap-3">
-            <div className="flex-1">
+      <main className="flex-1 min-w-0">
+        {/* 顶部导航栏 */}
+        <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border/40">
+          <div className="flex items-center gap-4 px-5 sm:px-10 h-14">
+            <div className="flex-1 min-w-0">
               <SearchBar
                 navigationData={navigationData}
                 onSearch={handleSearch}
@@ -143,125 +130,100 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
               />
             </div>
             <div className="flex items-center gap-1">
-              <Link
-                href="/submit"
-                aria-label="投稿网站"
-              >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="hover:bg-accent hover:text-accent-foreground"
-                >
-                  <Send className="h-5 w-5" />
-                </Button>
-              </Link>
-              <Link
-                href="/videos"
-                aria-label="Video Navigation"
-              >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="hover:bg-accent hover:text-accent-foreground"
-                >
-                  <MonitorPlay className="h-5 w-5" />
-                </Button>
-              </Link>
+              <LanguageToggle />
               <ModeToggle />
-              <Link
-                href="https://github.com/tianyaxiang/NavSphere"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="访问 GitHub 仓库"
-              >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="hover:bg-accent hover:text-accent-foreground"
-                >
-                  <Github className="h-5 w-5" />
+              <Link href="/convert" aria-label="文件转换">
+                <Button variant="ghost" size="icon" className="hover:bg-accent/50">
+                  <ArrowRightLeft className="h-[18px] w-[18px]" />
                 </Button>
               </Link>
-              <Link
-                href="https://github.com/tianyaxiang/navsphere-extension"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="下载浏览器插件"
-              >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="hover:bg-accent hover:text-accent-foreground"
-                >
-                  <Puzzle className="h-5 w-5" />
-                </Button>
-              </Link>
-              <Link
-                href="https://mp.weixin.qq.com/s/XBeedyqHGJtaAa_v9EXz4A"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="查看帮助文档"
-              >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="hover:bg-accent hover:text-accent-foreground"
-                >
-                  <HelpCircle className="h-5 w-5" />
+              <Link href="/videos" aria-label="视频导航">
+                <Button variant="ghost" size="icon" className="hover:bg-accent/50">
+                  <MonitorPlay className="h-[18px] w-[18px]" />
                 </Button>
               </Link>
               <Button
                 variant="ghost"
                 size="icon"
-                className="sm:hidden"
+                className="sm:hidden hover:bg-accent/50"
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               >
                 <Menu className="h-5 w-5" />
               </Button>
             </div>
           </div>
-        </div>
+        </header>
 
-        <div className="px-3 sm:px-6 py-3 sm:py-6">
-          <div className="space-y-6">
+        {/* 主内容区 */}
+        <div className="px-5 sm:px-10 pt-10 pb-8">
+          <div className="max-w-5xl mx-auto">
+
+            {/* 首屏标题 */}
+            <section className="mb-14 sm:mb-20">
+              <h1 className="text-3xl sm:text-[2.5rem] font-bold leading-[1.15] tracking-tight">
+                {t('AI 万能工具箱', 'AI Toolbox')}
+              </h1>
+              <p className="mt-2.5 text-muted-foreground text-base sm:text-lg leading-relaxed max-w-xl">
+                {t('汇集全球优质 AI 工具，覆盖写作、编程、设计、音视频等场景。', 'Curated AI tools for writing, coding, design, audio & video — all in one place.')}
+              </p>
+            </section>
+
+            {/* 分类列表 */}
+            <div className="space-y-14 sm:space-y-20">
             {navigationData.navigationItems.map((category) => (
-              <section key={category.id} id={category.id} className="scroll-m-16">
-                <div className="space-y-4">
-                  <h2 className="text-base font-medium tracking-tight">
-                    {category.title}
-                  </h2>
-
-                  {/* 一级分类下直接挂载的站点 */}
-                  {category.items && category.items.length > 0 && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                      {category.items.map((item) => (
-                        <NavigationCard key={item.id} item={item} siteConfig={siteData} />
-                      ))}
-                    </div>
-                  )}
-
-                  {/* 二级分类及其站点 */}
-                  {category.subCategories && category.subCategories.length > 0 &&
-                    category.subCategories.map((subCategory) => (
-                      <div key={subCategory.id} id={subCategory.id} className="space-y-3">
-                        <h3 className="text-sm font-medium text-muted-foreground">
-                          {subCategory.title}
-                        </h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                          {(subCategory.items || []).map((item) => (
-                            <NavigationCard key={item.id} item={item} siteConfig={siteData} />
-                          ))}
-                        </div>
-                      </div>
-                    ))}
+              <section key={category.id} id={category.id} className="scroll-m-20">
+                {/* 分类标题 */}
+                <div className="mb-5">
+                  <div className="flex items-baseline gap-3">
+                    <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
+                      {locale === 'en' && category.titleEn ? category.titleEn : category.title}
+                    </h2>
+                    {category.items && category.items.length > 0 && (
+                      <span className="text-xs text-muted-foreground/60 tabular-nums font-medium">
+                        {category.items.length}
+                      </span>
+                    )}
+                  </div>
+                  <div className="mt-2.5 h-px bg-border/60" />
                 </div>
+
+                {/* 工具卡片列表 */}
+                {category.items && category.items.length > 0 && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-0">
+                    {category.items.map((item, itemIndex) => (
+                      <NavigationCard
+                        key={item.id}
+                        item={item}
+                        siteConfig={siteData}
+                        featured={itemIndex === 0 && category.items!.length > 3}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {/* 子分类 */}
+                {category.subCategories && category.subCategories.length > 0 &&
+                  category.subCategories.map((subCategory) => (
+                    <div key={subCategory.id} id={subCategory.id} className="mt-8">
+                      <h3 className="text-sm font-medium text-muted-foreground/70 mb-2 pl-4">
+                        {subCategory.title}
+                      </h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-0">
+                        {(subCategory.items || []).map((item) => (
+                          <NavigationCard key={item.id} item={item} siteConfig={siteData} />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
               </section>
             ))}
+            </div>
           </div>
         </div>
-        {/* 页脚 */}
+
         <Footer siteInfo={siteData} />
       </main>
     </div>
   )
 }
+

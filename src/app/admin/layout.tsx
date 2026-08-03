@@ -8,8 +8,8 @@ export const runtime = 'edge'
 
 
 export const metadata: Metadata = {
-  title: 'NavSphere Admin',
-  description: 'NavSphere Admin Dashboard',
+  title: 'AI万能工具箱 管理后台',
+  description: 'AI万能工具箱管理后台',
   icons: {
     icon: '/assets/images/favicon.webp',
     shortcut: '/assets/images/favicon.webp',

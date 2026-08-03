@@ -167,7 +167,7 @@ export function AdminLayoutClient({ children, user }: AdminLayoutClientProps) {
                           {!isSidebarCollapsed && (
                             <div className="flex flex-col">
                               <span className="text-lg font-semibold leading-none tracking-tight">
-                                NavSphere
+                                AI万能工具箱
                               </span>
                               <span className="text-xs text-muted-foreground mt-1">
                                 管理控制台

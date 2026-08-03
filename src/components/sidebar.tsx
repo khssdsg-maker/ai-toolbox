@@ -11,6 +11,7 @@ import type { NavigationData } from '@/types/navigation'
 import type { SiteConfig } from '@/types/site'
 import * as LucideIcons from 'lucide-react'
 import { ChevronDown, ChevronRight, X } from 'lucide-react'
+import { useLanguage } from '@/lib/language-context'
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   navigationData: NavigationData
@@ -20,6 +21,7 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function Sidebar({ className, navigationData, siteInfo, onClose }: SidebarProps) {
   const pathname = usePathname()
+  const { locale } = useLanguage()
 
 
 
@@ -120,7 +122,7 @@ export function Sidebar({ className, navigationData, siteInfo, onClose }: Sideba
                   onClick={() => handleCategoryClick(category.id)}
                 >
                   {renderIcon(category.icon)}
-                  <span>{category.title}</span>
+                  <span>{locale === 'en' && category.titleEn ? category.titleEn : category.title}</span>
                 </Button>
 
                 {category.subCategories && category.subCategories.length > 0 && (
@@ -170,3 +172,5 @@ export function Sidebar({ className, navigationData, siteInfo, onClose }: Sideba
     </div>
   )
 }
+
+

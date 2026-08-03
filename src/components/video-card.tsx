@@ -102,9 +102,7 @@ export function VideoCard({ item }: VideoCardProps) {
     return (
         <>
             <div
-                className="group cursor-pointer overflow-hidden rounded-xl bg-card border border-border/50 
-                           transition-all duration-300 ease-out hover:shadow-xl hover:shadow-primary/5 
-                           hover:border-primary/20 hover:-translate-y-1"
+                className="group cursor-pointer overflow-hidden rounded-xl bg-card border border-border/40 transition-all duration-200 ease-out hover:border-border/70 hover:shadow-md hover:shadow-primary/5"
                 onClick={handleCardClick}
             >
                 {/* 封面图区域 */}
@@ -197,3 +195,4 @@ export function VideoCard({ item }: VideoCardProps) {
         </>
     )
 }
+

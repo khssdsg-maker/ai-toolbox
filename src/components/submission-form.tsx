@@ -98,7 +98,7 @@ export function SubmissionForm({ navigationData }: SubmissionFormProps) {
     }
 
     return (
-        <Card className="w-full max-w-2xl mx-auto border-0 shadow-xl bg-gradient-to-br from-background to-muted/30">
+        <Card className="w-full max-w-2xl mx-auto border border-border/40 shadow-sm">
             <CardHeader className="space-y-1 pb-6">
                 <div className="flex items-center gap-3">
                     <div className="p-2.5 rounded-xl bg-primary/10">
@@ -264,7 +264,7 @@ export function SubmissionForm({ navigationData }: SubmissionFormProps) {
                     <Button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full h-12 text-base font-medium bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 transition-all duration-300"
+                        className="w-full h-12 text-base font-medium transition-all duration-200"
                     >
                         {isSubmitting ? (
                             <>
@@ -287,3 +287,4 @@ export function SubmissionForm({ navigationData }: SubmissionFormProps) {
         </Card>
     )
 }
+

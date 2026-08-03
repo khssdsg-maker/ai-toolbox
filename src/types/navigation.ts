@@ -13,6 +13,8 @@ export interface NavigationSubItemRaw {
   title: string
   href: string
   description?: string
+  titleEn?: string
+  descriptionEn?: string
   icon?: string
   useDefaultIcon?: boolean
   enabled: boolean
@@ -25,6 +27,8 @@ export interface NavigationSubItem {
   title: string
   href: string
   description?: string
+  titleEn?: string
+  descriptionEn?: string
   icon?: string
   useDefaultIcon?: boolean
   enabled: boolean
@@ -43,6 +47,7 @@ export interface VideoConfig {
 export interface NavigationCategoryRaw {
   id: string
   title: string
+  titleEn?: string
   icon?: string
   description?: string
   parentId?: string
@@ -53,6 +58,7 @@ export interface NavigationCategoryRaw {
 export interface NavigationItemRaw {
   id: string
   title: string
+  titleEn?: string
   description?: string
   icon?: string
   items?: NavigationSubItemRaw[]
@@ -67,6 +73,7 @@ export interface NavigationDataRaw {
 export interface NavigationCategory {
   id: string
   title: string
+  titleEn?: string
   icon?: string
   description?: string
   parentId?: string
@@ -77,6 +84,7 @@ export interface NavigationCategory {
 export interface NavigationItem {
   id: string
   title: string
+  titleEn?: string
   description?: string
   icon?: string
   items?: NavigationSubItem[]
