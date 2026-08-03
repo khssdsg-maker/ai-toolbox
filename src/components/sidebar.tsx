@@ -10,9 +10,10 @@ import { ScrollArea } from '@/registry/new-york/ui/scroll-area'
 import type { NavigationData } from '@/types/navigation'
 import type { SiteConfig } from '@/types/site'
 import * as LucideIcons from 'lucide-react'
-import { ChevronDown, ChevronRight, X, Settings } from 'lucide-react'
+import { ChevronDown, ChevronRight, X, Settings, Home, MonitorPlay, ArrowRightLeft, Globe, HardDrive, Star } from 'lucide-react'
 import { useLanguage } from '@/lib/language-context'
 import { SettingsDialog } from '@/components/settings-dialog'
+import { LanguageToggle } from '@/components/language-toggle'
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   navigationData: NavigationData
@@ -22,10 +23,18 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function Sidebar({ className, navigationData, siteInfo, onClose }: SidebarProps) {
   const pathname = usePathname()
-  const { locale } = useLanguage()
+  const { locale, t } = useLanguage()
   const [showSettings, setShowSettings] = useState(false)
 
-
+  // 功能模块入口（独立页面，不与 AI 工具分类混在一起）
+  const moduleLinks = [
+    { href: '/', label: t('AI 工具导航', 'AI Tools'), icon: Home },
+    { href: '/videos', label: t('视频合集', 'Videos'), icon: MonitorPlay },
+    { href: '/convert', label: t('文件转换', 'Convert'), icon: ArrowRightLeft },
+    { href: '/tools', label: t('网络工具箱', 'Network Tools'), icon: Globe },
+    { href: '/drivers', label: t('驱动中心', 'Drivers'), icon: HardDrive },
+    { href: '/favorites', label: t('我的收藏', 'Favorites'), icon: Star },
+  ]
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id)
@@ -81,6 +90,12 @@ export function Sidebar({ className, navigationData, siteInfo, onClose }: Sideba
     }))
   }
 
+  // 判断当前路径是否匹配（首页精确匹配，其余前缀匹配）
+  const isActive = (href: string) => {
+    if (href === '/') return pathname === '/'
+    return pathname.startsWith(href)
+  }
+
   return (
     <div className={cn("w-64 bg-background", className)}>
       <div className="flex h-14 items-center px-4">
@@ -114,6 +129,39 @@ export function Sidebar({ className, navigationData, siteInfo, onClose }: Sideba
       </div>
 
       <ScrollArea className="h-[calc(100vh-7rem)] px-3 py-2">
+        {/* 功能模块（独立页面入口） */}
+        <p className="px-3 pt-1 pb-1.5 text-xs font-medium text-muted-foreground/60 tracking-wide">
+          {t('功能模块', 'MODULES')}
+        </p>
+        <div className="space-y-0.5 mb-3">
+          {moduleLinks.map((m) => {
+            const Icon = m.icon
+            const active = isActive(m.href)
+            return (
+              <Link key={m.href} href={m.href} onClick={() => onClose?.()}>
+                <Button
+                  variant="ghost"
+                  className={cn(
+                    "w-full justify-start gap-2 font-medium cursor-pointer",
+                    active
+                      ? "text-primary bg-primary/5 hover:bg-primary/10"
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span>{m.label}</span>
+                </Button>
+              </Link>
+            )
+          })}
+        </div>
+
+        <div className="h-px bg-border/40 mx-1 mb-3" />
+
+        {/* AI 工具分类（页面内定位） */}
+        <p className="px-3 pb-1.5 text-xs font-medium text-muted-foreground/60 tracking-wide">
+          {t('AI 工具分类', 'AI CATEGORIES')}
+        </p>
         <div className="space-y-1">
           {navigationData.navigationItems.map((category) => (
             <div key={category.id} className="py-2">
@@ -172,22 +220,20 @@ export function Sidebar({ className, navigationData, siteInfo, onClose }: Sideba
         </div>
       </ScrollArea>
 
-      {/* 左下角设置入口 */}
-      <div className="h-14 flex items-center px-3 border-t border-border/40">
+      {/* 左下角：语言切换 + 设置 */}
+      <div className="h-14 flex items-center gap-1 px-3 border-t border-border/40">
         <Button
           variant="ghost"
-          className="gap-2 w-full justify-start text-muted-foreground hover:text-foreground hover:bg-muted/60 cursor-pointer"
+          className="gap-2 flex-1 justify-start text-muted-foreground hover:text-foreground hover:bg-muted/60 cursor-pointer"
           onClick={() => setShowSettings(true)}
         >
           <Settings className="h-4 w-4" />
           <span>{locale === 'en' ? 'Settings' : '设置'}</span>
         </Button>
+        <LanguageToggle />
       </div>
 
       <SettingsDialog open={showSettings} onClose={() => setShowSettings(false)} />
     </div>
   )
 }
-
-
-

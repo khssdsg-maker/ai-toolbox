@@ -42,6 +42,21 @@ const DRIVER_DATA: DriverCategory[] = [
     ],
   },
   {
+    id: 'peripheral-drivers',
+    title: '键鼠外设驱动',
+    titleEn: 'Peripheral Drivers',
+    items: [
+      { id: 'eweadn', title: '前行者驱动', titleEn: 'EWEADN', href: 'http://www.eweadn.com/', description: '前行者键盘鼠标官方驱动下载', descriptionEn: 'EWEADN official drivers', icon: 'http://www.eweadn.com/favicon.ico', enabled: true },
+      { id: 'mchose', title: '迈从驱动', titleEn: 'MCHOSE', href: 'https://www.mchose.com/', description: '迈从键盘鼠标官方驱动与支持', descriptionEn: 'MCHOSE official drivers', icon: 'https://www.mchose.com/favicon.ico', enabled: true },
+      { id: 'inphic', title: '英菲克驱动', titleEn: 'Inphic', href: 'http://www.inphic.com/', description: '英菲克鼠标键盘官方驱动下载', descriptionEn: 'Inphic official drivers', icon: 'http://www.inphic.com/favicon.ico', enabled: true },
+      { id: 'logitech', title: '罗技驱动', titleEn: 'Logitech', href: 'https://www.logitech.com.cn/', description: '罗技键鼠官方驱动（G HUB）', descriptionEn: 'Logitech G HUB drivers', icon: 'https://www.logitech.com/favicon.ico', enabled: true },
+      { id: 'razer', title: '雷蛇驱动', titleEn: 'Razer', href: 'https://www.razer.com.cn/', description: '雷蛇外设官方驱动（Synapse）', descriptionEn: 'Razer Synapse drivers', icon: 'https://www.razer.com/favicon.ico', enabled: true },
+      { id: 'rapoo', title: '雷柏驱动', titleEn: 'Rapoo', href: 'https://www.rapoo.com.cn/', description: '雷柏键鼠官方驱动下载', descriptionEn: 'Rapoo official drivers', icon: 'https://www.rapoo.com.cn/favicon.ico', enabled: true },
+      { id: 'dareu', title: '达尔优驱动', titleEn: 'Dareu', href: 'https://www.dareu.com/', description: '达尔优外设官方驱动下载', descriptionEn: 'Dareu official drivers', icon: 'https://www.dareu.com/favicon.ico', enabled: true },
+      { id: 'a4tech', title: '双飞燕驱动', titleEn: 'A4Tech', href: 'http://www.a4tech.com.cn/', description: '双飞燕键鼠官方驱动下载', descriptionEn: 'A4Tech official drivers', icon: 'http://www.a4tech.com.cn/favicon.ico', enabled: true },
+    ],
+  },
+  {
     id: 'driver-tools',
     title: '驱动管理工具',
     titleEn: 'Driver Tools',
@@ -130,3 +145,4 @@ export function DriversCenter() {
     </div>
   )
 }
+
