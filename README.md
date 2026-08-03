@@ -1,6 +1,26 @@
-﻿# AI万能工具箱
+<div align="center">
 
-> AI 时代的超级工具箱 —— 一个入口，解决找工具、转文件、装驱动、看视频的所有需求。
+# 🧰 AI万能工具箱
+
+**AI 时代的超级工具箱** —— 找工具、转文件、装驱动、看视频，一个入口全搞定
+
+[🌐 宣传主页](https://khssdsg-maker.github.io/ai-toolbox/) · [⬇ 下载最新版](https://github.com/khssdsg-maker/ai-toolbox/releases/latest) · [💬 反馈问题](https://github.com/khssdsg-maker/ai-toolbox/issues)
+
+</div>
+
+---
+
+## ⬇ 下载安装（Windows）
+
+| 方式 | 说明 |
+|---|---|
+| **一键下载** | [点击这里下载安装包](https://github.com/khssdsg-maker/ai-toolbox/releases/latest)（约 208 MB，Win10/11 64位） |
+| **安装步骤** | 下载后双击运行 → 选择安装位置 → 完成后桌面出现"AI万能工具箱"图标 |
+| **更新方式** | 有新版本时下载新安装包直接覆盖安装，收藏和设置自动保留 |
+
+---
+
+
 
 面向普通用户的综合工具平台，基于 Next.js 开发，可打包为 Windows 桌面应用（Electron）。
 
