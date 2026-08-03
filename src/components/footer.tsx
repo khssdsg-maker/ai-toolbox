@@ -14,11 +14,12 @@ export function Footer({ siteInfo }: FooterProps) {
       <div className="container flex flex-col items-center gap-4 md:h-16 md:flex-row md:justify-center">
         <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
           <p className="text-center text-sm leading-loose text-muted-foreground">
-            {currentYear} {siteInfo.basic.title}. All rights reserved.
+            {currentYear} {siteInfo.basic.title} 版权所有
           </p>
         </div>
       </div>
     </footer>
   )
 }
+
 

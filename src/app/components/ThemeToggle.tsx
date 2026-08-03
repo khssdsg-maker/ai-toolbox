@@ -19,7 +19,7 @@ export function ThemeToggle() {
     <button
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
       className="theme-toggle"
-      aria-label="Toggle theme"
+      aria-label="切换主题"
     >
       {theme === 'dark' ? (
         <i className="fas fa-sun text-xl animate-spin-slow" />
