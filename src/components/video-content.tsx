@@ -9,7 +9,7 @@ import { Sidebar } from '@/components/sidebar'
 import { SearchBar } from '@/components/search-bar'
 import { ModeToggle } from '@/components/mode-toggle'
 import { Footer } from '@/components/footer'
-import { MonitorPlay, Menu, Home, ArrowRightLeft, Globe, Star } from 'lucide-react'
+import { MonitorPlay, Menu, Home, ArrowRightLeft, Globe, Star, HardDrive } from 'lucide-react'
 import { Button } from "@/registry/new-york/ui/button"
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
@@ -142,6 +142,11 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
                                     <Star className="h-[18px] w-[18px]" />
                                 </Button>
                             </Link>
+                            <Link href="/drivers" aria-label="驱动工具中心">
+                                <Button variant="ghost" size="icon" className="hover:bg-accent/50">
+                                    <HardDrive className="h-[18px] w-[18px]" />
+                                </Button>
+                            </Link>
                             <Link href="/tools" aria-label="网络工具箱">
                                 <Button variant="ghost" size="icon" className="hover:bg-accent/50">
                                     <Globe className="h-[18px] w-[18px]" />
@@ -230,5 +235,6 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
         </div>
     )
 }
+
 
 

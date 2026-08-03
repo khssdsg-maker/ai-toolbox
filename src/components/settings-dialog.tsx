@@ -2,6 +2,7 @@
 
 // 应用设置弹窗：链接打开方式 / 主题外观 / 界面语言 / 数据管理 / 关于
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { X, Settings2, Sun, Moon, Monitor } from 'lucide-react'
 import { Button } from '@/registry/new-york/ui/button'
 import { useTheme } from 'next-themes'
@@ -50,7 +51,10 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
     }
   }, [open])
 
-  if (!open) return null
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => { setMounted(true) }, [])
+
+  if (!open || !mounted) return null
 
   // 保存链接打开方式（桌面应用）
   const saveLinkSettings = (s: LinkSettings) => {
@@ -89,8 +93,8 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
     { value: 'system', label: t('跟随系统', 'System'), icon: Monitor },
   ]
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={onClose}>
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={onClose}>
       <div
         className="w-full max-w-md mx-4 max-h-[85vh] overflow-y-auto rounded-2xl bg-card border border-border/50 shadow-2xl p-6"
         onClick={(e) => e.stopPropagation()}
@@ -229,6 +233,8 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
+
