@@ -6,5 +6,7 @@ contextBridge.exposeInMainWorld('tabAPI', {
   newTab: () => ipcRenderer.send('tab:new'),
   favLink: () => ipcRenderer.send('tab:favlink'),
   onUpdate: (cb) => ipcRenderer.on('tabs-updated', (e, data) => cb(data)),
+  onFavlinkResult: (cb) => ipcRenderer.on('favlink-result', (e, result) => cb(result)),
 })
+
 

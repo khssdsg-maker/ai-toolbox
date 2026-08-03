@@ -101,6 +101,22 @@
     border: 1px solid var(--border);
   }
   .favlink:hover { background: var(--hover); color: var(--accent); border-color: var(--accent); }
+  .favtoast {
+    position: fixed; top: 50px; right: 16px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #fff;
+    background: rgba(20, 26, 38, .92);
+    box-shadow: 0 4px 16px rgba(0,0,0,.2);
+    opacity: 0; transform: translateY(-6px);
+    transition: all .25s ease;
+    pointer-events: none;
+    z-index: 99;
+  }
+  .favtoast.show { opacity: 1; transform: translateY(0); }
+  .favtoast .ok { color: #7dd87d; margin-right: 6px; }
+  .favtoast .dup { color: var(--accent); margin-right: 6px; }
   .favlink .star { color: var(--accent); font-size: 14px; }
 </style>
 </head>
@@ -136,7 +152,25 @@
   }
 
   window.tabAPI.onUpdate(render)
+
+  // 收藏结果提示
+  let toastTimer = null
+  if (window.tabAPI.onFavlinkResult) {
+    window.tabAPI.onFavlinkResult((result) => {
+      const el = document.getElementById('favtoast')
+      if (result.status === 'duplicate') {
+        el.innerHTML = '<span class="dup">&#9733;</span>已在收藏夹：' + (result.title || '')
+      } else {
+        el.innerHTML = '<span class="ok">&#10003;</span>已收藏：' + (result.title || '')
+      }
+      el.classList.add('show')
+      if (toastTimer) clearTimeout(toastTimer)
+      toastTimer = setTimeout(() => el.classList.remove('show'), 2500)
+    })
+  }
 </script>
+  <div class="favtoast" id="favtoast"></div>
 </body>
 </html>
+
 

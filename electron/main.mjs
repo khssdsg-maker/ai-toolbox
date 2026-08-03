@@ -229,7 +229,7 @@ ipcMain.on('tab:favlink', async () => {
     if (response === 1) return
   }
 
-  // 发给主应用窗口保存收藏（前端会弹提示）
+  // 发给主应用保存收藏（不切换窗口，结果回传到标签栏提示）
   if (mainWindow && !mainWindow.isDestroyed()) {
     mainWindow.webContents.send('app:favorite-video', {
       title,
@@ -238,8 +238,15 @@ ipcMain.on('tab:favlink', async () => {
       platform: parsed ? parsed.platform : undefined,
       videoConfig: parsed ? parsed.videoConfig : undefined,
     })
-    mainWindow.show()
-    mainWindow.focus()
+  } else {
+    dialog.showMessageBox(browserWin, { type: 'info', title: '收藏链接', message: '主窗口未就绪，请稍后重试', buttons: ['知道了'] })
+  }
+})
+
+// 收藏保存结果回传：转发到浏览器窗口标签栏显示提示
+ipcMain.on('favorite:result', (e, result) => {
+  if (browserWin && !browserWin.isDestroyed()) {
+    browserWin.webContents.send('favlink-result', result)
   }
 })
 
@@ -377,4 +384,5 @@ app.on('window-all-closed', () => {
 app.on('quit', () => {
   if (server) server.close()
 })
+
 
