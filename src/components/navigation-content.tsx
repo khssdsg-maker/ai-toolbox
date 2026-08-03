@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import type { NavigationData, NavigationItem, NavigationSubItem } from '@/types/navigation'
 import type { SiteConfig } from '@/types/site'
 import { NavigationCard } from '@/components/navigation-card'
@@ -23,6 +23,17 @@ interface NavigationContentProps {
 export function NavigationContent({ navigationData, siteData }: NavigationContentProps) {
   const { t, locale } = useLanguage()
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // 检测屏幕宽度，避免 CSS 响应式类失效
+  useEffect(() => {
+    const checkWidth = () => setIsMobile(window.innerWidth < 640)
+    checkWidth()
+    window.addEventListener('resize', checkWidth)
+    return () => window.removeEventListener('resize', checkWidth)
+  }, [])
+  
+  
   const [searchQuery, setSearchQuery] = useState('')
 
   const searchResults = useMemo(() => {
@@ -92,7 +103,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
 
   return (
     <div className="flex flex-col sm:flex-row min-h-screen bg-background">
-      <div className="hidden sm:block desktop-sidebar">
+      <div style={{ display: isMobile ? "none" : "block" }}>
         <Sidebar
           navigationData={navigationData}
           siteInfo={siteData}
@@ -100,14 +111,14 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
         />
       </div>
 
-      <div className={cn(
-        "fixed inset-0 z-50 bg-background/80 backdrop-blur-sm transition-all sm:hidden mobile-sidebar-overlay",
-        isSidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-      )}>
-        <div className={cn(
-          "fixed inset-y-0 right-0 sm:left-0 w-3/4 max-w-xs bg-background shadow-2xl transform transition-transform duration-300 ease-out",
-          isSidebarOpen ? "translate-x-0" : "translate-x-full sm:-translate-x-full"
-        )}>
+      <div
+        className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm transition-all"
+        style={{ display: isMobile ? "block" : "none", opacity: isSidebarOpen ? 1 : 0, pointerEvents: isSidebarOpen ? "auto" : "none" }}
+      >
+        <div
+          className="fixed inset-y-0 right-0 w-3/4 max-w-xs bg-background shadow-2xl transform transition-transform duration-300 ease-out"
+          style={{ transform: isSidebarOpen ? "translateX(0)" : "translateX(100%)" }}
+        >
           <Sidebar
             navigationData={navigationData}
             siteInfo={siteData}
@@ -231,6 +242,11 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
     </div>
   )
 }
+
+
+
+
+
 
 
 
