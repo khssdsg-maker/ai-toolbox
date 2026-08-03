@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>标签栏</title>
+<style>
+  :root {
+    --bg: #faf9f7;
+    --tab-bg: transparent;
+    --tab-active: #ffffff;
+    --text: #1a2233;
+    --text-muted: #6b7280;
+    --accent: #e8930c;
+    --border: #e8e2d6;
+    --hover: #f0ece2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1420;
+      --tab-active: #1a2333;
+      --text: #ebe6da;
+      --text-muted: #8a93a6;
+      --accent: #e8930c;
+      --border: #232e42;
+      --hover: #16202f;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    display: flex; align-items: center;
+    height: 44px;
+    background: var(--bg);
+    font-family: "Manrope", "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+    border-bottom: 1px solid var(--border);
+  }
+  .tabs {
+    display: flex; align-items: flex-end;
+    flex: 1; overflow: hidden;
+    padding: 6px 8px 0;
+    gap: 2px;
+  }
+  .tab {
+    display: flex; align-items: center; gap: 6px;
+    max-width: 200px; min-width: 90px;
+    height: 34px;
+    padding: 0 10px;
+    border-radius: 8px 8px 0 0;
+    background: var(--tab-bg);
+    color: var(--text-muted);
+    font-size: 12px;
+    cursor: pointer;
+    position: relative;
+    transition: background .15s ease;
+  }
+  .tab:hover { background: var(--hover); }
+  .tab.active {
+    background: var(--tab-active);
+    color: var(--text);
+    font-weight: 600;
+  }
+  .tab.active::after {
+    content: "";
+    position: absolute; left: 10px; right: 10px; bottom: 0;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+  .tab .title {
+    flex: 1; overflow: hidden;
+    white-space: nowrap; text-overflow: ellipsis;
+  }
+  .tab .close {
+    width: 16px; height: 16px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 4px;
+    font-size: 14px; line-height: 1;
+    color: var(--text-muted);
+  }
+  .tab .close:hover { background: rgba(120,120,120,.25); color: var(--text); }
+  .newtab {
+    width: 30px; height: 30px;
+    margin: 0 8px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-size: 18px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .newtab:hover { background: var(--hover); color: var(--accent); }
+</style>
+</head>
+<body>
+  <div class="tabs" id="tabs"></div>
+  <div class="newtab" id="newtab" title="新建标签页">+</div>
+<script>
+  const tabsEl = document.getElementById('tabs')
+  document.getElementById('newtab').addEventListener('click', () => window.tabAPI.newTab())
+
+  function render(data) {
+    tabsEl.innerHTML = ''
+    data.tabs.forEach(t => {
+      const el = document.createElement('div')
+      el.className = 'tab' + (t.active ? ' active' : '')
+      el.title = t.url || ''
+      const title = document.createElement('span')
+      title.className = 'title'
+      title.textContent = t.title || '新标签页'
+      const close = document.createElement('span')
+      close.className = 'close'
+      close.textContent = '\u00d7'
+      close.addEventListener('click', (e) => { e.stopPropagation(); window.tabAPI.close(t.id) })
+      el.appendChild(title)
+      el.appendChild(close)
+      el.addEventListener('click', () => window.tabAPI.activate(t.id))
+      tabsEl.appendChild(el)
+    })
+  }
+
+  window.tabAPI.onUpdate(render)
+</script>
+</body>
+</html>

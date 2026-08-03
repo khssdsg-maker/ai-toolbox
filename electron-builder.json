@@ -5,7 +5,9 @@
     "output": "dist-electron"
   },
   "files": [
-    "electron/main.mjs"
+    "electron/main.mjs",
+    "electron/tab-bar.html",
+    "electron/tab-preload.cjs"
   ],
   "extraResources": [
     {
@@ -27,3 +29,4 @@
     "artifactName": "AI万能工具箱-安装程序.exe"
   }
 }
+
