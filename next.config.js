@@ -2,7 +2,8 @@
 const nextConfig = {
   // Standalone build for Cloudflare Pages
   // Note: Most routes use 'edge' runtime which is compatible with Cloudflare
-  output: 'standalone',
+  // 只在生产环境使用 standalone 输出（本地开发时禁用，避免CSS编译问题）
+  ...(process.env.NODE_ENV === 'production' && process.env.BUILD_STANDALONE === 'true' ? { output: 'standalone' } : {}),
 
   // Don't fail build on ESLint warnings
   eslint: {
@@ -45,3 +46,4 @@ const nextConfig = {
 }
 
 module.exports = nextConfig
+

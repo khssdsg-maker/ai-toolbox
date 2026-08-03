@@ -2,11 +2,14 @@
   "name": "navsphere",
   "version": "0.1.0",
   "private": true,
+  "main": "electron/main.mjs",
   "engines": {
     "node": ">=20.0.0"
   },
   "scripts": {
     "dev": "next dev",
+    "electron:dev": "cross-env NODE_ENV=development electron .",
+    "electron:build": "next build && electron-builder",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -89,6 +92,9 @@
     "@types/react": "18.3.23",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.14",
+    "cross-env": "^10.1.0",
+    "electron": "^43.2.0",
+    "electron-builder": "^26.15.3",
     "eslint": "9.33.0",
     "eslint-config-next": "15.4.6",
     "postcss": "8.4.27",
@@ -102,3 +108,4 @@
     "crypto": false
   }
 }
+
