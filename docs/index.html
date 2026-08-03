@@ -3,239 +3,320 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI万能工具箱 - AI时代的超级工具箱</title>
-<meta name="description" content="AI万能工具箱：AI工具导航、视频合集、文件转换、网络工具、驱动中心，一个入口解决所有需求。免费下载 Windows 桌面版。">
+<title>AI万能工具箱 — AI时代的超级工具箱</title>
+<meta name="description" content="找工具、转文件、装驱动、看视频，一个入口全搞定。AI工具导航、文件转换、驱动中心、网络工具、视频收藏，免费下载 Windows 桌面版。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Serif+SC:wght@500;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #faf9f7;
+    --paper: #faf9f7;
     --card: #ffffff;
-    --ink: #1a2233;
+    --ink: #141b2d;
+    --ink-soft: #3d4658;
     --muted: #6b7280;
-    --accent: #e8930c;
-    --accent-dark: #c67a06;
-    --border: #e8e2d6;
+    --amber: #e8930c;
+    --amber-deep: #c67a06;
+    --rule: #e5dfd2;
+    --night: #10182a;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
     font-family: "Manrope", "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
-    background: var(--bg);
+    background: var(--paper);
     color: var(--ink);
-    line-height: 1.6;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3 { font-family: "Noto Serif SC", "SimSun", serif; letter-spacing: -0.01em; }
+  h1, h2, h3, .serif { font-family: "Noto Serif SC", "SimSun", serif; }
   a { text-decoration: none; color: inherit; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
 
-  /* 顶部导航 */
-  nav {
-    position: sticky; top: 0; z-index: 50;
-    background: rgba(250, 249, 247, .85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
+  /* ============ 顶部 ============ */
+  nav { border-bottom: 1px solid var(--rule); background: var(--paper); position: sticky; top: 0; z-index: 40; }
+  .nav-in { display: flex; align-items: center; justify-content: space-between; height: 62px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 16px; letter-spacing: .02em; }
+  .brand-mark {
+    width: 28px; height: 28px; border-radius: 7px; background: var(--ink);
+    color: var(--amber); display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800;
   }
-  .nav-inner {
-    max-width: 1100px; margin: 0 auto;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 24px;
+  .nav-a { display: flex; gap: 26px; align-items: center; font-size: 14px; color: var(--muted); font-weight: 600; }
+  .nav-a a:hover { color: var(--ink); }
+  .nav-dl {
+    color: var(--paper); background: var(--ink); padding: 9px 20px; border-radius: 999px;
+    font-size: 13px; font-weight: 700; transition: background .2s;
   }
-  .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; }
-  .logo-mark {
-    width: 30px; height: 30px; border-radius: 8px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-    display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 15px; font-weight: 800;
-  }
-  .nav-links { display: flex; align-items: center; gap: 22px; font-size: 14px; color: var(--muted); }
-  .nav-links a:hover { color: var(--ink); }
+  .nav-dl:hover { background: var(--amber-deep); color: #fff; }
 
-  .btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 11px 26px; border-radius: 10px;
-    font-size: 15px; font-weight: 600;
-    transition: all .2s ease; cursor: pointer; border: none;
+  /* ============ 开篇 ============ */
+  .open { padding: 96px 0 72px; border-bottom: 1px solid var(--rule); }
+  .open-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; align-items: end; }
+  .open h1 {
+    font-size: clamp(46px, 6.5vw, 86px);
+    font-weight: 900; line-height: 1.08; letter-spacing: -.01em;
   }
-  .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 4px 14px rgba(232,147,12,.35); }
-  .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
-  .btn-ghost { background: transparent; color: var(--ink); border: 1px solid var(--border); }
-  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-  .btn-sm { padding: 8px 18px; font-size: 13px; }
-
-  /* 首屏 */
-  .hero { max-width: 1100px; margin: 0 auto; padding: 90px 24px 70px; text-align: center; }
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 6px 16px; border-radius: 999px;
-    background: rgba(232,147,12,.1); color: var(--accent-dark);
-    font-size: 13px; font-weight: 600; margin-bottom: 28px;
+  .open h1 .hl {
+    background: linear-gradient(transparent 62%, rgba(232,147,12,.4) 62%, rgba(232,147,12,.4) 92%, transparent 92%);
   }
-  .hero-badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
-  .hero h1 { font-size: clamp(38px, 6vw, 62px); font-weight: 900; line-height: 1.15; margin-bottom: 20px; }
-  .hero h1 em { font-style: normal; color: var(--accent); }
-  .hero p { font-size: 18px; color: var(--muted); max-width: 620px; margin: 0 auto 40px; }
-  .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
-  .hero-note { margin-top: 16px; font-size: 13px; color: var(--muted); }
-
-  /* 数据条 */
-  .stats {
-    max-width: 900px; margin: 0 auto; padding: 0 24px 30px;
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px;
+  .open-side { padding-bottom: 10px; }
+  .open-side p { font-size: 16px; color: var(--ink-soft); margin-bottom: 26px; }
+  .open-side p b { color: var(--ink); }
+  .cta-row { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+  .btn-big {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--amber); color: #fff; font-weight: 800; font-size: 16px;
+    padding: 15px 32px; border-radius: 12px; box-shadow: 0 6px 20px rgba(232,147,12,.35);
+    transition: all .2s;
   }
-  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px; text-align: center; }
-  .stat b { display: block; font-size: 32px; color: var(--accent); font-family: "Manrope", sans-serif; }
-  .stat span { font-size: 13px; color: var(--muted); }
+  .btn-big:hover { background: var(--amber-deep); transform: translateY(-2px); }
+  .btn-line { font-weight: 700; font-size: 14px; color: var(--ink-soft); border-bottom: 2px solid var(--rule); padding-bottom: 2px; }
+  .btn-line:hover { color: var(--amber-deep); border-color: var(--amber); }
+  .open-note { margin-top: 18px; font-size: 13px; color: var(--muted); }
+  .lede { margin-top: 60px; max-width: 760px; }
+  .lede p { font-family: "Noto Serif SC", serif; font-size: 21px; font-weight: 500; color: var(--ink-soft); line-height: 1.9; }
+  .lede p::first-letter { font-size: 34px; font-weight: 900; color: var(--amber-deep); }
 
-  /* 功能区块 */
-  section.block { max-width: 1100px; margin: 0 auto; padding: 70px 24px 0; }
-  .block-head { text-align: center; margin-bottom: 44px; }
-  .block-head h2 { font-size: 34px; font-weight: 800; margin-bottom: 10px; }
-  .block-head p { color: var(--muted); }
-  .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
-  .feature {
-    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
-    padding: 26px; transition: all .25s ease;
+  /* ============ 模块目录 ============ */
+  .catalog { padding: 84px 0 40px; }
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
+  .sec-head h2 { font-size: clamp(30px, 4vw, 44px); font-weight: 900; }
+  .sec-head .meta { font-size: 13px; font-weight: 700; color: var(--muted); letter-spacing: .12em; }
+  .sec-rule { height: 3px; background: var(--ink); width: 100%; margin-bottom: 8px; }
+  .row {
+    display: grid; grid-template-columns: 220px 1fr 150px; gap: 32px;
+    padding: 30px 4px; border-bottom: 1px solid var(--rule);
+    transition: background .2s;
   }
-  .feature:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(26,34,51,.08); border-color: rgba(232,147,12,.4); }
-  .feature-icon {
-    width: 46px; height: 46px; border-radius: 12px; margin-bottom: 16px;
-    display: flex; align-items: center; justify-content: center; font-size: 22px;
-    background: rgba(232,147,12,.12);
+  .row:hover { background: rgba(232,147,12,.05); }
+  .row-name { font-family: "Noto Serif SC", serif; font-size: 24px; font-weight: 700; line-height: 1.3; }
+  .row-name small { display: block; font-family: "Manrope", sans-serif; font-size: 12px; font-weight: 700; color: var(--amber-deep); letter-spacing: .1em; margin-top: 6px; }
+  .row-desc { font-size: 15px; color: var(--ink-soft); }
+  .row-desc .tags { display: block; margin-top: 10px; font-size: 13px; color: var(--muted); }
+  .row-count { text-align: right; font-family: "Noto Serif SC", serif; }
+  .row-count b { font-size: 30px; font-weight: 900; color: var(--ink); }
+  .row-count span { display: block; font-size: 12px; color: var(--muted); font-family: "Manrope", sans-serif; }
+
+  /* ============ 特写两栏 ============ */
+  .focus { padding: 84px 0; border-top: 1px solid var(--rule); }
+  .focus-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 40px; }
+  .panel { background: var(--card); border: 1px solid var(--rule); border-radius: 18px; padding: 36px; }
+  .panel h3 { font-size: 26px; font-weight: 900; margin-bottom: 6px; }
+  .panel .sub { font-size: 13px; font-weight: 700; color: var(--amber-deep); letter-spacing: .1em; margin-bottom: 20px; }
+  .spec { list-style: none; }
+  .spec li {
+    display: flex; justify-content: space-between; gap: 16px;
+    padding: 12px 0; border-bottom: 1px dashed var(--rule); font-size: 14px;
   }
-  .feature h3 { font-size: 18px; margin-bottom: 8px; }
-  .feature p { font-size: 14px; color: var(--muted); }
-
-  /* 下载区 */
-  .download {
-    max-width: 860px; margin: 80px auto 0; padding: 54px 40px;
-    background: #10182a; color: #ebe6da; border-radius: 24px; text-align: center;
+  .spec li:last-child { border-bottom: none; }
+  .spec .k { color: var(--ink); font-weight: 700; }
+  .spec .v { color: var(--muted); text-align: right; }
+  .brands { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+  .brands span {
+    font-size: 13px; font-weight: 700; color: var(--ink-soft);
+    border: 1px solid var(--rule); border-radius: 999px; padding: 7px 16px;
+    background: var(--paper);
   }
-  .download h2 { font-size: 32px; margin-bottom: 12px; color: #fff; }
-  .download > p { color: #9aa3b5; margin-bottom: 34px; }
-  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-bottom: 38px; text-align: left; }
-  .step { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.09); border-radius: 14px; padding: 20px; }
-  .step b { display: flex; align-items: center; gap: 8px; color: var(--accent); font-size: 14px; margin-bottom: 8px; }
-  .step b i { font-style: normal; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; }
-  .step p { font-size: 13px; color: #c3c9d6; }
-  .dl-meta { margin-top: 18px; font-size: 13px; color: #8a93a6; }
-  .dl-meta a { color: var(--accent); }
+  .brands span.hot { border-color: rgba(232,147,12,.5); color: var(--amber-deep); background: rgba(232,147,12,.07); }
 
-  /* 页脚 */
-  footer { max-width: 1100px; margin: 80px auto 0; padding: 30px 24px 50px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 13px; color: var(--muted); }
-  footer a:hover { color: var(--accent); }
+  /* ============ 下载横幅 ============ */
+  .get { background: var(--night); color: #e8e3d8; padding: 88px 0; }
+  .get-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 60px; align-items: center; }
+  .get h2 { font-size: clamp(32px, 4vw, 48px); font-weight: 900; color: #fff; line-height: 1.2; }
+  .get h2 em { font-style: normal; color: var(--amber); }
+  .get .lead { margin-top: 18px; color: #9aa3b5; font-size: 15px; }
+  .steps { display: grid; gap: 14px; }
+  .step {
+    display: grid; grid-template-columns: 44px 1fr; gap: 18px; align-items: start;
+    background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.09);
+    border-radius: 14px; padding: 20px 22px;
+  }
+  .step .no {
+    width: 40px; height: 40px; border-radius: 50%; background: var(--amber);
+    color: var(--night); font-weight: 800; font-size: 17px;
+    display: flex; align-items: center; justify-content: center; font-family: "Noto Serif SC", serif;
+  }
+  .step b { display: block; color: #fff; font-size: 16px; margin-bottom: 3px; }
+  .step p { font-size: 13px; color: #9aa3b5; }
+  .get-cta { margin-top: 26px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .btn-amber {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--amber); color: var(--night); font-weight: 800; font-size: 16px;
+    padding: 15px 34px; border-radius: 12px; transition: all .2s;
+  }
+  .btn-amber:hover { background: #ffb03a; transform: translateY(-2px); }
+  .get-alt { font-size: 13px; color: #9aa3b5; }
+  .get-alt a { color: var(--amber); border-bottom: 1px solid rgba(232,147,12,.5); }
+  .req { margin-top: 34px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,.1); font-size: 13px; color: #77809a; display: flex; gap: 28px; flex-wrap: wrap; }
 
-  @media (max-width: 640px) {
-    .nav-links a:not(.btn) { display: none; }
-    .hero { padding-top: 60px; }
+  /* ============ 页脚 ============ */
+  footer { padding: 34px 0 46px; }
+  .foot { display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+  .foot a:hover { color: var(--amber-deep); }
+  .foot .links { display: flex; gap: 22px; }
+
+  @media (max-width: 860px) {
+    .open-grid, .focus-grid, .get-grid { grid-template-columns: 1fr; gap: 36px; }
+    .row { grid-template-columns: 1fr; gap: 10px; }
+    .row-count { text-align: left; }
+    .nav-a a:not(.nav-dl) { display: none; }
+    .open { padding: 64px 0 52px; }
   }
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="nav-inner">
-    <div class="logo">
-      <div class="logo-mark">AI</div>
-      <span>AI万能工具箱</span>
-    </div>
-    <div class="nav-links">
-      <a href="#features">功能</a>
-      <a href="#download">下载</a>
+  <div class="wrap nav-in">
+    <div class="brand"><span class="brand-mark">AI</span>AI万能工具箱</div>
+    <div class="nav-a">
+      <a href="#modules">功能目录</a>
+      <a href="#focus">特色</a>
       <a href="https://github.com/khssdsg-maker/ai-toolbox" target="_blank">GitHub</a>
-      <a href="#download" class="btn btn-primary btn-sm">立即下载</a>
+      <a href="#get" class="nav-dl">免费下载</a>
     </div>
   </div>
 </nav>
 
-<div class="hero">
-  <div class="hero-badge">v1.1.0 正式版已发布 · 免费使用</div>
-  <h1>AI 时代的<em>超级工具箱</em></h1>
-  <p>一个入口，解决找工具、转文件、装驱动、看视频的所有需求。汇集全球优质 AI 工具，持续更新中。</p>
-  <div class="hero-actions">
-    <a href="https://github.com/khssdsg-maker/ai-toolbox/releases/download/v1.1.0/AI%E4%B8%87%E8%83%BD%E5%B7%A5%E5%85%B7%E7%AE%B1-%E5%AE%89%E8%A3%85%E7%A8%8B%E5%BA%8F.exe" class="btn btn-primary">⬇ 下载 Windows 版</a>
-    <a href="https://github.com/khssdsg-maker/ai-toolbox" target="_blank" class="btn btn-ghost">查看源代码</a>
+<!-- 开篇 -->
+<header class="open">
+  <div class="wrap">
+    <div class="open-grid">
+      <h1>找工具、转文件、<br>装驱动，<span class="hl">一个入口</span><br>全搞定。</h1>
+      <div class="open-side">
+        <p><b>AI 万能工具箱</b>把日常最常用工具收进同一个软件：37+ 精选 AI 工具导航、本地文件转换、官方驱动入口、视频收藏播放，装一次，用很久。</p>
+        <div class="cta-row">
+          <a class="btn-big" href="https://github.com/khssdsg-maker/ai-toolbox/releases/download/v1.1.0/AI%E4%B8%87%E8%83%BD%E5%B7%A5%E5%85%B7%E7%AE%B1-%E5%AE%89%E8%A3%85%E7%A8%8B%E5%BA%8F.exe">⬇ 下载 Windows 版</a>
+          <a class="btn-line" href="#modules">先看功能 →</a>
+        </div>
+        <p class="open-note">Windows 10 / 11 64 位 · 免费 · 无广告</p>
+      </div>
+    </div>
+    <div class="lede">
+      <p>工具箱不该是一堆散落的网页书签。我们把 AI 工具、文件处理、驱动下载、视频收藏整理成一本随手可查的目录，装上就能用，不联网也能查。</p>
+    </div>
   </div>
-  <p class="hero-note">Windows 10/11 64 位 · 约 208 MB · 双击安装即用</p>
-</div>
+</header>
 
-<div class="stats">
-  <div class="stat"><b>37+</b><span>精选 AI 工具</span></div>
-  <div class="stat"><b>6</b><span>大功能模块</span></div>
-  <div class="stat"><b>22+</b><span>官方驱动入口</span></div>
-  <div class="stat"><b>2</b><span>种语言支持</span></div>
-</div>
+<!-- 功能目录 -->
+<section class="catalog" id="modules">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>功能目录</h2>
+      <span class="meta">共 6 个模块</span>
+    </div>
+    <div class="sec-rule"></div>
 
-<section class="block" id="features">
-  <div class="block-head">
-    <h2>六大功能模块</h2>
-    <p>日常需要的工具，这一个软件全都有</p>
-  </div>
-  <div class="features">
-    <div class="feature">
-      <div class="feature-icon">🤖</div>
-      <h3>AI 工具导航</h3>
-      <p>汇集 ChatGPT、Claude、Gemini、DeepSeek 等 37+ 全球优质 AI 工具，覆盖聊天、编程、设计、办公、视频、音乐 7 大分类。</p>
+    <div class="row">
+      <div class="row-name">AI 工具导航<small>AI DIRECTORY</small></div>
+      <div class="row-desc">ChatGPT、Claude、Gemini、DeepSeek、Kimi 等全球优质 AI 工具，按使用场景整理，点开即用。<span class="tags">聊天对话 · Agent 平台 · 办公 · 设计绘画 · 编程 · 视频 · 音频</span></div>
+      <div class="row-count"><b>37+</b><span>精选工具</span></div>
     </div>
-    <div class="feature">
-      <div class="feature-icon">📁</div>
-      <h3>文件转换中心</h3>
-      <p>图片格式互转、PDF 与 Word 互转、Markdown 与 HTML 互转、JSON/CSV/YAML 转换。全部本地处理，文件不上传。</p>
+
+    <div class="row">
+      <div class="row-name">文件转换<small>CONVERTER</small></div>
+      <div class="row-desc">图片格式互转、PDF 与 Word 互转、Markdown 与 HTML 互转、JSON / CSV / YAML 转换。<span class="tags">全程本地处理，文件不上传</span></div>
+      <div class="row-count"><b>8</b><span>种转换工具</span></div>
     </div>
-    <div class="feature">
-      <div class="feature-icon">🎬</div>
-      <h3>视频合集与收藏</h3>
-      <p>B站、YouTube 等平台入口，精选视频在线播放。看视频时一键收藏，自动识别来源、提取标题封面。</p>
+
+    <div class="row">
+      <div class="row-name">驱动中心<small>DRIVERS</small></div>
+      <div class="row-desc">电脑品牌官方驱动、显卡声卡网卡驱动、键鼠外设驱动，全部指向官网下载页，安全无毒。<span class="tags">联想 · 戴尔 · 惠普 · NVIDIA · 罗技 · 迈从 · 英菲克</span></div>
+      <div class="row-count"><b>22+</b><span>官方入口</span></div>
     </div>
-    <div class="feature">
-      <div class="feature-icon">💾</div>
-      <h3>驱动工具中心</h3>
-      <p>联想、戴尔、惠普、华为等品牌官方驱动，NVIDIA、AMD 硬件驱动，前行者、迈从、英菲克等键鼠外设驱动入口。</p>
+
+    <div class="row">
+      <div class="row-name">视频合集<small>VIDEOS</small></div>
+      <div class="row-desc">B站、YouTube 等平台入口与精选视频，应用内直接播放；看到好视频一键收藏，自动识别来源、提取标题封面。<span class="tags">在线播放 · 一键收藏 · 去重提醒</span></div>
+      <div class="row-count"><b>14+</b><span>平台与工具</span></div>
     </div>
-    <div class="feature">
-      <div class="feature-icon">🌐</div>
-      <h3>网络工具箱</h3>
-      <p>IP 查询、DNS 查询、HTTP 状态检测、端口检测、URL 解析、UA 解析，运维排查小工具一应俱全。</p>
+
+    <div class="row">
+      <div class="row-name">网络工具箱<small>NETWORK</small></div>
+      <div class="row-desc">IP 查询、DNS 查询、HTTP 状态检测、端口检测、URL 解析、UA 解析，排查网络问题的顺手工具。<span class="tags">即开即用 · 无需安装</span></div>
+      <div class="row-count"><b>6</b><span>个工具</span></div>
     </div>
-    <div class="feature">
-      <div class="feature-icon">🪟</div>
-      <h3>内置多标签浏览器</h3>
-      <p>软件内置带标签页的浏览器，链接可选应用内打开或指定外部浏览器（Chrome/Edge/360 等），自由设置。</p>
+
+    <div class="row">
+      <div class="row-name">内置浏览器<small>BROWSER</small></div>
+      <div class="row-desc">带标签页的应用内浏览器；每个链接可自选打开方式：应用内、系统默认、或指定 Chrome / Edge / 360。<span class="tags">多标签 · 记住选择 · 深浅主题</span></div>
+      <div class="row-count"><b>∞</b><span>自由打开</span></div>
     </div>
   </div>
 </section>
 
-<section class="block" id="download">
-  <div class="download">
-    <h2>下载 AI万能工具箱</h2>
-    <p>免费、无广告，安装即用</p>
-    <div class="steps">
-      <div class="step">
-        <b><i>1</i>下载安装包</b>
-        <p>点击下方按钮下载 Windows 安装包（约 208 MB）</p>
+<!-- 特写 -->
+<section class="focus" id="focus">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>两个最常用的</h2>
+      <span class="meta">细节特写</span>
+    </div>
+    <div class="sec-rule"></div>
+    <div class="focus-grid">
+      <div class="panel">
+        <h3>文件转换</h3>
+        <div class="sub">不上传 · 不排队 · 不收费</div>
+        <ul class="spec">
+          <li><span class="k">图片格式</span><span class="v">PNG / JPG / WebP / BMP / AVIF 互转</span></li>
+          <li><span class="k">PDF → Word</span><span class="v">提取文字生成 Word 文档</span></li>
+          <li><span class="k">Word → PDF</span><span class="v">保留文字排版</span></li>
+          <li><span class="k">Markdown</span><span class="v">与 HTML 双向转换</span></li>
+          <li><span class="k">数据格式</span><span class="v">JSON / CSV / YAML 互转</span></li>
+          <li><span class="k">隐私</span><span class="v">全部本机完成，文件不出电脑</span></li>
+        </ul>
       </div>
-      <div class="step">
-        <b><i>2</i>双击安装</b>
-        <p>运行安装程序，选择安装位置，一路下一步</p>
-      </div>
-      <div class="step">
-        <b><i>3</i>桌面启动</b>
-        <p>桌面出现"AI万能工具箱"图标，点开即用</p>
+      <div class="panel">
+        <h3>驱动中心</h3>
+        <div class="sub">只收录官方下载入口</div>
+        <p style="font-size:14px;color:var(--muted);margin-bottom:14px;">按设备类型分好类，点进去就是官网驱动页：</p>
+        <div class="brands">
+          <span>联想</span><span>戴尔</span><span>惠普</span><span>华为</span><span>华硕</span><span>微星</span>
+          <span>NVIDIA</span><span>AMD</span><span>Intel</span><span>Realtek</span>
+          <span class="hot">前行者</span><span class="hot">迈从</span><span class="hot">英菲克</span>
+          <span>罗技</span><span>雷蛇</span><span>雷柏</span><span>达尔优</span><span>双飞燕</span>
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin-top:16px;">键鼠外设驱动单独成类，国产品牌齐全。</p>
       </div>
     </div>
-    <a href="https://github.com/khssdsg-maker/ai-toolbox/releases/download/v1.1.0/AI%E4%B8%87%E8%83%BD%E5%B7%A5%E5%85%B7%E7%AE%B1-%E5%AE%89%E8%A3%85%E7%A8%8B%E5%BA%8F.exe" class="btn btn-primary">⬇ 下载 v1.1.0 安装包</a>
-    <p class="dl-meta">
-      系统要求：Windows 10 / 11（64 位）<br>
-      更多版本与更新日志：<a href="https://github.com/khssdsg-maker/ai-toolbox/releases" target="_blank">GitHub Releases</a>
-    </p>
+  </div>
+</section>
+
+<!-- 下载 -->
+<section class="get" id="get">
+  <div class="wrap get-grid">
+    <div>
+      <h2>装一次，<br><em>用很久。</em></h2>
+      <p class="lead">免费、无广告、无登录。安装包约 208 MB，双击安装，桌面就有图标。</p>
+      <div class="get-cta">
+        <a class="btn-amber" href="https://github.com/khssdsg-maker/ai-toolbox/releases/download/v1.1.0/AI%E4%B8%87%E8%83%BD%E5%B7%A5%E5%85%B7%E7%AE%B1-%E5%AE%89%E8%A3%85%E7%A8%8B%E5%BA%8F.exe">⬇ 下载 v1.1.0</a>
+        <span class="get-alt">更多版本见 <a href="https://github.com/khssdsg-maker/ai-toolbox/releases" target="_blank">GitHub Releases</a></span>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="no">1</span><div><b>下载安装包</b><p>点左边按钮，下载 Windows 安装包（约 208 MB）</p></div></div>
+      <div class="step"><span class="no">2</span><div><b>双击安装</b><p>运行安装程序，选个安装位置，一路下一步</p></div></div>
+      <div class="step"><span class="no">3</span><div><b>桌面启动</b><p>桌面出现"AI万能工具箱"图标，点开就用</p></div></div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="req">
+      <span>系统要求：Windows 10 / 11（64 位）</span>
+      <span>更新方式：下载新安装包覆盖安装，收藏与设置保留</span>
+      <span>开源地址：github.com/khssdsg-maker/ai-toolbox</span>
+    </div>
   </div>
 </section>
 
 <footer>
-  <span>© 2026 AI万能工具箱 · 基于 NavSphere 开源项目二次开发</span>
-  <span>
-    <a href="https://github.com/khssdsg-maker/ai-toolbox" target="_blank">GitHub</a> ·
-    <a href="https://github.com/khssdsg-maker/ai-toolbox/releases" target="_blank">下载</a> ·
-    <a href="https://github.com/khssdsg-maker/ai-toolbox/issues" target="_blank">反馈问题</a>
-  </span>
+  <div class="wrap foot">
+    <span>© 2026 AI万能工具箱 · 基于 NavSphere 开源项目二次开发</span>
+    <span class="links">
+      <a href="https://github.com/khssdsg-maker/ai-toolbox" target="_blank">GitHub</a>
+      <a href="https://github.com/khssdsg-maker/ai-toolbox/releases" target="_blank">下载</a>
+      <a href="https://github.com/khssdsg-maker/ai-toolbox/issues" target="_blank">反馈</a>
+    </span>
+  </div>
 </footer>
 
 </body>
