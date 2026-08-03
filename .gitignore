@@ -51,3 +51,7 @@ build/cache/
 /.npm_cache/
 /.venv/
 /.npm_cache/
+
+dist-electron/
+out/
+launch.log

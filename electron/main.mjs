@@ -1,37 +1,59 @@
 import { app, BrowserWindow, session } from 'electron'
 import path from 'path'
-import { fileURLToPath } from 'url'
-import { spawn } from 'child_process'
+import http from 'http'
+import fs from 'fs'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const isDev = process.env.NODE_ENV === 'development'
+const PORT = 3456
 
 let mainWindow
-let nextProcess
+let server
 
-function startNextServer() {
-  return new Promise((resolve, reject) => {
-    const port = 3456
-    const projectDir = path.join(__dirname, '..')
-    
-    nextProcess = spawn('npx', ['next', 'start', '-p', String(port)], {
-      cwd: projectDir,
-      stdio: 'pipe',
-      shell: true,
-    })
+const MIME = {
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'application/javascript',
+  '.css': 'text/css',
+  '.json': 'application/json',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
+  '.gif': 'image/gif',
+  '.svg': 'image/svg+xml',
+  '.ico': 'image/x-icon',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2',
+  '.txt': 'text/plain',
+  '.map': 'application/json',
+}
 
-    nextProcess.stdout.on('data', (data) => {
-      if (data.toString().includes('Ready') || data.toString().includes('started server')) {
-        resolve(port)
+// 内置静态服务器：直接提供打包好的前端文件，不依赖任何外部环境
+function startStaticServer(rootDir) {
+  return new Promise((resolve) => {
+    server = http.createServer((req, res) => {
+      let urlPath = decodeURIComponent(req.url.split('?')[0])
+      let filePath = path.join(rootDir, urlPath)
+
+      // 目录则找 index.html
+      if (urlPath.endsWith('/') || !path.extname(urlPath)) {
+        filePath = path.join(filePath, 'index.html')
       }
-    })
 
-    nextProcess.stderr.on('data', (data) => {
-      console.error(`Next.js error: ${data}`)
+      fs.readFile(filePath, (err, data) => {
+        if (err) {
+          // 找不到的路径返回首页（支持前端路由）
+          fs.readFile(path.join(rootDir, 'index.html'), (err2, data2) => {
+            if (err2) { res.writeHead(404); res.end('Not Found') }
+            else { res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' }); res.end(data2) }
+          })
+          return
+        }
+        const ext = path.extname(filePath).toLowerCase()
+        res.writeHead(200, { 'Content-Type': MIME[ext] || 'application/octet-stream' })
+        res.end(data)
+      })
     })
-
-    // 超时处理
-    setTimeout(() => resolve(port), 5000)
+    server.listen(PORT, '127.0.0.1', () => resolve())
   })
 }
 
@@ -48,28 +70,26 @@ async function createWindow() {
     },
     autoHideMenuBar: true,
     backgroundColor: '#faf9f7',
+    show: false,
   })
 
-  if (isDev) {
-    // 开发模式：连接本地 dev server
-    await mainWindow.loadURL('http://localhost:3000')
-    // 加载失败时自动重试（服务器可能还在编译）
-    mainWindow.webContents.on('did-fail-load', () => {
-      setTimeout(() => mainWindow && mainWindow.loadURL('http://localhost:3000'), 2000)
-    })
-  } else {
-    // 生产模式：启动 Next.js 服务
-    const port = await startNextServer()
-    await mainWindow.loadURL(`http://localhost:${port}`)
+  mainWindow.once('ready-to-show', () => mainWindow.show())
+
+  const url = isDev ? 'http://localhost:3000' : `http://127.0.0.1:${PORT}`
+
+  if (!isDev) {
+    await startStaticServer(path.join(process.resourcesPath, 'web'))
   }
 
-  mainWindow.on('closed', () => {
-    mainWindow = null
+  await mainWindow.loadURL(url)
+  mainWindow.webContents.on('did-fail-load', () => {
+    setTimeout(() => mainWindow && mainWindow.loadURL(url), 2000)
   })
+
+  mainWindow.on('closed', () => { mainWindow = null })
 }
 
 app.whenReady().then(async () => {
-  // 每次启动强制清除缓存，防止样式加载旧版本
   await session.defaultSession.clearCache()
   createWindow()
   app.on('activate', () => {
@@ -78,13 +98,10 @@ app.whenReady().then(async () => {
 })
 
 app.on('window-all-closed', () => {
-  if (nextProcess) nextProcess.kill()
-  if (process.platform !== 'darwin') app.quit()
+  if (server) server.close()
+  app.quit()
 })
 
 app.on('quit', () => {
-  if (nextProcess) nextProcess.kill()
+  if (server) server.close()
 })
-
-
-

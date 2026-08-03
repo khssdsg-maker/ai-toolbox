@@ -5,20 +5,25 @@
     "output": "dist-electron"
   },
   "files": [
-    "electron/**/*",
-    ".next/**/*",
-    "public/**/*",
-    "node_modules/**/*",
-    "package.json"
+    "electron/main.mjs"
   ],
+  "extraResources": [
+    {
+      "from": "out",
+      "to": "web"
+    }
+  ],
+  "asar": true,
   "win": {
-    "target": ["nsis"],
-    "icon": "public/assets/images/alogo.webp"
+    "target": ["nsis"]
   },
   "nsis": {
     "oneClick": false,
+    "perMachine": false,
     "allowToChangeInstallationDirectory": true,
     "createDesktopShortcut": true,
-    "createStartMenuShortcut": true
+    "createStartMenuShortcut": true,
+    "shortcutName": "AI万能工具箱",
+    "artifactName": "AI万能工具箱-安装程序.exe"
   }
 }
