@@ -11,4 +11,6 @@ contextBridge.exposeInMainWorld('appAPI', {
   windowMinimize: () => ipcRenderer.send('app:minimize'),
   windowMaximize: () => ipcRenderer.send('app:maximize'),
   windowClose: () => ipcRenderer.send('app:close'),
+  startDownloadUpdate: () => ipcRenderer.invoke('app:start-download-update'),
+  onDownloadProgress: (cb) => ipcRenderer.on('update:download-progress', (e, percent) => cb(percent)),
 })

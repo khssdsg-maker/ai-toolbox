@@ -278,11 +278,40 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
     }
   }
 
+  const [downloadProgress, setDownloadProgress] = useState<number | null>(null)
+  const [isDownloading, setIsDownloading] = useState(false)
+
   const handleConfirmUpdate = () => {
-    if (updateResult.url) {
-      window.open(updateResult.url, '_blank')
+    const api = (window as unknown as {
+      appAPI?: {
+        startDownloadUpdate?: () => Promise<{ status: string; message?: string }>
+        onDownloadProgress?: (cb: (percent: number) => void) => void
+      }
+    }).appAPI
+
+    if (api && api.startDownloadUpdate) {
+      setIsDownloading(true)
+      setDownloadProgress(0)
+      if (api.onDownloadProgress) {
+        api.onDownloadProgress((percent) => setDownloadProgress(percent))
+      }
+      api.startDownloadUpdate().then((res) => {
+        if (res.status === 'error') {
+          setIsDownloading(false)
+          setDownloadProgress(null)
+          setUpdateResult({ status: 'error', message: res.message || t('下载失败，请重试', 'Download failed') })
+        }
+      }).catch(() => {
+        setIsDownloading(false)
+        setDownloadProgress(null)
+        setUpdateResult({ status: 'error', message: t('应用内下载出错', 'Download error') })
+      })
     } else {
-      window.open('https://github.com/khssdsg-maker/ai-toolbox/releases/latest', '_blank')
+      if (updateResult.url) {
+        window.open(updateResult.url, '_blank')
+      } else {
+        window.open('https://github.com/khssdsg-maker/ai-toolbox/releases/latest', '_blank')
+      }
     }
   }
 
@@ -445,14 +474,29 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
                 <p className="text-xs text-muted-foreground leading-relaxed">
                   {t('检测到官方有新版本更新，是否现在前往查看并下载新版本？', 'Official update detected. Would you like to view and download the latest release?')}
                 </p>
-                <div className="flex items-center gap-2 pt-1">
-                  <Button size="sm" onClick={handleConfirmUpdate} className="h-7 text-xs bg-amber-600 hover:bg-amber-700 text-white">
-                    {t('立即前往更新', 'Update Now')}
-                  </Button>
-                  <Button size="sm" variant="ghost" onClick={() => setUpdateResult({ status: 'idle' })} className="h-7 text-xs text-muted-foreground">
-                    {t('暂不更新', 'Later')}
-                  </Button>
-                </div>
+                {isDownloading ? (
+                  <div className="space-y-1.5 pt-1">
+                    <div className="flex items-center justify-between text-xs text-amber-700 dark:text-amber-300 font-semibold">
+                      <span>{t(downloadProgress === 100 ? '下载完成，正在自动启动安装向导...' : '正在为您下载最新安装包...', downloadProgress === 100 ? 'Download complete, launching setup...' : 'Downloading update...')}</span>
+                      <span>{downloadProgress !== null ? `${downloadProgress}%` : ''}</span>
+                    </div>
+                    <div className="w-full bg-amber-500/20 rounded-full h-2 overflow-hidden">
+                      <div
+                        className="bg-amber-500 h-full transition-all duration-300 rounded-full"
+                        style={{ width: `${downloadProgress || 0}%` }}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 pt-1">
+                    <Button size="sm" onClick={handleConfirmUpdate} className="h-7 text-xs bg-amber-600 hover:bg-amber-700 text-white">
+                      {isDesktop ? t('应用内下载并升级', 'Download & Update') : t('前往 GitHub 查看', 'View on GitHub')}
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => setUpdateResult({ status: 'idle' })} className="h-7 text-xs text-muted-foreground">
+                      {t('暂不更新', 'Later')}
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
 

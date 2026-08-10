@@ -319,5 +319,21 @@
   </div>
 </footer>
 
+<script>
+  // 自动解析 GitHub 最新发布版本的 .exe 直链地址，点击直接引发文件下载而无需跳转页面
+  fetch('https://api.github.com/repos/khssdsg-maker/ai-toolbox/releases/latest')
+    .then(r => r.json())
+    .then(data => {
+      if (data && data.assets && Array.isArray(data.assets)) {
+        const exeAsset = data.assets.find(a => a.name && (a.name.endsWith('.exe') || a.name.includes('.exe')))
+        if (exeAsset && exeAsset.browser_download_url) {
+          document.querySelectorAll('.btn-big, .btn-amber, .nav-dl').forEach(el => {
+            el.setAttribute('href', exeAsset.browser_download_url)
+            el.setAttribute('download', '')
+          })
+        }
+      }
+    }).catch(() => {})
+</script>
 </body>
 </html>

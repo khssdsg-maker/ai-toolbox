@@ -64,6 +64,58 @@ ipcMain.handle('app:check-updates', async () => {
   return { status: 'error', message: '无法连接 GitHub 服务器，请检查网络或稍后再试' }
 })
 
+// 应用内一键异步下载安装包、退出旧应用并自动弹窗调起安装程序
+ipcMain.handle('app:start-download-update', async () => {
+  try {
+    const res = await fetch('https://api.github.com/repos/khssdsg-maker/ai-toolbox/releases/latest', {
+      headers: { 'User-Agent': 'ai-toolbox-app' },
+      signal: AbortSignal.timeout(6000)
+    })
+    if (!res.ok) throw new Error('无法连接 GitHub API')
+    const data = await res.json()
+    const exeAsset = data.assets && data.assets.find(a => a.name && (a.name.endsWith('.exe') || a.name.includes('.exe')))
+    if (!exeAsset || !exeAsset.browser_download_url) throw new Error('未发现安装包程序')
+
+    const downloadUrl = exeAsset.browser_download_url
+    const destPath = path.join(app.getPath('temp'), 'AI万能工具箱-最新安装包.exe')
+
+    const response = await fetch(downloadUrl)
+    if (!response.ok) throw new Error('下载安装包失败')
+
+    const totalBytes = parseInt(response.headers.get('content-length') || '0', 10)
+    let downloadedBytes = 0
+
+    const fileStream = fs.createWriteStream(destPath)
+    const reader = response.body.getReader()
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      downloadedBytes += value.length
+      fileStream.write(value)
+      if (totalBytes > 0 && mainWindow && !mainWindow.isDestroyed()) {
+        const percent = Math.round((downloadedBytes / totalBytes) * 100)
+        mainWindow.webContents.send('update:download-progress', percent)
+      }
+    }
+    fileStream.end()
+
+    // 自动定位程序当前物理安装目录（如 D:\AI万能工具箱\navsphere）并弹出 NSIS 安装向导
+    const currentInstallDir = path.dirname(process.execPath)
+    spawn(destPath, [`/D=${currentInstallDir}`], {
+      detached: true,
+      stdio: 'ignore'
+    }).unref()
+
+    setTimeout(() => {
+      app.quit()
+    }, 500)
+
+    return { status: 'success' }
+  } catch (err) {
+    return { status: 'error', message: err ? err.message : '下载更新异常' }
+  }
+})
+
 // ============ 链接打开方式设置 ============
 function settingsFile() {
   return path.join(app.getPath('userData'), 'link-settings.json')
@@ -486,6 +538,14 @@ async function createWindow() {
 }
 
 app.whenReady().then(async () => {
+  // 自动清理升级留在系统的临时安装包程序，确保零垃圾残余
+  try {
+    const tempInstaller = path.join(app.getPath('temp'), 'AI万能工具箱-最新安装包.exe')
+    if (fs.existsSync(tempInstaller)) fs.unlinkSync(tempInstaller)
+    const dlInstaller = path.join(app.getPath('downloads'), 'AI万能工具箱-最新安装包.exe')
+    if (fs.existsSync(dlInstaller)) fs.unlinkSync(dlInstaller)
+  } catch {}
+
   await session.defaultSession.clearCache()
   createWindow()
   app.on('activate', () => {
