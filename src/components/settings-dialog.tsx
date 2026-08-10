@@ -136,6 +136,9 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
     url?: string
     message?: string
   }>({ status: 'idle' })
+  const [downloadProgress, setDownloadProgress] = useState<number | null>(null)
+  const [isDownloading, setIsDownloading] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     if (!open) return
@@ -184,7 +187,6 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
       .catch(() => {})
   }, [open])
 
-  const [mounted, setMounted] = useState(false)
   useEffect(() => { setMounted(true) }, [])
 
   if (!open || !mounted) return null
@@ -277,9 +279,6 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
       }
     }
   }
-
-  const [downloadProgress, setDownloadProgress] = useState<number | null>(null)
-  const [isDownloading, setIsDownloading] = useState(false)
 
   const handleConfirmUpdate = () => {
     const api = (window as unknown as {
