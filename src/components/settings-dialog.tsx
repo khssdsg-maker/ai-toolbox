@@ -1,9 +1,9 @@
 'use client'
 
-// 应用设置弹窗：链接打开方式 / 主题外观 / 界面语言 / 数据管理 / 关于与更新日志
+// 应用设置弹窗：链接打开方式 / 主题外观 / 界面语言 / 数据管理 / 手动检查更新 / 最近更新日志
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { X, Settings2, Sun, Moon, Monitor, Github, ExternalLink, History, Sparkles, ChevronDown, ChevronUp } from 'lucide-react'
+import { X, Settings2, Sun, Moon, Monitor, Github, ExternalLink, History, Sparkles, ChevronDown, ChevronUp, RefreshCw, AlertCircle } from 'lucide-react'
 import { Button } from '@/registry/new-york/ui/button'
 import { useTheme } from 'next-themes'
 import { useLanguage } from '@/lib/language-context'
@@ -36,19 +36,19 @@ const RECENT_RELEASE_NOTES: ReleaseNote[] = [
   {
     version: 'v1.2.1',
     date: '2026-08-10',
-    title: '海量 AI 工具更新与开发者链接集成',
-    titleEn: 'Massive AI tools expansion & developer info',
+    title: '卡片常用置顶、拖拽重排与全网真实 Logo 支持',
+    titleEn: 'Card Pinning, Drag & Drop Reordering & Real Domain Logos',
     changes: [
-      '新增 Recapo.ai 智能视频剪辑平台（响应 Issue #1）',
-      '新增 22 个全网热门 AI 工具（即梦AI、Sora、Luma、秘塔搜索、智谱清言、腾讯元宝、NotebookLM、ChatPDF、Windsurf 等）',
-      '设置弹窗中添加 GitHub 项目仓库与开发者个人主页跳转按钮',
-      '设置弹窗集成最近四次更新日志查看面板'
+      '每个工具卡片增加【常用置顶】按键，设为常用的卡片自动置顶在最最前面',
+      '支持工具卡片在列表间自由拖拽排布顺序',
+      '全部工具替换为当前链接的真实网站 Favicon / 官方图标，不使用占位图',
+      '响应 Issue #1 新增 Recapo.ai 智能剪辑及全网 22 个热门 AI 工具'
     ],
     changesEn: [
-      'Added Recapo.ai AI video editing platform (Resolves Issue #1)',
-      'Added 22 trending AI tools (Jimeng, Sora, Luma, Metaso, Zhipu, Yuanbao, NotebookLM, ChatPDF, etc.)',
-      'Added GitHub repo and author profile links in Settings',
-      'Integrated recent 4 release notes viewer in Settings'
+      'Added Pin-to-top button on each card; pinned tools automatically float to top',
+      'Supported free Drag-and-drop card reordering in categories',
+      'Replaced tool icons with real website favicons/logos',
+      'Added Recapo.ai (Issue #1) and 22 trending AI tools'
     ]
   },
   {
@@ -113,6 +113,15 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   const [appVersion, setAppVersion] = useState('1.2.1')
   const [showChangelog, setShowChangelog] = useState(false)
 
+  // 检查更新状态
+  const [checkingUpdate, setCheckingUpdate] = useState(false)
+  const [updateResult, setUpdateResult] = useState<{
+    status: 'idle' | 'latest' | 'available' | 'error'
+    version?: string
+    url?: string
+    message?: string
+  }>({ status: 'idle' })
+
   useEffect(() => {
     if (!open) return
     const api = (window as unknown as {
@@ -157,15 +166,78 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   // 清空收藏
   const handleClearFavorites = async () => {
     if (!confirm(t('确定要清空所有收藏吗？此操作无法撤销。', 'Clear all favorites? This cannot be undone.'))) return
-    // 清空本地收藏
     localStorage.removeItem('ai-toolbox-favorites')
-    // 清空桌面应用收藏文件
     const api = (window as unknown as { appAPI?: { clearFavorites?: () => void } }).appAPI
     if (api && api.clearFavorites) {
       api.clearFavorites()
     }
     setClearTip(t('收藏已清空', 'Favorites cleared'))
     setTimeout(() => setClearTip(''), 2000)
+  }
+
+  // 手动检查更新
+  const handleCheckUpdate = async () => {
+    setCheckingUpdate(true)
+    setUpdateResult({ status: 'idle' })
+
+    const api = (window as unknown as {
+      appAPI?: {
+        checkForUpdates?: () => Promise<{ status: string; version?: string; releaseUrl?: string; message?: string }>
+      }
+    }).appAPI
+
+    if (api && api.checkForUpdates) {
+      try {
+        const res = await api.checkForUpdates()
+        if (res.status === 'available') {
+          setUpdateResult({
+            status: 'available',
+            version: res.version,
+            url: res.releaseUrl || 'https://github.com/khssdsg-maker/ai-toolbox/releases/latest'
+          })
+        } else if (res.status === 'latest') {
+          setUpdateResult({ status: 'latest', version: res.version || appVersion })
+        } else {
+          setUpdateResult({ status: 'error', message: res.message || t('网络连接失败', 'Network connection error') })
+        }
+      } catch {
+        setUpdateResult({ status: 'error', message: t('请求异常，请检查网络', 'Request failed, check network') })
+      } finally {
+        setCheckingUpdate(false)
+      }
+    } else {
+      // 网页端在线请求 GitHub API
+      try {
+        const res = await fetch('https://api.github.com/repos/khssdsg-maker/ai-toolbox/releases/latest')
+        if (res.ok) {
+          const data = await res.json()
+          const latestVer = (data.tag_name || '').replace(/^v/, '')
+          if (latestVer && latestVer !== appVersion) {
+            setUpdateResult({
+              status: 'available',
+              version: latestVer,
+              url: data.html_url || 'https://github.com/khssdsg-maker/ai-toolbox/releases/latest'
+            })
+          } else {
+            setUpdateResult({ status: 'latest', version: appVersion })
+          }
+        } else {
+          setUpdateResult({ status: 'error', message: t('访问 GitHub 接口超时', 'Failed to reach GitHub API') })
+        }
+      } catch {
+        setUpdateResult({ status: 'error', message: t('无法检查更新，请确认网络', 'Network error') })
+      } finally {
+        setCheckingUpdate(false)
+      }
+    }
+  }
+
+  const handleConfirmUpdate = () => {
+    if (updateResult.url) {
+      window.open(updateResult.url, '_blank')
+    } else {
+      window.open('https://github.com/khssdsg-maker/ai-toolbox/releases/latest', '_blank')
+    }
   }
 
   const linkOptions = [
@@ -301,6 +373,57 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
             </div>
           )}
 
+          {/* 检查更新板块（带版本对比与是否更新确认） */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-semibold">{t('版本与更新', 'Version & Update')}</h3>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleCheckUpdate}
+                disabled={checkingUpdate}
+                className="h-8 text-xs gap-1.5"
+              >
+                <RefreshCw className={`h-3.5 w-3.5 ${checkingUpdate ? 'animate-spin' : ''}`} />
+                {t('检查更新', 'Check Updates')}
+              </Button>
+            </div>
+
+            {/* 发现新版本时的互动面板 */}
+            {updateResult.status === 'available' && (
+              <div className="p-3.5 rounded-xl border border-amber-500/30 bg-amber-500/10 space-y-2.5 animate-in fade-in duration-200 mt-2">
+                <div className="flex items-center gap-2 text-amber-700 dark:text-amber-300 font-semibold text-xs">
+                  <Sparkles className="h-4 w-4 flex-shrink-0" />
+                  <span>{t(`发现新版本 v${updateResult.version}！`, `New version v${updateResult.version} available!`)}</span>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {t('检测到官方有新版本更新，是否现在前往查看并下载新版本？', 'Official update detected. Would you like to view and download the latest release?')}
+                </p>
+                <div className="flex items-center gap-2 pt-1">
+                  <Button size="sm" onClick={handleConfirmUpdate} className="h-7 text-xs bg-amber-600 hover:bg-amber-700 text-white">
+                    {t('立即前往更新', 'Update Now')}
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={() => setUpdateResult({ status: 'idle' })} className="h-7 text-xs text-muted-foreground">
+                    {t('暂不更新', 'Later')}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {updateResult.status === 'latest' && (
+              <p className="text-xs text-green-600 dark:text-green-400 bg-green-500/10 py-2 px-3 rounded-lg border border-green-500/20 mt-2">
+                ✓ {t(`当前已是最新版本 (v${updateResult.version})`, `Already on the latest version (v${updateResult.version})`)}
+              </p>
+            )}
+
+            {updateResult.status === 'error' && (
+              <p className="text-xs text-red-500 bg-red-500/10 py-2 px-3 rounded-lg border border-red-500/20 mt-2 flex items-center gap-1.5">
+                <AlertCircle className="h-3.5 w-3.5 flex-shrink-0" />
+                <span>{updateResult.message}</span>
+              </p>
+            )}
+          </div>
+
           {/* 数据管理 */}
           <div>
             <h3 className="text-sm font-semibold mb-3">{t('数据管理', 'Data')}</h3>
@@ -343,7 +466,7 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
               </div>
             )}
 
-            {/* 关于与开发者 */}
+            {/* 关于与开发者信息 */}
             <div className="pt-2 flex flex-col items-center gap-2 text-xs">
               <p className="text-muted-foreground">
                 {t('AI万能工具箱', 'AI Toolbox')} v{appVersion} · {t('AI 时代的超级工具箱', 'The super toolbox for the AI era')}

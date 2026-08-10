@@ -15,6 +15,26 @@ let server
 
 ipcMain.handle('app:get-version', () => app.getVersion())
 
+ipcMain.handle('app:check-updates', async () => {
+  try {
+    const res = await fetch('https://api.github.com/repos/khssdsg-maker/ai-toolbox/releases/latest', {
+      headers: { 'User-Agent': 'ai-toolbox-app' }
+    })
+    if (!res.ok) throw new Error('网络通信失败')
+    const data = await res.json()
+    const latestVersion = (data.tag_name || '').replace(/^v/, '')
+    const currentVersion = app.getVersion()
+
+    if (latestVersion && latestVersion !== currentVersion) {
+      return { status: 'available', version: latestVersion, releaseUrl: data.html_url }
+    } else {
+      return { status: 'latest', version: currentVersion }
+    }
+  } catch (err) {
+    return { status: 'error', message: err && err.message ? err.message : '检查更新失败，请检查网络' }
+  }
+})
+
 // ============ 链接打开方式设置 ============
 function settingsFile() {
   return path.join(app.getPath('userData'), 'link-settings.json')

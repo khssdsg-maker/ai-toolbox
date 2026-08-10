@@ -5,30 +5,61 @@ import { LetterAvatar } from './letter-avatar'
 
 interface SiteFaviconProps {
   title: string
+  href?: string
   icon?: string
   useDefaultIcon?: boolean
   className?: string
 }
 
-// useDefaultIcon === true、无 icon、或图片加载失败 → 显示首字母色块;否则显示 <img>。
-export function SiteFavicon({ title, icon, useDefaultIcon, className }: SiteFaviconProps) {
-  const [errored, setErrored] = useState(false)
+function getDomain(url?: string): string {
+  if (!url) return ''
+  try {
+    const parsed = new URL(url.startsWith('http') ? url : `https://${url}`)
+    return parsed.hostname
+  } catch {
+    return ''
+  }
+}
 
-  // icon 变化时重置错误态(同一组件实例复用于不同 item 时)
+export function SiteFavicon({ title, href, icon, useDefaultIcon, className }: SiteFaviconProps) {
+  const [imgSrc, setImgSrc] = useState<string>('')
+  const [fallbackIndex, setFallbackIndex] = useState<number>(0)
+
+  const domain = getDomain(href)
+
   useEffect(() => {
-    setErrored(false)
-  }, [icon])
+    setFallbackIndex(0)
+    if (icon && icon.trim() !== '' && !useDefaultIcon) {
+      setImgSrc(icon)
+    } else if (domain) {
+      setImgSrc(`https://www.google.com/s2/favicons?domain=${domain}&sz=128`)
+    } else {
+      setImgSrc('')
+    }
+  }, [icon, href, useDefaultIcon, domain])
 
-  if (useDefaultIcon || !icon || errored) {
+  const handleError = () => {
+    if (fallbackIndex === 0 && domain) {
+      setFallbackIndex(1)
+      setImgSrc(`https://icon.horse/icon/${domain}`)
+    } else if (fallbackIndex === 1 && domain) {
+      setFallbackIndex(2)
+      setImgSrc(`https://unavatar.io/${domain}`)
+    } else {
+      setFallbackIndex(3)
+    }
+  }
+
+  if (fallbackIndex >= 3 || !imgSrc) {
     return <LetterAvatar title={title} className={className} />
   }
 
   return (
     <img
-      src={icon}
+      src={imgSrc}
       alt={`${title} icon`}
       className={className}
-      onError={() => setErrored(true)}
+      onError={handleError}
     />
   )
 }
