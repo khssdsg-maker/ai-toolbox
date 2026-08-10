@@ -4,8 +4,7 @@ import http from 'http'
 import fs from 'fs'
 import { spawn } from 'child_process'
 import { fileURLToPath } from 'url'
-import electronUpdater from 'electron-updater'
-const { autoUpdater } = electronUpdater
+
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const isDev = process.env.NODE_ENV === 'development'
@@ -14,48 +13,7 @@ const PORT = 3456
 let mainWindow
 let server
 
-// ============ 自动更新 ============
-function setupAutoUpdate() {
-  // 只在打包后的生产环境检查更新
-  if (isDev || !app.isPackaged) return
-
-  autoUpdater.autoDownload = true
-  autoUpdater.autoInstallOnAppQuit = true
-
-  autoUpdater.on('update-available', (info) => {
-    if (mainWindow && !mainWindow.isDestroyed()) {
-      dialog.showMessageBox(mainWindow, {
-        type: 'info',
-        title: '发现新版本',
-        message: '发现新版本 v' + info.version + '，正在后台下载...',
-        buttons: ['好的'],
-      })
-    }
-  })
-
-  autoUpdater.on('update-downloaded', (info) => {
-    if (mainWindow && !mainWindow.isDestroyed()) {
-      dialog.showMessageBox(mainWindow, {
-        type: 'info',
-        title: '更新已就绪',
-        message: 'v' + info.version + ' 已下载完成，重启应用即可安装。',
-        buttons: ['立即重启安装', '稍后'],
-        defaultId: 0,
-        cancelId: 1,
-      }).then(({ response }) => {
-        if (response === 0) autoUpdater.quitAndInstall()
-      })
-    }
-  })
-
-  autoUpdater.on('error', (err) => {
-    // 更新失败静默处理，不影响正常使用
-    console.error('自动更新出错:', err && err.message)
-  })
-
-  // 启动后延迟检查，避免影响开窗速度
-  setTimeout(() => { autoUpdater.checkForUpdates().catch(() => {}) }, 4000)
-}
+ipcMain.handle('app:get-version', () => app.getVersion())
 
 // ============ 链接打开方式设置 ============
 function settingsFile() {
@@ -460,8 +418,6 @@ async function createWindow() {
 app.whenReady().then(async () => {
   await session.defaultSession.clearCache()
   createWindow()
-  // 自动更新放在窗口创建之后，且出错不影响应用正常使用
-  try { setupAutoUpdate() } catch (e) { console.error('自动更新初始化失败（不影响使用）:', e && e.message) }
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })

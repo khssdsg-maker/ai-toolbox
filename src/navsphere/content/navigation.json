@@ -83,6 +83,56 @@
           "description": "字节跳动推出的AI助手，支持对话、写作、翻译等",
           "title": "豆包",
           "id": "1_8"
+        },
+        {
+          "id": "1_9",
+          "title": "秘塔AI搜索",
+          "titleEn": "Metaso AI Search",
+          "href": "https://metaso.cn/",
+          "description": "无广告智能搜索引擎，支持语义理解、文档总结与自动思维导图生成",
+          "descriptionEn": "Ad-free intelligent search engine supporting semantic understanding, doc summary and mind maps",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "1_10",
+          "title": "智谱清言",
+          "titleEn": "Zhipu Qingyan",
+          "href": "https://chatglm.cn/",
+          "description": "智谱AI推出的全能AI助手，基于GLM大模型，擅长长文本分析、代码编写与多模态生成",
+          "descriptionEn": "All-in-one AI assistant by Zhipu AI based on GLM models, excelling at long-text, coding and multimodal tasks",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "1_11",
+          "title": "腾讯元宝",
+          "titleEn": "Tencent Yuanbao",
+          "href": "https://yuanbao.tencent.com/",
+          "description": "腾讯官方AI智能助手，深度整合微信公众号与网页搜索，支持文档解析与创作",
+          "descriptionEn": "Official AI assistant by Tencent deeply integrated with WeChat articles and web search",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "1_12",
+          "title": "Perplexity AI",
+          "titleEn": "Perplexity AI",
+          "href": "https://www.perplexity.ai/",
+          "description": "全球顶尖的对话式AI搜索引擎，提供附带真实引用来源的高质量答案",
+          "descriptionEn": "Leading conversational AI search engine providing cited answers with real-time web references",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "1_13",
+          "title": "纳米搜索",
+          "titleEn": "Nano Search",
+          "href": "https://n.cn/",
+          "description": "新一代AI超级搜索引擎，聚合顶级模型，自动规划任务、提炼信息并生成深度报告",
+          "descriptionEn": "Next-gen AI super search engine aggregating top models to plan tasks and extract info",
+          "icon": "",
+          "enabled": true
         }
       ],
       "id": "1",
@@ -141,6 +191,26 @@
           "description": "百度推出的AI智能体创建平台",
           "title": "百度智能体",
           "id": "2_5"
+        },
+        {
+          "id": "2_6",
+          "title": "CrewAI",
+          "titleEn": "CrewAI",
+          "href": "https://www.crewai.com/",
+          "description": "前沿的多Agent协同自治框架，轻松编排具有不同角色与职责的AI智能体团队",
+          "descriptionEn": "Cutting-edge multi-agent framework for orchestrating autonomous AI agent teams with roles",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "2_7",
+          "title": "Flowise",
+          "titleEn": "Flowise",
+          "href": "https://flowiseai.com/",
+          "description": "开源拖拽式可视化LLM流程构建工具，基于LangChain快速搭建Agent与RAG应用",
+          "descriptionEn": "Open-source drag & drop visual UI tool for building LLM workflows and RAG applications",
+          "icon": "",
+          "enabled": true
         }
       ],
       "id": "2",
@@ -199,6 +269,36 @@
           "description": "科大讯飞推出的AI助手，擅长语音转文字、文档处理",
           "title": "讯飞星火",
           "id": "3_5"
+        },
+        {
+          "id": "3_6",
+          "title": "NotebookLM",
+          "titleEn": "NotebookLM",
+          "href": "https://notebooklm.google.com/",
+          "description": "Google推出的AI个性化研究笔记本，精准基于导入文档进行问答、分析与音频播客生成",
+          "descriptionEn": "Google's AI personalized research notebook for grounding answers and audio podcasts on uploaded docs",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "3_7",
+          "title": "ChatPDF",
+          "titleEn": "ChatPDF",
+          "href": "https://www.chatpdf.com/",
+          "description": "AI文档对话工具，智能解析PDF文献与报告，秒级回答问题并附带准确引用来源",
+          "descriptionEn": "AI document interaction tool parsing PDFs to answer questions instantly with source citations",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "3_8",
+          "title": "AiPPT",
+          "titleEn": "AiPPT",
+          "href": "https://www.aippt.cn/",
+          "description": "智能AI演示文稿生成平台，支持大纲生成、一键主题换肤与文档转换PPT",
+          "descriptionEn": "AI presentation generator supporting instant outlines, theme switching and doc-to-PPT conversions",
+          "icon": "",
+          "enabled": true
         }
       ],
       "id": "3",
@@ -259,6 +359,36 @@
           "descriptionEn": "Chinese online design tool with AI features",
           "icon": "",
           "enabled": true
+        },
+        {
+          "id": "4_6",
+          "title": "Ideogram",
+          "titleEn": "Ideogram",
+          "href": "https://ideogram.ai/",
+          "description": "擅长高精度文本渲染与设计的AI生图平台，轻松在海报和艺术图中精准加入高质量文字",
+          "descriptionEn": "AI image generation platform renowned for precise typography and text rendering within visuals",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "4_7",
+          "title": "Krea AI",
+          "titleEn": "Krea AI",
+          "href": "https://www.krea.ai/",
+          "description": "实时AI绘画与图像无损放大工具，支持画板实时渲染与HD变清晰",
+          "descriptionEn": "Real-time AI drawing and image upscaling tool with instant canvas rendering",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "4_8",
+          "title": "Flux AI",
+          "titleEn": "Flux AI",
+          "href": "https://flux1.ai/",
+          "description": "Black Forest Labs推出的顶级开源生图模型，图像真实度极高，人像与微距细节惊艳",
+          "descriptionEn": "Top open-source image model by Black Forest Labs delivering photorealistic details and prompt control",
+          "icon": "",
+          "enabled": true
         }
       ]
     },
@@ -315,6 +445,26 @@
           "href": "https://v0.dev/",
           "description": "AI生成前端UI代码，输入描述即可生成React组件",
           "descriptionEn": "AI-generated frontend UI code from text descriptions",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "5_6",
+          "title": "Windsurf",
+          "titleEn": "Windsurf",
+          "href": "https://codeium.com/windsurf",
+          "description": "Codeium推出的Agentic AI编程编辑器，原生支持深度上下文协同与多文件联动重构",
+          "descriptionEn": "Agentic AI coding IDE by Codeium featuring deep codebase context and multi-file cascade editing",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "5_7",
+          "title": "Bolt.new",
+          "titleEn": "Bolt.new",
+          "href": "https://bolt.new/",
+          "description": "浏览器全栈AI开发平台，输入需求即可在云端沙盒中直接全自动构建、运行和部署应用",
+          "descriptionEn": "In-browser full-stack AI development platform to prompt, run and deploy web apps in cloud sandboxes",
           "icon": "",
           "enabled": true
         }
@@ -375,6 +525,66 @@
           "descriptionEn": "AI video generation tool by Kuaishou",
           "icon": "",
           "enabled": true
+        },
+        {
+          "id": "6_6",
+          "title": "Recapo.ai",
+          "titleEn": "Recapo.ai",
+          "href": "https://recapo.ai?from=khssdsg-maker-ai-toolbox",
+          "description": "AI视频剪辑平台，智能理解长视频，一键自动提取精彩片段并生成带字幕和配音的短视频",
+          "descriptionEn": "AI-powered video editing platform that understands long-form videos and converts them into short clips with script, subtitles and voiceover",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "6_7",
+          "title": "Luma Dream Machine",
+          "titleEn": "Luma Dream Machine",
+          "href": "https://lumalabs.ai/dream-machine",
+          "description": "高真实度AI视频生成模型，轻松将文本和图像转化为动感流利的视频",
+          "descriptionEn": "High-realism AI video generation model converting text and images into smooth, dynamic videos",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "6_8",
+          "title": "海螺AI视频",
+          "titleEn": "Hailuo AI Video",
+          "href": "https://hailuoai.video/",
+          "description": "MiniMax推出的高清AI视频生成平台，支持精细动作和电影级画面渲染",
+          "descriptionEn": "High-definition AI video generation platform by MiniMax supporting fine motion and cinematic rendering",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "6_9",
+          "title": "即梦AI",
+          "titleEn": "Jimeng AI",
+          "href": "https://jimeng.jianying.com/",
+          "description": "字节跳动推出的AI视频与图像创作平台，支持高质量文生视频、图生视频与创意生图",
+          "descriptionEn": "AI video and image creation platform by ByteDance supporting text-to-video, image-to-video and text-to-image",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "6_10",
+          "title": "Vidu AI",
+          "titleEn": "Vidu AI",
+          "href": "https://www.vidu.studio/",
+          "description": "生数科技与清华联合推出的长视频生成平台，支持4K高清晰度与逼真动态控制",
+          "descriptionEn": "AI video platform by Shengshu Tech & Tsinghua supporting 4K generation and realistic physics",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "6_11",
+          "title": "Sora",
+          "titleEn": "Sora",
+          "href": "https://sora.com/",
+          "description": "OpenAI推出的旗舰级文本生成视频大模型，拥有震撼的物理世界模拟与镜头语言呈现",
+          "descriptionEn": "OpenAI's flagship text-to-video model simulating physical world mechanics and cinematic movements",
+          "icon": "",
+          "enabled": true
         }
       ]
     },
@@ -421,6 +631,16 @@
           "href": "https://peiyin.xunfei.cn/",
           "description": "科大讯飞推出的AI配音工具，支持多种音色和语言",
           "descriptionEn": "AI voiceover tool by iFlytek with multiple voices",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "7_5",
+          "title": "Fish Audio",
+          "titleEn": "Fish Audio",
+          "href": "https://fish.audio/",
+          "description": "开源先进的AI声音克隆与文本转语音平台，支持极少样本快速训练与高保真TTS",
+          "descriptionEn": "Open-source advanced AI voice cloning and text-to-speech platform with zero-shot voice synthesis",
           "icon": "",
           "enabled": true
         }

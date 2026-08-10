@@ -6,5 +6,5 @@ contextBridge.exposeInMainWorld('appAPI', {
   getSettings: () => ipcRenderer.invoke('settings:get'),
   saveSettings: (s) => ipcRenderer.send('settings:set', s),
   clearFavorites: () => ipcRenderer.send('settings:clear-favorites'),
+  getVersion: () => ipcRenderer.invoke('app:get-version'),
 })
-

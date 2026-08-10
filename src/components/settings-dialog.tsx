@@ -1,9 +1,9 @@
 'use client'
 
-// 应用设置弹窗：链接打开方式 / 主题外观 / 界面语言 / 数据管理 / 关于
+// 应用设置弹窗：链接打开方式 / 主题外观 / 界面语言 / 数据管理 / 关于与更新日志
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { X, Settings2, Sun, Moon, Monitor } from 'lucide-react'
+import { X, Settings2, Sun, Moon, Monitor, Github, ExternalLink, History, Sparkles, ChevronDown, ChevronUp } from 'lucide-react'
 import { Button } from '@/registry/new-york/ui/button'
 import { useTheme } from 'next-themes'
 import { useLanguage } from '@/lib/language-context'
@@ -23,6 +23,84 @@ interface SettingsDialogProps {
   onClose: () => void
 }
 
+interface ReleaseNote {
+  version: string
+  date: string
+  title: string
+  titleEn: string
+  changes: string[]
+  changesEn: string[]
+}
+
+const RECENT_RELEASE_NOTES: ReleaseNote[] = [
+  {
+    version: 'v1.2.1',
+    date: '2026-08-10',
+    title: '海量 AI 工具更新与开发者链接集成',
+    titleEn: 'Massive AI tools expansion & developer info',
+    changes: [
+      '新增 Recapo.ai 智能视频剪辑平台（响应 Issue #1）',
+      '新增 22 个全网热门 AI 工具（即梦AI、Sora、Luma、秘塔搜索、智谱清言、腾讯元宝、NotebookLM、ChatPDF、Windsurf 等）',
+      '设置弹窗中添加 GitHub 项目仓库与开发者个人主页跳转按钮',
+      '设置弹窗集成最近四次更新日志查看面板'
+    ],
+    changesEn: [
+      'Added Recapo.ai AI video editing platform (Resolves Issue #1)',
+      'Added 22 trending AI tools (Jimeng, Sora, Luma, Metaso, Zhipu, Yuanbao, NotebookLM, ChatPDF, etc.)',
+      'Added GitHub repo and author profile links in Settings',
+      'Integrated recent 4 release notes viewer in Settings'
+    ]
+  },
+  {
+    version: 'v1.2.0',
+    date: '2026-08-03',
+    title: '新增驱动中心与网络工具箱',
+    titleEn: 'Driver Center & Network Tools Added',
+    changes: [
+      '新增驱动工具中心：品牌电脑、硬件厂商、键鼠外设官方驱动入口汇总',
+      '新增网络工具箱：IP查询、DNS解析、HTTP检测与端口分析工具',
+      '新增硬件驱动分类一键查找导航'
+    ],
+    changesEn: [
+      'Added Driver Center for brand PC, hardware & outer peripherals driver downloads',
+      'Added Network Toolbox for IP, DNS, HTTP status, and Port inspection',
+      'Added categorized navigation for official driver portals'
+    ]
+  },
+  {
+    version: 'v1.1.0',
+    date: '2026-08-01',
+    title: '文件格式转换中心与内置浏览器',
+    titleEn: 'File Converter & In-App Browser',
+    changes: [
+      '新增纯本地文件格式转换中心（图片互转、PDF↔Word、Markdown/JSON/CSV/Base64）',
+      '新增内置多标签页浏览器，点击工具支持在应用内直接全屏多标签浏览',
+      '支持收藏链接到本地文件库，自动提取视频封面与标题'
+    ],
+    changesEn: [
+      'Added local file format converter (Images, PDF↔Word, Markdown, JSON, CSV)',
+      'Added built-in multi-tab browser for smooth in-app web navigation',
+      'Supported local link favorites with auto video metadata fetching'
+    ]
+  },
+  {
+    version: 'v1.0.0',
+    date: '2026-07-25',
+    title: 'AI万能工具箱首发版本上线',
+    titleEn: 'Initial Release of AI Toolbox',
+    changes: [
+      'AI万能工具箱首个版本正式发布，内置 37+ 核心全球 AI 工具分类导航',
+      '支持暗黑/浅色/跟随系统主题切换与中英文一键切换',
+      '适配 Windows 桌面客户端与网页端响应式访问'
+    ],
+    changesEn: [
+      'First official release with 37+ curated AI tool navigation',
+      'Supported light/dark/system themes and bilingual language toggling',
+      'Optimized responsive layouts for both desktop app and web'
+    ]
+  }
+]
+
 export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   const { theme, setTheme } = useTheme()
   const { locale, setLocale, t } = useLanguage()
@@ -32,20 +110,29 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   const [savedTip, setSavedTip] = useState(false)
   const [clearTip, setClearTip] = useState('')
 
+  const [appVersion, setAppVersion] = useState('1.2.1')
+  const [showChangelog, setShowChangelog] = useState(false)
+
   useEffect(() => {
     if (!open) return
     const api = (window as unknown as {
       appAPI?: {
         getSettings?: () => Promise<{ settings: LinkSettings; browsers: BrowserInfo[] }>
+        getVersion?: () => Promise<string>
       }
     }).appAPI
 
-    if (api && api.getSettings) {
-      setIsDesktop(true)
-      api.getSettings().then((data) => {
-        setLinkSettings(data.settings || { mode: 'ask', browserPath: '' })
-        setBrowsers(data.browsers || [])
-      }).catch(() => {})
+    if (api) {
+      if (api.getVersion) {
+        api.getVersion().then((v) => { if (v) setAppVersion(v) }).catch(() => {})
+      }
+      if (api.getSettings) {
+        setIsDesktop(true)
+        api.getSettings().then((data) => {
+          setLinkSettings(data.settings || { mode: 'ask', browserPath: '' })
+          setBrowsers(data.browsers || [])
+        }).catch(() => {})
+      }
     } else {
       setIsDesktop(false)
     }
@@ -222,14 +309,68 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
             </Button>
           </div>
 
-          {/* 关于 */}
-          <div className="pt-4 border-t border-border/40">
-            <p className="text-xs text-muted-foreground text-center">
-              {t('AI万能工具箱', 'AI Toolbox')} v1.0.0
-            </p>
-            <p className="text-xs text-muted-foreground/70 text-center mt-1">
-              {t('AI 时代的超级工具箱', 'The super toolbox for the AI era')}
-            </p>
+          {/* 最近更新日志面板 */}
+          <div className="pt-2 border-t border-border/40 space-y-3">
+            <button
+              onClick={() => setShowChangelog(!showChangelog)}
+              className="w-full flex items-center justify-between p-3 rounded-xl border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors text-primary font-medium text-sm"
+            >
+              <div className="flex items-center gap-2">
+                <History className="h-4 w-4 text-primary" />
+                <span>{t('最近 4 次更新日志', 'Recent 4 Release Notes')}</span>
+              </div>
+              {showChangelog ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            </button>
+
+            {showChangelog && (
+              <div className="space-y-4 p-3 rounded-xl bg-muted/40 border border-border/50 text-xs animate-in fade-in duration-200">
+                {RECENT_RELEASE_NOTES.map((note) => (
+                  <div key={note.version} className="space-y-1.5 pb-3 border-b border-border/30 last:border-0 last:pb-0">
+                    <div className="flex items-center justify-between font-semibold text-foreground">
+                      <span className="flex items-center gap-1.5">
+                        <Sparkles className="h-3 w-3 text-amber-500" />
+                        {note.version} — {locale === 'zh' ? note.title : note.titleEn}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground/70 font-mono">{note.date}</span>
+                    </div>
+                    <ul className="list-disc list-inside space-y-1 text-muted-foreground pl-1">
+                      {(locale === 'zh' ? note.changes : note.changesEn).map((change, idx) => (
+                        <li key={idx} className="leading-relaxed">{change}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* 关于与开发者 */}
+            <div className="pt-2 flex flex-col items-center gap-2 text-xs">
+              <p className="text-muted-foreground">
+                {t('AI万能工具箱', 'AI Toolbox')} v{appVersion} · {t('AI 时代的超级工具箱', 'The super toolbox for the AI era')}
+              </p>
+              <div className="flex items-center gap-3">
+                <a
+                  href="https://github.com/khssdsg-maker/ai-toolbox"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <Github className="h-3.5 w-3.5" />
+                  <span>{t('GitHub 仓库', 'GitHub Repo')}</span>
+                  <ExternalLink className="h-3 w-3 opacity-60" />
+                </a>
+                <span className="text-border">|</span>
+                <a
+                  href="https://github.com/khssdsg-maker"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <span>{t('开发者: khssdsg-maker', 'Author: khssdsg-maker')}</span>
+                  <ExternalLink className="h-3 w-3 opacity-60" />
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -237,4 +378,3 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
     document.body
   )
 }
-

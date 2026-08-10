@@ -1,6 +1,6 @@
 {
   "name": "navsphere",
-  "version": "1.2.1",
+  "version": "1.2.7",
   "private": true,
   "main": "electron/main.mjs",
   "engines": {
@@ -21,7 +21,8 @@
     "docker:logs": "docker-compose -f docker/docker-compose.yml logs -f",
     "docker:deploy": "./scripts/docker-deploy.sh",
     "cf:build": "next build",
-    "cf:deploy": "wrangler pages deploy .next --project-name navsphere"
+    "cf:deploy": "wrangler pages deploy .next --project-name navsphere",
+    "release": "powershell -ExecutionPolicy Bypass -File publish-release.ps1"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^17.0.0",
