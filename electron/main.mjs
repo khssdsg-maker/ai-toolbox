@@ -397,7 +397,18 @@ function startStaticServer(rootDir) {
     })
     server.listen(PORT, '127.0.0.1', () => resolve())
   })
-}
+ipcMain.on('app:minimize', () => {
+  if (mainWindow && !mainWindow.isDestroyed()) mainWindow.minimize()
+})
+ipcMain.on('app:maximize', () => {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    if (mainWindow.isMaximized()) mainWindow.unmaximize()
+    else mainWindow.maximize()
+  }
+})
+ipcMain.on('app:close', () => {
+  if (mainWindow && !mainWindow.isDestroyed()) mainWindow.close()
+})
 
 async function createWindow() {
   mainWindow = new BrowserWindow({
@@ -406,9 +417,11 @@ async function createWindow() {
     minWidth: 800,
     minHeight: 600,
     title: 'AI万能工具箱',
+    frame: false,
     webPreferences: { nodeIntegration: false, contextIsolation: true, preload: path.join(__dirname, 'main-preload.cjs') },
     autoHideMenuBar: true,
-    backgroundColor: '#faf9f7',
+    backgroundColor: '#09090b',
+    icon: path.join(__dirname, '../build/icon.png'),
     show: false,
   })
 

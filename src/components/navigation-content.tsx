@@ -5,6 +5,8 @@ import type { NavigationData, NavigationItem, NavigationSubItem } from '@/types/
 import type { SiteConfig } from '@/types/site'
 import { NavigationCard } from '@/components/navigation-card'
 import { Sidebar } from '@/components/sidebar'
+import { FloatingSidebar } from '@/components/floating-sidebar'
+import { WindowControls } from '@/components/window-controls'
 import { SearchBar } from '@/components/search-bar'
 import { ModeToggle } from '@/components/mode-toggle'
 import { Footer } from '@/components/footer'
@@ -175,11 +177,15 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
 
   return (
     <div className="flex flex-col sm:flex-row min-h-screen bg-background">
+      {/* 悬浮侧边栏 */}
+      <FloatingSidebar />
+
+      {/* 经典侧边栏（备用展开） */}
       <div style={{ display: isMobile ? "none" : "block" }}>
         <Sidebar
           navigationData={navigationData}
           siteInfo={siteData}
-          className="sticky top-0 h-screen"
+          className="sticky top-0 h-screen hidden lg:block"
         />
       </div>
 
@@ -199,11 +205,14 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
         </div>
       </div>
 
-      <main className="flex-1 min-w-0">
-        {/* 顶部导航栏 */}
-        <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border/40">
+      <main className="flex-1 min-w-0 sm:pl-16 lg:pl-0">
+        {/* 顶部导航栏（支持无边框拖拽移动窗口） */}
+        <header
+          style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}
+          className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border/40 select-none"
+        >
           <div className="flex items-center gap-4 px-5 sm:px-10 h-14">
-            <div className="flex-1 min-w-0">
+            <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties} className="flex-1 min-w-0">
               <SearchBar
                 navigationData={navigationData}
                 onSearch={handleSearch}
@@ -212,7 +221,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
                 siteConfig={siteData}
               />
             </div>
-            <div className="flex items-center gap-1">
+            <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties} className="flex items-center gap-1.5">
               <ModeToggle />
               <Link href="/favorites" aria-label="我的收藏">
                 <Button variant="ghost" size="icon" className="hover:bg-accent/50">
@@ -227,6 +236,9 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
               >
                 <Menu className="h-5 w-5" />
               </Button>
+
+              {/* 独立圆形悬浮窗口控制键 (最小化/关闭) */}
+              <WindowControls />
             </div>
           </div>
         </header>

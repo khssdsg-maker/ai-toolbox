@@ -1,6 +1,7 @@
 {
   "appId": "com.ai-toolbox.app",
   "productName": "AI万能工具箱",
+  "icon": "build/icon.png",
   "directories": {
     "output": "dist-electron"
   },
@@ -24,6 +25,7 @@
     "releaseType": "release"
   },
   "win": {
+    "icon": "build/icon.png",
     "target": ["nsis"]
   },
   "nsis": {
@@ -36,6 +38,3 @@
     "artifactName": "AI万能工具箱-安装程序.exe"
   }
 }
-
-
-

@@ -8,4 +8,7 @@ contextBridge.exposeInMainWorld('appAPI', {
   clearFavorites: () => ipcRenderer.send('settings:clear-favorites'),
   getVersion: () => ipcRenderer.invoke('app:get-version'),
   checkForUpdates: () => ipcRenderer.invoke('app:check-updates'),
+  windowMinimize: () => ipcRenderer.send('app:minimize'),
+  windowMaximize: () => ipcRenderer.send('app:maximize'),
+  windowClose: () => ipcRenderer.send('app:close'),
 })
