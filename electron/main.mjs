@@ -397,6 +397,7 @@ function startStaticServer(rootDir) {
     })
     server.listen(PORT, '127.0.0.1', () => resolve())
   })
+}
 ipcMain.on('app:minimize', () => {
   if (mainWindow && !mainWindow.isDestroyed()) mainWindow.minimize()
 })
