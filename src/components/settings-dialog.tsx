@@ -110,7 +110,7 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   const [savedTip, setSavedTip] = useState(false)
   const [clearTip, setClearTip] = useState('')
 
-  const [appVersion, setAppVersion] = useState('1.2.1')
+  const [appVersion, setAppVersion] = useState('1.2.7')
   const [showChangelog, setShowChangelog] = useState(false)
 
   // 检查更新状态

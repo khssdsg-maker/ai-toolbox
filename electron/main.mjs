@@ -13,6 +13,18 @@ const PORT = 3456
 let mainWindow
 let server
 
+const gotTheLock = app.requestSingleInstanceLock()
+if (!gotTheLock) {
+  app.quit()
+} else {
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore()
+      mainWindow.focus()
+    }
+  })
+}
+
 ipcMain.handle('app:get-version', () => app.getVersion())
 
 ipcMain.handle('app:check-updates', async () => {
@@ -411,6 +423,13 @@ function startStaticServer(rootDir) {
         res.writeHead(200, { 'Content-Type': MIME[ext] || 'application/octet-stream' })
         res.end(data)
       })
+    })
+    server.on('error', (err) => {
+      if (err.code === 'EADDRINUSE') {
+        server.listen(0, '127.0.0.1', () => resolve())
+      } else {
+        resolve()
+      }
     })
     server.listen(PORT, '127.0.0.1', () => resolve())
   })
