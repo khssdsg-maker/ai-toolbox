@@ -9,7 +9,9 @@
     "electron/main.mjs",
     "electron/tab-bar.html",
     "electron/tab-preload.cjs",
-    "electron/main-preload.cjs"
+    "electron/main-preload.cjs",
+    "!node_modules/**/*",
+    "!node_modules"
   ],
   "extraResources": [
     {
