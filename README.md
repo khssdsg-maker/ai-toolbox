@@ -8,8 +8,6 @@
 
 </div>
 
-> 📋 **给接手的开发者 / AI Agent：请先阅读 [HANDOFF.md](./HANDOFF.md) 交接文档**
-
 ---
 
 ## ⬇ 下载安装（Windows）
