@@ -1,12 +1,14 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import type { NavigationSubItem } from '@/types/navigation'
 import { SiteFavicon } from '@/components/site-favicon'
 import type { SiteConfig } from '@/types/site'
 import { useLanguage } from '@/lib/language-context'
-import { ArrowUpRight, Pin, GripVertical } from 'lucide-react'
+import { ArrowUpRight, Pin, Heart, GripVertical } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { isFavorited, toggleFavorite } from '@/lib/favorites'
 
 interface NavigationCardProps {
   item: NavigationSubItem
@@ -39,12 +41,34 @@ export function NavigationCard({
   const displayTitle = locale === 'en' && item.titleEn ? item.titleEn : item.title
   const displayDesc = locale === 'en' && item.descriptionEn ? item.descriptionEn : item.description
 
+  const [fav, setFav] = useState(false)
+
+  useEffect(() => {
+    setFav(isFavorited(item.href))
+    const updateHandler = () => setFav(isFavorited(item.href))
+    window.addEventListener('ai-toolbox-favorites-updated', updateHandler)
+    return () => window.removeEventListener('ai-toolbox-favorites-updated', updateHandler)
+  }, [item.href])
+
   const handlePinClick = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
     if (onTogglePin) {
       onTogglePin(item.id)
     }
+  }
+
+  const handleFavClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const nowFav = toggleFavorite({
+      title: item.title,
+      href: item.href,
+      description: item.description,
+      icon: item.icon,
+      category: 'ai-tool'
+    })
+    setFav(nowFav)
   }
 
   return (
@@ -90,7 +114,7 @@ export function NavigationCard({
           </div>
 
           {/* 文字内容 */}
-          <div className="flex-1 min-w-0 pr-6">
+          <div className="flex-1 min-w-0 pr-12">
             <div className="flex items-center gap-1.5">
               <h3 className="font-semibold text-[15px] text-foreground truncate leading-snug transition-colors duration-200 group-hover:text-primary">
                 {displayTitle}
@@ -104,20 +128,35 @@ export function NavigationCard({
             )}
           </div>
 
-          {/* 常用置顶功能键 */}
-          <button
-            type="button"
-            onClick={handlePinClick}
-            title={isPinned ? t('取消常用置顶', 'Unpin from top') : t('设为常用置顶', 'Pin to top')}
-            className={cn(
-              'absolute right-2.5 top-2.5 p-1 rounded-md transition-all duration-200',
-              isPinned
-                ? 'text-amber-500 bg-amber-500/10 hover:bg-amber-500/20'
-                : 'text-muted-foreground/40 opacity-0 group-hover:opacity-100 hover:text-amber-500 hover:bg-muted'
-            )}
-          >
-            <Pin className={cn('h-3.5 w-3.5 transition-transform', isPinned && 'fill-amber-500 rotate-45')} />
-          </button>
+          {/* 常用置顶与收藏按键 */}
+          <div className="absolute right-2 top-2.5 flex items-center gap-0.5">
+            <button
+              type="button"
+              onClick={handleFavClick}
+              title={fav ? t('取消收藏', 'Remove from favorites') : t('收藏此工具', 'Add to favorites')}
+              className={cn(
+                'p-1 rounded-md transition-all duration-200',
+                fav
+                  ? 'text-red-500 bg-red-500/10 hover:bg-red-500/20'
+                  : 'text-muted-foreground/40 opacity-0 group-hover:opacity-100 hover:text-red-500 hover:bg-muted'
+              )}
+            >
+              <Heart className={cn('h-3.5 w-3.5 transition-transform', fav && 'fill-red-500 text-red-500')} />
+            </button>
+            <button
+              type="button"
+              onClick={handlePinClick}
+              title={isPinned ? t('取消常用置顶', 'Unpin from top') : t('设为常用置顶', 'Pin to top')}
+              className={cn(
+                'p-1 rounded-md transition-all duration-200',
+                isPinned
+                  ? 'text-amber-500 bg-amber-500/10 hover:bg-amber-500/20'
+                  : 'text-muted-foreground/40 opacity-0 group-hover:opacity-100 hover:text-amber-500 hover:bg-muted'
+              )}
+            >
+              <Pin className={cn('h-3.5 w-3.5 transition-transform', isPinned && 'fill-amber-500 rotate-45')} />
+            </button>
+          </div>
         </div>
       </Link>
     </div>

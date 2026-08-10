@@ -8,10 +8,18 @@ export interface FavoriteVideo {
   description?: string
   icon?: string
   platform?: string
+  category?: 'ai-tool' | 'video' | 'website'
   videoConfig?: VideoConfig
 }
 
 const STORAGE_KEY = 'ai-toolbox-favorites'
+
+// 发送全局更新通知事件
+function notifyFavoritesChanged() {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('ai-toolbox-favorites-updated'))
+  }
+}
 
 // 获取所有收藏
 export function getFavorites(): FavoriteVideo[] {
@@ -45,11 +53,29 @@ export function addFavorite(item: Omit<FavoriteVideo, 'id'>): FavoriteVideo[] {
   const list = getFavorites()
   const newItem: FavoriteVideo = {
     ...item,
-    id: `fav-${Date.now()}`,
+    id: `fav-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
   }
   const updated = [newItem, ...list]
   localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
+  notifyFavoritesChanged()
   return updated
+}
+
+// 切换收藏状态（存在则删除，不存在则添加）
+export function toggleFavorite(item: Omit<FavoriteVideo, 'id'>): boolean {
+  const target = normalizeUrl(item.href)
+  const list = getFavorites()
+  const exists = list.some((f) => normalizeUrl(f.href) === target)
+
+  if (exists) {
+    const updated = list.filter((f) => normalizeUrl(f.href) !== target)
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
+    notifyFavoritesChanged()
+    return false // 已移除
+  } else {
+    addFavorite(item)
+    return true // 已添加
+  }
 }
 
 // 收藏视频（自动查重）：返回 added 或 duplicate
@@ -61,9 +87,54 @@ export function favoriteVideo(item: Omit<FavoriteVideo, 'id'>): 'added' | 'dupli
 
 // 删除收藏
 export function removeFavorite(id: string): FavoriteVideo[] {
-  const updated = getFavorites().filter((item) => item.id !== id)
+  const updated = getFavorites().filter((item) => item.id !== id && normalizeUrl(item.href) !== normalizeUrl(id))
   localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
+  notifyFavoritesChanged()
   return updated
+}
+
+// 导出 JSON
+export function exportFavoritesJSON(): string {
+  return JSON.stringify(getFavorites(), null, 2)
+}
+
+// 导入 JSON
+export function importFavoritesJSON(jsonStr: string): number {
+  try {
+    const parsed = JSON.parse(jsonStr)
+    if (!Array.isArray(parsed)) return 0
+    const list = getFavorites()
+    const seen = new Set(list.map((f) => normalizeUrl(f.href)))
+    let addedCount = 0
+
+    for (const item of parsed) {
+      if (item && item.href && item.title) {
+        const norm = normalizeUrl(item.href)
+        if (!seen.has(norm)) {
+          seen.add(norm)
+          list.unshift({
+            id: `fav-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+            title: item.title,
+            href: item.href,
+            description: item.description,
+            icon: item.icon,
+            platform: item.platform,
+            category: item.category || (item.videoConfig ? 'video' : 'website'),
+            videoConfig: item.videoConfig,
+          })
+          addedCount++
+        }
+      }
+    }
+
+    if (addedCount > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list))
+      notifyFavoritesChanged()
+    }
+    return addedCount
+  } catch {
+    return 0
+  }
 }
 
 // ============ 视频链接识别 ============
