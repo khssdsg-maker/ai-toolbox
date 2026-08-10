@@ -101,6 +101,18 @@ const RECENT_RELEASE_NOTES: ReleaseNote[] = [
   }
 ]
 
+function isGreaterVersion(remote: string, local: string): boolean {
+  const p1 = (remote || '').replace(/^v/, '').split('.').map(n => parseInt(n, 10) || 0)
+  const p2 = (local || '').replace(/^v/, '').split('.').map(n => parseInt(n, 10) || 0)
+  for (let i = 0; i < Math.max(p1.length, p2.length); i++) {
+    const n1 = p1[i] || 0
+    const n2 = p2[i] || 0
+    if (n1 > n2) return true
+    if (n1 < n2) return false
+  }
+  return false
+}
+
 export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   const { theme, setTheme } = useTheme()
   const { locale, setLocale, t } = useLanguage()
@@ -110,7 +122,7 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   const [savedTip, setSavedTip] = useState(false)
   const [clearTip, setClearTip] = useState('')
 
-  const [appVersion, setAppVersion] = useState('1.2.7')
+  const [appVersion, setAppVersion] = useState('')
   const [showChangelog, setShowChangelog] = useState(false)
 
   // 检查更新状态
@@ -183,20 +195,29 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
     const api = (window as unknown as {
       appAPI?: {
         checkForUpdates?: () => Promise<{ status: string; version?: string; releaseUrl?: string; message?: string }>
+        getVersion?: () => Promise<string>
       }
     }).appAPI
+
+    let currentLocalVersion = appVersion
+    if (api && api.getVersion) {
+      try {
+        const v = await api.getVersion()
+        if (v) { currentLocalVersion = v; setAppVersion(v) }
+      } catch {}
+    }
 
     if (api && api.checkForUpdates) {
       try {
         const res = await api.checkForUpdates()
-        if (res.status === 'available') {
+        if (res.status === 'available' || (res.version && isGreaterVersion(res.version, currentLocalVersion))) {
           setUpdateResult({
             status: 'available',
             version: res.version,
             url: res.releaseUrl || 'https://github.com/khssdsg-maker/ai-toolbox/releases/latest'
           })
-        } else if (res.status === 'latest') {
-          setUpdateResult({ status: 'latest', version: res.version || appVersion })
+        } else if (res.status === 'latest' || res.version) {
+          setUpdateResult({ status: 'latest', version: currentLocalVersion || res.version })
         } else {
           setUpdateResult({ status: 'error', message: res.message || t('网络连接失败', 'Network connection error') })
         }
@@ -212,14 +233,14 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
         if (res.ok) {
           const data = await res.json()
           const latestVer = (data.tag_name || '').replace(/^v/, '')
-          if (latestVer && latestVer !== appVersion) {
+          if (latestVer && isGreaterVersion(latestVer, currentLocalVersion)) {
             setUpdateResult({
               status: 'available',
               version: latestVer,
               url: data.html_url || 'https://github.com/khssdsg-maker/ai-toolbox/releases/latest'
             })
           } else {
-            setUpdateResult({ status: 'latest', version: appVersion })
+            setUpdateResult({ status: 'latest', version: currentLocalVersion || latestVer })
           }
         } else {
           setUpdateResult({ status: 'error', message: t('访问 GitHub 接口超时', 'Failed to reach GitHub API') })
