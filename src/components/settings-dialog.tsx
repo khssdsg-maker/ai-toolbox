@@ -32,9 +32,27 @@ interface ReleaseNote {
   changesEn: string[]
 }
 
-const RECENT_RELEASE_NOTES: ReleaseNote[] = [
+const FALLBACK_RELEASE_NOTES: ReleaseNote[] = [
   {
-    version: 'v1.2.1',
+    version: 'v1.2.7',
+    date: '2026-08-10',
+    title: '极简 Logo、无边框悬浮侧边栏与版本检测绑定',
+    titleEn: 'Minimalist Logo, Frameless Floating Sidebar & Version Sync',
+    changes: [
+      '应用确认选择的 Logo 方案二（纯矢量图形、无文字）',
+      '全新无边框（Frameless）应用架构，打造左侧悬浮圆角胶囊导航与沉浸无界移动窗口',
+      '系统设置内增加版本实时比对与单实例防护',
+      '最近 4 次更新日志支持全网实时读取推送'
+    ],
+    changesEn: [
+      'Applied Logo Option 2 pure icon mark (no text)',
+      'Constructed Frameless window architecture with floating pill sidebar and draggable window header',
+      'Added SemVer real-time version compare and single-instance protection',
+      'Supported live fetching of latest 4 release notes'
+    ]
+  },
+  {
+    version: 'v1.2.6',
     date: '2026-08-10',
     title: '卡片常用置顶、拖拽重排与全网真实 Logo 支持',
     titleEn: 'Card Pinning, Drag & Drop Reordering & Real Domain Logos',
@@ -82,22 +100,6 @@ const RECENT_RELEASE_NOTES: ReleaseNote[] = [
       'Added built-in multi-tab browser for smooth in-app web navigation',
       'Supported local link favorites with auto video metadata fetching'
     ]
-  },
-  {
-    version: 'v1.0.0',
-    date: '2026-07-25',
-    title: 'AI万能工具箱首发版本上线',
-    titleEn: 'Initial Release of AI Toolbox',
-    changes: [
-      'AI万能工具箱首个版本正式发布，内置 37+ 核心全球 AI 工具分类导航',
-      '支持暗黑/浅色/跟随系统主题切换与中英文一键切换',
-      '适配 Windows 桌面客户端与网页端响应式访问'
-    ],
-    changesEn: [
-      'First official release with 37+ curated AI tool navigation',
-      'Supported light/dark/system themes and bilingual language toggling',
-      'Optimized responsive layouts for both desktop app and web'
-    ]
   }
 ]
 
@@ -124,6 +126,7 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
 
   const [appVersion, setAppVersion] = useState('')
   const [showChangelog, setShowChangelog] = useState(false)
+  const [releaseNotes, setReleaseNotes] = useState<ReleaseNote[]>(FALLBACK_RELEASE_NOTES)
 
   // 检查更新状态
   const [checkingUpdate, setCheckingUpdate] = useState(false)
@@ -157,6 +160,28 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
     } else {
       setIsDesktop(false)
     }
+
+    // 实时读取 GitHub 动态最新的最近 4 次 Release 日志
+    fetch('https://api.github.com/repos/khssdsg-maker/ai-toolbox/releases?per_page=4')
+      .then(res => res.json())
+      .then((data: Array<{ tag_name: string; published_at?: string; name?: string; body?: string }>) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const fetched: ReleaseNote[] = data.map(rel => {
+            const lines = (rel.body || '').split('\n').map(l => l.trim().replace(/^[-*•]\s*/, '')).filter(Boolean)
+            const titleStr = rel.name || rel.tag_name || '更新版本'
+            return {
+              version: rel.tag_name || 'v1.0.0',
+              date: rel.published_at ? rel.published_at.substring(0, 10) : '',
+              title: titleStr,
+              titleEn: titleStr,
+              changes: lines.length > 0 ? lines : [titleStr],
+              changesEn: lines.length > 0 ? lines : [titleStr]
+            }
+          })
+          setReleaseNotes(fetched)
+        }
+      })
+      .catch(() => {})
   }, [open])
 
   const [mounted, setMounted] = useState(false)
@@ -468,7 +493,7 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
 
             {showChangelog && (
               <div className="space-y-4 p-3 rounded-xl bg-muted/40 border border-border/50 text-xs animate-in fade-in duration-200">
-                {RECENT_RELEASE_NOTES.map((note) => (
+                {releaseNotes.map((note) => (
                   <div key={note.version} className="space-y-1.5 pb-3 border-b border-border/30 last:border-0 last:pb-0">
                     <div className="flex items-center justify-between font-semibold text-foreground">
                       <span className="flex items-center gap-1.5">
