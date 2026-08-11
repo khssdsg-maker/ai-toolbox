@@ -263,16 +263,6 @@
           "enabled": true
         },
         {
-          "id": "2_13",
-          "title": "TaskingAI",
-          "titleEn": "TaskingAI",
-          "href": "https://www.tasking.ai/",
-          "description": "开源大模型 Agent 与 API 研发部署平台，提供一站式插件集成、对话记忆与 RAG 检索增强",
-          "descriptionEn": "Open-source AI Agent and API development platform integrating plugins, memory and RAG",
-          "icon": "",
-          "enabled": true
-        },
-        {
           "id": "2_14",
           "title": "腾讯元器",
           "titleEn": "Tencent Yuanqi",
@@ -589,6 +579,124 @@
           "href": "https://sourcegraph.com/cody",
           "description": "全球代码检索巨头 Sourcegraph 推出的企业级 AI 编程 Agent，精准检索全代码库上下文与逻辑推演",
           "descriptionEn": "Enterprise AI coding agent by Sourcegraph with deep codebase graph understanding",
+          "icon": "",
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "title": "AI写作与小说生成",
+      "icon": "BookOpen",
+      "description": "收录 GitHub 高 Star 热门开源 AI 小说生成器、角色扮演引擎与主流大厂文本创作平台",
+      "items": [
+        {
+          "id": "11_1",
+          "title": "SillyTavern",
+          "titleEn": "SillyTavern",
+          "href": "https://sillytavern.app/",
+          "description": "GitHub 3.1万Star！全网最火爆的开源 LLM 角色扮演与故事/小说交互写作前端",
+          "descriptionEn": "Top-starred 30.9k★ open-source LLM roleplay & interactive story writing UI",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "11_2",
+          "title": "AutoNovel",
+          "titleEn": "AutoNovel",
+          "href": "https://github.com/NousResearch/autonovel",
+          "description": "开源自主 AI 小说创作 Agent 管线，支持从核心概念、世界观构建到全书章节自动撰写",
+          "descriptionEn": "Autonomous AI novel generation agent pipeline for world-building and chapter writing",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "11_4",
+          "title": "inkos",
+          "titleEn": "inkos",
+          "href": "https://github.com/Narcooo/inkos",
+          "description": "开源多语言 AI 小说创作 Agent，支持章节规划、世界观状态与对话交互改写",
+          "descriptionEn": "Open-source AI novel writing Agent with chapter planning and world status",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "11_5",
+          "title": "StoryMoss (草苔)",
+          "titleEn": "StoryMoss",
+          "href": "https://github.com/91zgaoge/StoryMoss",
+          "description": "Tauri+Rust 驱动的专业网文 AI 写作桌面环境，集成知识图谱与伏笔追踪",
+          "descriptionEn": "AI-powered novel IDE with knowledge graphs and plot foreshadowing",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "11_6",
+          "title": "Vela",
+          "titleEn": "Vela",
+          "href": "https://github.com/heider-x/vela",
+          "description": "专为网文作者设计的本地优先 AI 创作 IDE，集成大纲规划与 RAG 局部润色",
+          "descriptionEn": "Local-first AI writing IDE for fiction authors with RAG & outline tools",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "11_7",
+          "title": "Sudowrite",
+          "titleEn": "Sudowrite",
+          "href": "https://www.sudowrite.com/",
+          "description": "全球知名的专业 AI 小说创作平台，支持章节扩展、情节推演与场景描述",
+          "descriptionEn": "Premier AI novel writing platform for authors with scene expansion",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "11_8",
+          "title": "NovelAI",
+          "titleEn": "NovelAI",
+          "href": "https://novelai.net/",
+          "description": "全球大火的 AI 小说故事生成与叙事助手，具备出色的文学语境模仿能力",
+          "descriptionEn": "Leading AI storytelling and fiction generation assistant",
+          "icon": "https://icon.horse/icon/novelai.net",
+          "enabled": true
+        },
+        {
+          "id": "11_9",
+          "title": "秘塔写作猫",
+          "titleEn": "Metaso Cat Writer",
+          "href": "https://xiezuocat.com/",
+          "description": "秘塔科技 AI 长文本写作平台，支持小说大纲生成、文本改写与文章润色",
+          "descriptionEn": "AI long-form text & novel writing platform by Metaso",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "11_10",
+          "title": "讯飞奇妙文",
+          "titleEn": "iFlytek Qimiaowen",
+          "href": "https://qimiaowen.xinghuo.xfyun.cn/",
+          "description": "科大讯飞 AI 长文写作助手，支持小说大纲、故事创作与智能续写",
+          "descriptionEn": "AI long-form writing assistant by iFlytek",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "11_11",
+          "title": "彩云小文",
+          "titleEn": "Caiyun Xiaowen",
+          "href": "https://if.caiyunai.com/",
+          "description": "彩云科技 AI 小说续写与平行世界剧情推演工具",
+          "descriptionEn": "AI story continuation & parallel world plot engine",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "11_12",
+          "title": "Kimi 长文本写作",
+          "titleEn": "Kimi Writer",
+          "href": "https://kimi.moonshot.cn/",
+          "description": "月之暗面 Kimi 大模型小说创作辅助，擅长超长设定记忆与大纲推演",
+          "descriptionEn": "Ultra-long context AI novel outline and story generation assistant",
           "icon": "",
           "enabled": true
         }

@@ -34,6 +34,24 @@ interface ReleaseNote {
 
 export const FALLBACK_RELEASE_NOTES: ReleaseNote[] = [
   {
+    version: 'v1.3.1',
+    date: '2026-08-12',
+    title: '新增 AI 写作与小说生成分类 & 淘汰失效死链',
+    titleEn: 'AI Novel Writing Category & Dead Links Elimination',
+    changes: [
+      '新增顶级分类【AI 写作与小说生成】，收录 SillyTavern (3.1万★)、AutoNovel、Sudowrite 等 12 款热门 AI 写作与小说生成工具',
+      '开源项目全面升格关联官方宣传与体验首页（如 sillytavern.app、aidungeon.com 等）',
+      '检测并清理淘汰已失效 404 死链（TaskingAI 等）',
+      '全量规范 GitHub Release 标题格式为 AI Toolbox vX.X.X'
+    ],
+    changesEn: [
+      'Added AI Novel Writing category featuring SillyTavern (30.9k★), AutoNovel, Sudowrite and 12 top AI writing platforms',
+      'Upgraded open-source tool links to official showcase websites (sillytavern.app, aidungeon.com, etc.)',
+      'Cleaned up verified broken 404 links (TaskingAI)',
+      'Standardized GitHub release title format to AI Toolbox vX.X.X'
+    ]
+  },
+  {
     version: 'v1.3.0',
     date: '2026-08-11',
     title: '新增 28 款主流 AI Agent 平台 & 永久解决图标重载问题',
@@ -222,8 +240,13 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
       .then((data: Array<{ tag_name: string; published_at?: string; name?: string; body?: string }>) => {
         if (Array.isArray(data) && data.length > 0) {
           const fetched: ReleaseNote[] = data.map(rel => {
-            const lines = (rel.body || '').split('\n').map(l => l.trim().replace(/^[-*•]\s*/, '')).filter(Boolean)
-            const titleStr = rel.name || rel.tag_name || '更新版本'
+            const lines = (rel.body || '')
+              .split('\n')
+              .map(l => l.trim())
+              .filter(l => l && !l.startsWith('#') && !l.startsWith('>') && !l.includes('核心功能与变更'))
+              .map(l => l.replace(/^[-*•]\s*/, ''))
+            let titleStr = rel.name || rel.tag_name || '更新版本'
+            titleStr = titleStr.replace(/^AI万能工具箱\s*(v\d+\.\d+\.\d+)?\s*[—\-:]\s*/i, '')
             return {
               version: rel.tag_name || 'v1.0.0',
               date: rel.published_at ? rel.published_at.substring(0, 10) : '',
@@ -587,19 +610,19 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
             </button>
 
             {showChangelog && (
-              <div className="space-y-4 p-3 rounded-xl bg-muted/40 border border-border/50 text-xs animate-in fade-in duration-200">
+              <div className="space-y-3 p-3 rounded-xl bg-muted/40 border border-border/50 animate-in fade-in duration-200">
                 {releaseNotes.map((note) => (
-                  <div key={note.version} className="space-y-1.5 pb-3 border-b border-border/30 last:border-0 last:pb-0">
-                    <div className="flex items-center justify-between font-semibold text-foreground">
-                      <span className="flex items-center gap-1.5">
-                        <Sparkles className="h-3 w-3 text-amber-500" />
-                        {note.version} — {locale === 'zh' ? note.title : note.titleEn}
+                  <div key={note.version} className="space-y-1 pb-2.5 border-b border-border/30 last:border-0 last:pb-0">
+                    <div className="flex items-center justify-between text-xs font-semibold text-foreground">
+                      <span className="flex items-center gap-1.5 truncate max-w-[280px]">
+                        <Sparkles className="h-3.5 w-3.5 text-amber-500 flex-shrink-0" />
+                        <span>{note.version} {note.title ? `— ${locale === 'zh' ? note.title : note.titleEn}` : ''}</span>
                       </span>
-                      <span className="text-[10px] text-muted-foreground/70 font-mono">{note.date}</span>
+                      <span className="text-[10px] text-muted-foreground/70 font-mono flex-shrink-0 ml-2">{note.date}</span>
                     </div>
-                    <ul className="list-disc list-inside space-y-1 text-muted-foreground pl-1">
+                    <ul className="list-disc list-inside space-y-1 text-muted-foreground text-[11px] leading-relaxed pl-1">
                       {(locale === 'zh' ? note.changes : note.changesEn).map((change, idx) => (
-                        <li key={idx} className="leading-relaxed">{change}</li>
+                        <li key={idx}>{change}</li>
                       ))}
                     </ul>
                   </div>

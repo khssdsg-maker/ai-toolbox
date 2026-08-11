@@ -1,0 +1,275 @@
+[
+  {
+    "catId": "1",
+    "catTitle": "AI聊天对话",
+    "itemId": "1_1",
+    "itemTitle": "ChatGPT",
+    "href": "https://chat.openai.com/"
+  },
+  {
+    "catId": "1",
+    "catTitle": "AI聊天对话",
+    "itemId": "1_2",
+    "itemTitle": "Claude",
+    "href": "https://claude.ai/"
+  },
+  {
+    "catId": "1",
+    "catTitle": "AI聊天对话",
+    "itemId": "1_3",
+    "itemTitle": "Gemini",
+    "href": "https://gemini.google.com/"
+  },
+  {
+    "catId": "1",
+    "catTitle": "AI聊天对话",
+    "itemId": "1_12",
+    "itemTitle": "Perplexity AI",
+    "href": "https://www.perplexity.ai/"
+  },
+  {
+    "catId": "2",
+    "catTitle": "AI Agent平台",
+    "itemId": "2_1",
+    "itemTitle": "Dify",
+    "href": "https://dify.ai/"
+  },
+  {
+    "catId": "2",
+    "catTitle": "AI Agent平台",
+    "itemId": "2_6",
+    "itemTitle": "CrewAI",
+    "href": "https://www.crewai.com/"
+  },
+  {
+    "catId": "2",
+    "catTitle": "AI Agent平台",
+    "itemId": "2_10",
+    "itemTitle": "ChatDev",
+    "href": "https://www.chatdev.ai/"
+  },
+  {
+    "catId": "2",
+    "catTitle": "AI Agent平台",
+    "itemId": "2_12",
+    "itemTitle": "SuperAGI",
+    "href": "https://superagi.com/"
+  },
+  {
+    "catId": "2",
+    "catTitle": "AI Agent平台",
+    "itemId": "2_13",
+    "itemTitle": "TaskingAI",
+    "href": "https://www.tasking.ai/"
+  },
+  {
+    "catId": "2",
+    "catTitle": "AI Agent平台",
+    "itemId": "2_21",
+    "itemTitle": "Make.com",
+    "href": "https://www.make.com/"
+  },
+  {
+    "catId": "10",
+    "catTitle": "AI编程Agent",
+    "itemId": "10_0b",
+    "itemTitle": "Claude Code",
+    "href": "https://claude.ai/code"
+  },
+  {
+    "catId": "10",
+    "catTitle": "AI编程Agent",
+    "itemId": "10_0c",
+    "itemTitle": "OpenAI Codex",
+    "href": "https://chatgpt.com/codex"
+  },
+  {
+    "catId": "10",
+    "catTitle": "AI编程Agent",
+    "itemId": "10_6",
+    "itemTitle": "Windsurf",
+    "href": "https://codeium.com/"
+  },
+  {
+    "catId": "10",
+    "catTitle": "AI编程Agent",
+    "itemId": "10_8",
+    "itemTitle": "Lovable",
+    "href": "https://lovable.dev/"
+  },
+  {
+    "catId": "10",
+    "catTitle": "AI编程Agent",
+    "itemId": "10_13",
+    "itemTitle": "OpenHands",
+    "href": "https://www.all-hands.dev/"
+  },
+  {
+    "catId": "11",
+    "catTitle": "AI写作与小说生成",
+    "itemId": "11_1",
+    "itemTitle": "SillyTavern",
+    "href": "https://sillytavern.app/"
+  },
+  {
+    "catId": "11",
+    "catTitle": "AI写作与小说生成",
+    "itemId": "11_3",
+    "itemTitle": "RecurrentGPT",
+    "href": "https://recurrentgpt.github.io/"
+  },
+  {
+    "catId": "11",
+    "catTitle": "AI写作与小说生成",
+    "itemId": "11_5",
+    "itemTitle": "StoryMoss (草苔)",
+    "href": "https://github.com/91zgaoge/StoryMoss"
+  },
+  {
+    "catId": "11",
+    "catTitle": "AI写作与小说生成",
+    "itemId": "11_7",
+    "itemTitle": "Sudowrite",
+    "href": "https://www.sudowrite.com/"
+  },
+  {
+    "catId": "11",
+    "catTitle": "AI写作与小说生成",
+    "itemId": "11_10",
+    "itemTitle": "讯飞奇妙文",
+    "href": "https://qimiaowen.xinghuo.xfyun.cn/"
+  },
+  {
+    "catId": "3",
+    "catTitle": "AI办公工具",
+    "itemId": "3_1",
+    "itemTitle": "Gamma",
+    "href": "https://gamma.app/"
+  },
+  {
+    "catId": "3",
+    "catTitle": "AI办公工具",
+    "itemId": "3_2",
+    "itemTitle": "Notion AI",
+    "href": "https://www.notion.so/"
+  },
+  {
+    "catId": "3",
+    "catTitle": "AI办公工具",
+    "itemId": "3_6",
+    "itemTitle": "NotebookLM",
+    "href": "https://notebooklm.google.com/"
+  },
+  {
+    "catId": "4",
+    "catTitle": "AI设计绘画",
+    "itemId": "4_2",
+    "itemTitle": "Leonardo.AI",
+    "href": "https://app.leonardo.ai/"
+  },
+  {
+    "catId": "4",
+    "catTitle": "AI设计绘画",
+    "itemId": "4_6",
+    "itemTitle": "Ideogram",
+    "href": "https://ideogram.ai/"
+  },
+  {
+    "catId": "5",
+    "catTitle": "AI编程工具",
+    "itemId": "5_1",
+    "itemTitle": "GitHub Copilot",
+    "href": "https://github.com/features/copilot"
+  },
+  {
+    "catId": "5",
+    "catTitle": "AI编程工具",
+    "itemId": "5_2",
+    "itemTitle": "Cursor",
+    "href": "https://cursor.sh/"
+  },
+  {
+    "catId": "5",
+    "catTitle": "AI编程工具",
+    "itemId": "5_4",
+    "itemTitle": "Codeium",
+    "href": "https://codeium.com/"
+  },
+  {
+    "catId": "5",
+    "catTitle": "AI编程工具",
+    "itemId": "5_5",
+    "itemTitle": "v0 by Vercel",
+    "href": "https://v0.dev/"
+  },
+  {
+    "catId": "5",
+    "catTitle": "AI编程工具",
+    "itemId": "5_6",
+    "itemTitle": "Windsurf",
+    "href": "https://codeium.com/windsurf"
+  },
+  {
+    "catId": "6",
+    "catTitle": "AI视频工具",
+    "itemId": "6_1",
+    "itemTitle": "Runway",
+    "href": "https://runwayml.com/"
+  },
+  {
+    "catId": "6",
+    "catTitle": "AI视频工具",
+    "itemId": "6_2",
+    "itemTitle": "Pika",
+    "href": "https://pika.art/"
+  },
+  {
+    "catId": "6",
+    "catTitle": "AI视频工具",
+    "itemId": "6_4",
+    "itemTitle": "HeyGen",
+    "href": "https://www.heygen.com/"
+  },
+  {
+    "catId": "6",
+    "catTitle": "AI视频工具",
+    "itemId": "6_6",
+    "itemTitle": "Recapo.ai",
+    "href": "https://recapo.ai?from=khssdsg-maker-ai-toolbox"
+  },
+  {
+    "catId": "6",
+    "catTitle": "AI视频工具",
+    "itemId": "6_7",
+    "itemTitle": "Luma Dream Machine",
+    "href": "https://lumalabs.ai/dream-machine"
+  },
+  {
+    "catId": "6",
+    "catTitle": "AI视频工具",
+    "itemId": "6_8",
+    "itemTitle": "海螺AI视频",
+    "href": "https://hailuoai.video/"
+  },
+  {
+    "catId": "6",
+    "catTitle": "AI视频工具",
+    "itemId": "6_10",
+    "itemTitle": "Vidu AI",
+    "href": "https://www.vidu.studio/"
+  },
+  {
+    "catId": "6",
+    "catTitle": "AI视频工具",
+    "itemId": "6_11",
+    "itemTitle": "Sora",
+    "href": "https://sora.com/"
+  },
+  {
+    "catId": "7",
+    "catTitle": "AI音频音乐",
+    "itemId": "7_5",
+    "itemTitle": "Fish Audio",
+    "href": "https://fish.audio/"
+  }
+]

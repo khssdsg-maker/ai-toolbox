@@ -24,7 +24,11 @@ function main() {
   dirs.forEach(d => {
     const full = path.join(process.cwd(), d)
     if (fs.existsSync(full)) {
-      fs.rmSync(full, { recursive: true, force: true })
+      try {
+        fs.rmSync(full, { recursive: true, force: true })
+      } catch (err) {
+        console.log(` ⚠️ 跳过清理已锁定的目录: ${d}`)
+      }
     }
   })
 

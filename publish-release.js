@@ -109,14 +109,14 @@ async function main() {
 
   // 5. 读取设置组件内的变更日志说明并推送发布到 GitHub Release
   console.log(`☁️ 自动推送发布到 GitHub Release (v${targetVersion})...`)
-  let releaseNotesText = `## 🚀 AI万能工具箱 v${targetVersion} 更新日志\n`
+  let releaseNotesText = ''
   try {
     const settingsCode = fs.readFileSync(path.join(process.cwd(), 'src/components/settings-dialog.tsx'), 'utf8')
     const match = settingsCode.match(new RegExp(`version:\\s*['"]v${targetVersion}['"][\\s\\S]*?changes:\\s*\\[([\\s\\S]*?)\\]`))
     if (match && match[1]) {
       const items = match[1].split('\n').map(l => l.trim().replace(/^['"]|['"],?$/g, '')).filter(Boolean)
       if (items.length > 0) {
-        releaseNotesText += '\n### ✨ 核心功能与变更：\n' + items.map(i => `- ${i}`).join('\n')
+        releaseNotesText = '✨ **核心功能与变更：**\n\n' + items.map(i => `- ${i}`).join('\n')
       }
     }
   } catch {}
@@ -129,15 +129,22 @@ async function main() {
     assetsToUpload.push(path.join(dist2, blockmapFile))
   }
 
+  const notesFilePath = path.join(process.cwd(), 'temp_release_notes.md')
+  fs.writeFileSync(notesFilePath, releaseNotesText || `AI Toolbox v${targetVersion}`, 'utf8')
+
   const uploadArgs = assetsToUpload.map(a => `"${a}"`).join(' ')
   try {
-    run(`gh release create v${targetVersion} ${uploadArgs} --title "AI万能工具箱 v${targetVersion}" --notes "${releaseNotesText.replace(/"/g, '\\"')}"`)
+    run(`gh release create v${targetVersion} ${uploadArgs} --title "AI Toolbox v${targetVersion}" --notes-file "${notesFilePath}"`)
   } catch (err) {
     console.log('Release 极可能已存在，尝试覆写更新资源文件与 Release 说明...')
     run(`gh release upload v${targetVersion} ${uploadArgs} --clobber`)
     try {
-      run(`gh release edit v${targetVersion} --title "AI万能工具箱 v${targetVersion}" --notes "${releaseNotesText.replace(/"/g, '\\"')}"`)
+      run(`gh release edit v${targetVersion} --title "AI Toolbox v${targetVersion}" --notes-file "${notesFilePath}"`)
     } catch {}
+  } finally {
+    if (fs.existsSync(notesFilePath)) {
+      fs.unlinkSync(notesFilePath)
+    }
   }
 
   console.log('\n==========================================')
