@@ -107,8 +107,20 @@ async function main() {
   try { run(`git tag v${targetVersion} -f`) } catch {}
   try { run('git push origin main --tags -f') } catch {}
 
-  // 5. 通过 GitHub CLI 自动创建/更新 Release 并上传全部资产
+  // 5. 读取设置组件内的变更日志说明并推送发布到 GitHub Release
   console.log(`☁️ 自动推送发布到 GitHub Release (v${targetVersion})...`)
+  let releaseNotesText = `## 🚀 AI万能工具箱 v${targetVersion} 更新日志\n`
+  try {
+    const settingsCode = fs.readFileSync(path.join(process.cwd(), 'src/components/settings-dialog.tsx'), 'utf8')
+    const match = settingsCode.match(new RegExp(`version:\\s*['"]v${targetVersion}['"][\\s\\S]*?changes:\\s*\\[([\\s\\S]*?)\\]`))
+    if (match && match[1]) {
+      const items = match[1].split('\n').map(l => l.trim().replace(/^['"]|['"],?$/g, '')).filter(Boolean)
+      if (items.length > 0) {
+        releaseNotesText += '\n### ✨ 核心功能与变更：\n' + items.map(i => `- ${i}`).join('\n')
+      }
+    }
+  } catch {}
+
   const assetsToUpload = [
     path.join(dist2, installerFile),
     path.join(dist2, latestYml)
@@ -119,10 +131,13 @@ async function main() {
 
   const uploadArgs = assetsToUpload.map(a => `"${a}"`).join(' ')
   try {
-    run(`gh release create v${targetVersion} ${uploadArgs} --title "AI万能工具箱 v${targetVersion}" --notes "自动打包发布版本 v${targetVersion}"`)
+    run(`gh release create v${targetVersion} ${uploadArgs} --title "AI万能工具箱 v${targetVersion}" --notes "${releaseNotesText.replace(/"/g, '\\"')}"`)
   } catch (err) {
-    console.log('Release 极可能已存在，尝试补充/覆写上传资源文件...')
+    console.log('Release 极可能已存在，尝试覆写更新资源文件与 Release 说明...')
     run(`gh release upload v${targetVersion} ${uploadArgs} --clobber`)
+    try {
+      run(`gh release edit v${targetVersion} --title "AI万能工具箱 v${targetVersion}" --notes "${releaseNotesText.replace(/"/g, '\\"')}"`)
+    } catch {}
   }
 
   console.log('\n==========================================')
