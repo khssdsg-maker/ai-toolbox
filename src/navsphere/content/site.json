@@ -5,8 +5,8 @@
     "keywords": "AI工具,AI导航,文件转换,ChatGPT,AI绘画,AI编程,AI办公"
   },
   "appearance": {
-    "logo": "/assets/images/alogo.webp",
-    "favicon": "/assets/images/favicon.webp",
+    "logo": "/icon.png",
+    "favicon": "/favicon.ico",
     "theme": "system"
   },
   "navigation": {

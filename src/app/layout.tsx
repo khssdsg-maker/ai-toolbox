@@ -5,21 +5,8 @@ import { Toaster } from "@/components/ui/toaster"
 import { Providers } from '@/components/providers'
 import type { Metadata } from 'next'
 import Script from 'next/script'
-import { Manrope, Noto_Serif_SC } from 'next/font/google'
-
-// 独特的字体组合：Manrope(英文/数字) + Noto Serif SC(中文标题，宋体有杂志感)
-const manrope = Manrope({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-manrope',
-})
-
-const notoSerifSC = Noto_Serif_SC({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '900'],
-  display: 'swap',
-  variable: '--font-serif-sc',
-})
+// Define font CSS variable classes without external Google Font network dependencies
+const fontClasses = ""
 
 export const metadata: Metadata = {
   title: {
@@ -40,7 +27,7 @@ export default function RootLayout({
   const gaId = process.env.GA_ID
 
   return (
-    <html lang="zh-CN" suppressHydrationWarning className={cn(manrope.variable, notoSerifSC.variable)}>
+    <html lang="zh-CN" suppressHydrationWarning className={fontClasses}>
       <head>
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         {gaId && (

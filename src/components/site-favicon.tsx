@@ -21,45 +21,82 @@ function getDomain(url?: string): string {
   }
 }
 
-export function SiteFavicon({ title, href, icon, useDefaultIcon, className }: SiteFaviconProps) {
-  const [imgSrc, setImgSrc] = useState<string>('')
-  const [fallbackIndex, setFallbackIndex] = useState<number>(0)
+// 全局 Favicon 缓存：记录已解析成功或已跌落的域名图标，避免切页/重进时重复加载与闪烁
+const faviconCache = new Map<string, { src: string; fallbackIndex: number }>()
 
+export function SiteFavicon({ title, href, icon, useDefaultIcon, className }: SiteFaviconProps) {
   const domain = getDomain(href)
+  const cacheKey = icon && icon.trim() !== '' && !useDefaultIcon ? `icon:${icon}` : domain
+
+  const [state, setState] = useState<{ src: string; fallbackIndex: number }>(() => {
+    if (cacheKey && faviconCache.has(cacheKey)) {
+      return faviconCache.get(cacheKey)!
+    }
+    if (typeof window !== 'undefined' && cacheKey) {
+      try {
+        const stored = localStorage.getItem(`ai_fav_cache_${cacheKey}`)
+        if (stored) {
+          const parsed = JSON.parse(stored)
+          faviconCache.set(cacheKey, parsed)
+          return parsed
+        }
+      } catch {}
+    }
+    let initialSrc = ''
+    if (icon && icon.trim() !== '' && !useDefaultIcon) {
+      initialSrc = icon
+    } else if (domain) {
+      initialSrc = `https://favicon.im/${domain}`
+    }
+    const initial = { src: initialSrc, fallbackIndex: 0 }
+    if (cacheKey && initialSrc) {
+      faviconCache.set(cacheKey, initial)
+      try { localStorage.setItem(`ai_fav_cache_${cacheKey}`, JSON.stringify(initial)) } catch {}
+    }
+    return initial
+  })
 
   useEffect(() => {
-    setFallbackIndex(0)
-    if (icon && icon.trim() !== '' && !useDefaultIcon) {
-      setImgSrc(icon)
-    } else if (domain) {
-      setImgSrc(`https://www.google.com/s2/favicons?domain=${domain}&sz=128`)
-    } else {
-      setImgSrc('')
+    if (cacheKey && faviconCache.has(cacheKey)) {
+      const cached = faviconCache.get(cacheKey)!
+      if (cached.src !== state.src || cached.fallbackIndex !== state.fallbackIndex) {
+        setState(cached)
+      }
     }
-  }, [icon, href, useDefaultIcon, domain])
+  }, [cacheKey, state.src, state.fallbackIndex])
 
   const handleError = () => {
-    if (fallbackIndex === 0 && domain) {
-      setFallbackIndex(1)
-      setImgSrc(`https://icon.horse/icon/${domain}`)
-    } else if (fallbackIndex === 1 && domain) {
-      setFallbackIndex(2)
-      setImgSrc(`https://unavatar.io/${domain}`)
+    let nextIndex = state.fallbackIndex + 1
+    let nextSrc = ''
+
+    if (nextIndex === 1 && domain) {
+      nextSrc = `https://api.iowen.cn/favicon/${domain}.png`
+    } else if (nextIndex === 2 && domain) {
+      nextSrc = `https://${domain}/favicon.ico`
     } else {
-      setFallbackIndex(3)
+      nextIndex = 3
     }
+
+    const newState = { src: nextSrc, fallbackIndex: nextIndex }
+    if (cacheKey) {
+      faviconCache.set(cacheKey, newState)
+      try { localStorage.setItem(`ai_fav_cache_${cacheKey}`, JSON.stringify(newState)) } catch {}
+    }
+    setState(newState)
   }
 
-  if (fallbackIndex >= 3 || !imgSrc) {
+  if (state.fallbackIndex >= 3 || !state.src) {
     return <LetterAvatar title={title} className={className} />
   }
 
   return (
     <img
-      src={imgSrc}
+      src={state.src}
       alt={`${title} icon`}
       className={className}
       onError={handleError}
+      loading="lazy"
+      decoding="async"
     />
   )
 }

@@ -271,6 +271,96 @@
           "descriptionEn": "Open-source AI Agent and API development platform integrating plugins, memory and RAG",
           "icon": "",
           "enabled": true
+        },
+        {
+          "id": "2_14",
+          "title": "腾讯元器",
+          "titleEn": "Tencent Yuanqi",
+          "href": "https://yuanqi.tencent.com/",
+          "description": "腾讯基于混元大模型推出的智能体创作与分发平台，支持一键发布到微信公众号、微信小程序与腾讯会议",
+          "descriptionEn": "AI agent platform by Tencent supporting instant publishing to WeChat ecosystem and Tencent Meeting",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "2_15",
+          "title": "通义百炼",
+          "titleEn": "Alibaba Bailian",
+          "href": "https://bailian.console.aliyun.com/",
+          "description": "阿里云官方一站式大模型与 AI Agent 开发平台，提供可视化 Workflow 与企业级智能体编排",
+          "descriptionEn": "Official AI Agent and LLM development platform by Alibaba Cloud with enterprise workflow orchestration",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "2_16",
+          "title": "钉钉 AI 助理",
+          "titleEn": "DingTalk AI Agent",
+          "href": "https://www.dingtalk.com/",
+          "description": "阿里钉钉推出的企业级 AI Agent 平台，处理考勤、审批流、表格自动化与业务工作流",
+          "descriptionEn": "Enterprise AI Agent platform by DingTalk for workspace automation and workflow approvals",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "2_17",
+          "title": "智谱清言智能体",
+          "titleEn": "Zhipu Agent",
+          "href": "https://chatglm.cn/",
+          "description": "智谱 AI 基于 GLM 大模型推出的智能体中心，支持自定义代码解释器、数据分析与多模态 Agent",
+          "descriptionEn": "Zhipu AI Agent hub powered by GLM models supporting custom code interpreters and multimodal agents",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "2_18",
+          "title": "讯飞星火智能体",
+          "titleEn": "Spark Agent",
+          "href": "https://agent.xfyun.cn/",
+          "description": "科大讯飞星火大模型驱动的智能体创作中心，支持自定义角色、工作流与语音插件集成",
+          "descriptionEn": "AI agent creation platform by iFlytek Spark supporting custom roles, workflows and voice plugins",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "2_19",
+          "title": "万知 (零一万物 Agent)",
+          "titleEn": "Wanzhi AI Agent",
+          "href": "https://www.wanzhi.com/",
+          "description": "李开复零一万物推出的 AI 智能工作 Agent 平台，擅长长文档深度总结、PPT 自动生成与深度研报",
+          "descriptionEn": "AI work agent platform by 01.AI excelling at long doc summaries, PPT generation and research reports",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "2_20",
+          "title": "n8n",
+          "titleEn": "n8n",
+          "href": "https://n8n.io/",
+          "description": "GitHub 超 5.5 万 Star 开源工作流与 AI Agent 节点平台，无缝连接 400+ 办公软件实现业务自动化",
+          "descriptionEn": "Top open-source workflow and AI Agent node platform with 55k+ GitHub stars connecting 400+ apps",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "2_21",
+          "title": "Make.com",
+          "titleEn": "Make.com",
+          "href": "https://www.make.com/",
+          "description": "全球顶级可视化 AI Agent 与工作流自动化平台，支持数百款 SaaS 软件的无代码 Agent 编排",
+          "descriptionEn": "Leading visual AI Agent and workflow automation platform for no-code SaaS integrations",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "2_22",
+          "title": "Zapier Central",
+          "titleEn": "Zapier Central",
+          "href": "https://zapier.com/central",
+          "description": "全球自动化巨头 Zapier 推出的 AI Agent 助手，可直接命令 Agent 操作 9000+ 常用应用",
+          "descriptionEn": "AI Agent assistant by Zapier connecting and executing actions across 9000+ business applications",
+          "icon": "",
+          "enabled": true
         }
       ],
       "id": "2",
@@ -282,6 +372,36 @@
       "titleEn": "AI Coding Agents",
       "id": "10",
       "items": [
+        {
+          "id": "10_0a",
+          "title": "Google Antigravity",
+          "titleEn": "Google Antigravity",
+          "href": "https://antigravity.google/",
+          "description": "Google DeepMind 团队重磅打造的旗舰级 Agentic AI 开发平台与 IDE，支持多 Agent 自主协作、深度推理与工程自动化",
+          "descriptionEn": "Google DeepMind's flagship agentic AI development platform and IDE supporting multi-agent autonomy and deep reasoning",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "10_0b",
+          "title": "Claude Code",
+          "titleEn": "Claude Code",
+          "href": "https://claude.ai/code",
+          "description": "Anthropic 官方推出的终端原生 Agentic 编程智能体，具备超强逻辑推理、长 context 理解与自主代码重构",
+          "descriptionEn": "Anthropic's official terminal-native agentic coding tool with advanced reasoning and autonomous codebase editing",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "10_0c",
+          "title": "OpenAI Codex",
+          "titleEn": "OpenAI Codex",
+          "href": "https://chatgpt.com/codex",
+          "description": "OpenAI 标志性的代码生成与编程 Agent 基座，驱动全球众多智能代码生成助手与自主编程机器人",
+          "descriptionEn": "OpenAI's foundational AI coding engine driving intelligent code generation and autonomous coding agents",
+          "icon": "",
+          "enabled": true
+        },
         {
           "id": "10_1",
           "title": "Devin (Cognition AI)",
@@ -449,6 +569,26 @@
           "href": "https://www.workbuddy.ai/",
           "description": "腾讯推出的工作级 AI Agent 办公协同平台，专注于办公场景下的任务拆解、文档处理与流程交付",
           "descriptionEn": "AI Agent workspace platform by Tencent for task decomposition and office workflow automation",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "10_18",
+          "title": "Amazon Q Developer",
+          "titleEn": "Amazon Q Developer",
+          "href": "https://aws.amazon.com/q/developer/",
+          "description": "亚马逊 AWS 推出的云原生 AI 编程与架构 Agent，支持自动单元测试生成、云工程升级与代码重构",
+          "descriptionEn": "Cloud-native AI coding and architecture agent by AWS for code generation and refactoring",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "10_19",
+          "title": "Sourcegraph Cody",
+          "titleEn": "Sourcegraph Cody",
+          "href": "https://sourcegraph.com/cody",
+          "description": "全球代码检索巨头 Sourcegraph 推出的企业级 AI 编程 Agent，精准检索全代码库上下文与逻辑推演",
+          "descriptionEn": "Enterprise AI coding agent by Sourcegraph with deep codebase graph understanding",
           "icon": "",
           "enabled": true
         }

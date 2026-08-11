@@ -546,7 +546,6 @@ app.whenReady().then(async () => {
     if (fs.existsSync(dlInstaller)) fs.unlinkSync(dlInstaller)
   } catch {}
 
-  await session.defaultSession.clearCache()
   createWindow()
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()

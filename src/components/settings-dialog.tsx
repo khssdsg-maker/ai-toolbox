@@ -32,7 +32,59 @@ interface ReleaseNote {
   changesEn: string[]
 }
 
-const FALLBACK_RELEASE_NOTES: ReleaseNote[] = [
+export const FALLBACK_RELEASE_NOTES: ReleaseNote[] = [
+  {
+    version: 'v1.3.0',
+    date: '2026-08-11',
+    title: '新增 28 款主流 AI Agent 平台 & 永久解决图标重载问题',
+    titleEn: '28 Mainstream AI Agent Platforms & Zero-Flicker Icon Caching',
+    changes: [
+      '新增独立【AI 编程 Agent】分类与 28 款全球/国产大厂主流 AI Agent 平台（包括 Google Antigravity、Claude Code、OpenAI Codex、Trae、Qoder、ZCode 等）',
+      '重构图标加载与 LocalStorage 持久化缓存，彻底解决每次重进应用重复刷新与闪烁问题',
+      '修正应用主界面左上角 Logo 指向官方图标标志 /icon.png',
+      '移除应用启动时清除 HTTP 缓存的限制，大幅提升离线与重复打开加载速度'
+    ],
+    changesEn: [
+      'Added dedicated AI Coding Agents category with 28 top global and Chinese AI Agent platforms',
+      'Refactored icon loading with LocalStorage caching to eliminate icon reloading and flickering',
+      'Updated top-left app header logo to official icon mark /icon.png',
+      'Removed startup cache wipe to boost app launching performance'
+    ]
+  },
+  {
+    version: 'v1.2.9',
+    date: '2026-08-11',
+    title: '深度瘦身省 609MB & 新增顶级 AI Agent 平台',
+    titleEn: '609MB Resource Slimming & Top AI Agent Platforms',
+    changes: [
+      '剔除编译依赖，桌面安装资源体积从 975MB 暴降至 366MB（资源缩减 609MB）',
+      '新增独立【AI 编程 Agent】分类与 28 款全球/国产大厂主流 AI Agent 平台（包括 Google Antigravity、Claude Code、OpenAI Codex、Trae、Qoder、ZCode 等）',
+      '优化网站 Favicon/Logo 加载速度，彻底解决图标重复闪烁与超时延迟',
+      '内嵌静默升级进度条，支持全流程静默更新体验'
+    ],
+    changesEn: [
+      'Slimmed desktop package footprint from 975MB down to 366MB (saved 609MB)',
+      'Added dedicated AI Coding Agents category with 28 top global and Chinese AI Agent platforms',
+      'Optimized site favicon loading performance and eliminated icon flickering',
+      'Added in-app background download progress bar'
+    ]
+  },
+  {
+    version: 'v1.2.8',
+    date: '2026-08-10',
+    title: '应用内嵌入安装进度条 & Cloudflare Pages 全球静止发布',
+    titleEn: 'In-App Download Progress & Cloudflare Pages Static Release',
+    changes: [
+      '设置面板内嵌无感知背景升级进度条',
+      '完成 Cloudflare Pages 全球 CDN 在线版本实时部署上线',
+      '修复 React Hook 顺序引发的渲染异常'
+    ],
+    changesEn: [
+      'Embedded smooth download progress bar into settings dialog',
+      'Deployed live static app on Cloudflare Pages global CDN',
+      'Fixed React Hook ordering issue'
+    ]
+  },
   {
     version: 'v1.2.7',
     date: '2026-08-10',
