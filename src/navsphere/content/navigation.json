@@ -211,6 +211,66 @@
           "descriptionEn": "Open-source drag & drop visual UI tool for building LLM workflows and RAG applications",
           "icon": "",
           "enabled": true
+        },
+        {
+          "id": "2_8",
+          "title": "OpenHands (OpenDevin)",
+          "titleEn": "OpenHands",
+          "href": "https://www.all-hands.dev/",
+          "description": "GitHub 超 4.2 万 Star 开源软件工程 Agent 平台，可自主编写代码、命令行调试与修改 Bug",
+          "descriptionEn": "Open-source AI software engineering agent platform with 42k+ GitHub stars to code and debug software autonomously",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "2_9",
+          "title": "MetaGPT",
+          "titleEn": "MetaGPT",
+          "href": "https://www.metagpt.ai/",
+          "description": "GitHub 超 4.5 万 Star 多智能体软件公司模拟框架，一句话需求自动生成 PRD、架构图与全套代码",
+          "descriptionEn": "Multi-agent framework simulating software company roles to produce PRDs, architecture and code from single prompt",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "2_10",
+          "title": "ChatDev",
+          "titleEn": "ChatDev",
+          "href": "https://www.chatdev.ai/",
+          "description": "GitHub 超 2.6 万 Star 虚拟软件开发 Agent 社区，CEO、CTO、程序员等智能体角色开会协作全自动开发",
+          "descriptionEn": "Virtual software company powered by collaborative agents across CEO, CTO and coder roles",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "2_11",
+          "title": "AgentGPT",
+          "titleEn": "AgentGPT",
+          "href": "https://agentgpt.reworkd.ai/",
+          "description": "GitHub 超 3.3 万 Star 网页端免代码自主 AI Agent 部署平台，输入目标自动递归拆解与执行",
+          "descriptionEn": "No-code browser platform for configuring and deploying autonomous AI agents in your browser",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "2_12",
+          "title": "SuperAGI",
+          "titleEn": "SuperAGI",
+          "href": "https://superagi.com/",
+          "description": "GitHub 超 1.6 万 Star 开发者优先开源自主 Agent 构建与运行平台，集成长文本记忆与并发任务",
+          "descriptionEn": "Developer-first open-source autonomous AI agent framework supporting memory, actions and concurrent agent runs",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "2_13",
+          "title": "TaskingAI",
+          "titleEn": "TaskingAI",
+          "href": "https://www.tasking.ai/",
+          "description": "开源大模型 Agent 与 API 研发部署平台，提供一站式插件集成、对话记忆与 RAG 检索增强",
+          "descriptionEn": "Open-source AI Agent and API development platform integrating plugins, memory and RAG",
+          "icon": "",
+          "enabled": true
         }
       ],
       "id": "2",
