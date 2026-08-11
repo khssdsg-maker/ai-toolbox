@@ -277,6 +277,184 @@
       "titleEn": "AI Agent Platforms"
     },
     {
+      "icon": "Code2",
+      "title": "AI编程Agent",
+      "titleEn": "AI Coding Agents",
+      "id": "10",
+      "items": [
+        {
+          "id": "10_1",
+          "title": "Devin (Cognition AI)",
+          "titleEn": "Devin",
+          "href": "https://www.cognition.ai/",
+          "description": "全球首个自主 AI 软件工程师，能够独立规划任务、编写代码、命令行调试与部署全流程",
+          "descriptionEn": "World's first autonomous AI software engineer planning, coding, debugging and deploying software",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "10_2",
+          "title": "Trae",
+          "titleEn": "Trae",
+          "href": "https://www.trae.ai/",
+          "description": "字节跳动推出的自适应 AI IDE，内置 SOLO 模式自主编程 Agent，自动拆解需求并生成全套工程代码",
+          "descriptionEn": "Adaptive AI IDE by ByteDance featuring SOLO autonomous coding Agent to plan and build full projects",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "10_3",
+          "title": "Cursor",
+          "titleEn": "Cursor",
+          "href": "https://www.cursor.com/",
+          "description": "全球极火爆的 AI 原生代码编辑器与 Agent，支持 Composer 多文件自主工程改写与代码库分析",
+          "descriptionEn": "Popular AI-first code editor with Composer multi-file autonomous refactoring and codebase Q&A",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "10_4",
+          "title": "Qoder",
+          "titleEn": "Qoder",
+          "href": "https://qoder.com/",
+          "description": "阿里云推出的 Agentic 智能编程平台，拥有深度的代码上下文理解与自主项目构建能力",
+          "descriptionEn": "Agentic AI coding platform by Alibaba Cloud with deep codebase context and autonomous workflows",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "10_5",
+          "title": "ZCode (Z.ai)",
+          "titleEn": "ZCode",
+          "href": "https://z.ai/",
+          "description": "智谱 Z.ai 研发的 Agentic 智能体开发环境，基于 GLM 大模型，支持长流程自主编程与微信/飞书远程操控",
+          "descriptionEn": "Agentic IDE by Z.ai powered by GLM models supporting long-horizon coding and remote control",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "10_6",
+          "title": "Windsurf",
+          "titleEn": "Windsurf",
+          "href": "https://codeium.com/",
+          "description": "Codeium 研发的下一代 Agentic IDE，内置 Cascade 智能体，可自主在终端执行命令与修复问题",
+          "descriptionEn": "Agentic IDE by Codeium featuring Cascade autonomous agent to execute commands and fix bugs",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "10_7",
+          "title": "Replit Agent",
+          "titleEn": "Replit Agent",
+          "href": "https://replit.com/",
+          "description": "Replit 出品的自主应用构建 Agent，只需自然语言，即可从零设计数据库、前端界面与后端逻辑",
+          "descriptionEn": "Autonomous app building agent by Replit converting natural language into deployed full-stack apps",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "10_8",
+          "title": "Lovable",
+          "titleEn": "Lovable",
+          "href": "https://lovable.dev/",
+          "description": "全球爆火的全栈软件开发 Agent 平台，专注将自然语言秒级转化为现代全栈 Web 应用与数据库",
+          "descriptionEn": "Full-stack AI software development agent converting natural language into production web apps",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "10_9",
+          "title": "Bolt.new",
+          "titleEn": "Bolt.new",
+          "href": "https://bolt.new/",
+          "description": "StackBlitz 推出的 WebContainers 浏览器端 AI 网页开发 Agent，输入提示词直接生成全栈运行项目",
+          "descriptionEn": "In-browser full-stack AI development platform to prompt, run and deploy web apps in cloud sandboxes",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "10_10",
+          "title": "v0 by Vercel",
+          "titleEn": "v0 by Vercel",
+          "href": "https://v0.dev/",
+          "description": "Vercel 推出的生成式 UI & 全栈代码 Agent，能够根据设计要求瞬间产出高质量 React / Tailwind 代码",
+          "descriptionEn": "Generative UI and full-stack coding agent by Vercel producing React and Tailwind code",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "10_11",
+          "title": "OpenCode",
+          "titleEn": "OpenCode",
+          "href": "https://opencode.ai/",
+          "description": "开源通用 AI 编程 Agent 平台，支持在终端和 IDE 内自主解析需求、调试与多大模型无缝切换",
+          "descriptionEn": "Open-source model-agnostic AI coding agent running in terminal and IDE",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "10_12",
+          "title": "Aider",
+          "titleEn": "Aider",
+          "href": "https://aider.chat/",
+          "description": "命令行终端极火爆的 AI 编程 Agent，直接在本地 Git 仓库配合 LLM 修改代码并自动提交 Commit",
+          "descriptionEn": "CLI AI coding agent pair programming in your local git repo with automatic git commits",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "10_13",
+          "title": "OpenHands",
+          "titleEn": "OpenHands",
+          "href": "https://www.all-hands.dev/",
+          "description": "GitHub 超 4.3 万 Star 开源软件工程 Agent 平台，可自主编写代码、命令行调试与修改真实 Bug",
+          "descriptionEn": "Open-source AI software engineering agent platform with 43k+ GitHub stars to code and debug software",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "10_14",
+          "title": "文心快码",
+          "titleEn": "Baidu Comate",
+          "href": "https://comate.baidu.com/",
+          "description": "百度基于文心大模型研发的 Agent 编程助手，支持项目级长上下文理解、AutoWork 智能体与自动注释",
+          "descriptionEn": "AI coding agent assistant by Baidu based on ERNIE models with AutoWork agent workflows",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "10_15",
+          "title": "CodeGeeX",
+          "titleEn": "CodeGeeX",
+          "href": "https://codegeex.cn/",
+          "description": "智谱 AI 旗下的开源多语言智能编程 Agent，支持高精度代码生成、跨语言翻译与自动项目级重构",
+          "descriptionEn": "Open-source multilingual AI coding agent by Zhipu AI for code generation and refactoring",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "10_16",
+          "title": "Fitten Code",
+          "titleEn": "Fitten Code",
+          "href": "https://code.fittentech.com/",
+          "description": "清华背景团队研发的低延迟 AI 编程 Agent，支持 80+ 种语言，响应极快，提供代码查错与工程问答",
+          "descriptionEn": "Ultra-fast AI coding agent supporting 80+ languages and instant code generation",
+          "icon": "",
+          "enabled": true
+        },
+        {
+          "id": "10_17",
+          "title": "WorkBuddy",
+          "titleEn": "WorkBuddy",
+          "href": "https://www.workbuddy.ai/",
+          "description": "腾讯推出的工作级 AI Agent 办公协同平台，专注于办公场景下的任务拆解、文档处理与流程交付",
+          "descriptionEn": "AI Agent workspace platform by Tencent for task decomposition and office workflow automation",
+          "icon": "",
+          "enabled": true
+        }
+      ]
+    },
+    {
       "icon": "Briefcase",
       "title": "AI办公工具",
       "items": [
