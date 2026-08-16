@@ -34,6 +34,24 @@ interface ReleaseNote {
 
 export const FALLBACK_RELEASE_NOTES: ReleaseNote[] = [
   {
+    version: 'v1.4.3',
+    date: '2026-08-16',
+    title: '图标加载系统重构：Logo 显示修复与启动提速',
+    titleEn: 'Favicon System Rebuild: Logo Fix & Faster Startup',
+    changes: [
+      '【重要修复】修复部分分类（如 AI 聊天对话）大量卡片图标无法显示网站 Logo 的问题',
+      '【性能】应用启动图标加载显著提速：移除不稳定的备用图标源（404/超时），主源全量实测健康',
+      '【健壮性】图标失败状态不再永久缓存，网络恢复后重开应用自动重试，杜绝"死亡图标"',
+      '历史被污染的图标缓存一次性作废重建，首次启动约 1 秒内全量解析，之后恢复首帧秒开'
+    ],
+    changesEn: [
+      'Fixed broken website logos on many cards (e.g. the AI Chat category)',
+      'Faster startup icon loading: removed an unreliable fallback source (404/timeouts)',
+      'Failed icon lookups are no longer persisted; they auto-retry after network recovery',
+      'Poisoned legacy icon cache invalidated and rebuilt once (~1s), then instant first paint'
+    ]
+  },
+  {
     version: 'v1.4.2',
     date: '2026-08-16',
     title: '收藏的视频直接看 & 官网实拍展示上线',

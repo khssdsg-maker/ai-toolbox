@@ -21,7 +21,11 @@ function getDomain(url?: string): string {
   }
 }
 
-// 全局 Favicon 缓存：记录已解析成功或已跌落的域名图标，避免切页/重进时重复加载与闪烁
+// 图标源链路（v2）：favicon.im 免墙高速 → 域名直连 favicon.ico → 字母头像
+// 仅"加载成功"的结果才持久化到 localStorage；失败状态只留在内存，
+// 网络恢复后重开应用自动重试，杜绝失败状态被永久缓存成"死亡图标"。
+// 缓存键带 v2 版本号：一次性作废旧版被污染的失败缓存。
+const CACHE_PREFIX = 'ai_fav_cache_v2_'
 const faviconCache = new Map<string, { src: string; fallbackIndex: number }>()
 
 export function SiteFavicon({ title, href, icon, useDefaultIcon, className }: SiteFaviconProps) {
@@ -34,11 +38,13 @@ export function SiteFavicon({ title, href, icon, useDefaultIcon, className }: Si
     }
     if (typeof window !== 'undefined' && cacheKey) {
       try {
-        const stored = localStorage.getItem(`ai_fav_cache_${cacheKey}`)
+        const stored = localStorage.getItem(CACHE_PREFIX + cacheKey)
         if (stored) {
           const parsed = JSON.parse(stored)
-          faviconCache.set(cacheKey, parsed)
-          return parsed
+          if (parsed && typeof parsed.src === 'string' && parsed.src) {
+            faviconCache.set(cacheKey, parsed)
+            return parsed
+          }
         }
       } catch {}
     }
@@ -48,12 +54,7 @@ export function SiteFavicon({ title, href, icon, useDefaultIcon, className }: Si
     } else if (domain) {
       initialSrc = `https://favicon.im/${domain}`
     }
-    const initial = { src: initialSrc, fallbackIndex: 0 }
-    if (cacheKey && initialSrc) {
-      faviconCache.set(cacheKey, initial)
-      try { localStorage.setItem(`ai_fav_cache_${cacheKey}`, JSON.stringify(initial)) } catch {}
-    }
-    return initial
+    return { src: initialSrc, fallbackIndex: 0 }
   })
 
   useEffect(() => {
@@ -65,27 +66,26 @@ export function SiteFavicon({ title, href, icon, useDefaultIcon, className }: Si
     }
   }, [cacheKey, state.src, state.fallbackIndex])
 
+  const handleLoad = () => {
+    if (!cacheKey || !state.src) return
+    const current = { src: state.src, fallbackIndex: state.fallbackIndex }
+    faviconCache.set(cacheKey, current)
+    try { localStorage.setItem(CACHE_PREFIX + cacheKey, JSON.stringify(current)) } catch {}
+  }
+
   const handleError = () => {
-    let nextIndex = state.fallbackIndex + 1
-    let nextSrc = ''
-
-    if (nextIndex === 1 && domain) {
-      nextSrc = `https://api.iowen.cn/favicon/${domain}.png`
-    } else if (nextIndex === 2 && domain) {
-      nextSrc = `https://${domain}/favicon.ico`
-    } else {
-      nextIndex = 3
-    }
-
-    const newState = { src: nextSrc, fallbackIndex: nextIndex }
+    // 降级链：favicon.im → 域名直连 favicon.ico → 字母头像；失败只留内存、并清除落盘记录
+    const nextIndex = state.fallbackIndex + 1
+    const nextSrc = nextIndex === 1 && domain ? `https://${domain}/favicon.ico` : ''
+    const newState = { src: nextSrc, fallbackIndex: nextSrc ? nextIndex : 2 }
     if (cacheKey) {
       faviconCache.set(cacheKey, newState)
-      try { localStorage.setItem(`ai_fav_cache_${cacheKey}`, JSON.stringify(newState)) } catch {}
+      try { localStorage.removeItem(CACHE_PREFIX + cacheKey) } catch {}
     }
     setState(newState)
   }
 
-  if (state.fallbackIndex >= 3 || !state.src) {
+  if (state.fallbackIndex >= 2 || !state.src) {
     return <LetterAvatar title={title} className={className} />
   }
 
@@ -94,6 +94,7 @@ export function SiteFavicon({ title, href, icon, useDefaultIcon, className }: Si
       src={state.src}
       alt={`${title} icon`}
       className={className}
+      onLoad={handleLoad}
       onError={handleError}
       loading="lazy"
       decoding="async"
