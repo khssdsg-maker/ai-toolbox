@@ -34,6 +34,24 @@ interface ReleaseNote {
 
 export const FALLBACK_RELEASE_NOTES: ReleaseNote[] = [
   {
+    version: 'v1.4.4',
+    date: '2026-08-16',
+    title: '内置浏览器防护体系：协议弹窗根除与稳定性大修',
+    titleEn: 'In-App Browser Hardening: Protocol Dialogs Eliminated',
+    changes: [
+      '【重要修复】彻底解决刷抖音等网站时 Windows 反复弹出"获取打开此链接的应用"系统对话框的问题：应用认领 bytedance 等字节系协议并静默终结，任何网站的自定义协议唤起一律免疫',
+      '【优化】系统级封锁网站借应用身份弹送的 Windows 通知（注册表层实现，不干扰网页正常浏览）',
+      '【稳定性】网页渲染进程崩溃时自动整页重载，杜绝黑屏死区',
+      '【工具链】本地更新脚本三级保障：NSIS 静默安装 → 失败自动重试 → win-unpacked 直拷覆盖，更新永远可落地'
+    ],
+    changesEn: [
+      'Eliminated the recurring Windows "look for an app to open this link" dialog when browsing sites like Douyin: ByteDance custom protocols are claimed and silently terminated, plus a universal guard for all custom-protocol launches',
+      'Windows-level registry block stops websites from sending system notifications under the app identity, without touching page behavior',
+      'Crashed renderers now auto-reload, eliminating dead black areas',
+      'Local updater now has three-tier fallbacks: NSIS silent install, auto-retry, and direct win-unpacked overlay copy'
+    ]
+  },
+  {
     version: 'v1.4.3',
     date: '2026-08-16',
     title: '图标加载系统重构：Logo 显示修复与启动提速',

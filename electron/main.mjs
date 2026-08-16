@@ -1,9 +1,18 @@
-import { app, BrowserWindow, session, dialog, shell, ipcMain, WebContentsView } from 'electron'
+import { app, BrowserWindow, session, dialog, shell, ipcMain, WebContentsView, protocol } from 'electron'
 import path from 'path'
 import http from 'http'
 import fs from 'fs'
 import { spawn } from 'child_process'
 import { fileURLToPath } from 'url'
+
+// 认领字节系自定义协议（必须在 app ready 前注册）：抖音网页版会尝试唤起 bytedance:// 等协议，
+// 未认领时 Windows 会弹"获取打开此链接的应用"商店对话框；认领后这些链接在应用内静默终结
+protocol.registerSchemesAsPrivileged([
+  { scheme: 'bytedance', privileges: { standard: false, supportFetchAPI: false } },
+  { scheme: 'snssdk1128', privileges: { standard: false, supportFetchAPI: false } },
+  { scheme: 'aweme', privileges: { standard: false, supportFetchAPI: false } },
+  { scheme: 'douyin', privileges: { standard: false, supportFetchAPI: false } },
+])
 
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -223,6 +232,23 @@ function addTab(url) {
   view.webContents.setWindowOpenHandler(({ url: u }) => {
     if (u.startsWith('http')) addTab(u)
     return { action: 'deny' }
+  })
+
+  // 通用协议护栏：拦截一切非 web 协议的跳转（bytedance://、weixin://、tmall:// 等），
+  // 防止 Windows 弹"获取打开此链接的应用"系统对话框
+  const isWebUrl = (u) => /^(https?|about:|file:|data:|blob:)/i.test(u)
+  view.webContents.on('will-navigate', (e, u) => {
+    if (!isWebUrl(u)) e.preventDefault()
+  })
+  view.webContents.on('will-redirect', (e, u) => {
+    if (!isWebUrl(u)) e.preventDefault()
+  })
+
+  // 注入式拦截已全部移除：协议认领 + will-navigate 护栏 + 注册表通知封锁已覆盖真实问题，页面级注入曾导致抖音黑屏
+
+  // 渲染进程崩溃自愈：黑屏/白屏时自动整页重载，避免出现死黑区域
+  view.webContents.on('render-process-gone', () => {
+    try { if (!view.webContents.isDestroyed()) view.webContents.reload() } catch {}
   })
 
   view.webContents.loadURL(url)
@@ -539,6 +565,25 @@ async function createWindow() {
 }
 
 app.whenReady().then(async () => {
+  // 字节系协议静默终结（配合文件顶部的 registerSchemesAsPrivileged）
+  for (const s of ['bytedance', 'snssdk1128', 'aweme', 'douyin']) {
+    try { protocol.handle(s, () => new Response('', { status: 204 })) } catch {}
+  }
+
+  // 系统级封锁本应用的一切 Windows 通知（治本：抖音等网站借应用身份弹的推送通知）
+  // 通过注册表把本应用的通知身份设为禁用，无论 Chromium 内部走何种通道都无法弹出
+  app.setAppUserModelId('com.ai-toolbox.app')
+  const notifKeys = [
+    'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Notifications\\Settings\\com.ai-toolbox.app',
+    'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Notifications\\Settings\\electron.app.Electron',
+    'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Notifications\\Settings\\electron.app.AI万能工具箱',
+  ]
+  for (const key of notifKeys) {
+    try {
+      spawn('reg', ['add', key, '/v', 'Enabled', '/t', 'REG_DWORD', '/d', '0', '/f'], { stdio: 'ignore', windowsHide: true })
+    } catch {}
+  }
+
   // 文件转换页内嵌 Convertio：该站响应头带 X-Frame-Options: SAMEORIGIN，
   // 仅对 convertio.co 域名移除该限制头，允许应用内 iframe 加载（不影响其他站点安全策略）
   session.defaultSession.webRequest.onHeadersReceived(
@@ -559,6 +604,15 @@ app.whenReady().then(async () => {
       callback({ responseHeaders: headers })
     }
   )
+
+  // 内置浏览器全局禁用网站通知：防止抖音等网站在后台以应用名义弹 Windows 系统通知
+  // （仅禁 notifications，摄像头/麦克风/剪贴板等其它权限不受影响）
+  session.defaultSession.setPermissionRequestHandler((wc, permission, callback) => {
+    callback(permission !== 'notifications')
+  })
+  session.defaultSession.setPermissionCheckHandler((wc, permission) => {
+    return permission !== 'notifications'
+  })
 
   // 自动清理升级留在系统的临时安装包程序，确保零垃圾残余
   try {

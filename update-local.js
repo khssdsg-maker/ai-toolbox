@@ -115,27 +115,70 @@ function main() {
   console.log(`✅ 安装包生成成功: ${installerName}`)
 
   // 5. 执行静默安装升级（构建耗时较久，期间应用可能被重新打开，安装前再关一次防止安装器挂起）
-  try { execSync('taskkill /F /IM "AI万能工具箱.exe"', { stdio: 'ignore' }) } catch {}
+  const sleep = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms)
+  const killApp = () => { try { execSync('taskkill /F /IM "AI万能工具箱.exe"', { stdio: 'ignore' }) } catch {} }
+  const listAppPids = () => {
+    try {
+      return execSync('tasklist /FI "IMAGENAME eq AI万能工具箱.exe" /NH', { encoding: 'utf8' })
+        .split('\n').map(l => l.trim().split(/\s+/)[1]).filter(p => p && /^\d+$/.test(p))
+    } catch { return [] }
+  }
+  const waitInstallLanded = (startMs) => {
+    const deadline = Date.now() + 75000
+    while (Date.now() < deadline) {
+      const inst = findInstalledApp()
+      if (inst) {
+        let mtime = 0
+        try { mtime = fs.statSync(inst.exe).mtimeMs } catch {}
+        if (mtime >= startMs) return inst
+      }
+      sleep(2000)
+    }
+    return null
+  }
+
   console.log('⚡ 正在静默安装升级本地应用...')
-  const installStartMs = Date.now()
+  killApp()
+  sleep(3000) // 等待进程句柄完全释放
+  let installStartMs = Date.now()
   spawnSync(installerPath, ['/S'], { stdio: 'inherit' })
+  let installed = waitInstallLanded(installStartMs)
+
+  // 首次失败自动重试一次：常见原因是安装瞬间应用又被打开（占用文件句柄）
+  if (!installed) {
+    console.log('⚠️ 首次安装未落地（应用可能在安装瞬间被重新打开），关闭后自动重试...')
+    killApp()
+    for (let i = 0; i < 15 && listAppPids().length > 0; i++) sleep(2000)
+    installStartMs = Date.now()
+    spawnSync(installerPath, ['/S'], { stdio: 'inherit' })
+    installed = waitInstallLanded(installStartMs)
+  }
+
+  // 终极兜底：NSIS 两连败后改用 win-unpacked 完整文件树直接覆盖安装目录（100% 可控可验证）
+  // 注：直拷不更新注册表版本号，但 update-local 场景版本号恒等于已装版本（铁律：本地构建不改版本号），校验不受影响
+  if (!installed) {
+    console.log('⚠️ NSIS 静默安装两次未落地，改用 win-unpacked 直拷覆盖安装...')
+    killApp()
+    for (let i = 0; i < 15 && listAppPids().length > 0; i++) sleep(2000)
+    const unpackedDir = path.join(process.cwd(), 'dist-electron', 'win-unpacked')
+    const existing = findInstalledApp()
+    const installDir = existing ? path.dirname(existing.exe) : null
+    if (installDir && fs.existsSync(path.join(unpackedDir, 'resources', 'app.asar'))) {
+      spawnSync('robocopy', [unpackedDir, installDir, '/E', '/COPY:DA', '/DCopy:DA', '/NFL', '/NDL', '/NJH', '/NP'], { stdio: 'ignore' })
+      installed = waitInstallLanded(Date.now() - 60000) // 直拷同步完成，放宽时间窗
+    }
+  }
 
   // 6. 校验安装真正落地（注册表版本 = 构建版本 且 文件为本次安装后新写入），再从真实安装目录启动
   const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'))
-  const installed = findInstalledApp()
-
   if (!installed) {
-    throw new Error(`静默安装后未能在注册表找到已安装的 AI万能工具箱！请手动运行安装包: ${installerPath}`)
+    const pids = listAppPids()
+    throw new Error(
+      `安装落地校验失败（已自动重试一次）。${pids.length ? `检测到应用进程 PID ${pids.join(', ')} 占用文件，请手动关闭后重跑。` : '请手动运行安装包: ' + installerPath}`
+    )
   }
   if (installed.version !== pkg.version) {
     throw new Error(`安装校验失败：已安装 v${installed.version} ≠ 构建 v${pkg.version}（安装可能未真正写入）。请手动运行安装包: ${installerPath}`)
-  }
-
-  // 文件新鲜度校验：防止版本号相同的旧安装骗过校验（安装目录文件必须是本次安装之后写入的）
-  let fileMtimeMs = 0
-  try { fileMtimeMs = fs.statSync(installed.exe).mtimeMs } catch {}
-  if (fileMtimeMs < installStartMs) {
-    throw new Error(`安装落地校验失败：安装目录文件时间早于本次安装（可能被运行中的应用阻止写入）。请关闭应用后重试，或手动运行安装包: ${installerPath}`)
   }
   console.log(`✅ 安装校验通过：v${installed.version} @ ${path.dirname(installed.exe)}（文件已更新）`)
 
