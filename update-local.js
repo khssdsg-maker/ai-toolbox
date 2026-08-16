@@ -7,6 +7,42 @@ function run(cmd, opts = {}) {
   return execSync(cmd, { stdio: 'inherit', cwd: process.cwd(), ...opts })
 }
 
+// 从注册表读取真实安装位置（用户可能自选 C/D 盘任意目录安装）
+// 使用 PowerShell EncodedCommand 传递脚本，彻底规避中文与引号的命令行编码问题
+function findInstalledApp() {
+  const psScript = `
+    [Console]::OutputEncoding = [Text.Encoding]::UTF8
+    $keys = @(
+      'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
+      'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
+      'HKLM:\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall'
+    )
+    foreach ($k in $keys) {
+      Get-ChildItem $k -ErrorAction SilentlyContinue | ForEach-Object {
+        $p = Get-ItemProperty $_.PSPath -ErrorAction SilentlyContinue
+        if ($p.DisplayName -like 'AI万能工具箱*') {
+          $loc = $p.InstallLocation
+          if (-not $loc -and $p.DisplayIcon) { $loc = Split-Path ($p.DisplayIcon -replace ',0$','') }
+          if (-not $loc -and $p.UninstallString) { $loc = Split-Path (($p.UninstallString -replace '"','') -replace ' /currentuser.*','') }
+          $ver = $p.DisplayVersion
+          if (-not $ver -and $p.DisplayName -match 'AI万能工具箱\\s*([\\d.]+)') { $ver = $Matches[1] }
+          if ($loc) { Write-Output ($loc.TrimEnd('\\') + '|' + $ver) }
+        }
+      }
+    }`
+  try {
+    const encoded = Buffer.from(psScript, 'utf16le').toString('base64')
+    const out = execSync(`powershell -NoProfile -EncodedCommand ${encoded}`, { encoding: 'utf8' })
+    for (const line of out.split(/\r?\n/)) {
+      const m = line.match(/^(.+)\|(\d[\w.\-]*)\s*$/)
+      if (!m) continue
+      const exe = path.join(m[1], 'AI万能工具箱.exe')
+      if (fs.existsSync(exe)) return { exe, version: m[2] }
+    }
+  } catch {}
+  return null
+}
+
 function main() {
   console.log('==========================================')
   console.log(' 🔄 开始更新本地已安装的 AI万能工具箱...')
@@ -82,16 +118,22 @@ function main() {
   console.log('⚡ 正在静默安装升级本地应用...')
   spawnSync(installerPath, ['/S'], { stdio: 'inherit' })
 
-  // 6. 启动新版本
-  const localAppData = process.env.LOCALAPPDATA || 'C:\\Users\\海辰\\AppData\\Local'
-  const appExe = path.join(localAppData, 'Programs\\navsphere\\AI万能工具箱.exe')
+  // 6. 校验安装真正落地（注册表版本 = 构建版本），再从真实安装目录启动
+  const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'))
+  const installed = findInstalledApp()
 
-  if (fs.existsSync(appExe)) {
-    console.log('🚀 正在启动已更新的 AI万能工具箱...')
-    try {
-      spawnSync(appExe, [], { detached: true, stdio: 'ignore' })
-    } catch {}
+  if (!installed) {
+    throw new Error(`静默安装后未能在注册表找到已安装的 AI万能工具箱！请手动运行安装包: ${installerPath}`)
   }
+  if (installed.version !== pkg.version) {
+    throw new Error(`安装校验失败：已安装 v${installed.version} ≠ 构建 v${pkg.version}（安装可能未真正写入）。请手动运行安装包: ${installerPath}`)
+  }
+  console.log(`✅ 安装校验通过：v${installed.version} @ ${path.dirname(installed.exe)}`)
+
+  console.log('🚀 正在启动已更新的 AI万能工具箱...')
+  try {
+    spawnSync(installed.exe, [], { detached: true, stdio: 'ignore' })
+  } catch {}
 
   console.log('\n==========================================')
   console.log(' 🎉 本地 AI万能工具箱 已成功静默更新并重新启动！')

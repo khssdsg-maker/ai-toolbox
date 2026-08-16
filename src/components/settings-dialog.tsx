@@ -34,6 +34,24 @@ interface ReleaseNote {
 
 export const FALLBACK_RELEASE_NOTES: ReleaseNote[] = [
   {
+    version: 'v1.4.1',
+    date: '2026-08-16',
+    title: '视频合集大扩充 & 窗口控制全页面可用',
+    titleEn: 'Video Hub Expansion & Global Window Controls',
+    changes: [
+      '【视频合集】新增「直播平台」分类：虎牙、斗鱼、B站直播、抖音直播、YY直播、网易CC直播',
+      '【视频合集】「视频平台」新增腾讯视频、芒果TV、西瓜视频、咪咕视频 4 个影视站点，总收录由 14 增至 26',
+      '【窗口控制】最小化 / 关闭按钮现已在全部功能页顶栏显示，任意页面均可直接操作窗口',
+      '强化本地更新脚本：自动定位任意安装盘符并校验安装真正落地，杜绝假成功'
+    ],
+    changesEn: [
+      'Video hub: new Live Streaming category with Huya, Douyu, Bilibili Live, Douyin Live, YY and NetEase CC',
+      'Video hub: added Tencent Video, Mango TV, Xigua Video and Migu Video, expanding collection from 14 to 26',
+      'Window controls (minimize / close) now available on every page header',
+      'Hardened local update script: auto-locates install directory on any drive and verifies installation'
+    ]
+  },
+  {
     version: 'v1.4.0',
     date: '2026-08-16',
     title: '文件转换接入 Convertio & 网络工具升级导航页',

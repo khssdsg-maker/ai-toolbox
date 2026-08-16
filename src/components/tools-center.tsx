@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowUpRight } from 'lucide-react'
 import { Button } from '@/registry/new-york/ui/button'
 import Link from 'next/link'
 import { SiteFavicon } from './site-favicon'
+import { WindowControls } from './window-controls'
 
 interface SiteItem {
   name: string
@@ -60,6 +61,8 @@ export function ToolsCenter() {
             </Button>
           </Link>
           <h1 className="text-lg font-bold tracking-tight">网络工具</h1>
+          <div className="flex-1" />
+          <WindowControls />
         </div>
       </header>
 

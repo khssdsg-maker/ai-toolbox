@@ -23,6 +23,7 @@ import { Alert, AlertDescription } from "@/registry/new-york/ui/alert"
 import { Loader2, CheckCircle, XCircle, Send, Globe, FileText, Tag } from 'lucide-react'
 import type { NavigationData, NavigationItem, NavigationCategory } from '@/types/navigation'
 import type { SubmissionData, SubmissionResponse } from '@/types/submission'
+import { WindowControls } from '@/components/window-controls'
 
 interface SubmissionFormProps {
     navigationData: NavigationData
@@ -98,6 +99,10 @@ export function SubmissionForm({ navigationData }: SubmissionFormProps) {
     }
 
     return (
+        <>
+        <div className="fixed top-4 right-5 z-50">
+            <WindowControls />
+        </div>
         <Card className="w-full max-w-2xl mx-auto border border-border/40 shadow-sm">
             <CardHeader className="space-y-1 pb-6">
                 <div className="flex items-center gap-3">
@@ -285,6 +290,7 @@ export function SubmissionForm({ navigationData }: SubmissionFormProps) {
                 </form>
             </CardContent>
         </Card>
+        </>
     )
 }
 

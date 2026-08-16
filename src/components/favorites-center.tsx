@@ -10,6 +10,7 @@ import Link from 'next/link'
 import { SiteFavicon } from '@/components/site-favicon'
 import { VideoCard } from '@/components/video-card'
 import { useLanguage } from '@/lib/language-context'
+import { WindowControls } from '@/components/window-controls'
 import {
   getFavorites, addFavorite, removeFavorite, parseVideoUrl,
   exportFavoritesJSON, importFavoritesJSON,
@@ -223,6 +224,8 @@ export function FavoritesCenter() {
               <Plus className="h-4 w-4" />
               <span>{t('新增网页书签', 'Add Bookmark')}</span>
             </Button>
+
+            <WindowControls />
           </div>
         </div>
       </header>

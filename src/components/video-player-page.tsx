@@ -9,6 +9,7 @@ import { Button } from "@/registry/new-york/ui/button"
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { ScrollArea } from '@/registry/new-york/ui/scroll-area'
+import { WindowControls } from '@/components/window-controls'
 
 interface VideoPlayerPageProps {
     navigationData: NavigationData
@@ -242,6 +243,7 @@ export function VideoPlayerPage({ navigationData }: VideoPlayerPageProps) {
                             </Button>
                         </Link>
                         <ModeToggle />
+                        <WindowControls />
                     </div>
                 </div>
             </header>

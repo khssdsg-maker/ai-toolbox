@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { NavigationCard } from '@/components/navigation-card'
 import type { NavigationSubItem } from '@/types/navigation'
 import { useLanguage } from '@/lib/language-context'
+import { WindowControls } from '@/components/window-controls'
 
 interface DriverCategory {
   id: string
@@ -103,6 +104,8 @@ export function DriversCenter() {
                 <Star className="h-[18px] w-[18px]" />
               </Button>
             </Link>
+            <div className="w-[1px] h-4 bg-border/60 mx-1" />
+            <WindowControls />
           </div>
         </div>
       </header>

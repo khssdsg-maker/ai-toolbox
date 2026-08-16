@@ -14,6 +14,7 @@ import { Button } from "@/registry/new-york/ui/button"
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { useLanguage } from '@/lib/language-context'
+import { WindowControls } from '@/components/window-controls'
 
 interface VideoContentProps {
     navigationData: NavigationData
@@ -151,6 +152,7 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
                             >
                                 <Menu className="h-5 w-5" />
                             </Button>
+                            <WindowControls />
                         </div>
                     </div>
                 </header>

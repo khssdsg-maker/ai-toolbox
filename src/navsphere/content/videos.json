@@ -107,6 +107,116 @@
           "descriptionEn": "Alibaba's video platform",
           "icon": "https://www.youku.com/favicon.ico",
           "enabled": true
+        },
+        {
+          "id": "tencent-video",
+          "title": "腾讯视频",
+          "titleEn": "Tencent Video",
+          "href": "https://v.qq.com",
+          "description": "腾讯旗下综合视频平台，热门影视剧综动漫",
+          "descriptionEn": "Tencent's streaming platform for shows and series",
+          "icon": "https://v.qq.com/favicon.ico",
+          "enabled": true
+        },
+        {
+          "id": "mgtv",
+          "title": "芒果TV",
+          "titleEn": "Mango TV",
+          "href": "https://www.mgtv.com",
+          "description": "湖南广电旗下，综艺与独播剧场",
+          "descriptionEn": "Hunan TV's streaming platform with variety shows",
+          "icon": "https://www.mgtv.com/favicon.ico",
+          "enabled": true
+        },
+        {
+          "id": "ixigua",
+          "title": "西瓜视频",
+          "titleEn": "Xigua Video",
+          "href": "https://www.ixigua.com",
+          "description": "字节跳动旗下中长视频平台",
+          "descriptionEn": "ByteDance's mid-length video platform",
+          "icon": "https://www.ixigua.com/favicon.ico",
+          "enabled": true
+        },
+        {
+          "id": "migu-video",
+          "title": "咪咕视频",
+          "titleEn": "Migu Video",
+          "href": "https://www.miguvideo.com",
+          "description": "中国移动旗下，体育赛事直播与影视",
+          "descriptionEn": "China Mobile's sports and video streaming",
+          "icon": "https://www.miguvideo.com/favicon.ico",
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "id": "live-platforms",
+      "title": "直播平台",
+      "titleEn": "Live Streaming",
+      "icon": "RadioTower",
+      "description": "热门游戏与娱乐直播平台",
+      "enabled": true,
+      "items": [
+        {
+          "id": "huya",
+          "title": "虎牙直播",
+          "titleEn": "Huya Live",
+          "href": "https://www.huya.com",
+          "description": "游戏直播为主的大型互动直播平台",
+          "descriptionEn": "Leading interactive game live streaming platform",
+          "icon": "https://www.huya.com/favicon.ico",
+          "enabled": true
+        },
+        {
+          "id": "douyu",
+          "title": "斗鱼直播",
+          "titleEn": "Douyu Live",
+          "href": "https://www.douyu.com",
+          "description": "游戏与娱乐直播头部平台",
+          "descriptionEn": "Top game and entertainment live streaming platform",
+          "icon": "https://www.douyu.com/favicon.ico",
+          "enabled": true
+        },
+        {
+          "id": "bilibili-live",
+          "title": "B站直播",
+          "titleEn": "Bilibili Live",
+          "href": "https://live.bilibili.com",
+          "description": "哔哩哔哩旗下直播，游戏/虚拟主播/娱乐",
+          "descriptionEn": "Bilibili's live streaming for games and VTubers",
+          "icon": "https://live.bilibili.com/favicon.ico",
+          "enabled": true
+        },
+        {
+          "id": "douyin-live",
+          "title": "抖音直播",
+          "titleEn": "Douyin Live",
+          "href": "https://live.douyin.com",
+          "description": "抖音官方直播平台入口",
+          "descriptionEn": "Douyin's official live streaming portal",
+          "icon": "https://live.douyin.com/favicon.ico",
+          "enabled": true
+        },
+        {
+          "id": "yy-live",
+          "title": "YY直播",
+          "titleEn": "YY Live",
+          "href": "https://www.yy.com",
+          "description": "老牌娱乐秀场直播平台",
+          "descriptionEn": "Veteran entertainment live streaming platform",
+          "icon": "https://www.yy.com/favicon.ico",
+          "enabled": true
+        },
+        {
+          "id": "netease-cc",
+          "title": "网易CC直播",
+          "titleEn": "NetEase CC",
+          "href": "https://cc.163.com",
+          "description": "网易旗下游戏直播平台",
+          "descriptionEn": "NetEase's game live streaming platform",
+          "icon": "https://cc.163.com/favicon.ico",
+          "enabled": true
         }
       ]
     },

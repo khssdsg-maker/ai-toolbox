@@ -5,6 +5,7 @@ import { ArrowLeft, ExternalLink, Sparkles, FileUp, ShieldCheck } from 'lucide-r
 import { Button } from '@/registry/new-york/ui/button'
 import Link from 'next/link'
 import { SiteFavicon } from './site-favicon'
+import { WindowControls } from './window-controls'
 
 const CONVERTIO_URL = 'https://convertio.co/zh/'
 
@@ -40,6 +41,7 @@ export function ConvertCenter() {
               新窗口打开
             </Button>
           </a>
+          <WindowControls />
         </div>
       </header>
 

@@ -1,7 +1,7 @@
 # 📋 AI万能工具箱 (AI Toolbox) 项目开发无缝交接文档
 
 > **文档创建/更新时间**：2026-08-16
-> **当前最新版本**：`v1.3.1` (已成功发布至 GitHub Releases)
+> **当前最新版本**：`v1.4.0` (已成功发布至 GitHub Releases)
 > **项目本地路径**：`C:\Users\海辰\.gemini\antigravity\scratch\ai-toolbox`
 > **GitHub 仓库**：`https://github.com/khssdsg-maker/ai-toolbox`
 > **在线体验版**：`https://ai-toolbox-ajc.pages.dev`
@@ -10,7 +10,20 @@
 
 ## 一、 项目当前最新状态与已完成工作
 
-### 1. 全新上线【AI 写作与小说生成】核心分类 (`v1.3.1`)
+### 1. 文件转换接入 Convertio (`v1.4.0`)
+- 删除全部自研【文件转换中心】（8 个工具、converters.ts / doc-converters.ts 两个库），`/convert` 页面改为接入 Convertio。
+- **桌面端**：应用内 iframe 直接内嵌 `https://convertio.co/zh/`；`electron/main.mjs` 通过 `onHeadersReceived` 仅对 `*.convertio.co` 域移除 `X-Frame-Options`（作用域严格受限）。
+- **网页版**：Convertio 官方禁止 iframe 内嵌，自动降级为跳转卡片（favicon + 特性标签 + 新标签页打开）。
+
+### 2. 网络工具箱升级为导航页 (`v1.4.0`)
+- 自研网络工具箱 6 工具中 2 个因 `/api/*` 后端不存在而完全坏死（DNS、HTTP 状态）、2 个不可靠（端口、IP 查询依赖外国 API），整页替换为精选导航卡片。
+- 收录 10 款实测可用的优质站点：国内直连（站长工具、ITDOG、Boce、IP138、爱站、IPIP.NET）+ 国际服务（MXToolbox、DNSChecker、Ping.pe、YouGetSignal）。
+
+### 3. 依赖瘦身 (`v1.4.0`)
+- 移除 7 个全项目零引用的历史依赖：jspdf、marked、pdfjs-dist、turndown、@types/turndown、mammoth、html2canvas；删除死文件 public/vendor/pdf.worker.min.mjs。
+- 注：因 v1.2.9 起 node_modules 已排除出安装包，此瘦身不改变安装包体积，收益为仓库精简与构建提速。
+
+### 4. 全新上线【AI 写作与小说生成】核心分类 (`v1.3.1`)
 - 在 `src/navsphere/content/navigation.json` 中新增顶级分类 **【AI写作与小说生成】** (`id: "11"`, 图标 `BookOpen`)。
 - 精选收录 **12 款 GitHub 高 Star 热门开源小说生成器与主流大厂写作平台**：
   - **GitHub 高 Star 开源项目**：SillyTavern (30,900+ ⭐，全网最火 LLM 故事/角色交互前端)、AutoNovel (自主小说章节创作 Agent)、inkos、StoryMoss (草苔，Tauri 网文 IDE)、Vela (本地网文 IDE) 等。
@@ -67,13 +80,14 @@
 
 ## 三、 常用构建命令速查
 
+- **⚠️ 海辰本机实际安装位置**：`D:\AI万能工具箱\navsphere\`（早期手动安装自选了 D 盘目录）。`update-local.js` 已修复为通过注册表自动定位真实安装目录（兼容任意盘符），静默安装后**校验版本真正落地**并从正确路径启动，杜绝"假成功"。
 - **本地更新/测试安装包 (不改版本号，纯本地静默更新重启)**：
   ```bash
   node update-local.js
   ```
 - **正式打包并发布到 GitHub Release (自动递增版本号、打 Tag 并同步发布说明)**：
   ```bash
-  node publish-release.js v1.3.2
+  node publish-release.js v1.4.1
   ```
 - **TypeScript 类型检查 (修改代码后必查)**：
   ```bash
