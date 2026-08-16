@@ -10,9 +10,11 @@ import { WindowControls } from './window-controls'
 const CONVERTIO_URL = 'https://convertio.co/zh/'
 
 // 桌面端（Electron）主进程已对 convertio.co 移除 X-Frame-Options，可 iframe 内嵌；
+// 通过 preload 注入的 appAPI 精准识别本应用（比 UA 可靠，避免误伤其它 Electron 壳浏览器）；
 // 普通浏览器中 Convertio 禁止被内嵌，降级为跳转卡片
 function isElectron(): boolean {
-  return typeof window !== 'undefined' && /electron/i.test(navigator.userAgent)
+  return typeof window !== 'undefined' &&
+    !!(window as unknown as { appAPI?: unknown }).appAPI
 }
 
 export function ConvertCenter() {
