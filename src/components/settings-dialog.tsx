@@ -34,6 +34,24 @@ interface ReleaseNote {
 
 export const FALLBACK_RELEASE_NOTES: ReleaseNote[] = [
   {
+    version: 'v1.4.2',
+    date: '2026-08-16',
+    title: '收藏的视频直接看 & 官网实拍展示上线',
+    titleEn: 'Play Favorited Videos In-App & Landing Page Showcase',
+    changes: [
+      '【收藏视频】收藏的 B站 / YouTube 视频点击卡片即可应用内直接播放，与精选视频同款体验；旧视频书签自动升级，B站封面自动补抓',
+      '【重要修复】修复内置浏览器"收藏链接"因数据异常导致收藏静默失败的 Bug，并自动归类视频收藏',
+      '【官网】落地页全新实拍展示区：应用内真实截图直观呈现收藏看视频、视频合集等核心功能',
+      '强化本地更新脚本：安装前自动关闭应用 + 安装后文件级落地校验，杜绝假成功'
+    ],
+    changesEn: [
+      'Favorited Bilibili / YouTube videos now play in-app with one click; legacy video bookmarks auto-upgrade with covers fetched',
+      'Fixed a critical bug where favoriting from the in-app browser silently failed; video favorites now categorized automatically',
+      'Landing page revamped with real app screenshots showcasing favorites playback and the video hub',
+      'Hardened local updater: auto-close app before install plus file-level verification'
+    ]
+  },
+  {
     version: 'v1.4.1',
     date: '2026-08-16',
     title: '视频合集大扩充 & 窗口控制全页面可用',

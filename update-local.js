@@ -114,11 +114,13 @@ function main() {
   const installerPath = path.join(distDir, installerName)
   console.log(`✅ 安装包生成成功: ${installerName}`)
 
-  // 5. 执行静默安装升级
+  // 5. 执行静默安装升级（构建耗时较久，期间应用可能被重新打开，安装前再关一次防止安装器挂起）
+  try { execSync('taskkill /F /IM "AI万能工具箱.exe"', { stdio: 'ignore' }) } catch {}
   console.log('⚡ 正在静默安装升级本地应用...')
+  const installStartMs = Date.now()
   spawnSync(installerPath, ['/S'], { stdio: 'inherit' })
 
-  // 6. 校验安装真正落地（注册表版本 = 构建版本），再从真实安装目录启动
+  // 6. 校验安装真正落地（注册表版本 = 构建版本 且 文件为本次安装后新写入），再从真实安装目录启动
   const pkg = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'))
   const installed = findInstalledApp()
 
@@ -128,7 +130,14 @@ function main() {
   if (installed.version !== pkg.version) {
     throw new Error(`安装校验失败：已安装 v${installed.version} ≠ 构建 v${pkg.version}（安装可能未真正写入）。请手动运行安装包: ${installerPath}`)
   }
-  console.log(`✅ 安装校验通过：v${installed.version} @ ${path.dirname(installed.exe)}`)
+
+  // 文件新鲜度校验：防止版本号相同的旧安装骗过校验（安装目录文件必须是本次安装之后写入的）
+  let fileMtimeMs = 0
+  try { fileMtimeMs = fs.statSync(installed.exe).mtimeMs } catch {}
+  if (fileMtimeMs < installStartMs) {
+    throw new Error(`安装落地校验失败：安装目录文件时间早于本次安装（可能被运行中的应用阻止写入）。请关闭应用后重试，或手动运行安装包: ${installerPath}`)
+  }
+  console.log(`✅ 安装校验通过：v${installed.version} @ ${path.dirname(installed.exe)}（文件已更新）`)
 
   console.log('🚀 正在启动已更新的 AI万能工具箱...')
   try {

@@ -14,6 +14,7 @@ import { WindowControls } from '@/components/window-controls'
 import {
   getFavorites, addFavorite, removeFavorite, parseVideoUrl,
   exportFavoritesJSON, importFavoritesJSON,
+  migrateVideoFavorites, backfillBilibiliCovers,
   type FavoriteVideo,
 } from '@/lib/favorites'
 
@@ -75,7 +76,10 @@ export function FavoritesCenter() {
 
   useEffect(() => {
     setMounted(true)
+    // 旧收藏迁移：把视频链接书签升级为可站内播放的视频收藏，并异步补齐B站封面
+    migrateVideoFavorites()
     loadFavorites()
+    backfillBilibiliCovers()
 
     const updateHandler = () => loadFavorites()
     window.addEventListener('ai-toolbox-favorites-updated', updateHandler)

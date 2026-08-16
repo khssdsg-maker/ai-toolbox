@@ -139,6 +139,52 @@ export function importFavoritesJSON(jsonStr: string): number {
 
 // ============ 视频链接识别 ============
 
+// 一次性迁移：把早期以普通书签形式保存的视频链接升级为可站内播放的视频收藏
+// （识别 B站/YouTube 链接，补齐 videoConfig / 分类 / 平台，返回迁移条数）
+export function migrateVideoFavorites(): number {
+  if (typeof window === 'undefined') return 0
+  const list = getFavorites()
+  let changed = 0
+  for (const f of list) {
+    if (f.videoConfig || f.category === 'video') continue
+    const parsed = parseVideoUrl(f.href)
+    if (!parsed) continue
+    f.category = 'video'
+    f.platform = parsed.platform
+    f.videoConfig = parsed.videoConfig
+    if (!f.icon && parsed.cover) f.icon = parsed.cover
+    changed++
+  }
+  if (changed > 0) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list))
+  }
+  return changed
+}
+
+// 异步补齐B站视频封面（对缺封面的B站视频收藏调 API 抓取，静默更新）
+export async function backfillBilibiliCovers(): Promise<void> {
+  if (typeof window === 'undefined') return
+  const list = getFavorites()
+  const targets = list.filter(
+    (f) => f.videoConfig?.type === 'bilibili' && f.videoConfig.bvid && !f.icon
+  )
+  if (targets.length === 0) return
+  let changed = false
+  await Promise.all(
+    targets.map(async (f) => {
+      const cover = await fetchBilibiliCover(f.videoConfig?.bvid || '')
+      if (cover) {
+        f.icon = cover
+        changed = true
+      }
+    })
+  )
+  if (changed) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list))
+    notifyFavoritesChanged()
+  }
+}
+
 export interface ParsedVideo {
   platform: string
   videoConfig?: VideoConfig

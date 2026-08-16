@@ -360,11 +360,12 @@ ipcMain.on('tab:favlink', async () => {
     return
   }
   list.unshift({
-    id: av- + Date.now(),
+    id: 'fav-' + Date.now(),
     title,
     href: url,
     icon: cover,
     platform: parsed ? parsed.platform : undefined,
+    category: parsed ? 'video' : 'website',
     videoConfig: parsed ? parsed.videoConfig : undefined,
   })
   writeFavFile(list)

@@ -162,6 +162,21 @@
     .nav-a a:not(.nav-dl) { display: none; }
     .open { padding: 64px 0 52px; }
   }
+  /* ============ 实拍展示 ============ */
+  .shots { padding: 88px 0 24px; }
+  .shots .sec-head h2 em { font-style: normal; color: var(--amber); }
+  .shot-hero { max-width: 900px; margin: 44px auto 0; }
+  .window { background: var(--night); border-radius: 14px; overflow: hidden; box-shadow: 0 24px 64px rgba(16,24,42,.22), 0 0 0 1px rgba(16,24,42,.06); }
+  .window-bar { display: flex; align-items: center; gap: 7px; padding: 12px 16px; }
+  .dot { width: 11px; height: 11px; border-radius: 50%; flex: none; }
+  .dot.red { background: #ff5f57; } .dot.yellow { background: #febc2e; } .dot.green { background: #28c840; }
+  .window-tab { margin-left: 10px; padding: 5px 14px; border-radius: 7px; background: rgba(255,255,255,.09); color: #c8cdd8; font-size: 12px; font-weight: 600; }
+  .window img { display: block; width: 100%; }
+  .shot-help { text-align: center; font-size: 13px; color: #8a90a0; margin-top: 16px; }
+  .shot-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; max-width: 900px; margin: 28px auto 0; }
+  .shot-duo figcaption { margin-top: 12px; font-size: 13.5px; color: var(--muted); line-height: 1.6; }
+  .shot-duo figcaption b { color: var(--ink); font-size: 14.5px; margin-right: 8px; }
+  @media (max-width: 820px) { .shot-duo { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -186,7 +201,7 @@
       <div class="open-side">
         <p><b>AI 万能工具箱</b>把日常最常用工具收进同一个软件：59+ 精选 AI 工具导航、Convertio 文件转换、官方驱动入口、视频收藏播放，装一次，用很久。</p>
         <div class="cta-row">
-          <a class="btn-big" href="https://github.com/khssdsg-maker/ai-toolbox/releases/latest">⬇ 下载 Windows 最新版 (v1.4.1)</a>
+          <a class="btn-big" href="https://github.com/khssdsg-maker/ai-toolbox/releases/latest">⬇ 下载 Windows 最新版 (v1.4.2)</a>
           <a class="btn-big" style="background:#141b2d;" href="https://ai-toolbox-ajc.pages.dev" target="_blank">🌐 在线极速体验版 →</a>
           <a class="btn-line" href="#modules">先看功能 →</a>
         </div>
@@ -216,7 +231,7 @@
 
     <div class="row">
       <div class="row-name">个人收藏工作台<small>FAVORITES HUB</small></div>
-      <div class="row-desc">一键收藏任意 AI 工具、视频资源或自定义网页书签。按类别 Tab 聚合分类，内置 Live 实时搜寻过滤，支持 JSON 导入导出云端全量备份。<span class="tags">分类 Tab · Live 实时搜索 · JSON 备份导入导出</span></div>
+      <div class="row-desc">一键收藏任意 AI 工具、视频资源或自定义网页书签；收藏的 B站 / YouTube 视频点击即看，应用内直接播放。按类别 Tab 聚合，内置 Live 实时搜寻，支持 JSON 导入导出备份。<span class="tags">视频收藏直接看 · 分类 Tab · Live 实时搜索 · JSON 备份</span></div>
       <div class="row-count"><b>全能</b><span>收藏工作台</span></div>
     </div>
 
@@ -269,6 +284,7 @@
           <li><span class="k">Live 实时搜索</span><span class="v">键入关键字秒级精准匹配显示</span></li>
           <li><span class="k">数据导出备份</span><span class="v">一键导出带时间戳的 JSON 文件</span></li>
           <li><span class="k">云端导入恢复</span><span class="v">支持直接上传 JSON 文件一键还原收藏</span></li>
+          <li><span class="k">视频直接看</span><span class="v">B站 / YouTube 收藏点击即播，无需跳转</span></li>
           <li><span class="k">域名 Favicon</span><span class="v">自动匹配获取高清官方高清 Logo</span></li>
         </ul>
       </div>
@@ -287,6 +303,51 @@
           <span>罗技</span><span>雷蛇</span><span>雷柏</span>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- 实拍展示 -->
+<section class="shots" id="shots">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>收藏的视频，<em>点开就能看。</em></h2>
+      <span class="meta">应用内实拍 · FAVORITES PLAYER</span>
+    </div>
+    <div class="sec-rule"></div>
+
+    <figure class="shot-hero">
+      <div class="window">
+        <div class="window-bar">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+          <span class="window-tab">我的收藏 · 应用内播放器</span>
+        </div>
+        <img src="assets/fav-video-player.png" alt="收藏夹视频点击直接播放" loading="lazy">
+      </div>
+      <p class="shot-help">在收藏夹点击任意 B站 / YouTube 视频卡片，应用内直接播放，无需跳转浏览器</p>
+    </figure>
+
+    <div class="shot-duo">
+      <figure>
+        <div class="window">
+          <div class="window-bar">
+            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+            <span class="window-tab">我的收藏</span>
+          </div>
+          <img src="assets/fav-videos-grid.png" alt="收藏夹视频卡片" loading="lazy">
+        </div>
+        <figcaption><b>收藏即卡片</b><span>视频链接自动变身视频卡片，封面、平台角标、播放按钮一步到位</span></figcaption>
+      </figure>
+      <figure>
+        <div class="window">
+          <div class="window-bar">
+            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+            <span class="window-tab">视频合集</span>
+          </div>
+          <img src="assets/videos-hub.png" alt="视频合集与直播平台" loading="lazy">
+        </div>
+        <figcaption><b>视频合集 26 站</b><span>腾讯视频、芒果TV 影视站台与虎牙、斗鱼直播入口一站直达</span></figcaption>
+      </figure>
     </div>
   </div>
 </section>
