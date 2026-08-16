@@ -1,7 +1,7 @@
 # 📋 AI万能工具箱 (AI Toolbox) 项目开发无缝交接文档
 
 > **文档创建/更新时间**：2026-08-16
-> **当前最新版本**：`v1.4.3` (已成功发布至 GitHub Releases)
+> **当前最新版本**：`v1.4.4` (已成功发布至 GitHub Releases)
 > **项目本地路径**：`C:\Users\海辰\.gemini\antigravity\scratch\ai-toolbox`
 > **GitHub 仓库**：`https://github.com/khssdsg-maker/ai-toolbox`
 > **在线体验版**：`https://ai-toolbox-ajc.pages.dev`
@@ -87,7 +87,7 @@
   ```
 - **正式打包并发布到 GitHub Release (自动递增版本号、打 Tag 并同步发布说明)**：
   ```bash
-  node publish-release.js v1.4.4
+  node publish-release.js v1.4.5
   ```
 - **TypeScript 类型检查 (修改代码后必查)**：
   ```bash
