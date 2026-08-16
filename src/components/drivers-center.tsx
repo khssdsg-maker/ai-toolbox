@@ -27,7 +27,7 @@ const DRIVER_DATA: DriverCategory[] = [
       { id: 'hp', title: '惠普驱动', titleEn: 'HP', href: 'https://support.hp.com/cn-zh/drivers', description: '惠普电脑打印机官方驱动下载', descriptionEn: 'HP official driver downloads', icon: 'https://www.hp.com/favicon.ico', enabled: true },
       { id: 'huawei', title: '华为驱动', titleEn: 'Huawei', href: 'https://consumer.huawei.com/cn/support/', description: '华为笔记本官方驱动与支持', descriptionEn: 'Huawei official support', icon: 'https://consumer.huawei.com/favicon.ico', enabled: true },
       { id: 'asus', title: '华硕驱动', titleEn: 'ASUS', href: 'https://www.asus.com.cn/support/', description: '华硕主板显卡笔记本官方驱动', descriptionEn: 'ASUS official support', icon: 'https://www.asus.com/favicon.ico', enabled: true },
-      { id: 'acer', title: '宏碁驱动', titleEn: 'Acer', href: 'https://www.acer.com.cn/support', description: '宏碁电脑官方驱动下载', descriptionEn: 'Acer official support', icon: 'https://www.acer.com/favicon.ico', enabled: true },
+      { id: 'acer', title: '宏碁驱动', titleEn: 'Acer', href: 'https://www.acer.com.cn/support.html?type=1', description: '宏碁电脑官方驱动下载', descriptionEn: 'Acer official support', icon: 'https://www.acer.com/favicon.ico', enabled: true },
       { id: 'msi', title: '微星驱动', titleEn: 'MSI', href: 'https://www.msi.cn/support', description: '微星主板显卡笔记本官方驱动', descriptionEn: 'MSI official support', icon: 'https://www.msi.com/favicon.ico', enabled: true },
     ],
   },

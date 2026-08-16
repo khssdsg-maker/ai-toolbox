@@ -147,10 +147,19 @@ async function main() {
     }
   }
 
+  // 6. 自动部署网页版到 Cloudflare Pages（与桌面端一次发布全搞定）
+  console.log('🌍 自动部署网页版到 Cloudflare Pages...')
+  try {
+    run('npx wrangler pages deploy out --project-name ai-toolbox --branch main --commit-dirty=true')
+  } catch {
+    console.log('⚠️ 网页版部署失败（不影响桌面端发布与 GitHub Release），可手动执行:')
+    console.log('   npx wrangler pages deploy out --project-name ai-toolbox --branch main')
+  }
+
   console.log('\n==========================================')
   console.log(` 🎉 成功完成打包与发布 v${targetVersion} 至 GitHub Releases！`)
   console.log(' 客户端开启后将在 4 秒内检测到新版本并自动提示下载安装。')
-  console.log('==========================================\n')
+  console.log(' ==========================================\n')
 }
 
 main().catch(err => {
