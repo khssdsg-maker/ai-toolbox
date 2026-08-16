@@ -34,6 +34,22 @@ interface ReleaseNote {
 
 export const FALLBACK_RELEASE_NOTES: ReleaseNote[] = [
   {
+    version: 'v1.4.0',
+    date: '2026-08-16',
+    title: '文件转换接入 Convertio & 网络工具升级导航页',
+    titleEn: 'Convertio Integration & Network Tools Navigation',
+    changes: [
+      '【文件转换】全面重构：桌面端应用内直接内嵌 Convertio 官方页面，支持 300+ 文件格式在线互转；网页版自动降级为跳转卡片',
+      '【网络工具】自研工具箱升级为精选导航页：收录站长工具、ITDOG、MXToolbox、DNSChecker 等 10 款优质在线网络工具（全部实测可用）',
+      '移除 jspdf、pdfjs-dist、mammoth 等 7 个无引用历史依赖与死文件，仓库更精简、构建更快'
+    ],
+    changesEn: [
+      'File conversion rebuilt: desktop app embeds the official Convertio page for 300+ format online conversion; web version falls back to a redirect card',
+      'Network tools upgraded from self-built toolbox to a curated navigation page featuring Chinaz, ITDOG, MXToolbox, DNSChecker and more (all verified working)',
+      'Removed 7 unused legacy dependencies and dead files for a leaner repo and faster builds'
+    ]
+  },
+  {
     version: 'v1.3.1',
     date: '2026-08-12',
     title: '新增 AI 写作与小说生成分类 & 淘汰失效死链',

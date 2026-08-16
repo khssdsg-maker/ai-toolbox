@@ -538,6 +538,27 @@ async function createWindow() {
 }
 
 app.whenReady().then(async () => {
+  // 文件转换页内嵌 Convertio：该站响应头带 X-Frame-Options: SAMEORIGIN，
+  // 仅对 convertio.co 域名移除该限制头，允许应用内 iframe 加载（不影响其他站点安全策略）
+  session.defaultSession.webRequest.onHeadersReceived(
+    { urls: ['*://*.convertio.co/*'] },
+    (details, callback) => {
+      const headers = details.responseHeaders || {}
+      for (const key of Object.keys(headers)) {
+        const lower = key.toLowerCase()
+        if (lower === 'x-frame-options') {
+          delete headers[key]
+        } else if (lower === 'content-security-policy') {
+          headers[key] = (Array.isArray(headers[key]) ? headers[key] : [headers[key]])
+            .map((v) => String(v).replace(/frame-ancestors[^;]*;?/gi, '').trim())
+            .filter(Boolean)
+          if (headers[key].length === 0) delete headers[key]
+        }
+      }
+      callback({ responseHeaders: headers })
+    }
+  )
+
   // 自动清理升级留在系统的临时安装包程序，确保零垃圾残余
   try {
     const tempInstaller = path.join(app.getPath('temp'), 'AI万能工具箱-最新安装包.exe')
