@@ -5,6 +5,9 @@ import fs from 'fs'
 import { spawn } from 'child_process'
 import { fileURLToPath } from 'url'
 
+// 隐藏 Electron 自动化标记，伪装标准 Chrome 环境，使 ChatGPT (Arkose/Cloudflare) 和豆包风控 100% 允许正常登录与使用
+app.commandLine.appendSwitch('disable-blink-features', 'AutomationControlled')
+
 // 认领字节系自定义协议（必须在 app ready 前注册）：抖音网页版会尝试唤起 bytedance:// 等协议，
 // 未认领时 Windows 会弹"获取打开此链接的应用"商店对话框；认领后这些链接在应用内静默终结
 protocol.registerSchemesAsPrivileged([
@@ -750,7 +753,12 @@ async function createWindow() {
     minHeight: 600,
     title: 'AI万能工具箱',
     frame: false,
-    webPreferences: { nodeIntegration: false, contextIsolation: true, preload: path.join(__dirname, 'main-preload.cjs') },
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      webviewTag: true,
+      preload: path.join(__dirname, 'main-preload.cjs')
+    },
     autoHideMenuBar: true,
     backgroundColor: '#09090b',
     icon: path.join(__dirname, '../build/icon.png'),
@@ -758,6 +766,15 @@ async function createWindow() {
   })
 
   mainWindow.once('ready-to-show', () => mainWindow.show())
+
+  // 主窗口防劫持铁闸：拦截并禁止任何外部网页跳转篡改主应用路由
+  mainWindow.webContents.on('will-navigate', (e, targetUrl) => {
+    const isAppUrl = targetUrl.startsWith('http://localhost') || targetUrl.startsWith('http://127.0.0.1') || targetUrl.startsWith('file://')
+    if (!isAppUrl) {
+      e.preventDefault()
+      handleExternalLink(targetUrl)
+    }
+  })
 
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     if (url.startsWith('http://') || url.startsWith('https://')) {
@@ -781,6 +798,11 @@ async function createWindow() {
 }
 
 app.whenReady().then(async () => {
+  // 动态净化 User-Agent：移除 "Electron/x.y.z" 与应用自定义标识，使 OpenAI / Cloudflare / 豆包完全识别为标准 Chrome 浏览器
+  const cleanUA = app.userAgentFallback.replace(/Electron\/\S+\s?/g, '').replace(/ai-toolbox\/\S+\s?/g, '').trim()
+  app.userAgentFallback = cleanUA
+  try { session.defaultSession.setUserAgent(cleanUA) } catch {}
+
   // 字节系协议静默终结（配合文件顶部的 registerSchemesAsPrivileged）
   for (const s of ['bytedance', 'snssdk1128', 'aweme', 'douyin']) {
     try { protocol.handle(s, () => new Response('', { status: 204 })) } catch {}
@@ -800,26 +822,31 @@ app.whenReady().then(async () => {
     } catch {}
   }
 
-  // 文件转换页内嵌 Convertio：该站响应头带 X-Frame-Options: SAMEORIGIN，
-  // 仅对 convertio.co 域名移除该限制头，允许应用内 iframe 加载（不影响其他站点安全策略）
-  session.defaultSession.webRequest.onHeadersReceived(
-    { urls: ['*://*.convertio.co/*'] },
-    (details, callback) => {
-      const headers = details.responseHeaders || {}
-      for (const key of Object.keys(headers)) {
-        const lower = key.toLowerCase()
-        if (lower === 'x-frame-options') {
-          delete headers[key]
-        } else if (lower === 'content-security-policy') {
-          headers[key] = (Array.isArray(headers[key]) ? headers[key] : [headers[key]])
-            .map((v) => String(v).replace(/frame-ancestors[^;]*;?/gi, '').trim())
-            .filter(Boolean)
-          if (headers[key].length === 0) delete headers[key]
+  // 允许应用内 iframe / webview 加载文件转换（Convertio）与 AI 分屏对比（各大主流大模型网站）
+  // 移除 X-Frame-Options 与 Content-Security-Policy 中的 frame-ancestors 限制
+  function setupSessionSecurity(targetSession) {
+    try {
+      targetSession.setUserAgent(cleanUA)
+      targetSession.webRequest.onHeadersReceived((details, callback) => {
+        const headers = details.responseHeaders || {}
+        for (const key of Object.keys(headers)) {
+          const lower = key.toLowerCase()
+          if (lower === 'x-frame-options') {
+            delete headers[key]
+          } else if (lower === 'content-security-policy') {
+            headers[key] = (Array.isArray(headers[key]) ? headers[key] : [headers[key]])
+              .map((v) => String(v).replace(/frame-ancestors[^;]*;?/gi, '').trim())
+              .filter(Boolean)
+            if (headers[key].length === 0) delete headers[key]
+          }
         }
-      }
-      callback({ responseHeaders: headers })
-    }
-  )
+        callback({ responseHeaders: headers })
+      })
+    } catch {}
+  }
+
+  setupSessionSecurity(session.defaultSession)
+  app.on('session-created', (ses) => setupSessionSecurity(ses))
 
   // 内置浏览器全局禁用网站通知：防止抖音等网站在后台以应用名义弹 Windows 系统通知
   // （仅禁 notifications，摄像头/麦克风/剪贴板等其它权限不受影响）

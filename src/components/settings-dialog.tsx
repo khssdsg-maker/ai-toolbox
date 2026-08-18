@@ -34,6 +34,26 @@ interface ReleaseNote {
 
 export const FALLBACK_RELEASE_NOTES: ReleaseNote[] = [
   {
+    version: 'v1.5.1',
+    date: '2026-08-18',
+    title: 'AI 大模型分屏对比台上线与独立沙箱风控免疫',
+    titleEn: 'AI Model Arena & Split-Screen Comparison Workstation',
+    changes: [
+      '【重磅功能】新增【AI 大模型聚合分屏对比台】：收录 10 大国内外主流顶尖大模型（DeepSeek R1、ChatGPT、Kimi、豆包、通义千问、Claude、智谱清言、秘塔搜索等），支持 1:1 双栏并排即时对比',
+      '【自定义模型】支持自由添加任意第三方私有/本地大模型（如 Ollama、Grok、私有知识库），永久保存在本地',
+      '【风控免疫架构】全面升级为 Chromium 原生独立隔离沙箱（Webview）与标准桌面 Chrome 身份伪装，彻底消除反嵌套警告与风控拦截',
+      '【持久化登录】接入物理磁盘持久化存储池（persist:ai_arena），用户登录状态、账户凭证与历史对话永久保留，无需重复登录',
+      '【生态闭环】与【提示词宝典】深度联动，精选实战 Prompt 模板支持一键送入双模型分屏对比'
+    ],
+    changesEn: [
+      'New feature: AI Model Arena featuring 10 top domestic and global LLMs (DeepSeek R1, ChatGPT, Kimi, Doubao, Qwen, Claude) with 1:1 split-screen real-time comparison',
+      'Support custom AI models: easily add local Ollama, Grok, or private knowledge bases with persistent local storage',
+      'Stealth sandboxing architecture: isolated Webview processes with genuine desktop Chrome signatures bypass anti-framing and bot-detection guards',
+      'Persistent authentication: session and cookies are stored on disk (persist:ai_arena) to preserve login states indefinitely',
+      'Ecosystem integration: one-click dispatch from Prompts Hub into dual-model split-screen comparison'
+    ]
+  },
+  {
     version: 'v1.5.0',
     date: '2026-08-18',
     title: 'AI 提示词灵感宝典发布与内置浏览器智能全自动翻译',

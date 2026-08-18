@@ -23,7 +23,8 @@ import {
   ExternalLink,
   Globe,
   Compass,
-  ArrowUpRight
+  ArrowUpRight,
+  Columns2
 } from 'lucide-react'
 import { PROMPTS_DATA, PROMPT_CATEGORIES, PROMPT_PLATFORMS, type PromptItem, type PromptPlatform } from '@/data/prompts-data'
 import { SiteFavicon } from '@/components/site-favicon'
@@ -462,6 +463,16 @@ export function PromptsCenter() {
                       >
                         <Heart className={cn('w-4 h-4', isFav && 'fill-red-500')} />
                       </button>
+
+                      {/* 一键送入分屏对比 */}
+                      <Link
+                        href={`/arena?prompt=${encodeURIComponent(getRenderedPrompt(item))}`}
+                        title={t('将此提示词直接送入双模型分屏对比', 'Send to Arena for Dual Models Comparison')}
+                        className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-500/20 border border-blue-500/20 transition-all shadow-sm"
+                      >
+                        <Columns2 className="w-3.5 h-3.5" />
+                        <span className="hidden sm:inline">{t('分屏对比', 'Compare')}</span>
+                      </Link>
 
                       {/* 一键复制按键 */}
                       <button

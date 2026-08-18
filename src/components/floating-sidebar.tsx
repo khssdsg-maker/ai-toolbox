@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
-import { Home, ArrowRightLeft, Globe, HardDrive, Star, Settings, Sparkles } from 'lucide-react'
+import { Home, ArrowRightLeft, Globe, HardDrive, Star, Settings, Sparkles, Columns2 } from 'lucide-react'
 import { useLanguage } from '@/lib/language-context'
 import { SettingsDialog } from '@/components/settings-dialog'
 
@@ -15,6 +15,7 @@ export function FloatingSidebar() {
 
   const links = [
     { href: '/', label: t('AI 工具', 'AI Tools'), icon: Home },
+    { href: '/arena', label: t('分屏对比', 'AI Arena'), icon: Columns2 },
     { href: '/prompts', label: t('提示词', 'Prompts'), icon: Sparkles },
     { href: '/convert', label: t('格式转换', 'Convert'), icon: ArrowRightLeft },
     { href: '/drivers', label: t('驱动中心', 'Drivers'), icon: HardDrive },
