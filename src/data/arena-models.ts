@@ -64,7 +64,7 @@ export const PRESET_MODELS: ArenaModel[] = [
     nameEn: 'Wanxiang',
     url: 'https://wanxiang.aliyun.com/',
     tag: '阿里官方 · AI绘画与视频',
-    icon: 'https://tongyi.aliyun.com/favicon.ico'
+    icon: '/icons/wanxiang.svg'
   },
 
   // ================= 🌐 国际顶流大模型 =================

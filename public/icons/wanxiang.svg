@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="wanxiang_bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1" />
+      <stop offset="50%" stop-color="#8B5CF6" />
+      <stop offset="100%" stop-color="#EC4899" />
+    </linearGradient>
+    <linearGradient id="wanxiang_glow" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#FFFFFF" />
+    </linearGradient>
+  </defs>
+  <!-- Background Rounded Superellipse -->
+  <rect width="128" height="128" rx="28" fill="url(#wanxiang_bg)" />
+  
+  <!-- Creative Prism Polyhedron Overlay -->
+  <g transform="translate(20, 20)">
+    <!-- Central Glowing Core -->
+    <path d="M44 8 L68 28 L44 80 L20 28 Z" fill="url(#wanxiang_glow)" opacity="0.95" />
+    <!-- Left Wing -->
+    <path d="M44 8 L20 28 L4 48 L24 64 L44 80 Z" fill="#FFFFFF" opacity="0.75" />
+    <!-- Right Wing -->
+    <path d="M44 8 L68 28 L84 48 L64 64 L44 80 Z" fill="#FFFFFF" opacity="0.6" />
+    <!-- Sparkle Stars -->
+    <path d="M72 12 L75 20 L83 23 L75 26 L72 34 L69 26 L61 23 L69 20 Z" fill="#FFDF00" />
+    <path d="M16 60 L18 66 L24 68 L18 70 L16 76 L14 70 L8 68 L14 66 Z" fill="#FFFFFF" opacity="0.9" />
+  </g>
+</svg>

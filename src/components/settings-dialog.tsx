@@ -34,6 +34,20 @@ interface ReleaseNote {
 
 export const FALLBACK_RELEASE_NOTES: ReleaseNote[] = [
   {
+    version: 'v1.5.5',
+    date: '2026-08-19',
+    title: '通义万相高画质矢量品牌图标与多模态创作生态增强',
+    titleEn: 'High-Res Vector Brand Icon for Tongyi Wanxiang & Multimodal Enhancements',
+    changes: [
+      '【品牌图标升级】为【通义万相】专属定制超清阿里几何渐变矢量图标（/icons/wanxiang.svg），彻底解决第三方图床与 SSO 重定向导致的图标加载空白问题',
+      '【双端即时渲染】在首页导航卡片与 AI 大模型分屏对比台顶级下拉中完美展示高清通义万相品牌标识'
+    ],
+    changesEn: [
+      'Brand Icon Upgrade: Custom high-res Alibaba geometry vector icon (/icons/wanxiang.svg) for Tongyi Wanxiang to eliminate CORS and SSO blank icon fallback',
+      'Dual-view rendering: crisp icon display across both Home Navigation cards and Arena model selectors'
+    ]
+  },
+  {
     version: 'v1.5.4',
     date: '2026-08-19',
     title: '收录阿里通义万相 AI 绘画与视频生成创作平台',

@@ -883,7 +883,7 @@
           "href": "https://wanxiang.aliyun.com/",
           "description": "阿里巴巴官方 AI 绘画与多模态创作平台，支持高画质文生图、相似图生成、图像局部重绘与创意涂鸦",
           "descriptionEn": "Alibaba official AI image generation platform supporting text-to-image, repainting and stylized visual design",
-          "icon": "",
+          "icon": "/icons/wanxiang.svg",
           "enabled": true
         }
       ]
