@@ -34,6 +34,26 @@ interface ReleaseNote {
 
 export const FALLBACK_RELEASE_NOTES: ReleaseNote[] = [
   {
+    version: 'v1.5.2',
+    date: '2026-08-18',
+    title: 'AI 多模型多轮研判协同中枢与多屏矩阵架构',
+    titleEn: 'AI Multi-Model Synthesis Hub & Multi-Screen Matrix Architecture',
+    changes: [
+      '【多模型多轮协同中枢】新增「左侧原始答卷池 vs 右侧内嵌独立总审官大模型」双区研判架构，彻底解决对话覆盖与状态污染问题',
+      '【全平台深度正文抓取】深度适配通义千问、DeepSeek、ChatGPT、Kimi、豆包等平台，支持全自动正文提取与左侧透明可视编辑/一键粘贴辅助',
+      '【二轮攻坚动态派发】总审官完成初审后，支持一键实时提取总审意见并自动派发至主屏各模型开展第二轮针对性深化与改写',
+      '【多屏灵活矩阵】支持双栏自由无级拖拽分屏 (1:1)、三栏竞速并排 (1:1:1)、四宫格全开矩阵 (2x2) 与单屏临时最大化切换',
+      '【双轨成果输出】提供结构化多模型研判综合报告与工业级 AI Agent (Cursor/Cline/Dify) 系统提示词一键导出'
+    ],
+    changesEn: [
+      'New feature: Multi-Model Synthesis Hub with isolated dual-pane architecture (Raw Answers Pool on the left vs Live Independent Arbiter on the right)',
+      'Robust DOM extraction: seamlessly capture full response text across Qwen, DeepSeek, ChatGPT, Kimi, and Doubao with live editable review & clipboard paste helper',
+      'Round 2 dynamic dispatch: extract live advice from chief arbiter and automatically forward targeted refinement tasks to arena models',
+      'Multi-pane matrix: flexible layout modes supporting 2-pane resizable split, 3-pane triple race, 4-pane quad grid, and single-pane temporary zoom',
+      'Dual-track export: 1-click copy for synthesis comparison reports and production-ready AI Agent (Cursor/Cline/Dify) system prompts'
+    ]
+  },
+  {
     version: 'v1.5.1',
     date: '2026-08-18',
     title: 'AI 大模型分屏对比台上线与独立沙箱风控免疫',

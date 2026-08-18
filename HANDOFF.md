@@ -1,7 +1,7 @@
 # 📋 AI万能工具箱 (AI Toolbox) 项目开发无缝交接文档
 
 > **文档创建/更新时间**：2026-08-18
-> **当前最新版本**：`v1.5.1` (已成功发布至 GitHub Releases 与 Cloudflare Pages)
+> **当前最新版本**：`v1.5.2` (已成功发布至 GitHub Releases 与 Cloudflare Pages)
 > **项目本地路径**：`C:\Users\海辰\.gemini\antigravity\scratch\ai-toolbox`
 > **GitHub 仓库**：`https://github.com/khssdsg-maker/ai-toolbox`
 > **在线体验版**：`https://ai-toolbox-ajc.pages.dev`
@@ -10,7 +10,14 @@
 
 ## 一、 项目当前最新状态与已完成工作
 
-### 1. 全新上线【AI 大模型分屏对比台】(`v1.5.1`)
+### 1. 全新上线【AI 多模型多轮研判协同中枢与多屏矩阵架构】(`v1.5.2`)
+- **双区研判协同架构**：左侧【主屏原始答卷池】（保留各模型作答记录，支持可视编辑与一键粘贴辅助）vs 右侧【内嵌独立总审官大模型视窗】（专职深度分析与冲突裁决，彻底杜绝主屏答卷被冲掉/覆盖的问题）。
+- **全平台正文深度提取引擎**：精准适配通义千问、DeepSeek、ChatGPT、Kimi、豆包等平台，全自动提取回答全文，并在 Tab 标签页实时展示字数。
+- **二轮攻坚全动态派发**：实时抓取右侧总审官的最新分析与分工意见，先解除弹窗遮挡后毫秒级注入主屏各模型开展第二轮定向深化。
+- **多屏灵活布局矩阵**：支持双栏自由无级拖拽分屏 (1:1)、三栏竞速并排 (1:1:1)、四宫格全开矩阵 (2x2) 与单屏临时最大化切换。
+- **双轨成果输出**：一键导出结构化多模型研判综合报告与工业级 AI Agent (Cursor/Cline/Dify) 系统提示词。
+
+### 2. 全新上线【AI 大模型分屏对比台】(`v1.5.1`)
 - 新增顶级路由页面 `/arena`（对应组件 `src/components/arena-content.tsx`，数据文件 `src/data/arena-models.ts`）。
 - **10 大主流预置模型一键分屏**：涵盖国内直连（DeepSeek R1、Kimi、通义千问、豆包、智谱清言、秘塔搜索）与国际顶流（ChatGPT、Claude 3.5 Sonnet、Google Gemini、Perplexity）。
 - **用户自定义模型扩展**：支持自由添加本地部署 Ollama、Grok 或私有知识库，本地持久化永久保存。
