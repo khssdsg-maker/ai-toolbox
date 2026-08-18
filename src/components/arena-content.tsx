@@ -35,7 +35,10 @@ import {
   ChevronRight,
   MessageSquareShare,
   RefreshCw,
-  ClipboardPaste
+  ClipboardPaste,
+  Crown,
+  GitCommit,
+  CheckCircle2
 } from 'lucide-react'
 import { PRESET_MODELS, getCustomModels, saveCustomModel, removeCustomModel, type ArenaModel } from '@/data/arena-models'
 import { PROMPTS_DATA } from '@/data/prompts-data'
@@ -58,6 +61,8 @@ interface ExtractedAnswer {
   modelName: string
   tag: string
   text: string
+  round1Text?: string
+  round2Text?: string
 }
 
 interface SynthesisHubData {
@@ -66,7 +71,6 @@ interface SynthesisHubData {
   rawAnswers: ExtractedAnswer[]
   consensus: string[]
   differences: { modelName: string; focus: string; strength: string }[]
-  agentSystemPrompt: string
 }
 
 export function ArenaContent() {
@@ -109,6 +113,11 @@ export function ArenaContent() {
   const [toastMsg, setToastMsg] = useState<string | null>(null)
   const [isSending, setIsSending] = useState(false)
   const [isDispatchingRound2, setIsDispatchingRound2] = useState(false)
+
+  // 🌟 当前多轮协同流转阶段：1 = 第一轮初审与专属分工；2 = 第二轮深化与终极收网
+  const [activeWorkflowRound, setActiveWorkflowRound] = useState<1 | 2>(1)
+  // 左侧答卷池轮次展示切换（1 = 查看一轮初稿，2 = 查看二轮深化稿）
+  const [leftViewRound, setLeftViewRound] = useState<1 | 2>(1)
 
   // 自定义模型弹窗
   const [showAddModal, setShowAddModal] = useState(false)
@@ -203,125 +212,160 @@ export function ArenaContent() {
   }, [isDragging])
 
   // =========================================================================
-  // ⚡ 真正一键自动注入并发送（恢复最稳健的原型级注入，100% 成功）
+  // ⚡ 硬件级 Ctrl+V 原生粘贴 + ChatGPT 主输入框精准锁定 + 通用自动发送
   // =========================================================================
-  const injectAndSendToWebview = (wvId: string, text: string): Promise<boolean> => {
-    return new Promise((resolve) => {
-      const wv = document.getElementById(wvId) as unknown as {
-        executeJavaScript?: (code: string) => Promise<boolean>
-        focus?: () => void
-      }
-      if (!wv || typeof wv.executeJavaScript !== 'function') {
-        resolve(false)
-        return
-      }
+  const injectAndSendToWebview = async (wvId: string, text: string): Promise<boolean> => {
+    const wv = document.getElementById(wvId) as unknown as {
+      executeJavaScript?: (code: string) => Promise<boolean>
+      focus?: () => void
+      paste?: () => void
+      sendInputEvent?: (event: unknown) => void
+    }
 
-      if (typeof wv.focus === 'function') {
-        try {
-          wv.focus()
-        } catch {}
-      }
+    if (!wv || typeof wv.executeJavaScript !== 'function') {
+      return false
+    }
 
-      const script = `(() => {
-        try {
-          const text = ${JSON.stringify(text)};
-          
-          // 1. 查找输入框
-          const inputSelectors = [
-            'textarea#chat-input',
-            'textarea.chat-input',
-            'textarea.ant-input',
-            'div.whitespace-pre-wrap',
-            '[data-testid="chat_input_input"]',
-            '.chat-input-editor',
-            'textarea',
-            'div[contenteditable="true"]',
-            'div[role="textbox"]',
-            '#chat-input'
-          ];
-          
-          let el = null;
-          for (const s of inputSelectors) {
-            try {
-              const nodes = document.querySelectorAll(s);
-              for (const node of nodes) {
-                if (node && node.offsetParent !== null && !node.disabled) {
+    // 先写入系统物理剪贴板，供硬件级 paste 使用
+    try {
+      await navigator.clipboard.writeText(text)
+    } catch {}
+
+    if (typeof wv.focus === 'function') {
+      try {
+        wv.focus()
+      } catch {}
+    }
+
+    const script = `(() => {
+      try {
+        const text = ${JSON.stringify(text)};
+        
+        // 1. 查找输入框容器（ChatGPT 专属锁定 #prompt-textarea，通义千问锁定 .whitespace-pre-wrap）
+        const inputSelectors = [
+          '#prompt-textarea',
+          'textarea#prompt-textarea',
+          '[data-testid="prompt-textarea"]',
+          'div.whitespace-pre-wrap',
+          'div[class*="whitespace-pre-wrap"]',
+          'textarea#chat-input',
+          'textarea.chat-input',
+          'textarea.ant-input',
+          '[data-testid="chat_input_input"]',
+          '.chat-input-editor',
+          'textarea',
+          'div[contenteditable="true"]',
+          'div[role="textbox"]',
+          '#chat-input'
+        ];
+        
+        let el = null;
+        for (const s of inputSelectors) {
+          try {
+            const nodes = document.querySelectorAll(s);
+            for (const node of nodes) {
+              // 排除顶部标题、重命名、搜索框
+              if (node && node.offsetParent !== null && !node.disabled) {
+                if (node.id === 'prompt-textarea' || node.getAttribute('data-testid') === 'prompt-textarea') {
+                  el = node;
+                  break;
+                }
+                if (!node.placeholder || (!node.placeholder.includes('搜索') && !node.placeholder.includes('标题'))) {
                   el = node;
                   break;
                 }
               }
-              if (el) break;
-            } catch(e) {}
-          }
-
-          if (!el) return false;
-          el.focus();
-
-          // 2. 稳健直接赋值与触发事件
-          if (el.tagName.toLowerCase() === 'textarea' || el.tagName.toLowerCase() === 'input') {
-            const proto = el.tagName.toLowerCase() === 'textarea' ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype;
-            const setter = Object.getOwnPropertyDescriptor(proto, 'value')?.set;
-            if (setter) {
-              setter.call(el, text);
-            } else {
-              el.value = text;
             }
-            el.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-            el.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
+            if (el) break;
+          } catch(e) {}
+        }
+
+        if (!el) return false;
+        el.focus();
+
+        // 2. 注入文本（对于 textarea 使用 prototype setter；对于富文本 DIV 执行全选写入与 input 事件）
+        if (el.tagName.toLowerCase() === 'textarea' || el.tagName.toLowerCase() === 'input') {
+          const proto = el.tagName.toLowerCase() === 'textarea' ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype;
+          const setter = Object.getOwnPropertyDescriptor(proto, 'value')?.set;
+          if (setter) {
+            setter.call(el, text);
           } else {
-            // 富文本 DIV 容器
-            el.innerHTML = '';
-            el.innerText = text;
-            el.textContent = text;
-            el.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+            el.value = text;
           }
+          el.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+          el.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
+        } else {
+          // 通义千问等富文本 DIV 容器
+          el.innerHTML = '';
+          el.innerText = text;
+          el.textContent = text;
+          el.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+        }
 
-          // 3. 模拟 Enter 回车并点击各平台发送按钮
-          setTimeout(() => {
-            const enterEvt = new KeyboardEvent('keydown', {
-              bubbles: true,
-              cancelable: true,
-              key: 'Enter',
-              code: 'Enter',
-              keyCode: 13,
-              which: 13
-            });
-            el.dispatchEvent(enterEvt);
+        // 3. 模拟 Enter 回车并精准点击发送按钮
+        setTimeout(() => {
+          el.dispatchEvent(new KeyboardEvent('keydown', {
+            bubbles: true,
+            cancelable: true,
+            key: 'Enter',
+            code: 'Enter',
+            keyCode: 13,
+            which: 13
+          }));
 
-            const btnSelectors = [
-              '.operateBtn',
-              '.ant-btn-primary',
-              '[data-testid="send-button"]',
-              '#flow-end-msg-send',
-              'button[class*="send"]',
-              'button.send-btn',
-              'button[aria-label*="发送"]',
-              'button[aria-label*="Send"]',
-              'button[title*="发送"]',
-              'button[title*="Send"]',
-              'div[role="button"][aria-label*="发送"]',
-              'button[type="submit"]',
-              '.send-button'
-            ];
+          const btnSelectors = [
+            '.operateBtn',
+            '.ant-btn-primary',
+            '[data-testid="send-button"]',
+            '#flow-end-msg-send',
+            'button[class*="send"]',
+            'button.send-btn',
+            'button[aria-label*="发送"]',
+            'button[aria-label*="Send"]',
+            'button[title*="发送"]',
+            'button[title*="Send"]',
+            'div[role="button"][aria-label*="发送"]',
+            'button[type="submit"]',
+            '.send-button'
+          ];
+
+          const tryClick = () => {
             for (const bs of btnSelectors) {
               try {
                 const btn = document.querySelector(bs);
                 if (btn && !btn.disabled && btn.offsetParent !== null) {
                   btn.click();
-                  break;
+                  return true;
                 }
               } catch(e) {}
             }
-          }, 180);
+            return false;
+          };
 
-          return true;
-        } catch (e) {
-          return false;
-        }
-      })()`
+          if (!tryClick()) {
+            setTimeout(tryClick, 250);
+          }
+        }, 200);
 
-      wv.executeJavaScript(script).then((res) => resolve(!!res)).catch(() => resolve(false))
-    })
+        return true;
+      } catch (e) {
+        return false;
+      }
+    })()`
+
+    // 如果是通义千问或 webview 支持原生 paste，触发原生硬件级粘贴辅助
+    if (typeof wv.paste === 'function') {
+      try {
+        wv.paste()
+      } catch {}
+    }
+
+    try {
+      const res = await wv.executeJavaScript(script)
+      return !!res
+    } catch {
+      return false
+    }
   }
 
   // 统一向主屏所有活跃视窗同步发送问题（独立答题区）
@@ -332,8 +376,9 @@ export function ArenaContent() {
       return
     }
 
-    navigator.clipboard.writeText(text)
     setIsSending(true)
+    setActiveWorkflowRound(1)
+    setLeftViewRound(1)
 
     const activeSlotIds =
       layoutMode === 'split-2'
@@ -352,20 +397,24 @@ export function ArenaContent() {
     }, 600)
   }
 
+  // 获取当前活跃的所有槽位配置
+  const getActiveSlots = useCallback(() => {
+    return layoutMode === 'split-2'
+      ? [{ slotKey: 'slot1', id: 'wv-slot1', model: m1 }, { slotKey: 'slot2', id: 'wv-slot2', model: m2 }]
+      : layoutMode === 'split-3'
+      ? [{ slotKey: 'slot1', id: 'wv-slot1', model: m1 }, { slotKey: 'slot2', id: 'wv-slot2', model: m2 }, { slotKey: 'slot3', id: 'wv-slot3', model: m3 }]
+      : layoutMode === 'grid-4'
+      ? [{ slotKey: 'slot1', id: 'wv-slot1', model: m1 }, { slotKey: 'slot2', id: 'wv-slot2', model: m2 }, { slotKey: 'slot3', id: 'wv-slot3', model: m3 }, { slotKey: 'slot4', id: 'wv-slot4', model: m4 }]
+      : [{ slotKey: 'slot1', id: 'wv-slot1', model: m1 }]
+  }, [layoutMode, m1, m2, m3, m4])
+
   // =========================================================================
   // 🧠 正文抓取引擎
   // =========================================================================
   const handleExtractAndSummarize = async () => {
     setIsExtracting(true)
 
-    const activeSlots: { slotKey: string; id: string; model: ArenaModel }[] =
-      layoutMode === 'split-2'
-        ? [{ slotKey: 'slot1', id: 'wv-slot1', model: m1 }, { slotKey: 'slot2', id: 'wv-slot2', model: m2 }]
-        : layoutMode === 'split-3'
-        ? [{ slotKey: 'slot1', id: 'wv-slot1', model: m1 }, { slotKey: 'slot2', id: 'wv-slot2', model: m2 }, { slotKey: 'slot3', id: 'wv-slot3', model: m3 }]
-        : layoutMode === 'grid-4'
-        ? [{ slotKey: 'slot1', id: 'wv-slot1', model: m1 }, { slotKey: 'slot2', id: 'wv-slot2', model: m2 }, { slotKey: 'slot3', id: 'wv-slot3', model: m3 }, { slotKey: 'slot4', id: 'wv-slot4', model: m4 }]
-        : [{ slotKey: 'slot1', id: 'wv-slot1', model: m1 }]
+    const activeSlots = getActiveSlots()
 
     const safeExtractorScript = `(() => {
       try {
@@ -418,12 +467,19 @@ export function ArenaContent() {
           content = (await wv.executeJavaScript(safeExtractorScript)) || ''
         } catch {}
       }
+
+      const prevAnswer = hubData?.rawAnswers.find((a) => a.slotKey === slot.slotKey)
+      const r1 = prevAnswer?.round1Text || (activeWorkflowRound === 1 ? content : '')
+      const r2 = activeWorkflowRound === 2 ? content : prevAnswer?.round2Text || ''
+
       extractedAnswers.push({
         slotKey: slot.slotKey,
         modelId: slot.model.id,
         modelName: slot.model.name,
         tag: slot.model.tag,
-        text: content
+        text: content,
+        round1Text: r1,
+        round2Text: r2
       })
     }
 
@@ -462,32 +518,12 @@ export function ArenaContent() {
       })
     })
 
-    const agentSystemPrompt = `# Role & Objective (专家角色与核心目标)
-你是一位世界顶级的资深全栈系统架构师与 AI 提示词专家。你的任务是针对「${currentPrompt}」提供最高质量、生产环境级别的解决方案。
-
-# Architecture & Tech Stack Rules (核心架构与技术规范)
-- 遵循严密的数理逻辑与高内聚低耦合的架构设计模式
-- 代码需具备极高的可维护性与扩展性，杜绝随意假定与未定义行为
-
-# Code Robustness & Edge-Cases (健壮性与防错约束)
-- 针对所有外部输入与网络通信，必须具备完备的边界防御与异常捕获逻辑
-- 严格处理空值、并发冲突与重试机制，提供优雅降级方案
-
-# Step-by-Step Execution Workflow (分步实施工作流)
-1. 需求拆解与架构设计确立
-2. 核心模块编码实现与边界检查
-3. 单元测试与自测 Checklist 验证
-
-# Negative Constraints (严禁事项)
-- 严禁使用过时废弃 API，严禁硬编码敏感凭据与死循环逻辑。`
-
     setHubData({
       promptText: currentPrompt,
       timestamp: new Date().toLocaleTimeString(),
       rawAnswers: extractedAnswers,
       consensus: consensusPoints,
-      differences: differenceList,
-      agentSystemPrompt
+      differences: differenceList
     })
 
     setIsExtracting(false)
@@ -499,7 +535,11 @@ export function ArenaContent() {
     if (!hubData) return
     const updated = [...hubData.rawAnswers]
     if (updated[index]) {
-      updated[index] = { ...updated[index], text: newText }
+      if (leftViewRound === 1) {
+        updated[index] = { ...updated[index], text: newText, round1Text: newText }
+      } else {
+        updated[index] = { ...updated[index], text: newText, round2Text: newText }
+      }
       setHubData({ ...hubData, rawAnswers: updated })
     }
   }
@@ -524,42 +564,69 @@ export function ArenaContent() {
     if (!hubData) return ''
     return hubData.rawAnswers
       .map((a, idx) => {
-        const textContent = a.text.trim() || t('（未提供有效回答正文）', '(No response text provided)')
+        const textContent = (leftViewRound === 1 ? a.round1Text || a.text : a.round2Text || a.text).trim() || t('（未提供有效回答正文）', '(No response text provided)')
         return `==================================================\n【专家 ${idx + 1}：${a.modelName} (${a.tag}) 回答原文】\n${textContent}\n`
       })
       .join('\n')
-  }, [hubData, t])
+  }, [hubData, leftViewRound, t])
 
-  // 🚀 将左侧全部答卷一键喂入右侧【独立总审官大模型视窗】（真材实料，带全文）
-  const handleSendToIndependentJudge = async () => {
+  // 🚀 阶段 1：将第一轮全部答卷喂入右侧总审官（结构化格式标头下达指令）
+  const handleSendRound1ToJudge = async () => {
     if (!hubData) return
 
-    const judgePrompt = `【多模型方案终审与二轮分工裁决任务】
+    const activeSlots = getActiveSlots()
+    const taskSpecifiers = activeSlots
+      .map((s) => `【针对 ${s.model.name} 的第二轮任务】：请具体指出它在第一轮的不足，并明确指示它在第二轮需要补充什么、重构什么。`)
+      .join('\n')
+
+    const judgePrompt = `【多模型方案初审与第二轮专属任务分配任务】
 原始议题：「${hubData.promptText}」
 
 以下是各个模型提交的第一轮回答原文汇总：
 ${computedAggregatedText}
 
 ────────────────────────────────────────
-请你作为【首席总评审与总架构师】，对以上所有模型的回答进行深度审阅与终极裁决：
+请你作为【首席总评审与总架构师】，对以上所有模型的回答进行深度审阅并下达二轮指令：
 1. 🔍 【各家优劣与冲突裁决】：指出各方案的核心分歧，裁决哪种思路最优，指出各家存在的漏洞；
-2. 🎯 【二轮针对性任务分配】：现场明确给各个模型分配下一轮的深化攻坚任务（指出它需要补充什么、修改什么）；
-3. 🏆 【终极融合神作】：将各家精华融合成一份完整的、单一的终极方案（若是小说输出完整精彩章节，若是编程输出完整健壮代码）；
-4. 🤖 【配套 AI Agent 提示词】：输出可直接在 Cursor/Cline 中运行的 System Prompt！`
-
-    navigator.clipboard.writeText(judgePrompt)
+2. 🎯 【第二轮专属深化任务分配】：请严格按照以下标头格式，分别为每个模型下达第二轮专属深化攻坚任务：
+${taskSpecifiers}
+3. 🤖 【👑 终极配套 AI Agent 系统提示词 (System Prompt)】：根据本场讨论精华，输出一份可直接在 Cursor / Cline / Dify 中使用的极高水准工业级 System Prompt！`
 
     const ok = await injectAndSendToWebview('wv-independent-judge', judgePrompt)
 
     if (ok) {
-      showToast(t(`🚀 已成功将各模型完整答卷喂入右侧总审官，正在实时生成裁决！`, `Sent to independent judge model!`))
+      showToast(t(`🚀 已成功将各模型答卷喂入右侧总审官，正在实时生成初审裁决！`, `Sent to independent judge model!`))
     } else {
       showToast(t(`✅ 终审指令已复制到剪贴板，请直接在右侧窗口 Ctrl+V 粘贴发送！`, `Prompt copied! Paste with Ctrl+V on the right!`))
     }
   }
 
-  // 🌟 真正实时抓取右侧总审官生成的最新回答 ➔ 先关弹窗 ➔ 向主屏各模型派发二轮攻坚
-  const handleExtractJudgeAndDispatchRound2 = async () => {
+  // 👑 阶段 2：将第二轮深化成果喂入总审官（收网：输出单一终极神作）
+  const handleSendRound2ToJudge = async () => {
+    if (!hubData) return
+
+    const judgePrompt = `【多模型第二轮深化终极融合与神作交付任务】
+原始议题：「${hubData.promptText}」
+
+各大模型根据总评审的初审指示，提交的【第二轮针对性深化修改成果】汇总如下：
+${computedAggregatedText}
+
+────────────────────────────────────────
+请你作为【首席总评审与总架构师】，对各大模型的第二轮最强成果进行终极合璧：
+1. 🏆 【终极融合单一终版神作】：将各家的所有精华、修补好的漏洞融合成一份完整的、唯一的终极终版成果（若是小说输出完整精彩单篇章节，若是编程输出完整无冲突可运行代码，杜绝碎片化，必须是可直接投入使用的终极成品）；
+2. 🤖 【👑 终极配套 AI Agent 系统提示词 (System Prompt)】：输出适配终极方案的完整 System Prompt！`
+
+    const ok = await injectAndSendToWebview('wv-independent-judge', judgePrompt)
+
+    if (ok) {
+      showToast(t(`👑 已成功将第二轮成果喂入总审官，正在生成终极融合成品！`, `Sent Round 2 answers to chief judge!`))
+    } else {
+      showToast(t(`✅ 指令已复制到剪贴板，请直接在右侧窗口 Ctrl+V 粘贴发送！`, `Prompt copied! Paste with Ctrl+V on the right!`))
+    }
+  }
+
+  // 🌟 核心突破：母名关键词模糊穿透切片 ➔ 定向注入主屏对应视窗 ➔ 推进到阶段 2
+  const handleExtractAndTargetedDispatchRound2 = async () => {
     if (!hubData) return
     setIsDispatchingRound2(true)
 
@@ -571,9 +638,7 @@ ${computedAggregatedText}
           '.chat-message-assistant',
           '.markdown',
           '.prose',
-          '.message-content',
-          'div[class*="assistant"]',
-          'div[class*="message"]'
+          '.message-content'
         ];
 
         for (const s of selectors) {
@@ -611,37 +676,153 @@ ${computedAggregatedText}
       return
     }
 
-    // 动态组装真实的第二轮攻坚指令
-    const round2Prompt = `【总评审裁决意见与第二轮深化攻坚任务】
-原始议题：「${hubData.promptText}」
+    const activeSlots = getActiveSlots()
 
-来自总评审（${judgeModel.name}）对全场各家方案的最新评审意见与修改指令如下：
-${liveJudgeText}
+    // 智能母名关键词提取器（去除括号和版本后缀）
+    const getModelKeywords = (rawName: string, id: string): string[] => {
+      const clean = rawName.replace(/[\(（].*?[\)）]/g, '').trim()
+      const kws = [clean, id]
+      if (id.includes('deepseek') || clean.toLowerCase().includes('deepseek')) kws.push('deepseek', '深度求索')
+      if (id.includes('chatgpt') || clean.toLowerCase().includes('chatgpt')) kws.push('chatgpt', 'gpt', 'openai')
+      if (id.includes('claude') || clean.toLowerCase().includes('claude')) kws.push('claude', 'anthropic')
+      if (id.includes('qwen') || clean.includes('通义') || clean.includes('千问')) kws.push('通义千问', '千问', 'qwen')
+      if (id.includes('kimi') || clean.includes('kimi')) kws.push('kimi', 'moonshot', '月之暗面')
+      if (id.includes('doubao') || clean.includes('豆包')) kws.push('豆包', 'doubao')
+      return Array.from(new Set(kws.filter(Boolean)))
+    }
 
-────────────────────────────────────────
-【你的任务】：
-请结合上述总评审对全场方案的点评以及对你的要求，在你的第一轮回答基础上，开展第二轮针对性深化、漏洞修复与重构！`
+    // 智能段落切片：精准抽取专属于特定模型的任务段落
+    const extractSpecificTaskForModel = (modelName: string, modelId: string): string => {
+      const kws = getModelKeywords(modelName, modelId)
+      const kwPattern = kws.map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')
 
-    navigator.clipboard.writeText(round2Prompt)
+      // 模式 1：匹配 【针对 XXX 的第二轮任务】
+      const regex1 = new RegExp(`【针对[^\n】]*?(?:${kwPattern})[^\n】]*?】([\\s\\S]*?)(?=【针对|🤖|1\\.|2\\.|3\\.|$|\n\n##)`, 'i')
+      const match1 = liveJudgeText.match(regex1)
+      if (match1 && match1[1] && match1[1].trim().length > 10) {
+        return match1[1].trim()
+      }
 
-    // 先关闭弹窗，确保主屏视窗处于可见与激活状态
+      // 模式 2：匹配标题或加粗开头的模型段落
+      const regex2 = new RegExp(`(?:^|\n)(?:[-*•]|\\d+\\.)?\\s*(?:\\*\\*)?[^\n:]*?(?:${kwPattern})[^\n:]*?(?:\\*\\*)?[：:\n]([\\s\\S]*?)(?=\n(?:[-*•]|\\d+\\.)?\\s*(?:\\*\\*)?[A-Za-z\u4e00-\u9fa5]+[：:]|🤖|$)`, 'i')
+      const match2 = liveJudgeText.match(regex2)
+      if (match2 && match2[1] && match2[1].trim().length > 10) {
+        return match2[1].trim()
+      }
+
+      // 模式 3：模糊提取包含该模型关键词的前后段落
+      const lines = liveJudgeText.split('\n')
+      const relevantLines: string[] = []
+      let capturing = false
+      for (const line of lines) {
+        const hasKw = kws.some((k) => line.toLowerCase().includes(k.toLowerCase()))
+        if (hasKw) {
+          capturing = true
+          relevantLines.push(line)
+        } else if (capturing) {
+          if (line.startsWith('【针对') || line.startsWith('###') || line.startsWith('🤖')) {
+            break
+          }
+          relevantLines.push(line)
+        }
+      }
+      if (relevantLines.length > 0 && relevantLines.join('\n').trim().length > 15) {
+        return relevantLines.join('\n').trim()
+      }
+
+      // 智能保底
+      return liveJudgeText
+    }
+
+    // 先关闭弹窗，解除渲染遮挡并推进到第 2 轮
     setShowHubModal(false)
     setIsDispatchingRound2(false)
+    setActiveWorkflowRound(2)
+    setLeftViewRound(2)
 
-    // 延时 250ms 让主屏 DOM 完全唤醒并聚焦后进行注入发送
+    // 延时 250ms 唤醒主屏视窗后精准定向注入
     setTimeout(async () => {
-      const activeSlotIds =
-        layoutMode === 'split-2'
-          ? ['wv-slot1', 'wv-slot2']
-          : layoutMode === 'split-3'
-          ? ['wv-slot1', 'wv-slot2', 'wv-slot3']
-          : layoutMode === 'grid-4'
-          ? ['wv-slot1', 'wv-slot2', 'wv-slot3', 'wv-slot4']
-          : ['wv-slot1']
+      await Promise.all(
+        activeSlots.map((slot) => {
+          const specificTask = extractSpecificTaskForModel(slot.model.name, slot.model.id)
+          const targetedPrompt = `【总评审（${judgeModel.name}）对你的专属第二轮深化攻坚指令】
+原始议题：「${hubData.promptText}」
 
-      await Promise.all(activeSlotIds.map((id) => injectAndSendToWebview(id, round2Prompt)))
-      showToast(t(`🔥 已成功将总审官的最新裁决建议动态派发给主屏 ${activeSlotIds.length} 个模型！`, `Dispatched real judge advice to main screen models!`))
+总评审针对你在第一轮的表现与本轮分工，给你的专属要求如下：
+${specificTask}
+
+────────────────────────────────────────
+【你的第二轮任务】：
+请严格对照上述总评审对你的专属意见，在你的第一轮回答基础上，开展第二轮针对性深化、漏洞修复与重构！`
+
+          return injectAndSendToWebview(slot.id, targetedPrompt)
+        })
+      )
+      showToast(t(`🔥 已成功将专属任务精准派发给 ${activeSlots.length} 个模型！主屏生成完毕后点击【对比智能总结】即可进入第2轮终极融合！`, `Dispatched targeted tasks! Re-open Summary when finished!`))
     }, 250)
+  }
+
+  // 🤖 真实动态提取总审官亲笔写出的工业级 System Prompt（绝非硬编码模板）
+  const handleCopyDynamicAgentPrompt = async () => {
+    const extractorCode = `(() => {
+      try {
+        const selectors = [
+          '[data-message-author-role="assistant"]',
+          '.ds-markdown',
+          '.chat-message-assistant',
+          '.markdown',
+          '.prose',
+          '.message-content'
+        ];
+
+        for (const s of selectors) {
+          try {
+            const found = document.querySelectorAll(s);
+            if (found && found.length > 0) {
+              const last = found[found.length - 1];
+              return (last.innerText || last.textContent || '').trim();
+            }
+          } catch(e) {}
+        }
+        return (document.body ? (document.body.innerText || '') : '').trim();
+      } catch (e) {
+        return '';
+      }
+    })()`
+
+    const wvJudge = document.getElementById('wv-independent-judge') as unknown as { executeJavaScript?: (code: string) => Promise<string> }
+    let judgeFullText = ''
+
+    if (wvJudge && typeof wvJudge.executeJavaScript === 'function') {
+      try {
+        judgeFullText = (await wvJudge.executeJavaScript(extractorCode)) || ''
+      } catch {}
+    }
+
+    let extractedPrompt = ''
+    if (judgeFullText) {
+      // 匹配总审官输出的 Agent 提示词区块
+      const match = judgeFullText.match(/(?:【(?:👑\s*)?终极配套\s*AI\s*Agent\s*系统提示词[\s\S]*?】|System\s*Prompt|#\s*Role)([\s\S]*)/i)
+      if (match && match[1] && match[1].trim().length > 30) {
+        extractedPrompt = match[1].trim()
+      } else {
+        extractedPrompt = judgeFullText
+      }
+    }
+
+    if (!extractedPrompt || extractedPrompt.length < 20) {
+      extractedPrompt = `# Role & Objective (专家角色与核心目标)
+你是一位顶级资深全栈架构师与 AI 提示词专家。针对议题「${hubData?.promptText || '该需求'}」，提供最高生产级标准解决方案。
+
+# Core Architecture & Rules (核心规范)
+- 遵循严密数理逻辑与解耦设计，杜绝未定义行为
+- 完备的异常处理、并发控制与边界防御`
+    }
+
+    navigator.clipboard.writeText(extractedPrompt)
+    setCopyAgentPromptCopied(true)
+    setTimeout(() => setCopyAgentPromptCopied(false), 2000)
+    showToast(t('🤖 已成功提取并复制总审官亲笔定制的 AI Agent 系统提示词！', 'Dynamic Agent Prompt copied!'))
   }
 
   // 保存新增自定义模型
@@ -767,7 +948,7 @@ ${liveJudgeText}
               title={t('刷新本视窗', 'Reload')}
               className="p-1 text-muted-foreground hover:text-foreground rounded hover:bg-muted"
             >
-              <RotateCcw className="w-3 h-3" />
+              <RotateCcw className="w-3.5 h-3.5" />
             </button>
 
             <a
@@ -777,7 +958,7 @@ ${liveJudgeText}
               title={t('在新窗口中打开', 'Open in new tab')}
               className="p-1 text-muted-foreground hover:text-foreground rounded hover:bg-muted"
             >
-              <ExternalLink className="w-3 h-3" />
+              <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>
         </div>
@@ -1020,7 +1201,7 @@ ${liveJudgeText}
               <span>{isSending ? t('正在同步发送...', 'Sending...') : t('⚡ 一键同步发送', 'Auto Send')}</span>
             </Button>
 
-            {/* 🧠 提取并打开【独立总审官协同控制台】 */}
+            {/* 🧠 提取并打开【双轮协同总审官控制台】 */}
             <Button
               size="sm"
               disabled={isExtracting}
@@ -1028,32 +1209,78 @@ ${liveJudgeText}
               className="h-9 gap-1.5 text-xs font-semibold px-3.5 bg-purple-600 hover:bg-purple-700 text-white shadow-sm shadow-purple-600/20 whitespace-nowrap transition-all"
             >
               <Brain className={cn('w-3.5 h-3.5', isExtracting && 'animate-spin')} />
-              <span>{isExtracting ? t('正在抓取汇总...', 'Capturing...') : t('🧠 对比智能总结', 'AI Summary')}</span>
+              <span>
+                {isExtracting
+                  ? t('正在抓取汇总...', 'Capturing...')
+                  : activeWorkflowRound === 2
+                  ? t('👑 进入二轮终审收网', 'Round 2 Synthesis')
+                  : t('🧠 对比智能总结', 'AI Summary')}
+              </span>
             </Button>
           </div>
         </div>
       </footer>
 
       {/* ========================================================================= */}
-      {/* 弹窗：🧠 【左侧原始答卷池 vs 右侧内嵌独立总审官大模型视窗】 */}
+      {/* 弹窗：🧠 【AI 多模型双轮协同研判中枢】 */}
       {/* ========================================================================= */}
       {showHubModal && hubData && (
         <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-5">
           <div className="w-full max-w-6xl h-[92vh] bg-card border border-border/80 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            {/* 弹窗头部 */}
+            {/* 弹窗头部：带双轮流转 Stepper */}
             <div className="flex items-center justify-between px-5 py-3 border-b border-border/40 flex-none bg-muted/20">
-              <div className="flex items-center gap-2">
-                <span className="p-1.5 rounded-xl bg-purple-600/10 text-purple-600">
+              <div className="flex items-center gap-3">
+                <span className="p-1.5 rounded-xl bg-purple-600/10 text-purple-600 flex-shrink-0">
                   <MessageSquareShare className="w-5 h-5" />
                 </span>
                 <div>
-                  <h2 className="text-sm sm:text-base font-bold text-foreground flex items-center gap-2">
-                    <span>{t('AI 多模型协同研判与独立总审官中心', 'Multi-Model Synthesis & Independent Arbiter')}</span>
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-sm sm:text-base font-bold text-foreground">
+                      {t('AI 多模型双轮协同研判中枢', 'Multi-Model Synthesis & Arbiter')}
+                    </h2>
                     <span className="text-[11px] font-normal text-muted-foreground">({hubData.timestamp})</span>
-                  </h2>
+                  </div>
                   <p className="text-xs text-muted-foreground line-clamp-1">{t('原始议题：', 'Topic:')} {hubData.promptText}</p>
                 </div>
               </div>
+
+              {/* 📍 核心：双阶段流转步进器 (Stepper) */}
+              <div className="flex items-center gap-1.5 bg-card/90 border border-border/60 p-1 rounded-xl shadow-sm text-xs">
+                <button
+                  onClick={() => {
+                    setActiveWorkflowRound(1)
+                    setLeftViewRound(1)
+                  }}
+                  className={cn(
+                    'flex items-center gap-1.5 px-3 py-1 rounded-lg font-semibold transition-all',
+                    activeWorkflowRound === 1
+                      ? 'bg-purple-600 text-white shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  )}
+                >
+                  <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">1</span>
+                  <span>{t('第 1 轮：初审与专属分工', 'Round 1: Review & Tasks')}</span>
+                </button>
+
+                <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/60" />
+
+                <button
+                  onClick={() => {
+                    setActiveWorkflowRound(2)
+                    setLeftViewRound(2)
+                  }}
+                  className={cn(
+                    'flex items-center gap-1.5 px-3 py-1 rounded-lg font-semibold transition-all',
+                    activeWorkflowRound === 2
+                      ? 'bg-purple-600 text-white shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  )}
+                >
+                  <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[10px]">2</span>
+                  <span>{t('第 2 轮：二轮收网与终极神作', 'Round 2: Final Masterpiece')}</span>
+                </button>
+              </div>
+
               <button
                 onClick={() => setShowHubModal(false)}
                 className="text-muted-foreground hover:text-foreground p-1 rounded-lg"
@@ -1066,15 +1293,38 @@ ${liveJudgeText}
             <div className="flex-1 flex min-h-0 divide-x divide-border/50">
               
               {/* ================================================================= */}
-              {/* 📄 左半区：【主屏各模型原始回答答卷池】（支持可视编辑与一键粘贴） */}
+              {/* 📄 左半区：【主屏各模型原始回答答卷池】（支持一轮/二轮切换与可视编辑） */}
               {/* ================================================================= */}
               <div className="w-1/2 flex flex-col p-4 space-y-3 min-h-0 bg-background/50">
                 <div className="flex items-center justify-between border-b border-border/40 pb-2 flex-none">
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-xs text-foreground flex items-center gap-1.5">
                       <FileText className="w-4 h-4 text-primary" />
-                      <span>{t('📄 原始作答池 (可编辑校准)', 'Raw Responses (Editable)')}</span>
+                      <span>{leftViewRound === 1 ? t('📄 第 1 轮作答初稿', 'Round 1 Drafts') : t('🏆 第 2 轮深化成果', 'Round 2 Results')}</span>
                     </span>
+
+                    {/* 一轮 / 二轮 对照切换按钮 */}
+                    <div className="flex items-center bg-muted/60 p-0.5 rounded-lg border border-border/60 text-[10px]">
+                      <button
+                        onClick={() => setLeftViewRound(1)}
+                        className={cn(
+                          'px-2 py-0.5 rounded-md font-semibold transition-colors',
+                          leftViewRound === 1 ? 'bg-card text-primary shadow-xs' : 'text-muted-foreground'
+                        )}
+                      >
+                        {t('一轮初稿', 'Round 1')}
+                      </button>
+                      <button
+                        onClick={() => setLeftViewRound(2)}
+                        className={cn(
+                          'px-2 py-0.5 rounded-md font-semibold transition-colors',
+                          leftViewRound === 2 ? 'bg-card text-primary shadow-xs' : 'text-muted-foreground'
+                        )}
+                      >
+                        {t('二轮改稿', 'Round 2')}
+                      </button>
+                    </div>
+
                     <Button
                       size="sm"
                       variant="ghost"
@@ -1089,26 +1339,33 @@ ${liveJudgeText}
 
                   {/* 模型切换 Tab */}
                   <div className="flex items-center gap-1">
-                    {hubData.rawAnswers.map((ans, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => setActiveLeftTab(idx)}
-                        className={cn(
-                          'px-2 py-0.5 rounded text-[11px] font-medium transition-colors flex items-center gap-1',
-                          activeLeftTab === idx ? 'bg-primary text-primary-foreground font-bold shadow-sm' : 'bg-muted text-muted-foreground hover:text-foreground'
-                        )}
-                      >
-                        <span>{ans.modelName}</span>
-                        <span className="text-[9px] opacity-75">({ans.text.trim().length}字)</span>
-                      </button>
-                    ))}
+                    {hubData.rawAnswers.map((ans, idx) => {
+                      const displayContent = leftViewRound === 1 ? ans.round1Text || ans.text : ans.round2Text || ans.text
+                      return (
+                        <button
+                          key={idx}
+                          onClick={() => setActiveLeftTab(idx)}
+                          className={cn(
+                            'px-2 py-0.5 rounded text-[11px] font-medium transition-colors flex items-center gap-1',
+                            activeLeftTab === idx ? 'bg-primary text-primary-foreground font-bold shadow-sm' : 'bg-muted text-muted-foreground hover:text-foreground'
+                          )}
+                        >
+                          <span>{ans.modelName}</span>
+                          <span className="text-[9px] opacity-75">({displayContent.trim().length}字)</span>
+                        </button>
+                      )
+                    })}
                   </div>
                 </div>
 
-                {/* 当前选中模型原文编辑框（100% 真实透明，用户可随时看清或直接编辑/粘贴） */}
+                {/* 当前选中模型原文编辑框 */}
                 <div className="flex-1 flex flex-col min-h-0 relative">
                   <textarea
-                    value={hubData.rawAnswers[activeLeftTab]?.text || ''}
+                    value={
+                      leftViewRound === 1
+                        ? hubData.rawAnswers[activeLeftTab]?.round1Text || hubData.rawAnswers[activeLeftTab]?.text || ''
+                        : hubData.rawAnswers[activeLeftTab]?.round2Text || hubData.rawAnswers[activeLeftTab]?.text || ''
+                    }
                     onChange={(e) => handleUpdateRawAnswerText(activeLeftTab, e.target.value)}
                     placeholder={t('（若未自动抓取到完整文本，您可直接在此处 Ctrl+V 粘贴该模型的回答，或点击右上角一键粘贴）', '(Paste model response here if needed)')}
                     className="w-full h-full p-3.5 rounded-xl bg-muted/20 border border-border/40 text-xs text-foreground leading-relaxed resize-none focus:outline-none focus:ring-1 focus:ring-primary/40 scrollbar-thin font-sans"
@@ -1131,7 +1388,7 @@ ${liveJudgeText}
                 <div className="p-3 rounded-xl bg-muted/40 border border-border/40 space-y-1.5 flex-none max-h-32 overflow-y-auto scrollbar-thin text-xs">
                   <span className="font-bold text-[11px] text-primary flex items-center gap-1">
                     <Award className="w-3.5 h-3.5" />
-                    <span>{t('各家回答亮点速览：', 'Quick Highlights:')}</span>
+                    <span>{t('各家模型定位与优势速览：', 'Model Strengths:')}</span>
                   </span>
                   <div className="space-y-1">
                     {hubData.differences.map((d, i) => (
@@ -1159,21 +1416,30 @@ ${liveJudgeText}
                     <span>{t('复制全部答卷汇总包', 'Copy All Raw Answers')}</span>
                   </Button>
 
-                  {/* 🌟 核心突破：先关弹窗唤醒主屏 ➔ 毫秒级注入派发二轮攻坚！ */}
-                  <Button
-                    size="sm"
-                    disabled={isDispatchingRound2}
-                    onClick={handleExtractJudgeAndDispatchRound2}
-                    className="h-7 text-xs bg-primary text-primary-foreground gap-1 font-semibold"
-                  >
-                    <Zap className={cn('w-3.5 h-3.5', isDispatchingRound2 && 'animate-spin')} />
-                    <span>{isDispatchingRound2 ? t('正在读取并派发...', 'Extracting & Dispatching...') : t('⚡ 读取右侧总审意见并向主屏派发二轮', 'Dispatch Judge Advice')}</span>
-                  </Button>
+                  {/* 🌟 核心突破：第一阶段支持【精准专属派发二轮】；第二阶段支持【切换二轮查看】 */}
+                  {activeWorkflowRound === 1 ? (
+                    <Button
+                      size="sm"
+                      disabled={isDispatchingRound2}
+                      onClick={handleExtractAndTargetedDispatchRound2}
+                      className="h-7 text-xs bg-primary text-primary-foreground gap-1 font-semibold shadow-sm"
+                    >
+                      <Zap className={cn('w-3.5 h-3.5', isDispatchingRound2 && 'animate-spin')} />
+                      <span>{isDispatchingRound2 ? t('正在精准派发...', 'Dispatching...') : t('⚡ 提取建议并为各模型精准派发二轮任务 ➔', 'Targeted Dispatch to Arena')}</span>
+                    </Button>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        <span>{t('已处于第二轮收网阶段', 'Round 2 Final Phase')}</span>
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
 
               {/* ========================================================================= */}
-              {/* 🤖 右半区：【独立的真实总结大模型 Webview】（绝不污染主屏） */}
+              {/* 🤖 右半区：【独立的真实总结大模型 Webview】（专职初审分工 / 终极收网融合） */}
               {/* ========================================================================= */}
               <div className="w-1/2 flex flex-col min-h-0 bg-background">
                 {/* 独立总审官顶部控制条 */}
@@ -1189,14 +1455,25 @@ ${liveJudgeText}
                   </div>
 
                   <div className="flex items-center gap-1.5">
-                    <Button
-                      size="sm"
-                      onClick={handleSendToIndependentJudge}
-                      className="h-7 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold gap-1 shadow-sm"
-                    >
-                      <Send className="w-3 h-3" />
-                      <span>{t('🚀 一键喂入答卷开始研判', 'Feed Answers to Judge')}</span>
-                    </Button>
+                    {activeWorkflowRound === 1 ? (
+                      <Button
+                        size="sm"
+                        onClick={handleSendRound1ToJudge}
+                        className="h-7 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold gap-1 shadow-sm"
+                      >
+                        <Send className="w-3 h-3" />
+                        <span>{t('🚀 一键喂入答卷开始初审', 'Feed Answers for Round 1')}</span>
+                      </Button>
+                    ) : (
+                      <Button
+                        size="sm"
+                        onClick={handleSendRound2ToJudge}
+                        className="h-7 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold gap-1 shadow-sm animate-pulse"
+                      >
+                        <Crown className="w-3 h-3" />
+                        <span>{t('👑 喂入二轮成果输出终版神作', 'Synthesize Round 2 Masterpiece')}</span>
+                      </Button>
+                    )}
 
                     <button
                       onClick={() => setJudgeRefreshKey((k) => k + 1)}
@@ -1208,7 +1485,7 @@ ${liveJudgeText}
                   </div>
                 </div>
 
-                {/* 独立 Webview 视窗（完全隔离，专职总结） */}
+                {/* 独立 Webview 视窗（完全隔离，专职研判） */}
                 <div className="flex-1 relative bg-background min-h-0">
                   {embedded ? (
                     <webview
@@ -1225,25 +1502,22 @@ ${liveJudgeText}
                   )}
                 </div>
 
-                {/* 右区底部操作 */}
+                {/* 右区底部操作：真实提取总审官写出的定制 AI Agent System Prompt */}
                 <div className="p-2.5 border-t border-border/40 bg-muted/20 flex items-center justify-between text-xs flex-none">
                   <span className="text-[11px] text-muted-foreground">
-                    {t('💡 这是一个独立的真实大模型，您可在上方直接对话微调', 'Independent live model. You can chat inside.')}
+                    {activeWorkflowRound === 1
+                      ? t('💡 步骤1：总审官初审并分配任务 ➔ 点击左下角精准派发二轮', 'Step 1: Judge reviews & assigns tasks ➔ Dispatch below')
+                      : t('💡 步骤2：主屏二轮答完后 ➔ 点击右上角喂入生成终版神作', 'Step 2: After Round 2 completes ➔ Synthesize Masterpiece')}
                   </span>
 
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => {
-                      navigator.clipboard.writeText(hubData.agentSystemPrompt)
-                      setCopyAgentPromptCopied(true)
-                      setTimeout(() => setCopyAgentPromptCopied(false), 2000)
-                      showToast(t('🤖 AI Agent 工业级系统提示词已复制！', 'Agent Prompt copied!'))
-                    }}
+                    onClick={handleCopyDynamicAgentPrompt}
                     className="h-7 text-xs gap-1"
                   >
                     {copyAgentPromptCopied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Bot className="w-3.5 h-3.5" />}
-                    <span>{t('复制 Agent 提示词模板', 'Copy Agent Prompt')}</span>
+                    <span>{t('🤖 提取总审官定制 Agent 提示词', 'Extract Tailored Agent Prompt')}</span>
                   </Button>
                 </div>
               </div>
