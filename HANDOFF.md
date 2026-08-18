@@ -1,7 +1,7 @@
 # 📋 AI万能工具箱 (AI Toolbox) 项目开发无缝交接文档
 
 > **文档创建/更新时间**：2026-08-18
-> **当前最新版本**：`v1.5.0` (已成功发布至 GitHub Releases 与 Cloudflare Pages)
+> **当前最新版本**：`v1.5.1` (已成功发布至 GitHub Releases 与 Cloudflare Pages)
 > **项目本地路径**：`C:\Users\海辰\.gemini\antigravity\scratch\ai-toolbox`
 > **GitHub 仓库**：`https://github.com/khssdsg-maker/ai-toolbox`
 > **在线体验版**：`https://ai-toolbox-ajc.pages.dev`
@@ -10,7 +10,15 @@
 
 ## 一、 项目当前最新状态与已完成工作
 
-### 1. 全新上线【AI 提示词灵感宝典】模块 (`v1.5.0`)
+### 1. 全新上线【AI 大模型分屏对比台】(`v1.5.1`)
+- 新增顶级路由页面 `/arena`（对应组件 `src/components/arena-content.tsx`，数据文件 `src/data/arena-models.ts`）。
+- **10 大主流预置模型一键分屏**：涵盖国内直连（DeepSeek R1、Kimi、通义千问、豆包、智谱清言、秘塔搜索）与国际顶流（ChatGPT、Claude 3.5 Sonnet、Google Gemini、Perplexity）。
+- **用户自定义模型扩展**：支持自由添加本地部署 Ollama、Grok 或私有知识库，本地持久化永久保存。
+- **Webview 独立沙箱与风控免疫**：注入 `disable-blink-features: AutomationControlled` 底层开关，清除自动化标记，伪装纯净原生 Chrome 桌面版，彻底消除 ChatGPT 与豆包的风控拦截与反嵌套警告。
+- **物理持久化会话 (`persist:ai_arena`)**：登录态、Token 与对话历史物理保存在磁盘，下次使用免登录。
+- **生态联动**：提示词宝典每张卡片增设 `[⚔️ 分屏对比]`，参数填空后一键直达对比台。
+
+### 2. 全新上线【AI 提示词灵感宝典】模块 (`v1.5.0`)
 - 新增顶级路由页面 `/prompts`（对应组件 `src/components/prompts-center.tsx`，数据文件 `src/data/prompts-data.ts`）。
 - **全球 11 大顶尖 Prompt 平台导航**：精选收录 Anthropic 官方提示词库、LiblibAI 哩布哩布、OpenArt PromptBook、FlowGPT、AI Short、Awesome Prompts 11万★ 开源版、PromptBase、ClickPrompt、AIPRM、PromptPerfect、SnackPrompt。
 - **5 大高频场景结构化实战模板**：涵盖网文小说（黄金三章/金手指推演）、AI 编程开发（架构与 Debug）、绘画咒语（Midjourney 胶片光影）、职场办公（爆款小红书文案）、学术深度思考（费曼学习法与反事实推演）。
