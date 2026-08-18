@@ -1,7 +1,7 @@
 # 📋 AI万能工具箱 (AI Toolbox) 项目开发无缝交接文档
 
-> **文档创建/更新时间**：2026-08-16
-> **当前最新版本**：`v1.4.4` (已成功发布至 GitHub Releases)
+> **文档创建/更新时间**：2026-08-18
+> **当前最新版本**：`v1.5.0` (已成功发布至 GitHub Releases 与 Cloudflare Pages)
 > **项目本地路径**：`C:\Users\海辰\.gemini\antigravity\scratch\ai-toolbox`
 > **GitHub 仓库**：`https://github.com/khssdsg-maker/ai-toolbox`
 > **在线体验版**：`https://ai-toolbox-ajc.pages.dev`
@@ -10,7 +10,21 @@
 
 ## 一、 项目当前最新状态与已完成工作
 
-### 1. 文件转换接入 Convertio (`v1.4.0`)
+### 1. 全新上线【AI 提示词灵感宝典】模块 (`v1.5.0`)
+- 新增顶级路由页面 `/prompts`（对应组件 `src/components/prompts-center.tsx`，数据文件 `src/data/prompts-data.ts`）。
+- **全球 11 大顶尖 Prompt 平台导航**：精选收录 Anthropic 官方提示词库、LiblibAI 哩布哩布、OpenArt PromptBook、FlowGPT、AI Short、Awesome Prompts 11万★ 开源版、PromptBase、ClickPrompt、AIPRM、PromptPerfect、SnackPrompt。
+- **5 大高频场景结构化实战模板**：涵盖网文小说（黄金三章/金手指推演）、AI 编程开发（架构与 Debug）、绘画咒语（Midjourney 胶片光影）、职场办公（爆款小红书文案）、学术深度思考（费曼学习法与反事实推演）。
+- 支持**动态交互参数填空**、**实时关键词/标签检索**、**一键秒级复制到剪贴板**与**本地收藏持久化**。
+
+### 2. 内置浏览器升级【全自动常驻持续网页翻译】与导航增强 (`v1.5.0`)
+- **SPA 动态 DOM 监听 (`MutationObserver`)**：在单页应用中点击菜单切换 Tab 或滚动加载新内容时，自动捕捉新载入的英文并在后台毫秒级自动翻译为简体中文。
+- **跨页面切页状态继承 (`did-navigate` 联动)**：一旦开启翻译，标签页站内超链接跳转、前进、后退或刷新均全自动持续翻译，彻底告别单次翻译丢失。
+- **工具栏与控制胶囊**：新增 `🌐 自动翻译中` 高亮开关、`🧭 浏览器打开`（一键调用系统默认 Edge/Chrome 打开）、`◀ / ▶ / ⟳` 基础导航按键。
+
+### 3. 全局胶囊悬浮导航栏常驻固定 (`v1.5.0`)
+- 将 `FloatingSidebar` 提升至全局根布局 `src/app/layout.tsx`，在所有子页面（主页、提示词、转换、收藏、驱动、网络工具、视频）永久固定悬浮，无缝跳转。
+
+### 4. 文件转换接入 Convertio (`v1.4.0`)
 - 删除全部自研【文件转换中心】（8 个工具、converters.ts / doc-converters.ts 两个库），`/convert` 页面改为接入 Convertio。
 - **桌面端**：应用内 iframe 直接内嵌 `https://convertio.co/zh/`；`electron/main.mjs` 通过 `onHeadersReceived` 仅对 `*.convertio.co` 域移除 `X-Frame-Options`（作用域严格受限）。
 - **网页版**：Convertio 官方禁止 iframe 内嵌，自动降级为跳转卡片（favicon + 特性标签 + 新标签页打开）。
