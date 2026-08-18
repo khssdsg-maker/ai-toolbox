@@ -34,6 +34,22 @@ interface ReleaseNote {
 
 export const FALLBACK_RELEASE_NOTES: ReleaseNote[] = [
   {
+    version: 'v1.5.4',
+    date: '2026-08-19',
+    title: '收录阿里通义万相 AI 绘画与视频生成创作平台',
+    titleEn: 'Added Alibaba Tongyi Wanxiang AI Art & Video Generation Platform',
+    changes: [
+      '【新增核心工具】收录阿里巴巴官方旗舰级多模态创作平台【通义万相】（https://wanxiang.aliyun.com/）',
+      '【多场景深度整合】全面接入【AI设计绘画】核心分类卡片库与【AI大模型分屏对比台】，支持一键内嵌秒开与多屏同台创作',
+      '【多模态创作赋能】全面支持高画质文生图、相似图创意衍生、涂鸦作画、图像局部重绘与 AI 视频生成'
+    ],
+    changesEn: [
+      'New tool integration: Added Alibaba official flagship multimodal creative platform Tongyi Wanxiang (https://wanxiang.aliyun.com/)',
+      'Ecosystem integration: Available in both AI Design & Art navigation catalog and AI Model Arena workstation with seamless embedded sandboxing',
+      'Multimodal capabilities: High-fidelity text-to-image, creative variation, inpainting, and AI video generation'
+    ]
+  },
+  {
     version: 'v1.5.3',
     date: '2026-08-19',
     title: '通义千问硬件级粘贴、ChatGPT精准锁定与专属任务智能切片',

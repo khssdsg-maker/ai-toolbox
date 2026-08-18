@@ -58,6 +58,14 @@ export const PRESET_MODELS: ArenaModel[] = [
     tag: '无广告 · 结构化搜索',
     icon: 'https://metaso.cn/favicon.ico'
   },
+  {
+    id: 'wanxiang',
+    name: '通义万相 (阿里生图/视频)',
+    nameEn: 'Wanxiang',
+    url: 'https://wanxiang.aliyun.com/',
+    tag: '阿里官方 · AI绘画与视频',
+    icon: 'https://tongyi.aliyun.com/favicon.ico'
+  },
 
   // ================= 🌐 国际顶流大模型 =================
   {
