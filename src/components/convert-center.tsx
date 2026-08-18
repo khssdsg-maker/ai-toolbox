@@ -28,7 +28,7 @@ export function ConvertCenter() {
     <div className="h-screen flex flex-col bg-background">
       {/* 顶部 */}
       <header className="flex-none bg-background/80 backdrop-blur-lg border-b border-border/40">
-        <div className="flex items-center gap-4 px-5 sm:px-10 h-14 max-w-[1600px] w-full mx-auto">
+        <div className="flex items-center gap-4 px-5 sm:px-10 sm:pl-24 h-14 max-w-[1600px] w-full mx-auto">
           <Link href="/">
             <Button variant="ghost" size="sm" className="gap-1.5 -ml-2 text-muted-foreground">
               <ArrowLeft className="h-4 w-4" />
@@ -48,14 +48,18 @@ export function ConvertCenter() {
       </header>
 
       {embedded ? (
-        <iframe
-          src={CONVERTIO_URL}
-          title="Convertio 文件转换"
-          className="flex-1 w-full border-0 bg-background"
-          allowFullScreen
-        />
+        <div className="flex-1 w-full sm:pl-20 bg-background flex flex-col">
+          <iframe
+            src={CONVERTIO_URL}
+            title="Convertio 文件转换"
+            className="flex-1 w-full border-0 bg-background"
+            allowFullScreen
+          />
+        </div>
       ) : (
-        <ConvertioCard />
+        <div className="flex-1 w-full sm:pl-20 flex flex-col">
+          <ConvertioCard />
+        </div>
       )}
     </div>
   )

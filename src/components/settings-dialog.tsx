@@ -34,6 +34,26 @@ interface ReleaseNote {
 
 export const FALLBACK_RELEASE_NOTES: ReleaseNote[] = [
   {
+    version: 'v1.5.0',
+    date: '2026-08-18',
+    title: 'AI 提示词灵感宝典发布与内置浏览器智能全自动翻译',
+    titleEn: 'AI Prompts Hub & Persistent In-App Browser Auto-Translation',
+    changes: [
+      '【重磅功能】新增【AI 提示词灵感宝典】：收录 11 大全球权威及高星开源 Prompt 平台（Anthropic 官方提示词库、LiblibAI、OpenArt、FlowGPT 等），一键直达海量灵感',
+      '【实战模板】精选 5 大高频场景结构化提示词模板（网文开篇大纲、AI 架构师开发、Midjourney 咒语、职场文案、学术思考），支持参数动态交互填空与秒级一键复制',
+      '【内置浏览器大升级】新增【全自动常驻持续网页翻译】：基于 MutationObserver 底层监听，单页应用动态加载与站内切页跳转均自动持续翻译为中文，支持一键还原原文与状态高亮',
+      '【导航增强】内置浏览器新增【在系统默认浏览器 (Edge/Chrome) 打开】快捷按键与【后退/前进/刷新】完整网页控制',
+      '【全局交互】左侧胶囊悬浮导航栏提升为全页面顶级常驻，跨模块自由切换无缝衔接'
+    ],
+    changesEn: [
+      'New feature: AI Prompts Hub featuring 11 curated top prompt platforms (Anthropic Library, LiblibAI, OpenArt, FlowGPT) and rich prompt communities',
+      'Curated production-ready prompt templates across 5 core categories with interactive variable fill-in and one-click instant copy',
+      'Persistent in-app browser auto-translation with MutationObserver: dynamic SPA updates and sub-page navigations are automatically translated into Chinese',
+      'Added "Open in System Default Browser" (Edge/Chrome) shortcut and complete navigation controls (Back, Forward, Reload)',
+      'Global floating capsule navigation bar is now persistently mounted across all sub-pages for seamless switching'
+    ]
+  },
+  {
     version: 'v1.4.4',
     date: '2026-08-16',
     title: '内置浏览器防护体系：协议弹窗根除与稳定性大修',

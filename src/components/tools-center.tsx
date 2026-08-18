@@ -53,7 +53,7 @@ export function ToolsCenter() {
     <div className="min-h-screen bg-background">
       {/* 顶部 */}
       <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border/40">
-        <div className="flex items-center gap-4 px-5 sm:px-10 h-14 max-w-6xl mx-auto">
+        <div className="flex items-center gap-4 px-5 sm:px-10 sm:pl-24 h-14 max-w-6xl mx-auto">
           <Link href="/">
             <Button variant="ghost" size="sm" className="gap-1.5 -ml-2 text-muted-foreground">
               <ArrowLeft className="h-4 w-4" />
@@ -66,7 +66,7 @@ export function ToolsCenter() {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-5 sm:px-10 py-8 space-y-10">
+      <div className="max-w-6xl mx-auto px-5 sm:px-10 sm:pl-24 py-8 space-y-10">
         {/* 国内直连 */}
         <section>
           <h2 className="text-sm font-medium text-muted-foreground mb-4 px-1">国内直连 · 即点即用</h2>

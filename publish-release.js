@@ -87,7 +87,13 @@ async function main() {
 
   // 3. 打包 Electron 客户端包
   console.log('📦 执行 Electron 本地打包 (electron-builder)...')
-  run('npx electron-builder --win --publish never --config.directories.output=dist2')
+  run('npx electron-builder --win --publish never --config.directories.output=dist2', {
+    env: {
+      ...process.env,
+      ELECTRON_BUILDER_BINARIES_MIRROR: 'https://npmmirror.com/mirrors/electron-builder-binaries/',
+      ELECTRON_MIRROR: 'https://npmmirror.com/mirrors/electron/'
+    }
+  })
 
   const dist2 = path.join(process.cwd(), 'dist2')
   const files = fs.readdirSync(dist2)

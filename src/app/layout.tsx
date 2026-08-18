@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
 import { Providers } from '@/components/providers'
+import { FloatingSidebar } from '@/components/floating-sidebar'
 import type { Metadata } from 'next'
 import Script from 'next/script'
 // Define font CSS variable classes without external Google Font network dependencies
@@ -59,9 +60,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Providers>
+            <FloatingSidebar />
             {children}
           </Providers>
-</ThemeProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

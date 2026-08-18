@@ -5,7 +5,6 @@ import type { NavigationData, NavigationItem, NavigationSubItem } from '@/types/
 import type { SiteConfig } from '@/types/site'
 import { NavigationCard } from '@/components/navigation-card'
 import { Sidebar } from '@/components/sidebar'
-import { FloatingSidebar } from '@/components/floating-sidebar'
 import { WindowControls } from '@/components/window-controls'
 import { SearchBar } from '@/components/search-bar'
 import { ModeToggle } from '@/components/mode-toggle'
@@ -177,9 +176,6 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
 
   return (
     <div className="flex flex-col sm:flex-row min-h-screen bg-background">
-      {/* 悬浮侧边栏 */}
-      <FloatingSidebar />
-
       {/* 经典侧边栏（备用展开） */}
       <div style={{ display: isMobile ? "none" : "block" }}>
         <Sidebar

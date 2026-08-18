@@ -192,13 +192,16 @@ let tabIdSeq = 0
 
 function sendTabs() {
   if (!browserWin || browserWin.isDestroyed()) return
+  const activeTab = tabs.find((t) => t.id === activeTabId)
   browserWin.webContents.send('tabs-updated', {
     tabs: tabs.map((t) => ({
       id: t.id,
       title: t.title || '新标签页',
       url: t.view.webContents.getURL(),
       active: t.id === activeTabId,
+      autoTranslate: !!t.autoTranslate,
     })),
+    activeAutoTranslate: !!activeTab?.autoTranslate,
   })
 }
 
@@ -217,20 +220,177 @@ function activateTab(id) {
   sendTabs()
 }
 
+// 注入持续翻译引擎（支持 SPA 动态加载与切页自动持续翻译）
+async function injectTranslator(tab) {
+  if (!tab || tab.view.webContents.isDestroyed()) return
+  const url = tab.view.webContents.getURL()
+  if (!url || !url.startsWith('http')) return
+
+  try {
+    await tab.view.webContents.executeJavaScript(`
+      (function() {
+        window.__ai_translate_enabled = true;
+
+        // 1. 创建或更新浮动提示胶囊
+        let bar = document.getElementById('__ai_translate_bar');
+        if (!bar) {
+          bar = document.createElement('div');
+          bar.id = '__ai_translate_bar';
+          bar.style.cssText = 'position:fixed;top:12px;right:20px;z-index:2147483647;background:rgba(20,27,45,0.95);backdrop-filter:blur(12px);border:1px solid rgba(77,224,177,0.4);border-radius:12px;padding:7px 14px;color:#fff;font-family:system-ui,-apple-system,sans-serif;font-size:12px;box-shadow:0 8px 32px rgba(0,0,0,0.3);display:flex;align-items:center;gap:8px;pointer-events:auto;';
+          bar.innerHTML = '<span style="color:#4DE0B1;font-weight:600;">🌐 持续自动翻译中</span><span id="__ai_trans_status" style="color:#cbd5e1;">正在翻译...</span><button id="__ai_restore_btn" style="background:#2a364f;border:none;color:#fff;padding:3px 8px;border-radius:6px;cursor:pointer;font-size:11px;">还原原文</button><button id="__ai_close_bar" style="background:transparent;border:none;color:#8a93a6;cursor:pointer;font-size:14px;line-height:1;margin-left:2px;">✕</button>';
+          document.body.appendChild(bar);
+
+          document.getElementById('__ai_close_bar').onclick = function() {
+            bar.remove();
+          };
+
+          document.getElementById('__ai_restore_btn').onclick = function() {
+            window.__ai_translate_enabled = false;
+            const textWalk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+            let n;
+            while ((n = textWalk.nextNode())) {
+              if (n.__ai_orig) {
+                n.nodeValue = n.__ai_orig;
+                delete n.__ai_orig;
+              }
+            }
+            bar.remove();
+          };
+        }
+
+        // 2. 翻译可见文本节点
+        async function translateVisibleNodes() {
+          if (!window.__ai_translate_enabled) return;
+          const statusEl = document.getElementById('__ai_trans_status');
+          
+          const textNodes = [];
+          const walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+            acceptNode: function(node) {
+              const parent = node.parentElement;
+              if (!parent) return NodeFilter.FILTER_REJECT;
+              if (parent.closest('#__ai_translate_bar')) return NodeFilter.FILTER_REJECT;
+              const tag = parent.tagName.toLowerCase();
+              if (['script', 'style', 'noscript', 'textarea', 'code', 'pre'].includes(tag)) return NodeFilter.FILTER_REJECT;
+              if (node.nodeValue.trim().length > 1 && /[a-zA-Z]{2,}/.test(node.nodeValue) && !node.__ai_orig) {
+                return NodeFilter.FILTER_ACCEPT;
+              }
+              return NodeFilter.FILTER_SKIP;
+            }
+          });
+
+          let node;
+          while ((node = walk.nextNode()) && textNodes.length < 300) {
+            textNodes.push(node);
+          }
+
+          if (textNodes.length === 0) {
+            if (statusEl) statusEl.innerText = '已保持为中文';
+            return;
+          }
+
+          if (statusEl) statusEl.innerText = '正在翻译 (' + textNodes.length + ' 处新文本)...';
+
+          const batchSize = 15;
+          for (let i = 0; i < textNodes.length; i += batchSize) {
+            if (!window.__ai_translate_enabled) break;
+            const batch = textNodes.slice(i, i + batchSize);
+            const promises = batch.map(async (n) => {
+              const text = n.nodeValue.trim();
+              if (!text || text.length > 800) return;
+              try {
+                const res = await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=zh-CN&dt=t&q=' + encodeURIComponent(text));
+                if (res.ok) {
+                  const data = await res.json();
+                  if (data && data[0]) {
+                    const translated = data[0].map(x => x[0]).join('');
+                    if (translated && window.__ai_translate_enabled) {
+                      n.__ai_orig = n.nodeValue;
+                      n.nodeValue = n.nodeValue.replace(text, translated);
+                    }
+                  }
+                }
+              } catch (e) {}
+            });
+            await Promise.all(promises);
+          }
+          if (statusEl && window.__ai_translate_enabled) statusEl.innerText = '✅ 翻译完成';
+        }
+
+        // 3. 启用 MutationObserver 监听动态 DOM 变化（针对 SPA 动态加载、切页、滚动）
+        if (!window.__ai_observer) {
+          let timer = null;
+          window.__ai_observer = new MutationObserver(() => {
+            if (!window.__ai_translate_enabled) return;
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+              translateVisibleNodes();
+            }, 350);
+          });
+          window.__ai_observer.observe(document.body, { childList: true, subtree: true });
+        }
+
+        translateVisibleNodes();
+      })();
+    `)
+    if (browserWin && !browserWin.isDestroyed()) {
+      browserWin.webContents.send('translate-result', { status: 'success' })
+    }
+  } catch (err) {
+    console.error('Translation error:', err)
+  }
+}
+
+// 还原网页原文
+async function revertTranslator(tab) {
+  if (!tab || tab.view.webContents.isDestroyed()) return
+  try {
+    await tab.view.webContents.executeJavaScript(`
+      (function() {
+        window.__ai_translate_enabled = false;
+        const bar = document.getElementById('__ai_translate_bar');
+        if (bar) bar.remove();
+        const textWalk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        let n;
+        while ((n = textWalk.nextNode())) {
+          if (n.__ai_orig) {
+            n.nodeValue = n.__ai_orig;
+            delete n.__ai_orig;
+          }
+        }
+      })();
+    `)
+  } catch {}
+}
+
 function addTab(url) {
   if (!browserWin || browserWin.isDestroyed()) return
   const id = ++tabIdSeq
   const view = new WebContentsView({ webPreferences: { contextIsolation: true } })
   browserWin.contentView.addChildView(view)
-  const tab = { id, view, title: '' }
+  const tab = { id, view, title: '', autoTranslate: false }
   tabs.push(tab)
 
+  const handlePageUpdated = () => {
+    sendTabs()
+    if (tab.autoTranslate) {
+      setTimeout(() => injectTranslator(tab), 400)
+    }
+  }
+
   view.webContents.on('page-title-updated', (e, title) => { tab.title = title; sendTabs() })
-  view.webContents.on('did-navigate', () => sendTabs())
-  view.webContents.on('did-navigate-in-page', () => sendTabs())
-  // 页面内弹出的新窗口 → 变成新标签页
+  view.webContents.on('did-finish-load', handlePageUpdated)
+  view.webContents.on('did-navigate', handlePageUpdated)
+  view.webContents.on('did-navigate-in-page', handlePageUpdated)
+
+  // 页面内弹出的新窗口 → 变成新标签页（继承原标签页的自动翻译设置）
   view.webContents.setWindowOpenHandler(({ url: u }) => {
-    if (u.startsWith('http')) addTab(u)
+    if (u.startsWith('http')) {
+      addTab(u)
+      const newCreated = tabs[tabs.length - 1]
+      if (newCreated && tab.autoTranslate) {
+        newCreated.autoTranslate = true
+      }
+    }
     return { action: 'deny' }
   })
 
@@ -243,8 +403,6 @@ function addTab(url) {
   view.webContents.on('will-redirect', (e, u) => {
     if (!isWebUrl(u)) e.preventDefault()
   })
-
-  // 注入式拦截已全部移除：协议认领 + will-navigate 护栏 + 注册表通知封锁已覆盖真实问题，页面级注入曾导致抖音黑屏
 
   // 渲染进程崩溃自愈：黑屏/白屏时自动整页重载，避免出现死黑区域
   view.webContents.on('render-process-gone', () => {
@@ -307,10 +465,68 @@ function openInternalBrowser(url) {
   addTab(url)
 }
 
-// 标签栏交互
+// 标签栏交互与基础导航
 ipcMain.on('tab:activate', (e, id) => activateTab(id))
 ipcMain.on('tab:close', (e, id) => closeTab(id))
 ipcMain.on('tab:new', () => addTab('about:blank'))
+
+ipcMain.on('tab:back', () => {
+  const tab = tabs.find((t) => t.id === activeTabId)
+  if (tab && !tab.view.webContents.isDestroyed()) {
+    if (tab.view.webContents.navigationHistory && tab.view.webContents.navigationHistory.canGoBack()) {
+      tab.view.webContents.navigationHistory.goBack()
+    } else if (tab.view.webContents.canGoBack()) {
+      tab.view.webContents.goBack()
+    }
+  }
+})
+
+ipcMain.on('tab:forward', () => {
+  const tab = tabs.find((t) => t.id === activeTabId)
+  if (tab && !tab.view.webContents.isDestroyed()) {
+    if (tab.view.webContents.navigationHistory && tab.view.webContents.navigationHistory.canGoForward()) {
+      tab.view.webContents.navigationHistory.goForward()
+    } else if (tab.view.webContents.canGoForward()) {
+      tab.view.webContents.goForward()
+    }
+  }
+})
+
+ipcMain.on('tab:reload', () => {
+  const tab = tabs.find((t) => t.id === activeTabId)
+  if (tab && !tab.view.webContents.isDestroyed()) {
+    tab.view.webContents.reload()
+  }
+})
+
+ipcMain.on('tab:open-external', () => {
+  const tab = tabs.find((t) => t.id === activeTabId)
+  const url = tab && !tab.view.webContents.isDestroyed() ? tab.view.webContents.getURL() : ''
+  if (url && url.startsWith('http')) {
+    shell.openExternal(url)
+  }
+})
+
+// 内置网页翻译开关（切换当前标签页的自动翻译状态）
+ipcMain.on('tab:toggle-translate', (e) => {
+  const tab = tabs.find((t) => t.id === activeTabId)
+  if (!tab || tab.view.webContents.isDestroyed()) return
+  tab.autoTranslate = !tab.autoTranslate
+  if (tab.autoTranslate) {
+    injectTranslator(tab)
+  } else {
+    revertTranslator(tab)
+  }
+  sendTabs()
+})
+
+ipcMain.on('tab:translate', (e) => {
+  const tab = tabs.find((t) => t.id === activeTabId)
+  if (!tab || tab.view.webContents.isDestroyed()) return
+  tab.autoTranslate = true
+  injectTranslator(tab)
+  sendTabs()
+})
 
 // ============ 标签栏"收藏链接"功能 ============
 function parseVideoInMain(url) {

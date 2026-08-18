@@ -10,7 +10,7 @@ import { ScrollArea } from '@/registry/new-york/ui/scroll-area'
 import type { NavigationData } from '@/types/navigation'
 import type { SiteConfig } from '@/types/site'
 import * as LucideIcons from 'lucide-react'
-import { ChevronDown, ChevronRight, X, Settings, Home, MonitorPlay, ArrowRightLeft, Globe, HardDrive, Star } from 'lucide-react'
+import { ChevronDown, ChevronRight, X, Settings, Home, MonitorPlay, ArrowRightLeft, Globe, HardDrive, Star, Sparkles } from 'lucide-react'
 import { useLanguage } from '@/lib/language-context'
 import { SettingsDialog } from '@/components/settings-dialog'
 import { LanguageToggle } from '@/components/language-toggle'
@@ -29,6 +29,7 @@ export function Sidebar({ className, navigationData, siteInfo, onClose }: Sideba
   // 功能模块入口（独立页面，不与 AI 工具分类混在一起）
   const moduleLinks = [
     { href: '/', label: t('AI 工具导航', 'AI Tools'), icon: Home },
+    { href: '/prompts', label: t('提示词宝典', 'Prompts Hub'), icon: Sparkles },
     { href: '/videos', label: t('视频合集', 'Videos'), icon: MonitorPlay },
     { href: '/convert', label: t('文件转换', 'Convert'), icon: ArrowRightLeft },
     { href: '/tools', label: t('网络工具箱', 'Network Tools'), icon: Globe },

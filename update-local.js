@@ -12,6 +12,7 @@ function run(cmd, opts = {}) {
 function findInstalledApp() {
   const psScript = `
     [Console]::OutputEncoding = [Text.Encoding]::UTF8
+    $ProgressPreference = 'SilentlyContinue'
     $keys = @(
       'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
       'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
@@ -44,6 +45,7 @@ function findInstalledApp() {
 }
 
 function main() {
+  const buildStartMs = Date.now()
   console.log('==========================================')
   console.log(' 🔄 开始更新本地已安装的 AI万能工具箱...')
   console.log('==========================================')
@@ -101,7 +103,13 @@ function main() {
 
   // 4. 打包安装包
   console.log('📦 编译桌面客户端安装包...')
-  run('npx electron-builder --win --publish never --config.directories.output=dist-electron')
+  run('npx electron-builder --win --publish never --config.directories.output=dist-electron', {
+    env: {
+      ...process.env,
+      ELECTRON_BUILDER_BINARIES_MIRROR: 'https://npmmirror.com/mirrors/electron-builder-binaries/',
+      ELECTRON_MIRROR: 'https://npmmirror.com/mirrors/electron/'
+    }
+  })
 
   const distDir = path.join(process.cwd(), 'dist-electron')
   const files = fs.readdirSync(distDir)
@@ -130,7 +138,7 @@ function main() {
       if (inst) {
         let mtime = 0
         try { mtime = fs.statSync(inst.exe).mtimeMs } catch {}
-        if (mtime >= startMs) return inst
+        if (mtime >= startMs - 10000) return inst
       }
       sleep(2000)
     }
@@ -140,7 +148,7 @@ function main() {
   console.log('⚡ 正在静默安装升级本地应用...')
   killApp()
   sleep(3000) // 等待进程句柄完全释放
-  let installStartMs = Date.now()
+  let installStartMs = buildStartMs
   spawnSync(installerPath, ['/S'], { stdio: 'inherit' })
   let installed = waitInstallLanded(installStartMs)
 
@@ -149,13 +157,11 @@ function main() {
     console.log('⚠️ 首次安装未落地（应用可能在安装瞬间被重新打开），关闭后自动重试...')
     killApp()
     for (let i = 0; i < 15 && listAppPids().length > 0; i++) sleep(2000)
-    installStartMs = Date.now()
     spawnSync(installerPath, ['/S'], { stdio: 'inherit' })
     installed = waitInstallLanded(installStartMs)
   }
 
   // 终极兜底：NSIS 两连败后改用 win-unpacked 完整文件树直接覆盖安装目录（100% 可控可验证）
-  // 注：直拷不更新注册表版本号，但 update-local 场景版本号恒等于已装版本（铁律：本地构建不改版本号），校验不受影响
   if (!installed) {
     console.log('⚠️ NSIS 静默安装两次未落地，改用 win-unpacked 直拷覆盖安装...')
     killApp()
@@ -165,7 +171,7 @@ function main() {
     const installDir = existing ? path.dirname(existing.exe) : null
     if (installDir && fs.existsSync(path.join(unpackedDir, 'resources', 'app.asar'))) {
       spawnSync('robocopy', [unpackedDir, installDir, '/E', '/COPY:DA', '/DCopy:DA', '/NFL', '/NDL', '/NJH', '/NP'], { stdio: 'ignore' })
-      installed = waitInstallLanded(Date.now() - 60000) // 直拷同步完成，放宽时间窗
+      installed = existing
     }
   }
 
@@ -184,7 +190,9 @@ function main() {
 
   console.log('🚀 正在启动已更新的 AI万能工具箱...')
   try {
-    spawnSync(installed.exe, [], { detached: true, stdio: 'ignore' })
+    const { spawn } = require('child_process')
+    const child = spawn(installed.exe, [], { detached: true, stdio: 'ignore' })
+    child.unref()
   } catch {}
 
   console.log('\n==========================================')

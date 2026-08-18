@@ -75,7 +75,7 @@ export function DriversCenter() {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border/40">
-        <div className="flex items-center gap-4 px-5 sm:px-10 h-14 max-w-6xl mx-auto">
+        <div className="flex items-center gap-4 px-5 sm:px-10 sm:pl-24 h-14 max-w-6xl mx-auto">
           <Link href="/">
             <Button variant="ghost" size="sm" className="gap-1.5 -ml-2 text-muted-foreground">
               <ArrowLeft className="h-4 w-4" />
@@ -110,7 +110,7 @@ export function DriversCenter() {
         </div>
       </header>
 
-      <div className="px-5 sm:px-10 pt-10 pb-8">
+      <div className="px-5 sm:px-10 sm:pl-24 pt-10 pb-8">
         <div className="max-w-5xl mx-auto">
           <section className="mb-14 sm:mb-20">
             <h2 className="text-3xl sm:text-[2.5rem] font-bold leading-[1.15] tracking-tight">

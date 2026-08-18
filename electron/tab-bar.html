@@ -10,7 +10,7 @@
     --tab-active: #ffffff;
     --text: #1a2233;
     --text-muted: #6b7280;
-    --accent: #e8930c;
+    --accent: #4DE0B1;
     --border: #e8e2d6;
     --hover: #f0ece2;
   }
@@ -20,7 +20,7 @@
       --tab-active: #1a2333;
       --text: #ebe6da;
       --text-muted: #8a93a6;
-      --accent: #e8930c;
+      --accent: #4DE0B1;
       --border: #232e42;
       --hover: #16202f;
     }
@@ -33,16 +33,44 @@
     background: var(--bg);
     font-family: "Manrope", "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
     border-bottom: 1px solid var(--border);
+    padding: 0 6px;
+    gap: 4px;
   }
+
+  /* 左侧前进/后退/刷新控制 */
+  .nav-actions {
+    display: flex; align-items: center; gap: 2px;
+    flex-shrink: 0;
+  }
+  .nav-btn {
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 6px;
+    color: var(--text-muted);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  .nav-btn:hover { background: var(--hover); color: var(--text); }
+  .nav-btn:active { transform: scale(0.95); }
+
+  .nav-divider {
+    width: 1px; height: 16px;
+    background: var(--border);
+    margin: 0 4px;
+    flex-shrink: 0;
+  }
+
+  /* 标签栏 */
   .tabs {
     display: flex; align-items: flex-end;
     flex: 1; overflow: hidden;
-    padding: 6px 8px 0;
+    padding: 6px 4px 0;
     gap: 2px;
   }
   .tab {
     display: flex; align-items: center; gap: 6px;
-    max-width: 200px; min-width: 90px;
+    max-width: 180px; min-width: 80px;
     height: 34px;
     padding: 0 10px;
     border-radius: 8px 8px 0 0;
@@ -61,7 +89,7 @@
   }
   .tab.active::after {
     content: "";
-    position: absolute; left: 10px; right: 10px; bottom: 0;
+    position: absolute; left: 8px; right: 8px; bottom: 0;
     height: 2px;
     background: var(--accent);
     border-radius: 2px;
@@ -78,34 +106,69 @@
     color: var(--text-muted);
   }
   .tab .close:hover { background: rgba(120,120,120,.25); color: var(--text); }
+
   .newtab {
-    width: 30px; height: 30px;
-    margin: 0 8px;
+    width: 28px; height: 28px;
+    margin: 0 4px;
     display: flex; align-items: center; justify-content: center;
-    border-radius: 8px;
+    border-radius: 6px;
     color: var(--text-muted);
-    font-size: 18px;
+    font-size: 16px;
     cursor: pointer;
     flex-shrink: 0;
   }
   .newtab:hover { background: var(--hover); color: var(--accent); }
-  .favlink {
-    display: flex; align-items: center; gap: 5px;
-    height: 30px; padding: 0 10px;
-    margin-right: 10px;
-    border-radius: 8px;
+
+  /* 右侧功能操作区 */
+  .right-actions {
+    display: flex; align-items: center; gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .action-btn {
+    display: flex; align-items: center; gap: 4px;
+    height: 28px; padding: 0 9px;
+    border-radius: 6px;
     color: var(--text-muted);
     font-size: 12px;
+    font-weight: 500;
     cursor: pointer;
     flex-shrink: 0;
     border: 1px solid var(--border);
+    background: var(--tab-bg);
+    transition: all .15s ease;
   }
-  .favlink:hover { background: var(--hover); color: var(--accent); border-color: var(--accent); }
+  .action-btn:hover {
+    background: var(--hover);
+    color: var(--text);
+    border-color: var(--accent);
+  }
+  .action-btn:active { transform: scale(0.97); }
+
+  .action-btn.translate {
+    color: #4DE0B1;
+    border-color: rgba(77,224,177,0.35);
+    background: rgba(77,224,177,0.08);
+  }
+  .action-btn.translate:hover {
+    background: rgba(77,224,177,0.18);
+    border-color: #4DE0B1;
+  }
+  .action-btn.translate.active {
+    background: #4DE0B1;
+    color: #0b1320;
+    font-weight: 700;
+    border-color: #4DE0B1;
+    box-shadow: 0 0 12px rgba(77,224,177,0.45);
+  }
+
+  .action-btn.fav .star { color: #f59e0b; font-size: 13px; }
+
   .favtoast {
-    position: fixed; top: 7px; right: 210px;
+    position: fixed; top: 7px; right: 280px;
     padding: 5px 14px;
     border-radius: 8px;
-    font-size: 13px;
+    font-size: 12px;
     color: #fff;
     background: rgba(20, 26, 38, .92);
     box-shadow: 0 4px 16px rgba(0,0,0,.2);
@@ -115,21 +178,51 @@
     z-index: 99;
   }
   .favtoast.show { opacity: 1; transform: translateY(0); }
-  .favtoast .ok { color: #7dd87d; margin-right: 6px; }
-  .favtoast .dup { color: var(--accent); margin-right: 6px; }
-  .favlink .star { color: var(--accent); font-size: 14px; }
+  .favtoast .ok { color: #4DE0B1; margin-right: 6px; font-weight: bold; }
+  .favtoast .dup { color: #f59e0b; margin-right: 6px; }
 </style>
 </head>
 <body>
+  <!-- 左侧后退/前进/刷新 -->
+  <div class="nav-actions">
+    <div class="nav-btn" id="btn-back" title="后退 (Alt + ←)">◀</div>
+    <div class="nav-btn" id="btn-forward" title="前进 (Alt + →)">▶</div>
+    <div class="nav-btn" id="btn-reload" title="刷新页面 (F5 / Ctrl + R)">⟳</div>
+  </div>
+
+  <div class="nav-divider"></div>
+
+  <!-- 多标签栏 -->
   <div class="tabs" id="tabs"></div>
   <div class="newtab" id="newtab" title="新建标签页">+</div>
-  <div class="favlink" id="favlink" title="粘贴视频链接，自动识别并收藏">
-    <span class="star">&#9733;</span><span>收藏链接</span>
+
+  <div class="nav-divider"></div>
+
+  <!-- 右侧高级功能：翻译、外部浏览器打开、收藏 -->
+  <div class="right-actions">
+    <button class="action-btn translate" id="btn-translate" title="一键开启/关闭常驻网页翻译（切页与动态内容自动保持翻译）">
+      <span>🌐</span><span id="txt-translate">翻译网页</span>
+    </button>
+    <button class="action-btn" id="btn-external" title="在系统默认浏览器 (Edge / Chrome) 中打开当前网页">
+      <span>🧭</span><span>浏览器打开</span>
+    </button>
+    <button class="action-btn fav" id="favlink" title="粘贴视频或网页链接，自动识别并收藏">
+      <span class="star">&#9733;</span><span>收藏链接</span>
+    </button>
   </div>
+
 <script>
   const tabsEl = document.getElementById('tabs')
+  const btnTranslate = document.getElementById('btn-translate')
+  const txtTranslate = document.getElementById('txt-translate')
+
   document.getElementById('newtab').addEventListener('click', () => window.tabAPI.newTab())
   document.getElementById('favlink').addEventListener('click', () => window.tabAPI.favLink())
+  document.getElementById('btn-back').addEventListener('click', () => window.tabAPI.goBack && window.tabAPI.goBack())
+  document.getElementById('btn-forward').addEventListener('click', () => window.tabAPI.goForward && window.tabAPI.goForward())
+  document.getElementById('btn-reload').addEventListener('click', () => window.tabAPI.reload && window.tabAPI.reload())
+  btnTranslate.addEventListener('click', () => window.tabAPI.toggleTranslate && window.tabAPI.toggleTranslate())
+  document.getElementById('btn-external').addEventListener('click', () => window.tabAPI.openExternal && window.tabAPI.openExternal())
 
   function render(data) {
     tabsEl.innerHTML = ''
@@ -149,6 +242,15 @@
       el.addEventListener('click', () => window.tabAPI.activate(t.id))
       tabsEl.appendChild(el)
     })
+
+    // 翻译状态高亮更新
+    if (data.activeAutoTranslate) {
+      btnTranslate.classList.add('active')
+      txtTranslate.textContent = '自动翻译中'
+    } else {
+      btnTranslate.classList.remove('active')
+      txtTranslate.textContent = '翻译网页'
+    }
   }
 
   window.tabAPI.onUpdate(render)
@@ -172,6 +274,3 @@
   <div class="favtoast" id="favtoast"></div>
 </body>
 </html>
-
-
-

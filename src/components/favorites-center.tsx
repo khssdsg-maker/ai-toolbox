@@ -189,7 +189,7 @@ export function FavoritesCenter() {
 
       {/* 顶部导航与快捷操作栏 */}
       <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border/40">
-        <div className="flex items-center justify-between px-5 sm:px-10 h-14 max-w-6xl mx-auto">
+        <div className="flex items-center justify-between px-5 sm:px-10 sm:pl-24 h-14 max-w-6xl mx-auto">
           <div className="flex items-center gap-3">
             <Link href="/">
               <Button variant="ghost" size="sm" className="gap-1.5 -ml-2 text-muted-foreground hover:text-foreground">
@@ -234,7 +234,7 @@ export function FavoritesCenter() {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-5 sm:px-10 py-6 space-y-6">
+      <div className="max-w-6xl mx-auto px-5 sm:px-10 sm:pl-24 py-6 space-y-6">
         {/* 新增收藏表单面板 */}
         {showForm && (
           <form onSubmit={handleAdd} className="p-5 rounded-2xl bg-card border border-border/60 shadow-lg space-y-4 animate-in fade-in duration-200">
