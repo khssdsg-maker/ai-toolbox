@@ -132,7 +132,7 @@
   <div class="wrap nav-in">
     <div class="brand"><span class="brand-mark">AI</span>AI万能工具箱</div>
     <div class="nav-a">
-      <a href="#modules">功能</a>
+      <a href="#modules">功能视窗</a>
       <a href="https://github.com/khssdsg-maker/ai-toolbox" target="_blank">GitHub</a>
       <a href="#get" class="nav-dl">免费下载</a>
     </div>
@@ -146,7 +146,7 @@
     <div class="type-row mono">AI万能工具箱 for <span id="typer"></span><span class="cursor">|</span></div>
     <div class="badges">
       <span class="badge">🪟 Windows 10 / 11</span>
-      <span class="badge">📦 版本 <b>v1.4.4</b></span>
+      <span class="badge">📦 版本 <b>v1.5.5</b></span>
       <span class="badge">🆓 免费无广告</span>
       <span class="badge">🌐 网页版 + 桌面端</span>
     </div>
@@ -155,11 +155,11 @@
       <div class="window">
         <div class="window-bar">
           <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-          <span class="window-tab">我的收藏 · 应用内播放器</span>
+          <span class="window-tab">我的收藏 · 应用内直接播放</span>
         </div>
-        <img src="assets/fav-video-player.jpg" alt="收藏的 B站视频在应用内直接播放">
+        <img src="assets/fav-video-player.jpg" alt="从内置浏览器一键收藏，直接在收藏页看视频">
       </div>
-      <p class="hero-help">收藏的 B站 / YouTube 视频，点击卡片直接看，无需跳转浏览器 ↑</p>
+      <p class="hero-help">从内置浏览器一键收藏，直接在收藏页看视频，无需跳转外部浏览器 ↑</p>
     </figure>
 
     <div class="hero-cta">
@@ -174,7 +174,7 @@
   <div class="wrap">
     <div class="sec-head">
       <h2>点一个板块，看真实界面。</h2>
-      <span class="meta">APP SHOWCASE · 6 大模块</span>
+      <span class="meta">APP SHOWCASE · 7 大核心视窗</span>
     </div>
     <div class="sec-rule"></div>
 
@@ -186,7 +186,7 @@
           <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
           <span class="window-tab" id="shotTab"></span>
         </div>
-        <div class="shot-box"><img id="shotImg" src="assets/fav-video-player.jpg" alt="模块预览截图"></div>
+        <div class="shot-box"><img id="shotImg" src="assets/arena.jpg" alt="模块预览截图"></div>
       </div>
       <div class="shot-info">
         <h3 id="shotTitle"></h3>
@@ -235,7 +235,15 @@
 <script>
   // 打字机轮播副标题
   (function () {
-    const words = ['AI 工具导航', '收藏视频直接看', 'Convertio 文件转换', '驱动一键直达', '网络工具精选', '视频合集 26 站'];
+    const words = [
+      'AI 大模型多屏打擂',
+      '独立总审官双轮协同',
+      'AI 提示词灵感宝典',
+      '全网 AI 导航与常驻翻译',
+      '视频收藏应用内直接看',
+      'Convertio 300+ 格式转换',
+      '22+ 品牌官方驱动直达'
+    ];
     const el = document.getElementById('typer');
     let wi = 0, ci = 0, deleting = false;
     function tick() {
@@ -253,12 +261,62 @@
   // 模块速览：点击板块切换预览界面
   (function () {
     const MODULES = [
-      { tab: '视频收藏', win: '我的收藏 · 应用内播放器', img: 'assets/fav-video-player.jpg', title: '收藏的视频，点开就能看。', desc: '把 B站、YouTube 视频链接丢进收藏夹，自动变身带封面与角标的视频卡片，点击即唤起应用内播放器直接观看。', pills: ['B站自动抓封面', 'YouTube 缩略图', '弹窗直接播放', '旧书签自动升级'] },
-      { tab: '视频合集', win: '视频合集', img: 'assets/videos-hub.jpg', title: '影视与直播，26 站一站直达。', desc: '腾讯视频、芒果TV、西瓜视频等影视站台，与虎牙、斗鱼、B站直播等直播入口一个合集全装下，支持应用内全屏播放。', pills: ['腾讯视频', '芒果TV', '虎牙直播', '斗鱼直播', '咪咕体育'] },
-      { tab: 'AI 工具导航', win: '首页 · AI 工具目录', img: 'assets/home-ai.jpg', title: '99+ 精选 AI 工具与 Agent 平台。', desc: 'Google Antigravity、SillyTavern (3.1万★)、Claude Code、OpenAI Codex、Trae、ZCode 等全球与国产主流 AI 工具，真实 Favicon、常用置顶、拖拽重排。', pills: ['AI 编程 Agent', 'AI 写作小说', '设计绘画', '办公效率'] },
-      { tab: '文件转换', win: '文件转换 · Convertio', img: 'assets/convert.jpg', title: '应用内嵌 Convertio，300+ 格式互转。', desc: 'PDF、Word、Excel、PPT、图片、音视频、电子书应有尽有，桌面端应用内即点即转，无需安装任何软件。', pills: ['应用内直转', '拖拽即转', 'PDF ↔ Word', '免安装'] },
-      { tab: '驱动中心', win: '驱动工具中心', img: 'assets/drivers.jpg', title: '22+ 品牌官方驱动入口。', desc: '联想、戴尔、惠普、华硕等品牌官方驱动与 NVIDIA / AMD / Intel 显卡驱动，独家收录迈从、前行者、英菲克等国产键鼠外设官方直链。', pills: ['品牌官方直链', '显卡驱动', '键鼠外设', '安全无毒'] },
-      { tab: '网络工具', win: '网络工具导航', img: 'assets/tools.jpg', title: '10 款精选网络工具导航。', desc: '站长工具、ITDOG 多地测速、MXToolbox、DNSChecker、Ping.pe 等优质站点，Ping / DNS / IP / 端口检测一站直达，国内直连优先。', pills: ['国内直连', 'DNS 查询', '多地测速', '端口检测'] },
+      {
+        tab: '分屏打擂',
+        win: 'AI 大模型分屏打擂台 · 多屏竞速 (/arena)',
+        img: 'assets/arena.jpg',
+        title: '双栏拖拽、三栏竞速、四宫格矩阵，顶流模型同台竞技。',
+        desc: 'DeepSeek R1、Claude 3.5、ChatGPT-4o、通义千问、Kimi、豆包等顶流模型同台分屏，自由无级拖拽对比，支持自定义模型扩展与底层沙箱风控免疫。',
+        pills: ['多屏无级拖拽', '四宫格全矩阵', 'DeepSeek R1', '防风控免登录']
+      },
+      {
+        tab: '总审官中枢',
+        win: '独立总审官大模型双轮协同中枢',
+        img: 'assets/arbiter.jpg',
+        title: '左侧原始答卷池 vs 右侧独立总审官，双轮协同裁决。',
+        desc: '一轮初审专属分工 ➔ 二轮定向派发深化 ➔ 终极单一融合成品交付（神作交付），100% 动态提炼 Cursor / Cline / Dify 工业级 Agent 提示词。',
+        pills: ['双区研判协同', '双轮派发闭环', '终极神作交付', 'Agent提示词提炼']
+      },
+      {
+        tab: '提示词宝典',
+        win: 'AI 提示词灵感宝典 · 实战模板 (/prompts)',
+        img: 'assets/prompts.jpg',
+        title: '11 大顶尖平台导航 + 5 大高频场景结构化模板。',
+        desc: '涵盖网文小说、AI 编程架构、Midjourney 绘画咒语、小红书文案、学术深度思考，支持动态参数填空与一键秒级直达分屏打擂。',
+        pills: ['11大Prompt平台', '网文/编程/绘画模板', '动态参数填空', '一键直达分屏']
+      },
+      {
+        tab: 'AI 工具导航',
+        win: '首页 · 全网 AI 工具导航与常驻翻译',
+        img: 'assets/home-ai.jpg',
+        title: '数百款精选 AI 工具 + SPA 全自动常驻持续翻译。',
+        desc: '收录 Google Antigravity、SillyTavern (3.1万★) 开源小说专区、阿里通义万相多模态创作平台，内置浏览器支持滚动与切页全自动持续翻译。',
+        pills: ['全网精选导航', '全自动常驻翻译', '开源网文专区', '通义万相多模态']
+      },
+      {
+        tab: '视频收藏播放',
+        win: '我的收藏 · 内置浏览器一键收藏与原生播放 (/favorites)',
+        img: 'assets/fav-video-player.jpg',
+        title: '从内置浏览器一键收藏，直接在收藏页看视频。',
+        desc: '看视频随手收藏，自动解析 BV 号与高清封面，点击卡片直接弹出内置播放器沉浸式观看，彻底免去跳转外部浏览器与广告干扰。',
+        pills: ['内置浏览器一键收藏', '自动抓取高清封面', '收藏页直接播放', '免跳转无干扰']
+      },
+      {
+        tab: '文件转换',
+        win: '文件转换 · Convertio (/convert)',
+        img: 'assets/convert.jpg',
+        title: '应用内嵌 Convertio，300+ 格式即拖即转。',
+        desc: 'PDF、Word、Excel、PPT、图片、音视频、电子书应有尽有，桌面端应用内即点即转，无需安装任何繁杂软件。',
+        pills: ['应用内直转', '拖拽即转', 'PDF ↔ Word', '300+格式互转']
+      },
+      {
+        tab: '驱动与网络',
+        win: '驱动中心与精选网络工具 (/drivers & /tools)',
+        img: 'assets/drivers.jpg',
+        title: '22+ 品牌官方驱动直达 + 10 款国内直连测速。',
+        desc: '联想、戴尔、华硕、NVIDIA 显卡驱动，独家收录国产键鼠外设官方固件；精选站长工具、ITDOG 等国内直连 DNS / Ping / 端口检测导航。',
+        pills: ['品牌官方直链', '国产键鼠固件', '国内测速直连', '安全无毒']
+      }
     ];
     const tabbar = document.getElementById('tabbar');
     const img = document.getElementById('shotImg');
