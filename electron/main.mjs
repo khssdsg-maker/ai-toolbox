@@ -744,11 +744,88 @@ ipcMain.on('app:maximize', () => {
 ipcMain.on('app:close', () => {
   if (mainWindow && !mainWindow.isDestroyed()) mainWindow.close()
 })
+ipcMain.handle('app:is-maximized', () => {
+  return mainWindow && !mainWindow.isDestroyed() ? mainWindow.isMaximized() : false
+})
+
+// 真实网页元数据爬虫：提取目标网站真实 Title 与官方 Meta 简介
+ipcMain.handle('app:fetch-site-meta', async (e, targetUrl) => {
+  if (!targetUrl || typeof targetUrl !== 'string') return { title: '', description: '' }
+  try {
+    const rawUrl = targetUrl.startsWith('http') ? targetUrl : `https://${targetUrl}`
+    const parsed = new URL(rawUrl)
+    const res = await fetch(parsed.href, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8'
+      },
+      signal: AbortSignal.timeout(5000)
+    })
+    if (!res.ok) return { title: '', description: '' }
+    const html = await res.text()
+
+    // 提取 <title>
+    const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i)
+    let title = titleMatch ? titleMatch[1].trim() : ''
+
+    // 提取 <meta name="description"> 或 og:description
+    const descMatch =
+      html.match(/<meta[^>]+name=["'](?:description|Description)["'][^>]+content=["']([^"']+)["']/i) ||
+      html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["'](?:description|Description)["']/i) ||
+      html.match(/<meta[^>]+property=["'](?:og:description)["'][^>]+content=["']([^"']+)["']/i) ||
+      html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["'](?:og:description)["']/i)
+    let description = descMatch ? descMatch[1].trim() : ''
+
+    // 过滤 title 中的营销垃圾后缀（如 "- 官方网站", "| Official Site", "_首页"）
+    if (title) {
+      title = title.replace(/(\s*[-_–|·]\s*(官网|官方网站|官方平台|Official Site|Official Website|首页|Home|欢迎访问)).*$/i, '').trim()
+    }
+
+    return { title, description }
+  } catch (err) {
+    return { title: '', description: '' }
+  }
+})
+
+function getWindowStatePath() {
+  return path.join(app.getPath('userData'), 'window-state.json')
+}
+
+function loadSavedWindowState() {
+  try {
+    const p = getWindowStatePath()
+    if (fs.existsSync(p)) {
+      return JSON.parse(fs.readFileSync(p, 'utf8'))
+    }
+  } catch {}
+  return null
+}
+
+function saveWindowState() {
+  if (!mainWindow || mainWindow.isDestroyed()) return
+  try {
+    const isMax = mainWindow.isMaximized()
+    const bounds = typeof mainWindow.getNormalBounds === 'function' ? mainWindow.getNormalBounds() : mainWindow.getBounds()
+    const data = {
+      isMaximized: isMax,
+      x: bounds.x,
+      y: bounds.y,
+      width: bounds.width,
+      height: bounds.height
+    }
+    fs.writeFileSync(getWindowStatePath(), JSON.stringify(data, null, 2))
+  } catch {}
+}
 
 async function createWindow() {
+  const savedState = loadSavedWindowState() || {}
+
   mainWindow = new BrowserWindow({
-    width: 1400,
-    height: 900,
+    width: savedState.width || 1400,
+    height: savedState.height || 900,
+    x: savedState.x,
+    y: savedState.y,
     minWidth: 800,
     minHeight: 600,
     title: 'AI万能工具箱',
@@ -765,7 +842,18 @@ async function createWindow() {
     show: false,
   })
 
-  mainWindow.once('ready-to-show', () => mainWindow.show())
+  mainWindow.once('ready-to-show', () => {
+    if (savedState.isMaximized) {
+      mainWindow.maximize()
+    }
+    mainWindow.show()
+  })
+
+  mainWindow.on('resize', saveWindowState)
+  mainWindow.on('move', saveWindowState)
+  mainWindow.on('maximize', saveWindowState)
+  mainWindow.on('unmaximize', saveWindowState)
+  mainWindow.on('close', saveWindowState)
 
   // 主窗口防劫持铁闸：拦截并禁止任何外部网页跳转篡改主应用路由
   mainWindow.webContents.on('will-navigate', (e, targetUrl) => {

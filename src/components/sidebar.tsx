@@ -1,16 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { cn } from '@/lib/utils'
 import { Button } from '@/registry/new-york/ui/button'
 import { ScrollArea } from '@/registry/new-york/ui/scroll-area'
-import type { NavigationData } from '@/types/navigation'
+import type { NavigationData, NavigationItem } from '@/types/navigation'
 import type { SiteConfig } from '@/types/site'
 import * as LucideIcons from 'lucide-react'
-import { ChevronDown, ChevronRight, X, Settings, Home, MonitorPlay, ArrowRightLeft, Globe, HardDrive, Star, Sparkles, Columns2 } from 'lucide-react'
+import { ChevronDown, ChevronRight, X, Settings, Plus, GripVertical } from 'lucide-react'
 import { useLanguage } from '@/lib/language-context'
 import { SettingsDialog } from '@/components/settings-dialog'
 import { LanguageToggle } from '@/components/language-toggle'
@@ -19,24 +18,16 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   navigationData: NavigationData
   siteInfo: SiteConfig
   onClose?: () => void
+  onAddCategory?: () => void
+  onReorderCategories?: (reorderedItems: NavigationItem[]) => void
 }
 
-export function Sidebar({ className, navigationData, siteInfo, onClose }: SidebarProps) {
-  const pathname = usePathname()
+export function Sidebar({ className, navigationData, siteInfo, onClose, onAddCategory, onReorderCategories }: SidebarProps) {
   const { locale, t } = useLanguage()
   const [showSettings, setShowSettings] = useState(false)
 
-  // 功能模块入口（独立页面，不与 AI 工具分类混在一起）
-  const moduleLinks = [
-    { href: '/', label: t('AI 工具导航', 'AI Tools'), icon: Home },
-    { href: '/arena', label: t('AI分屏对比', 'AI Arena'), icon: Columns2 },
-    { href: '/prompts', label: t('提示词宝典', 'Prompts Hub'), icon: Sparkles },
-    { href: '/videos', label: t('视频合集', 'Videos'), icon: MonitorPlay },
-    { href: '/convert', label: t('文件转换', 'Convert'), icon: ArrowRightLeft },
-    { href: '/tools', label: t('网络工具箱', 'Network Tools'), icon: Globe },
-    { href: '/drivers', label: t('驱动中心', 'Drivers'), icon: HardDrive },
-    { href: '/favorites', label: t('我的收藏', 'Favorites'), icon: Star },
-  ]
+  // 🌟 分类拖拽重排状态
+  const [catDragState, setCatDragState] = useState<{ dragIdx: number; hoverIdx: number } | null>(null)
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id)
@@ -47,10 +38,7 @@ export function Sidebar({ className, navigationData, siteInfo, onClose }: Sideba
   }
 
   const handleCategoryClick = (categoryId: string) => {
-    // 先跳转到对应区域
     scrollToSection(categoryId)
-
-    // 如果有子分类，切换展开/收起状态
     const category = navigationData.navigationItems.find(cat => cat.id === categoryId)
     if (category?.subCategories && category.subCategories.length > 0) {
       toggleCategory(categoryId)
@@ -58,7 +46,7 @@ export function Sidebar({ className, navigationData, siteInfo, onClose }: Sideba
   }
 
   const renderIcon = (iconName?: string) => {
-    if (!iconName) return <LucideIcons.Folder className="h-4 w-4" />;
+    if (!iconName) return <LucideIcons.Folder className="h-4 w-4" />
 
     if (iconName.startsWith('/') || iconName.startsWith('http')) {
       return (
@@ -69,15 +57,13 @@ export function Sidebar({ className, navigationData, siteInfo, onClose }: Sideba
           height={16}
           className="h-4 w-4"
         />
-      );
+      )
     }
 
-    // Convert icon name to match Lucide icon component name
-    const IconComponent = (LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[iconName] || LucideIcons.Folder;
-    return <IconComponent className="h-4 w-4" />;
+    const IconComponent = (LucideIcons as unknown as Record<string, React.ComponentType<{ className?: string }>>)[iconName] || LucideIcons.Folder
+    return <IconComponent className="h-4 w-4" />
   }
 
-  // 使用对象存储每个分类的展开状态
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>(() => {
     return navigationData.navigationItems.reduce((acc, category) => {
       acc[category.id] = false
@@ -92,15 +78,36 @@ export function Sidebar({ className, navigationData, siteInfo, onClose }: Sideba
     }))
   }
 
-  // 判断当前路径是否匹配（首页精确匹配，其余前缀匹配）
-  const isActive = (href: string) => {
-    if (href === '/') return pathname === '/'
-    return pathname.startsWith(href)
+  // 🌟 分类拖拽排序处理
+  const handleCatDragStart = (e: React.DragEvent, idx: number) => {
+    e.dataTransfer.setData('text/plain', `cat-${idx}`)
+    setCatDragState({ dragIdx: idx, hoverIdx: idx })
+  }
+
+  const handleCatDragOver = (e: React.DragEvent, idx: number) => {
+    e.preventDefault()
+    if (!catDragState) return
+    if (catDragState.hoverIdx !== idx) {
+      setCatDragState(prev => prev ? { ...prev, hoverIdx: idx } : null)
+    }
+  }
+
+  const handleCatDragEnd = () => {
+    if (!catDragState) return
+    const { dragIdx, hoverIdx } = catDragState
+    if (dragIdx !== hoverIdx && onReorderCategories) {
+      const items = [...navigationData.navigationItems]
+      const [moved] = items.splice(dragIdx, 1)
+      items.splice(hoverIdx, 0, moved)
+      onReorderCategories(items)
+    }
+    setCatDragState(null)
   }
 
   return (
-    <div className={cn("w-64 bg-background", className)}>
-      <div className="flex h-14 items-center px-4">
+    <div className={cn("w-full bg-background flex flex-col h-full", className)}>
+      {/* 头部 Brand */}
+      <div className="flex h-14 items-center px-4 flex-shrink-0 border-b border-border/40">
         <Link href="/" className="flex items-center gap-2 font-semibold">
           {siteInfo.appearance.logo ? (
             <Image
@@ -113,10 +120,9 @@ export function Sidebar({ className, navigationData, siteInfo, onClose }: Sideba
           ) : (
             <LucideIcons.Globe className="h-6 w-6" />
           )}
-          <span>{siteInfo.basic.title}</span>
+          <span className="font-bold text-sm tracking-tight">{siteInfo.basic.title}</span>
         </Link>
 
-        {/* 移动模式下的关闭按钮 */}
         {onClose && (
           <Button
             variant="ghost"
@@ -130,109 +136,114 @@ export function Sidebar({ className, navigationData, siteInfo, onClose }: Sideba
         )}
       </div>
 
-      <ScrollArea className="h-[calc(100vh-7rem)] px-3 py-2">
-        {/* 功能模块（独立页面入口） */}
-        <p className="px-3 pt-1 pb-1.5 text-xs font-medium text-muted-foreground/60 tracking-wide">
-          {t('功能模块', 'MODULES')}
-        </p>
-        <div className="space-y-0.5 mb-3">
-          {moduleLinks.map((m) => {
-            const Icon = m.icon
-            const active = isActive(m.href)
+      {/* 纯粹专注的 AI 工具分类导航列表 */}
+      <ScrollArea className="flex-1 px-3 py-3">
+        <div className="flex items-center justify-between px-2 pb-2">
+          <p className="text-[11px] font-semibold text-muted-foreground/70 tracking-wider">
+            {t('AI 分类导航 (可拖拽排序)', 'AI CATEGORIES')}
+          </p>
+          {onAddCategory && (
+            <button
+              onClick={onAddCategory}
+              className="text-[11px] text-primary hover:underline flex items-center gap-0.5 cursor-pointer font-medium"
+              title={t('新建自定义分类', 'Add Custom Category')}
+            >
+              <Plus className="w-3 h-3" />
+              <span>{t('新建', 'New')}</span>
+            </button>
+          )}
+        </div>
+
+        <div className="space-y-0.5">
+          {navigationData.navigationItems.map((category, idx) => {
+            const isCustom = (category as NavigationItem & { isCustomCategory?: boolean }).isCustomCategory
+            const isDragging = catDragState?.dragIdx === idx
+
             return (
-              <Link key={m.href} href={m.href} onClick={() => onClose?.()}>
-                <Button
-                  variant="ghost"
-                  className={cn(
-                    "w-full justify-start gap-2 font-medium cursor-pointer",
-                    active
-                      ? "text-primary bg-primary/5 hover:bg-primary/10"
-                      : "text-muted-foreground hover:text-foreground"
+              <div
+                key={category.id}
+                draggable
+                onDragStart={(e) => handleCatDragStart(e, idx)}
+                onDragOver={(e) => handleCatDragOver(e, idx)}
+                onDragEnd={handleCatDragEnd}
+                className={cn(
+                  "py-0.5 rounded-lg transition-all duration-200 group relative",
+                  isDragging && "opacity-30 scale-95 border border-dashed border-primary"
+                )}
+              >
+                <div className="flex items-center">
+                  <div className="opacity-0 group-hover:opacity-40 transition-opacity cursor-grab text-muted-foreground pl-1 -mr-1">
+                    <GripVertical className="h-3 w-3" />
+                  </div>
+                  <Button
+                    variant="ghost"
+                    className="flex-1 justify-start gap-2 font-medium text-muted-foreground hover:text-foreground cursor-pointer h-8 text-xs group"
+                    onClick={() => handleCategoryClick(category.id)}
+                  >
+                    {renderIcon(category.icon)}
+                    <span className="truncate">{locale === 'en' && category.titleEn ? category.titleEn : category.title}</span>
+                    {isCustom && (
+                      <span className="ml-auto text-[9px] px-1.5 py-0.2 rounded bg-primary/10 text-primary border border-primary/20 flex-shrink-0">
+                        {t('自建', 'Custom')}
+                      </span>
+                    )}
+                  </Button>
+
+                  {category.subCategories && category.subCategories.length > 0 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="px-2 hover:bg-transparent cursor-pointer h-8"
+                      onClick={() => toggleCategory(category.id)}
+                    >
+                      {expandedCategories[category.id] ? (
+                        <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+                      ) : (
+                        <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
+                      )}
+                    </Button>
                   )}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span>{m.label}</span>
-                </Button>
-              </Link>
+                </div>
+
+                {category.subCategories && category.subCategories.length > 0 && (
+                  <div
+                    className={cn(
+                      "grid transition-all duration-200 ease-in-out pl-6",
+                      expandedCategories[category.id] ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                    )}
+                  >
+                    <div className="overflow-hidden space-y-0.5 py-1">
+                      {category.subCategories.map((sub) => (
+                        <Button
+                          key={sub.id}
+                          variant="ghost"
+                          className="w-full justify-start text-xs font-normal text-muted-foreground hover:text-foreground h-7 px-2"
+                          onClick={() => handleCategoryClick(sub.id)}
+                        >
+                          {sub.title}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             )
           })}
         </div>
-
-        <div className="h-px bg-border/40 mx-1 mb-3" />
-
-        {/* AI 工具分类（页面内定位） */}
-        <p className="px-3 pb-1.5 text-xs font-medium text-muted-foreground/60 tracking-wide">
-          {t('AI 工具分类', 'AI CATEGORIES')}
-        </p>
-        <div className="space-y-1">
-          {navigationData.navigationItems.map((category) => (
-            <div key={category.id} className="py-2">
-              <div className="flex items-center">
-                <Button
-                  variant="ghost"
-                  className="flex-1 justify-start gap-2 font-medium text-muted-foreground hover:text-foreground cursor-pointer"
-                  onClick={() => handleCategoryClick(category.id)}
-                >
-                  {renderIcon(category.icon)}
-                  <span>{locale === 'en' && category.titleEn ? category.titleEn : category.title}</span>
-                </Button>
-
-                {category.subCategories && category.subCategories.length > 0 && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="px-2 hover:bg-transparent cursor-pointer"
-                    onClick={() => toggleCategory(category.id)}
-                  >
-                    {expandedCategories[category.id] ? (
-                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                    ) : (
-                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                    )}
-                  </Button>
-                )}
-              </div>
-
-              {category.subCategories && category.subCategories.length > 0 && (
-                <div
-                  className={cn(
-                    "grid transition-all duration-200 ease-in-out",
-                    expandedCategories[category.id] ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-                  )}
-                >
-                  <div className="mt-1 ml-4 space-y-1 overflow-hidden">
-                    {category.subCategories.map((subCategory) => (
-                      <Button
-                        key={subCategory.id}
-                        variant="ghost"
-                        className="w-full justify-start pl-6 text-sm text-muted-foreground/80 hover:text-foreground cursor-pointer"
-                        onClick={() => {
-                          scrollToSection(subCategory.id)
-                          onClose?.()
-                        }}
-                      >
-                        <span>{subCategory.title}</span>
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
       </ScrollArea>
 
-      {/* 左下角：语言切换 + 设置 */}
-      <div className="h-14 flex items-center gap-1 px-3 border-t border-border/40">
+      {/* 底部设置与多语言 */}
+      <div className="p-3 border-t border-border/40 flex items-center justify-between flex-shrink-0 bg-muted/10">
+        <LanguageToggle />
         <Button
           variant="ghost"
-          className="gap-2 flex-1 justify-start text-muted-foreground hover:text-foreground hover:bg-muted/60 cursor-pointer"
+          size="icon"
           onClick={() => setShowSettings(true)}
+          className="h-8 w-8 hover:bg-accent/50 text-muted-foreground"
+          aria-label={t('设置', 'Settings')}
         >
           <Settings className="h-4 w-4" />
-          <span>{locale === 'en' ? 'Settings' : '设置'}</span>
         </Button>
-        <LanguageToggle />
       </div>
 
       <SettingsDialog open={showSettings} onClose={() => setShowSettings(false)} />

@@ -7,6 +7,7 @@ import { X, Settings2, Sun, Moon, Monitor, Github, ExternalLink, History, Sparkl
 import { Button } from '@/registry/new-york/ui/button'
 import { useTheme } from 'next-themes'
 import { useLanguage } from '@/lib/language-context'
+import { CAPSULE_THEMES, CapsuleThemeKey } from '@/components/floating-sidebar'
 
 interface BrowserInfo {
   name: string
@@ -33,6 +34,26 @@ interface ReleaseNote {
 }
 
 export const FALLBACK_RELEASE_NOTES: ReleaseNote[] = [
+  {
+    version: 'v1.5.6',
+    date: '2026-08-19',
+    title: '黄金三栏零重叠架构、胶囊岛 6 大高定动效主题与全自由拖拽排版',
+    titleEn: 'Zero-Overlap 3-Column Layout, 6 Animated Capsule Themes & Free Drag Reordering',
+    changes: [
+      '【黄金三栏零重叠】重构全局固定悬浮胶囊岛（left-3）、纯净 AI 分类侧边栏（left-58px）与主画卷内容（lg:pl-282px），各司其职绝对物理隔离，彻底根治文字遮挡与卡片重叠',
+      '【胶囊岛 6 大高定动效主题】还原经典赛博薄荷绿（生物荧光呼吸脉冲），新增深海极光蓝（极光流光+磁吸弹性）、赛博霓虹紫（全息扫光+霓虹辉光）、电光落日橙（太阳耀斑+熔岩微动）、樱花绯红粉（果冻水滴挤压+柔光绽放）、黑曜石钛金（金属镜面反光+机械吸附），支持调色盘与设置弹窗双通道秒切',
+      '【真实网页爬虫与二次自由编辑】添加工具时通过真实后台网络爬虫自动提取官方 <title> 与 <meta name="description"> 简介，100% 自由手动编辑，支持卡片悬浮「✏️ 二次编辑」',
+      '【独立自建分类与自由拖拽排版】增设独立「📁 新建分类」入口无需填网址秒建空分类；左侧栏分类与主页卡片均支持物理弹性拖拽重排与本地持久化记忆',
+      '【驱动中心真实官方 Logo 与 7 层防反爬嗅探】子域名清洗归一化 + 22+ 硬件大厂抗反爬高保真官方图标字典，状态栏「🌐 修复空白图标」与卡片「🔄 重新拉取」真实有效且 100% 保护好图标'
+    ],
+    changesEn: [
+      'Zero-Overlap 3-Column Layout: Reconstructed layout isolating Global Floating Capsule (left-3), Pure AI Category Sidebar (left-58px), and Main Canvas (lg:pl-282px) for zero visual overlap',
+      '6 Animated Capsule Themes: Restored classic Cyber Mint (bioluminescent pulse), added Aurora Blue (aurora shimmer + magnetic spring), Neon Cyber (holographic scan + neon beam), Sunset Ember (solar flare + lava motion), Sakura Bloom (jelly waterdrop + petal bloom), and Obsidian Pro (titanium metallic sheen + mechanical snap)',
+      'Real Web Scraper & In-Place Editing: Auto-extracts authentic <title> and meta descriptions with 100% manual editable inputs and in-place secondary editing',
+      'Standalone Custom Category & Physics Drag-and-Drop: Dedicated category creation without URL requirements, plus full drag-and-drop reordering for both categories and cards',
+      'Driver Center Official Logos & 7-Layer Anti-Crawler Engine: Root-domain normalizer + 22+ hardware brand vector dictionaries ensure authentic logos immune to WAF/404'
+    ]
+  },
   {
     version: 'v1.5.5',
     date: '2026-08-19',
@@ -460,6 +481,23 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
       .catch(() => {})
   }, [open])
 
+  const [capsuleTheme, setCapsuleTheme] = useState<CapsuleThemeKey>('mint')
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('ai-toolbox-capsule-theme') as CapsuleThemeKey
+      if (saved && CAPSULE_THEMES.some(t => t.key === saved)) setCapsuleTheme(saved)
+    } catch {}
+  }, [open])
+
+  const handleSetCapsuleTheme = (thKey: CapsuleThemeKey) => {
+    setCapsuleTheme(thKey)
+    try {
+      localStorage.setItem('ai-toolbox-capsule-theme', thKey)
+      window.dispatchEvent(new CustomEvent('ai-toolbox-capsule-theme-change', { detail: { theme: thKey } }))
+    } catch {}
+  }
+
   useEffect(() => { setMounted(true) }, [])
 
   if (!open || !mounted) return null
@@ -634,6 +672,44 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
                   >
                     <Icon className="h-4 w-4" />
                     <span className="text-xs">{opt.label}</span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* 胶囊岛高定主题与专属动效 */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-semibold">{t('胶囊岛动效与主题', 'Capsule Island Themes')}</h3>
+              <span className="text-[11px] text-muted-foreground">{t('6 款专属动画风格', '6 Unique Animation Styles')}</span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {CAPSULE_THEMES.map((th) => {
+                const isSelected = capsuleTheme === th.key
+                return (
+                  <button
+                    key={th.key}
+                    type="button"
+                    onClick={() => handleSetCapsuleTheme(th.key)}
+                    className={`flex items-start gap-2.5 p-2.5 rounded-xl border text-left transition-all ${
+                      isSelected
+                        ? 'border-primary bg-primary/5 text-foreground shadow-sm'
+                        : 'border-border/50 hover:border-border text-muted-foreground'
+                    }`}
+                  >
+                    <span
+                      className="w-3.5 h-3.5 rounded-full mt-0.5 flex-shrink-0 shadow-sm"
+                      style={{ backgroundColor: th.color }}
+                    />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-semibold truncate">
+                        {locale === 'en' ? th.nameEn : th.name}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground truncate leading-tight mt-0.5">
+                        {th.desc}
+                      </p>
+                    </div>
                   </button>
                 )
               })}

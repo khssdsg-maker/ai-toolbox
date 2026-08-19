@@ -161,3 +161,116 @@
 @media (max-width: 639px) {
   .desktop-sidebar { display: none !important; }
 }
+
+/* =========================================================================
+   🌟 胶囊岛 6 大高定主题专属动态动画引擎
+   ========================================================================= */
+
+/* 1. 🌿 赛博薄荷绿：生物荧光呼吸脉冲 (Bioluminescent Pulse) */
+@keyframes mintPulseAnim {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(77, 224, 177, 0.45), 0 0 24px rgba(77, 224, 177, 0.25);
+    transform: scale(1.04);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(77, 224, 177, 0.8), 0 0 45px rgba(77, 224, 177, 0.45);
+    transform: scale(1.08);
+  }
+}
+.theme-capsule-mint-active {
+  background-color: #4DE0B1 !important;
+  color: #020617 !important;
+  animation: mintPulseAnim 2.6s ease-in-out infinite;
+}
+
+/* 2. 🌌 深海极光蓝：极光多色流光 (Aurora Shift) */
+@keyframes auroraShiftAnim {
+  0% { background-position: 0% 50%; box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+  50% { background-position: 100% 50%; box-shadow: 0 0 28px rgba(6, 182, 212, 0.7); }
+  100% { background-position: 0% 50%; box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+}
+.theme-capsule-aurora-active {
+  background: linear-gradient(135deg, #3b82f6, #06b6d4, #6366f1, #3b82f6) !important;
+  background-size: 300% 300% !important;
+  color: #ffffff !important;
+  animation: auroraShiftAnim 4s ease infinite;
+  transform: scale(1.06);
+}
+
+/* 3. 🔮 赛博霓虹紫：全息扫描与霓虹辉光 (Neon Holo Glow) */
+@keyframes neonGlowAnim {
+  0%, 100% {
+    box-shadow: 0 0 15px #a855f7, 0 0 30px rgba(168, 85, 247, 0.4), inset 0 0 8px #c084fc;
+    border-color: #c084fc;
+  }
+  50% {
+    box-shadow: 0 0 25px #c084fc, 0 0 50px rgba(192, 132, 252, 0.6), inset 0 0 14px #e9d5ff;
+    border-color: #f3e8ff;
+  }
+}
+.theme-capsule-neon-active {
+  background: linear-gradient(135deg, #9333ea, #c084fc) !important;
+  color: #ffffff !important;
+  border: 1px solid #c084fc !important;
+  animation: neonGlowAnim 2s ease-in-out infinite;
+  transform: scale(1.05);
+}
+
+/* 4. ⚡ 电光落日橙：太阳耀斑与炽热熔岩微动 (Solar Flare) */
+@keyframes sunsetFlareAnim {
+  0%, 100% {
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.6), 0 0 32px rgba(239, 68, 68, 0.3);
+    background-position: 0% 50%;
+  }
+  50% {
+    box-shadow: 0 0 28px rgba(249, 115, 22, 0.85), 0 0 50px rgba(245, 158, 11, 0.5);
+    background-position: 100% 50%;
+  }
+}
+.theme-capsule-sunset-active {
+  background: linear-gradient(45deg, #ea580c, #f59e0b, #dc2626) !important;
+  background-size: 200% 200% !important;
+  color: #0f172a !important;
+  animation: sunsetFlareAnim 3s ease infinite;
+  transform: scale(1.06);
+}
+
+/* 5. 🌸 樱花绯红粉：果冻水滴挤压形变与柔光 (Jelly Waterdrop) */
+@keyframes jellyBounceAnim {
+  0%, 100% {
+    transform: scale(1.05, 1.05);
+    box-shadow: 0 0 16px rgba(236, 72, 153, 0.5), 0 0 30px rgba(244, 114, 182, 0.3);
+  }
+  30% {
+    transform: scale(1.12, 0.96);
+  }
+  60% {
+    transform: scale(0.96, 1.1);
+  }
+}
+.theme-capsule-sakura-active {
+  background: linear-gradient(135deg, #ec4899, #f472b6) !important;
+  color: #ffffff !important;
+  animation: jellyBounceAnim 2.8s ease-in-out infinite;
+}
+
+/* 6. 💎 黑曜石钛金：金属镜面拉丝扫掠 (Titanium Sheen) */
+@keyframes metallicSheenAnim {
+  0% {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3), 0 8px 20px rgba(0, 0, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.8), 0 12px 28px rgba(0, 0, 0, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3), 0 8px 20px rgba(0, 0, 0, 0.4);
+  }
+}
+.theme-capsule-obsidian-active {
+  background: linear-gradient(145deg, #334155, #0f172a) !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  animation: metallicSheenAnim 3s ease infinite;
+  transform: scale(1.04);
+}
+

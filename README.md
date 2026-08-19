@@ -5,7 +5,7 @@
 **面向未来的 AI 时代超级协同工作台与综合工具箱**
 多大模型同台打擂 · 独立总审官协同 · 灵感宝典 · 视频收藏直看 · 300+ 格式转换 · 官方驱动网络
 
-[![Release](https://img.shields.io/badge/Release-v1.5.5-blue.svg?style=flat-square)](https://github.com/khssdsg-maker/ai-toolbox/releases)
+[![Release](https://img.shields.io/badge/Release-v1.5.6-blue.svg?style=flat-square)](https://github.com/khssdsg-maker/ai-toolbox/releases)
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%2F%2011%20(64bit)-green.svg?style=flat-square)](https://github.com/khssdsg-maker/ai-toolbox/releases/latest)
 [![Framework](https://img.shields.io/badge/Tech-Next.js%2015%20%7C%20Electron-orange.svg?style=flat-square)](https://nextjs.org/)
 [![License](https://img.shields.io/badge/License-MIT-purple.svg?style=flat-square)](LICENSE)
@@ -69,15 +69,15 @@
       </p>
     </td>
     <td width="50%" align="center" valign="top">
-      <h3>🌐 视窗 ④：全网 AI 导航与常驻网页翻译</h3>
+      <h3>🌐 视窗 ④：全网 AI 导航与胶囊岛 6 大高定动效</h3>
       <a href="https://khssdsg-maker.github.io/ai-toolbox/#modules">
-        <img src="docs/assets/home-ai.jpg" alt="全网 AI 工具导航与常驻网页翻译" width="100%" style="border-radius: 8px; border: 1px solid #30363d;">
+        <img src="docs/assets/home-ai.jpg" alt="全网 AI 工具导航、自建分类与胶囊岛 6 大高定动效" width="100%" style="border-radius: 8px; border: 1px solid #30363d;">
       </a>
       <p align="left">
-        <b>数百款精选生态 · 开源小说 · 通义万相多模态</b><br>
-        • 覆盖 7 大分类，独家收录 SillyTavern (3.1万★ 酒馆) 与阿里通义万相多模态<br>
-        • 内置浏览器全自动常驻持续翻译：SPA 动态 DOM 监听 + 跨页面切页继承<br>
-        • 自动将新载入的英文毫秒级翻译为简体中文，彻底告别单次翻译丢失
+        <b>黄金三栏零重叠 · 胶囊岛 6 大动效 · 真实网页爬虫</b><br>
+        • 黄金三栏物理隔离（胶囊岛 + 独立分类栏 + 主画卷），彻底告别重叠与遮挡<br>
+        • 胶囊岛 6 大动效主题（赛博薄荷绿、深海极光蓝、赛博霓虹紫、电光落日橙、樱花绯红粉、黑曜石钛金）<br>
+        • 真实后台网页爬虫自动提取标题与简介，支持自建空分类与分类/卡片全自由物理弹性拖拽排版
       </p>
     </td>
   </tr>
