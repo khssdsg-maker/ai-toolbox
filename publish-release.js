@@ -2,6 +2,11 @@ const fs = require('fs')
 const path = require('path')
 const { execSync } = require('child_process')
 
+if (!process.env.HTTPS_PROXY && !process.env.https_proxy) {
+  process.env.HTTPS_PROXY = 'http://127.0.0.1:7890'
+  process.env.HTTP_PROXY = 'http://127.0.0.1:7890'
+}
+
 function run(cmd, opts = {}) {
   console.log(`\n> ${cmd}`)
   return execSync(cmd, { stdio: 'inherit', cwd: process.cwd(), ...opts })
