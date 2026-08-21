@@ -141,8 +141,8 @@ export function FloatingSidebar() {
     {
       key: 'convert',
       href: '/convert',
-      label: t('300+ 文件格式转换', 'File Convert'),
-      desc: t('内置 Convertio 引擎，支持文档、图片、音视频等 300+ 格式极速转换。', 'Convert 300+ document, image, audio & video formats instantly.'),
+      label: t('格式转换导航工作台', 'Format Converter Studio'),
+      desc: t('收录飞鼠格式离线神器、知网 CAJ 论文直转、Convertio 与谷歌本地图像压缩等。', 'Curated offline & online format converters including FlyingMouse, CAJ & Convertio.'),
       icon: ArrowRightLeft
     },
     {

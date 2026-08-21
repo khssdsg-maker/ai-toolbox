@@ -18,6 +18,7 @@ export interface NavigationSubItemRaw {
   icon?: string
   useDefaultIcon?: boolean
   enabled: boolean
+  tags?: string[]
   videoConfig?: VideoConfigRaw
 }
 
@@ -32,6 +33,7 @@ export interface NavigationSubItem {
   icon?: string
   useDefaultIcon?: boolean
   enabled: boolean
+  tags?: string[]
   videoConfig?: VideoConfig
 }
 

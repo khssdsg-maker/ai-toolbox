@@ -24,8 +24,14 @@ import {
   Globe,
   Compass,
   ArrowUpRight,
-  Columns2
+  Columns2,
+  Plus,
+  Trash2,
+  Edit3,
+  X,
+  RefreshCw
 } from 'lucide-react'
+import { Button } from '@/registry/new-york/ui/button'
 import { PROMPTS_DATA, PROMPT_CATEGORIES, PROMPT_PLATFORMS, type PromptItem, type PromptPlatform } from '@/data/prompts-data'
 import { SiteFavicon } from '@/components/site-favicon'
 import { useLanguage } from '@/lib/language-context'
@@ -41,6 +47,10 @@ const ICON_MAP: Record<string, React.ElementType> = {
   Star
 }
 
+export interface CustomPromptPlatform extends PromptPlatform {
+  isCustom?: boolean
+}
+
 export function PromptsCenter() {
   const { locale, t } = useLanguage()
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
@@ -49,17 +59,40 @@ export function PromptsCenter() {
   const [favorites, setFavorites] = useState<string[]>([])
   const [copiedId, setCopiedId] = useState<string | null>(null)
 
+  // 自定义提示词社区/站点
+  const [customPlatforms, setCustomPlatforms] = useState<CustomPromptPlatform[]>([])
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [formUrl, setFormUrl] = useState('')
+  const [formName, setFormName] = useState('')
+  const [formDesc, setFormDesc] = useState('')
+  const [formTag, setFormTag] = useState('自定义社区')
+  const [isFetchingMeta, setIsFetchingMeta] = useState(false)
+  const [toastMessage, setToastMessage] = useState('')
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg)
+    setTimeout(() => setToastMessage(''), 2500)
+  }
+
   // 变量状态缓存：{ [promptId]: { [variableKey]: value } }
   const [variableValues, setVariableValues] = useState<Record<string, Record<string, string>>>({})
   // 展开变量编辑器的 Prompt ID 集合
   const [expandedIds, setExpandedIds] = useState<Record<string, boolean>>({})
 
-  // 初始化收藏列表与变量默认值
+  // 初始化收藏列表、变量默认值与自定义平台
   useEffect(() => {
     try {
       const storedFavs = localStorage.getItem('ai_toolbox_prompt_favs')
       if (storedFavs) {
         setFavorites(JSON.parse(storedFavs))
+      }
+    } catch {}
+
+    try {
+      const savedPlatforms = localStorage.getItem('ai-toolbox-custom-prompts-tools')
+      if (savedPlatforms) {
+        setCustomPlatforms(JSON.parse(savedPlatforms))
       }
     } catch {}
 
@@ -160,11 +193,118 @@ export function PromptsCenter() {
     return Array.from(tagSet)
   }, [selectedCategory, favorites])
 
+  // 自动抓取网站元数据
+  const handleAutoFetchMeta = async (inputUrl: string, force = true) => {
+    const target = inputUrl.trim()
+    if (!target) return
+    const fullTarget = target.startsWith('http') ? target : `https://${target}`
+    setIsFetchingMeta(true)
+    try {
+      const api = (window as unknown as { appAPI?: { fetchSiteMeta?: (u: string) => Promise<{ title: string; description: string }> } }).appAPI
+      if (api && api.fetchSiteMeta) {
+        const meta = await api.fetchSiteMeta(fullTarget)
+        if (meta) {
+          if (meta.title && (force || !formName)) setFormName(meta.title)
+          if (meta.description && (force || !formDesc)) setFormDesc(meta.description)
+          if (force && (meta.title || meta.description)) {
+            showToast(t('✅ 已成功自动抓取站点名称与简介！', 'Scraped title & description!'))
+          }
+        }
+      } else {
+        try {
+          const u = new URL(fullTarget)
+          const host = u.hostname.replace(/^www\./, '')
+          const mainName = host.split('.')[0]
+          if (mainName && (force || !formName)) {
+            setFormName(mainName.charAt(0).toUpperCase() + mainName.slice(1))
+          }
+        } catch {}
+      }
+    } catch {
+    } finally {
+      setIsFetchingMeta(false)
+    }
+  }
+
+  const handleOpenAddPlatform = () => {
+    setEditingId(null)
+    setFormUrl('')
+    setFormName('')
+    setFormDesc('')
+    setFormTag('自定义社区')
+    setShowAddModal(true)
+  }
+
+  const handleOpenEditPlatform = (item: CustomPromptPlatform) => {
+    setEditingId(item.id)
+    setFormUrl(item.url)
+    setFormName(item.name)
+    setFormDesc(item.description || '')
+    setFormTag(item.tag || '自定义社区')
+    setShowAddModal(true)
+  }
+
+  const handleSavePlatform = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!formUrl.trim() || !formName.trim()) {
+      showToast(t('请填写站点名称与链接', 'Please fill name and URL'))
+      return
+    }
+
+    const fullUrl = formUrl.startsWith('http') ? formUrl.trim() : `https://${formUrl.trim()}`
+
+    if (editingId) {
+      const next = customPlatforms.map((p) => {
+        if (p.id === editingId) {
+          return {
+            ...p,
+            name: formName.trim(),
+            nameEn: formName.trim(),
+            url: fullUrl,
+            description: formDesc.trim(),
+            descriptionEn: formDesc.trim(),
+            tag: formTag.trim() || '自定义社区'
+          }
+        }
+        return p
+      })
+      setCustomPlatforms(next)
+      try { localStorage.setItem('ai-toolbox-custom-prompts-tools', JSON.stringify(next)) } catch {}
+      showToast(t(`✅ 已更新提示词站点「${formName.trim()}」！`, `Updated platform "${formName.trim()}"!`))
+    } else {
+      const newPlatform: CustomPromptPlatform = {
+        id: `custom-prompt-platform-${Date.now()}`,
+        name: formName.trim(),
+        nameEn: formName.trim(),
+        url: fullUrl,
+        description: formDesc.trim(),
+        descriptionEn: formDesc.trim(),
+        tag: formTag.trim() || '自定义社区',
+        isCustom: true
+      }
+      const next = [...customPlatforms, newPlatform]
+      setCustomPlatforms(next)
+      try { localStorage.setItem('ai-toolbox-custom-prompts-tools', JSON.stringify(next)) } catch {}
+      showToast(t(`✅ 已成功添加提示词站点「${newPlatform.name}」！`, `Added platform "${newPlatform.name}"!`))
+    }
+
+    setShowAddModal(false)
+    setEditingId(null)
+  }
+
+  const handleDeletePlatform = (id: string) => {
+    const next = customPlatforms.filter((p) => p.id !== id)
+    setCustomPlatforms(next)
+    try { localStorage.setItem('ai-toolbox-custom-prompts-tools', JSON.stringify(next)) } catch {}
+    showToast(t('已删除自定义提示词站点', 'Custom platform deleted'))
+  }
+
   // 过滤展示的提示词平台导航
   const filteredPlatforms = useMemo(() => {
-    if (!searchQuery.trim()) return PROMPT_PLATFORMS
+    const combined = [...PROMPT_PLATFORMS, ...customPlatforms]
+    if (!searchQuery.trim()) return combined
     const query = searchQuery.toLowerCase().trim()
-    return PROMPT_PLATFORMS.filter((p) => {
+    return combined.filter((p) => {
       return (
         p.name.toLowerCase().includes(query) ||
         p.nameEn.toLowerCase().includes(query) ||
@@ -173,7 +313,7 @@ export function PromptsCenter() {
         p.url.toLowerCase().includes(query)
       )
     })
-  }, [searchQuery])
+  }, [searchQuery, customPlatforms])
 
   // 过滤展示的提示词模板列表
   const filteredPrompts = useMemo(() => {
@@ -205,7 +345,116 @@ export function PromptsCenter() {
   }, [selectedCategory, selectedTag, searchQuery, favorites])
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:pl-24 py-6 space-y-7">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:pl-24 py-6 space-y-7 relative">
+      {/* 全局反馈 Toast */}
+      {toastMessage && (
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-[110] px-4 py-2 bg-foreground text-background text-xs font-semibold rounded-full shadow-lg border border-border/20 animate-in fade-in slide-in-from-top-2 duration-150 pointer-events-none">
+          {toastMessage}
+        </div>
+      )}
+
+      {/* 新增/编辑提示词社区弹窗 */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={() => setShowAddModal(false)}>
+          <div
+            className="w-full max-w-md bg-card border border-border/70 rounded-2xl shadow-2xl p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150 select-none"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-border/40 pb-3">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-primary" />
+                <h3 className="text-base font-bold text-foreground">
+                  {editingId ? t('编辑提示词站点/社区', 'Edit Prompt Platform') : t('添加自定义提示词站点', 'Add Prompt Platform')}
+                </h3>
+              </div>
+              <button onClick={() => setShowAddModal(false)} className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSavePlatform} className="space-y-4">
+              <div>
+                <label className="text-xs font-semibold text-foreground mb-1 block">
+                  {t('站点网址', 'Website URL')} *
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    required
+                    placeholder="https://..."
+                    value={formUrl}
+                    onChange={(e) => setFormUrl(e.target.value)}
+                    onBlur={() => { if (formUrl && (!formName || !formDesc)) handleAutoFetchMeta(formUrl, false) }}
+                    className="flex-1 px-3 py-2 text-xs rounded-xl bg-muted/40 border border-border/60 focus:outline-hidden focus:ring-1 focus:ring-primary"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={!formUrl.trim() || isFetchingMeta}
+                    onClick={() => handleAutoFetchMeta(formUrl, true)}
+                    className="h-8 text-xs gap-1 flex-shrink-0"
+                  >
+                    <RefreshCw className={`h-3 w-3 ${isFetchingMeta ? 'animate-spin' : ''}`} />
+                    <span>{isFetchingMeta ? t('抓取中...', 'Fetching...') : t('智能抓取', 'Auto Fetch')}</span>
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-foreground mb-1 block">
+                  {t('站点名称', 'Platform Name')} *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder={t('如：FlowGPT 提示词社区', 'e.g. FlowGPT')}
+                  value={formName}
+                  onChange={(e) => setFormName(e.target.value)}
+                  className="w-full px-3 py-2 text-xs rounded-xl bg-muted/40 border border-border/60 focus:outline-hidden focus:ring-1 focus:ring-primary"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-foreground mb-1 block">
+                  {t('站点简介 / 核心特色', 'Description')}
+                </label>
+                <input
+                  type="text"
+                  placeholder={t('如：全球活跃的 AI 提示词分享与互动社区', 'e.g. Active global prompt sharing hub')}
+                  value={formDesc}
+                  onChange={(e) => setFormDesc(e.target.value)}
+                  className="w-full px-3 py-2 text-xs rounded-xl bg-muted/40 border border-border/60 focus:outline-hidden focus:ring-1 focus:ring-primary"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-foreground mb-1 block">
+                  {t('分类标签', 'Tag')}
+                </label>
+                <input
+                  type="text"
+                  placeholder={t('如：提示词库 / 社区生态 / 实战教程', 'e.g. Library / Community')}
+                  value={formTag}
+                  onChange={(e) => setFormTag(e.target.value)}
+                  className="w-full px-3 py-2 text-xs rounded-xl bg-muted/40 border border-border/60 focus:outline-hidden focus:ring-1 focus:ring-primary"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-border/40">
+                <Button type="button" variant="ghost" size="sm" onClick={() => setShowAddModal(false)} className="h-8 text-xs">
+                  {t('取消', 'Cancel')}
+                </Button>
+                <Button type="submit" size="sm" className="h-8 text-xs gap-1 bg-primary text-primary-foreground">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span>{editingId ? t('保存修改', 'Save Changes') : t('立即添加', 'Add Platform')}</span>
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* 顶部快捷返回条 */}
       <div className="flex items-center justify-between">
         <Link
@@ -215,21 +464,29 @@ export function PromptsCenter() {
           <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" />
           <span>{t('返回工具箱首页', 'Back to Home')}</span>
         </Link>
+        <Button
+          onClick={handleOpenAddPlatform}
+          size="sm"
+          className="gap-1.5 text-xs h-8 bg-primary text-primary-foreground font-medium shadow-xs"
+        >
+          <Plus className="h-3.5 w-3.5" />
+          <span>{t('➕ 添加提示词站点', 'Add Prompt Site')}</span>
+        </Button>
       </div>
 
       {/* 顶部标题横幅 */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-card via-card/90 to-primary/5 border border-border/60 p-6 sm:p-8 shadow-sm">
-        <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-card via-card to-primary/5 border border-border/60 p-6 sm:p-8 shadow-sm">
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="space-y-2">
-            <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-primary/10 text-primary border border-primary/20">
-                <Sparkles className="w-6 h-6" />
+            <div className="flex items-center gap-2">
+              <div className="p-2 rounded-xl bg-primary/10 text-primary">
+                <Sparkles className="w-5 h-5" />
               </div>
               <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
                 {t('AI 提示词灵感宝典', 'AI Prompts Hub')}
               </h1>
               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
-                {PROMPT_PLATFORMS.length} {t('大主流平台', 'Platforms')} · {PROMPTS_DATA.length} {t('条精选模板', 'Templates')}
+                {filteredPlatforms.length} {t('大主流平台', 'Platforms')} · {PROMPTS_DATA.length} {t('条精选模板', 'Templates')}
               </span>
             </div>
             <p className="text-sm sm:text-base text-muted-foreground max-w-2xl leading-relaxed">
@@ -278,44 +535,83 @@ export function PromptsCenter() {
               （{t('点击卡片直达外部海量 Prompt 社区', 'Click to explore external prompt communities')}）
             </span>
           </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleOpenAddPlatform}
+            className="h-7 text-xs text-muted-foreground hover:text-primary gap-1"
+          >
+            <Plus className="h-3 w-3" />
+            <span>{t('添加站点', 'Add Site')}</span>
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3.5">
           {filteredPlatforms.map((platform) => (
-            <a
-              key={platform.id}
-              href={platform.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative flex flex-col justify-between p-3.5 rounded-xl bg-card border border-border/50 hover:border-primary/50 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5"
-            >
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0 bg-muted/60 flex items-center justify-center">
-                      <SiteFavicon title={platform.name} href={platform.url} className="w-full h-full object-contain" />
+            <div key={platform.id} className="relative group">
+              <a
+                href={platform.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col justify-between p-3.5 rounded-xl bg-card border border-border/50 hover:border-primary/50 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 h-full"
+              >
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0 bg-muted/60 flex items-center justify-center">
+                        <SiteFavicon title={platform.name} href={platform.url} className="w-full h-full object-contain" />
+                      </div>
+                      <span className="font-semibold text-xs sm:text-sm text-foreground truncate group-hover:text-primary transition-colors">
+                        {locale === 'en' ? platform.nameEn : platform.name}
+                      </span>
                     </div>
-                    <span className="font-semibold text-xs sm:text-sm text-foreground truncate group-hover:text-primary transition-colors">
-                      {locale === 'en' ? platform.nameEn : platform.name}
-                    </span>
+                    <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all flex-shrink-0" />
                   </div>
-                  <ArrowUpRight className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all flex-shrink-0" />
+
+                  <p className="text-[12px] text-muted-foreground/85 leading-relaxed line-clamp-2">
+                    {locale === 'en' ? platform.descriptionEn : platform.description}
+                  </p>
                 </div>
 
-                <p className="text-[12px] text-muted-foreground/85 leading-relaxed line-clamp-2">
-                  {locale === 'en' ? platform.descriptionEn : platform.description}
-                </p>
-              </div>
+                <div className="pt-2 mt-2 border-t border-border/40 flex items-center justify-between">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-medium bg-primary/10 text-primary border border-primary/20">
+                    {platform.tag}
+                  </span>
+                  <span className="text-[11px] text-muted-foreground/60 group-hover:text-primary flex items-center gap-0.5 transition-colors">
+                    {t('直达', 'Open')} <ExternalLink className="w-2.5 h-2.5 ml-0.5" />
+                  </span>
+                </div>
+              </a>
 
-              <div className="pt-2 mt-2 border-t border-border/40 flex items-center justify-between">
-                <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-medium bg-primary/10 text-primary border border-primary/20">
-                  {platform.tag}
-                </span>
-                <span className="text-[11px] text-muted-foreground/60 group-hover:text-primary flex items-center gap-0.5 transition-colors">
-                  {t('直达', 'Open')} <ExternalLink className="w-2.5 h-2.5 ml-0.5" />
-                </span>
-              </div>
-            </a>
+              {(platform as CustomPromptPlatform).isCustom && (
+                <div className="absolute top-2 right-2 z-20 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity bg-card/95 backdrop-blur-xs p-0.5 rounded-md border border-border/50 shadow-xs">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      handleOpenEditPlatform(platform as CustomPromptPlatform)
+                    }}
+                    className="p-1 rounded text-muted-foreground hover:text-primary hover:bg-muted"
+                    title={t('编辑', 'Edit')}
+                  >
+                    <Edit3 className="h-3.5 w-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      handleDeletePlatform(platform.id)
+                    }}
+                    className="p-1 rounded text-muted-foreground hover:text-red-500 hover:bg-red-500/10"
+                    title={t('删除', 'Delete')}
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              )}
+            </div>
           ))}
         </div>
       </section>

@@ -126,6 +126,188 @@
     --sidebar-border: 222 25% 16%;
     --sidebar-ring: 33 92% 55%;
   }
+
+  /* =========================================================================
+     🌈 6 大全局界面氛围主题 (UI Accent Themes)
+     ========================================================================= */
+  /* 1. 🌿 赛博薄荷 (Cyber Mint) */
+  :root[data-ui-theme="mint"] {
+    --primary: 162 73% 40%;
+    --primary-foreground: 0 0% 100%;
+    --ring: 162 73% 45%;
+    --accent: 162 73% 45%;
+  }
+  .dark[data-ui-theme="mint"], [data-ui-theme="mint"] .dark {
+    --primary: 162 73% 52%;
+    --primary-foreground: 222 35% 7%;
+    --ring: 162 73% 52%;
+    --accent: 162 73% 52%;
+  }
+
+  /* 2. 🌊 深海极光 (Aurora Blue) */
+  :root[data-ui-theme="aurora"] {
+    --primary: 217 91% 52%;
+    --primary-foreground: 0 0% 100%;
+    --ring: 217 91% 58%;
+    --accent: 217 91% 58%;
+  }
+  .dark[data-ui-theme="aurora"], [data-ui-theme="aurora"] .dark {
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 35% 7%;
+    --ring: 217 91% 60%;
+    --accent: 217 91% 60%;
+  }
+
+  /* 3. 🔮 赛博霓虹 (Neon Cyber) */
+  :root[data-ui-theme="neon"] {
+    --primary: 271 91% 56%;
+    --primary-foreground: 0 0% 100%;
+    --ring: 271 91% 65%;
+    --accent: 271 91% 65%;
+  }
+  .dark[data-ui-theme="neon"], [data-ui-theme="neon"] .dark {
+    --primary: 271 91% 65%;
+    --primary-foreground: 222 35% 7%;
+    --ring: 271 91% 65%;
+    --accent: 271 91% 65%;
+  }
+
+  /* 4. ⚡ 电光落日 (Sunset Ember) */
+  :root[data-ui-theme="sunset"] {
+    --primary: 28 95% 48%;
+    --primary-foreground: 0 0% 100%;
+    --ring: 33 92% 55%;
+    --accent: 33 92% 55%;
+  }
+  .dark[data-ui-theme="sunset"], [data-ui-theme="sunset"] .dark {
+    --primary: 33 92% 55%;
+    --primary-foreground: 222 35% 7%;
+    --ring: 33 92% 55%;
+    --accent: 33 92% 55%;
+  }
+
+  /* 5. 🌸 樱花绯红 (Sakura Bloom) */
+  :root[data-ui-theme="sakura"] {
+    --primary: 330 81% 55%;
+    --primary-foreground: 0 0% 100%;
+    --ring: 330 81% 65%;
+    --accent: 330 81% 65%;
+  }
+  .dark[data-ui-theme="sakura"], [data-ui-theme="sakura"] .dark {
+    --primary: 330 81% 65%;
+    --primary-foreground: 222 35% 7%;
+    --ring: 330 81% 65%;
+    --accent: 330 81% 65%;
+  }
+
+  /* 6. 💎 黑曜钛金 (Obsidian Pro) */
+  :root[data-ui-theme="obsidian"] {
+    --primary: 215 25% 35%;
+    --primary-foreground: 0 0% 100%;
+    --ring: 215 25% 55%;
+    --accent: 215 25% 55%;
+  }
+  .dark[data-ui-theme="obsidian"], [data-ui-theme="obsidian"] .dark {
+    --primary: 215 20% 75%;
+    --primary-foreground: 222 35% 7%;
+    --ring: 215 20% 75%;
+    --accent: 215 20% 75%;
+  }
+}
+
+/* =========================================================================
+   ✨ 亚克力毛玻璃透明界面引擎 (Glassmorphism Mode) 与 原生桌面透视
+   ========================================================================= */
+html[data-glass-mode="true"],
+html[data-glass-mode="true"] body,
+body.glass-mode {
+  background-color: transparent !important;
+}
+
+html[data-glass-mode="true"] .min-h-screen,
+body.glass-mode .min-h-screen,
+html[data-glass-mode="true"] main,
+body.glass-mode main {
+  background-color: transparent !important;
+}
+
+html[data-glass-mode="true"] .bg-background,
+body.glass-mode .bg-background {
+  background-color: hsla(var(--background) / var(--glass-bg-opacity, 0.05)) !important;
+}
+
+/* 🌟 左侧栏与侧边导航：浮空亚克力磨砂玻璃 */
+html[data-glass-mode="true"] aside,
+body.glass-mode aside {
+  background-color: hsla(var(--background) / var(--glass-card-opacity, 0.45)) !important;
+  backdrop-filter: blur(var(--glass-blur, 24px)) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur, 24px)) !important;
+  border-right-color: rgba(255, 255, 255, 0.1) !important;
+}
+.dark[data-glass-mode="true"] aside,
+html.dark[data-glass-mode="true"] aside {
+  border-right-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* 🌟 顶部导航栏：浮空超薄晶体条 */
+html[data-glass-mode="true"] header,
+body.glass-mode header {
+  background-color: hsla(var(--background) / var(--glass-card-opacity, 0.4)) !important;
+  backdrop-filter: blur(var(--glass-blur, 24px)) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur, 24px)) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+.dark[data-glass-mode="true"] header,
+html.dark[data-glass-mode="true"] header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+/* 🌟 Linear / Raycast 级悬浮晶体磨砂卡片 */
+html[data-glass-mode="true"] .bg-card,
+body.glass-mode .bg-card {
+  background-color: hsla(var(--card) / var(--glass-card-opacity, 0.5)) !important;
+  backdrop-filter: blur(var(--glass-blur, 16px)) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+.dark[data-glass-mode="true"] .bg-card,
+html.dark[data-glass-mode="true"] .bg-card {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25) !important;
+}
+
+/* 🌟 全局羽化微光消融分隔线 (Feathered Divider) */
+.feathered-divider {
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent 0%, hsla(var(--border) / 0.65) 20%, hsla(var(--border) / 0.65) 80%, transparent 100%) !important;
+  border: none !important;
+}
+
+/* =========================================================================
+   🌌 动态环境流体光幕轨道引擎 (Ambient Fluid Orbs Animation)
+   ========================================================================= */
+@keyframes orbMove1 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(90px, -70px, 0) scale(1.18); }
+  66% { transform: translate3d(-70px, 60px, 0) scale(0.92); }
+}
+
+@keyframes orbMove2 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(-100px, 80px, 0) scale(1.15); }
+  66% { transform: translate3d(80px, -60px, 0) scale(0.88); }
+}
+
+@keyframes orbMove3 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(80px, 90px, 0) scale(1.22); }
+}
+
+@keyframes orbMove4 {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(0.92); }
+  50% { transform: translate3d(-80px, -80px, 0) scale(1.12); }
 }
 
 @layer base {

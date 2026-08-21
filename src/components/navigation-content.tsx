@@ -95,7 +95,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
   }, [])
 
   // 真实网页元数据抓取：调用 Electron 后台真实爬虫提取 Title 与 Meta 简介
-  const handleAutoFetchMeta = async (urlToFetch?: string) => {
+  const handleAutoFetchMeta = async (urlToFetch?: string, force = false) => {
     const target = urlToFetch || formUrl
     if (!target || !target.trim()) return
     setIsFetchingMeta(true)
@@ -110,15 +110,18 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
       if (api && api.fetchSiteMeta) {
         const meta = await api.fetchSiteMeta(target.trim())
         if (meta) {
-          if (meta.title && !formTitle) setFormTitle(meta.title)
-          if (meta.description && !formDesc) setFormDesc(meta.description)
+          if (meta.title && (force || !formTitle)) setFormTitle(meta.title)
+          if (meta.description && (force || !formDesc)) setFormDesc(meta.description)
+          if (force) {
+            showToast(t('✅ 成功抓取官方标题与简介！', 'Successfully extracted site title & description!'))
+          }
         }
       } else {
         try {
           const u = new URL(target.startsWith('http') ? target : `https://${target}`)
           const host = u.hostname.replace(/^www\./, '')
           const mainName = host.split('.')[0]
-          if (mainName && !formTitle) {
+          if (mainName && (force || !formTitle)) {
             setFormTitle(mainName.charAt(0).toUpperCase() + mainName.slice(1))
           }
         } catch {}
@@ -133,7 +136,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
   // 监听网址输入，失去焦点自动触发真实爬虫
   const handleUrlBlur = () => {
     if (formUrl && (!formTitle || !formDesc)) {
-      handleAutoFetchMeta()
+      handleAutoFetchMeta(formUrl, false)
     }
   }
 
@@ -461,7 +464,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
       {/* 🌟 左侧栏：fixed 物理固定，位于胶囊岛右侧，完全独立，彻底杜绝重叠！ */}
       <aside
         className={cn(
-          'fixed top-0 bottom-0 left-0 sm:left-[58px] z-40 w-56 border-r border-border/40 bg-background/95 backdrop-blur-xl transition-transform duration-300 ease-in-out',
+          'fixed top-0 bottom-0 left-0 sm:left-[58px] z-40 w-56 border-r border-border/30 bg-background/85 backdrop-blur-2xl transition-transform duration-300 ease-in-out',
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >
@@ -479,7 +482,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
         {/* 顶部导航栏 */}
         <header
           style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}
-          className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border/40 select-none"
+          className="sticky top-0 z-30 bg-background/70 backdrop-blur-2xl border-b border-border/30 select-none"
         >
           <div className="flex items-center gap-2.5 px-4 sm:px-8 h-14">
             <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties} className="flex-1 min-w-0">
@@ -604,7 +607,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
                       </button>
                     </div>
 
-                    <div className="mt-1 mb-4 border-b border-border/40" />
+                    <div className="mt-1.5 mb-4 feathered-divider" />
 
                     {/* 工具卡片列表 */}
                     {categoryItems.length > 0 ? (
@@ -767,7 +770,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
                   </label>
                   <button
                     type="button"
-                    onClick={() => handleAutoFetchMeta()}
+                    onClick={() => handleAutoFetchMeta(formUrl, true)}
                     disabled={!formUrl || isFetchingMeta}
                     className="text-[11px] font-medium text-primary hover:underline flex items-center gap-1 disabled:opacity-40"
                   >

@@ -113,15 +113,13 @@ export function FavoritesCenter() {
     showToast(t('添加成功！', 'Added successfully!'))
   }
 
-  // 删除收藏
+  // 删除收藏（确保同时从主进程 favorites.json 与浏览器 localStorage 双向彻底清理）
   const handleRemove = async (fav: MergedFavorite) => {
-    if (fav._source === 'server') {
-      try {
-        await fetch(`/favorites-data?id=${encodeURIComponent(fav.id)}`, { method: 'DELETE' })
-      } catch {}
-    } else {
-      removeFavorite(fav.id)
-    }
+    try {
+      await fetch(`/favorites-data?id=${encodeURIComponent(fav.id)}`, { method: 'DELETE' })
+    } catch {}
+    removeFavorite(fav.id)
+    if (fav.href) removeFavorite(fav.href)
     loadFavorites()
     showToast(t('已从收藏删除', 'Removed from favorites'))
   }

@@ -203,7 +203,7 @@ pnpm exec tsc --noEmit
 
 ## 📄 开源许可
 
-本项目基于 NavSphere 开源项目深度二次开发与架构重构，遵循 [MIT License](LICENSE)。
+本项目完全开源并遵循 [MIT License](LICENSE)。
 
 <div align="center">
   <sub>Made with ❤️ for all AI Creators & Power Users</sub>

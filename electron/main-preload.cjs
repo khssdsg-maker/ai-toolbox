@@ -13,6 +13,9 @@ contextBridge.exposeInMainWorld('appAPI', {
   windowClose: () => ipcRenderer.send('app:close'),
   isWindowMaximized: () => ipcRenderer.invoke('app:is-maximized'),
   fetchSiteMeta: (url) => ipcRenderer.invoke('app:fetch-site-meta', url),
+  openDataFolder: () => ipcRenderer.invoke('app:open-data-folder'),
   startDownloadUpdate: () => ipcRenderer.invoke('app:start-download-update'),
   onDownloadProgress: (cb) => ipcRenderer.on('update:download-progress', (e, percent) => cb(percent)),
+  scanWallpaperEngine: (customDir) => ipcRenderer.invoke('app:scan-wallpaper-engine', customDir),
+  selectWallpaperFolder: () => ipcRenderer.invoke('app:select-wallpaper-folder'),
 })

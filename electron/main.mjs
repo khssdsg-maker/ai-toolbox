@@ -18,6 +18,13 @@ protocol.registerSchemesAsPrivileged([
 ])
 
 
+// 锁定用户数据根目录（确保跨版本无损保留收藏 favorites.json、自建工具与登录态）
+try {
+  const customUserData = path.join(app.getPath('appData'), 'navsphere')
+  if (!fs.existsSync(customUserData)) fs.mkdirSync(customUserData, { recursive: true })
+  app.setPath('userData', customUserData)
+} catch {}
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const isDev = process.env.NODE_ENV === 'development'
 const PORT = 3456
@@ -38,6 +45,10 @@ if (!gotTheLock) {
 }
 
 ipcMain.handle('app:get-version', () => app.getVersion())
+ipcMain.handle('app:open-data-folder', () => {
+  const dir = app.getPath('userData')
+  shell.openPath(dir)
+})
 
 ipcMain.handle('app:check-updates', async () => {
   const currentVersion = app.getVersion()
@@ -705,6 +716,45 @@ function startStaticServer(rootDir) {
         res.end(JSON.stringify(readFavFile()))
         return
       }
+      if (urlPath === '/local-media') {
+        const targetPath = parsedUrl.searchParams.get('path')
+        if (!targetPath || !fs.existsSync(targetPath)) {
+          res.writeHead(404)
+          res.end('File Not Found')
+          return
+        }
+        const stat = fs.statSync(targetPath)
+        const fileSize = stat.size
+        const range = req.headers.range
+        const ext = path.extname(targetPath).toLowerCase()
+        const contentType = MIME[ext] || (ext === '.mp4' ? 'video/mp4' : ext === '.webm' ? 'video/webm' : 'application/octet-stream')
+
+        if (range) {
+          const parts = range.replace(/bytes=/, "").split("-")
+          const start = parseInt(parts[0], 10)
+          const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1
+          const chunksize = (end - start) + 1
+          const file = fs.createReadStream(targetPath, { start, end })
+          const head = {
+            'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+            'Accept-Ranges': 'bytes',
+            'Content-Length': chunksize,
+            'Content-Type': contentType,
+          }
+          res.writeHead(206, head)
+          file.pipe(res)
+        } else {
+          const head = {
+            'Content-Length': fileSize,
+            'Content-Type': contentType,
+            'Accept-Ranges': 'bytes',
+          }
+          res.writeHead(200, head)
+          fs.createReadStream(targetPath).pipe(res)
+        }
+        return
+      }
+
       let filePath = path.join(rootDir, urlPath)
       if (urlPath.endsWith('/') || !path.extname(urlPath)) {
         filePath = path.join(filePath, 'index.html')
@@ -732,6 +782,154 @@ function startStaticServer(rootDir) {
     server.listen(PORT, '127.0.0.1', () => resolve())
   })
 }
+
+// 扫描指定文件夹下的 Wallpaper Engine 壁纸
+async function scanWallpaperDirectory(dirPath) {
+  const wallpapers = []
+  if (!dirPath || !fs.existsSync(dirPath)) return wallpapers
+
+  try {
+    const entries = fs.readdirSync(dirPath, { withFileTypes: true })
+    for (const entry of entries) {
+      if (entry.isDirectory()) {
+        const itemDir = path.join(dirPath, entry.name)
+        const projFile = path.join(itemDir, 'project.json')
+        
+        let title = entry.name
+        let type = 'video'
+        let preview = ''
+        let mediaFile = ''
+
+        if (fs.existsSync(projFile)) {
+          try {
+            const proj = JSON.parse(fs.readFileSync(projFile, 'utf8'))
+            if (proj.title) title = proj.title
+            if (proj.type) type = proj.type
+            if (proj.file) {
+              const fullMedia = path.join(itemDir, proj.file)
+              if (fs.existsSync(fullMedia)) mediaFile = fullMedia
+            }
+            if (proj.preview) {
+              const fullPrev = path.join(itemDir, proj.preview)
+              if (fs.existsSync(fullPrev)) preview = fullPrev
+            }
+          } catch {}
+        }
+
+        // 如果 project.json 未指定具体 mediaFile，扫描该文件夹下的 mp4 / webm / jpg / png
+        if (!mediaFile) {
+          try {
+            const subFiles = fs.readdirSync(itemDir)
+            const videoFile = subFiles.find(f => /\.(mp4|webm)$/i.test(f))
+            const imageFile = subFiles.find(f => /\.(jpg|jpeg|png|webp)$/i.test(f) && !f.toLowerCase().includes('preview'))
+            if (videoFile) {
+              mediaFile = path.join(itemDir, videoFile)
+              type = 'video'
+            } else if (imageFile) {
+              mediaFile = path.join(itemDir, imageFile)
+              type = 'image'
+            }
+          } catch {}
+        }
+
+        // 查找缩略图
+        if (!preview) {
+          try {
+            const subFiles = fs.readdirSync(itemDir)
+            const prevFile = subFiles.find(f => /(preview|thumb|cover)\.(jpg|png|gif|webp)$/i.test(f)) ||
+                             subFiles.find(f => /\.(jpg|png|gif|webp)$/i.test(f))
+            if (prevFile) preview = path.join(itemDir, prevFile)
+          } catch {}
+        }
+
+        if (mediaFile) {
+          // 读取 preview 为 base64 data URL
+          let previewDataUrl = ''
+          if (preview && fs.existsSync(preview)) {
+            try {
+              const buf = fs.readFileSync(preview)
+              const ext = path.extname(preview).replace('.', '').toLowerCase()
+              previewDataUrl = `data:image/${ext === 'jpg' ? 'jpeg' : ext};base64,${buf.toString('base64')}`
+            } catch {}
+          }
+
+          wallpapers.push({
+            id: entry.name,
+            title,
+            type: mediaFile.endsWith('.mp4') || mediaFile.endsWith('.webm') ? 'video' : 'image',
+            mediaPath: mediaFile,
+            mediaUrl: `http://127.0.0.1:${PORT}/local-media?path=${encodeURIComponent(mediaFile)}`,
+            preview: previewDataUrl,
+            folderPath: itemDir,
+          })
+        }
+      }
+    }
+  } catch (err) {
+    console.error('Error scanning wallpaper directory:', err)
+  }
+  return wallpapers
+}
+
+function getKnownSteamWallpaperPaths() {
+  const drives = ['C', 'D', 'E', 'F', 'G']
+  const paths = []
+  
+  // 1. 用户自定义记忆路径
+  try {
+    const savedPathFile = path.join(app.getPath('userData'), 'wallpaper-custom-path.json')
+    if (fs.existsSync(savedPathFile)) {
+      const saved = JSON.parse(fs.readFileSync(savedPathFile, 'utf8'))
+      if (saved && saved.path && fs.existsSync(saved.path)) {
+        paths.push(saved.path)
+      }
+    }
+  } catch {}
+
+  // 2. 常见 Steam 创意工坊路径 (431960 是 Wallpaper Engine 的 Steam AppID)
+  for (const drive of drives) {
+    paths.push(`${drive}:\\Program Files (x86)\\Steam\\steamapps\\workshop\\content\\431960`)
+    paths.push(`${drive}:\\Steam\\steamapps\\workshop\\content\\431960`)
+    paths.push(`${drive}:\\SteamLibrary\\steamapps\\workshop\\content\\431960`)
+  }
+
+  return paths.filter(p => fs.existsSync(p))
+}
+
+ipcMain.handle('app:scan-wallpaper-engine', async (e, customDir) => {
+  if (customDir && fs.existsSync(customDir)) {
+    const items = await scanWallpaperDirectory(customDir)
+    return { path: customDir, items }
+  }
+
+  const knownPaths = getKnownSteamWallpaperPaths()
+  for (const p of knownPaths) {
+    const items = await scanWallpaperDirectory(p)
+    if (items.length > 0) {
+      return { path: p, items }
+    }
+  }
+  return { path: '', items: [] }
+})
+
+ipcMain.handle('app:select-wallpaper-folder', async () => {
+  const result = await dialog.showOpenDialog(mainWindow, {
+    title: '选择 Wallpaper Engine 或包含视频/图片的壁纸文件夹',
+    properties: ['openDirectory'],
+  })
+  if (result.canceled || !result.filePaths[0]) return null
+  const selectedPath = result.filePaths[0]
+
+  try {
+    fs.writeFileSync(
+      path.join(app.getPath('userData'), 'wallpaper-custom-path.json'),
+      JSON.stringify({ path: selectedPath }, null, 2)
+    )
+  } catch {}
+
+  const items = await scanWallpaperDirectory(selectedPath)
+  return { path: selectedPath, items }
+})
 ipcMain.on('app:minimize', () => {
   if (mainWindow && !mainWindow.isDestroyed()) mainWindow.minimize()
 })
@@ -748,43 +946,83 @@ ipcMain.handle('app:is-maximized', () => {
   return mainWindow && !mainWindow.isDestroyed() ? mainWindow.isMaximized() : false
 })
 
-// 真实网页元数据爬虫：提取目标网站真实 Title 与官方 Meta 简介
-ipcMain.handle('app:fetch-site-meta', async (e, targetUrl) => {
-  if (!targetUrl || typeof targetUrl !== 'string') return { title: '', description: '' }
+// 真实网页元数据爬虫：提取目标网站真实 Title 与官方 Meta 简介（增强版）
+ipcMain.handle('app:fetch-site-meta', async (e, rawUrl) => {
+  if (!rawUrl || typeof rawUrl !== 'string') return { title: '', description: '' }
+  let target = rawUrl.trim()
+  if (!target.startsWith('http://') && !target.startsWith('https://')) {
+    target = 'https://' + target
+  }
+
   try {
-    const rawUrl = targetUrl.startsWith('http') ? targetUrl : `https://${targetUrl}`
-    const parsed = new URL(rawUrl)
-    const res = await fetch(parsed.href, {
+    const res = await fetch(target, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8'
+        'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
       },
-      signal: AbortSignal.timeout(5000)
+      redirect: 'follow',
+      signal: AbortSignal.timeout(6000),
     })
-    if (!res.ok) return { title: '', description: '' }
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+
     const html = await res.text()
 
-    // 提取 <title>
+    // 1. 提取 Title
+    let title = ''
+    const ogTitleMatch = html.match(/<meta\s+[^>]*property=["']og:title["'][^>]*content=["']([^"']+)["']/i) ||
+                         html.match(/<meta\s+[^>]*content=["']([^"']+)["'][^>]*property=["']og:title["']/i)
     const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i)
-    let title = titleMatch ? titleMatch[1].trim() : ''
-
-    // 提取 <meta name="description"> 或 og:description
-    const descMatch =
-      html.match(/<meta[^>]+name=["'](?:description|Description)["'][^>]+content=["']([^"']+)["']/i) ||
-      html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["'](?:description|Description)["']/i) ||
-      html.match(/<meta[^>]+property=["'](?:og:description)["'][^>]+content=["']([^"']+)["']/i) ||
-      html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["'](?:og:description)["']/i)
-    let description = descMatch ? descMatch[1].trim() : ''
-
-    // 过滤 title 中的营销垃圾后缀（如 "- 官方网站", "| Official Site", "_首页"）
-    if (title) {
-      title = title.replace(/(\s*[-_–|·]\s*(官网|官方网站|官方平台|Official Site|Official Website|首页|Home|欢迎访问)).*$/i, '').trim()
+    if (ogTitleMatch && ogTitleMatch[1]) {
+      title = ogTitleMatch[1].trim()
+    } else if (titleMatch && titleMatch[1]) {
+      title = titleMatch[1].trim()
     }
 
-    return { title, description }
+    // 2. 提取 Description
+    let description = ''
+    const metaDescMatch = html.match(/<meta\s+[^>]*name=["'](?:description|Description)["'][^>]*content=["']([^"']+)["']/i) ||
+                          html.match(/<meta\s+[^>]*content=["']([^"']+)["'][^>]*name=["'](?:description|Description)["']/i) ||
+                          html.match(/<meta\s+[^>]*property=["']og:description["'][^>]*content=["']([^"']+)["']/i) ||
+                          html.match(/<meta\s+[^>]*content=["']([^"']+)["'][^>]*property=["']og:description["']/i) ||
+                          html.match(/<meta\s+[^>]*name=["']twitter:description["'][^>]*content=["']([^"']+)["']/i)
+    if (metaDescMatch && metaDescMatch[1]) {
+      description = metaDescMatch[1].trim()
+    }
+
+    // 3. 清理 HTML 转义实体与营销垃圾后缀
+    function cleanHtmlText(text) {
+      if (!text) return ''
+      return text
+        .replace(/&quot;/gi, '"')
+        .replace(/&#39;/gi, "'")
+        .replace(/&amp;/gi, '&')
+        .replace(/&lt;/gi, '<')
+        .replace(/&gt;/gi, '>')
+        .replace(/&nbsp;/gi, ' ')
+        .replace(/(\s*[-_–|·]\s*(官网|官方网站|官方平台|Official Site|Official Website|首页|Home|欢迎访问)).*$/i, '')
+        .replace(/\s+/g, ' ')
+        .trim()
+    }
+
+    title = cleanHtmlText(title)
+    description = cleanHtmlText(description)
+
+    return {
+      title: title || '',
+      description: description || '',
+    }
   } catch (err) {
-    return { title: '', description: '' }
+    try {
+      const u = new URL(target)
+      const host = u.hostname.replace(/^www\./, '')
+      const mainName = host.split('.')[0]
+      const capitalized = mainName.charAt(0).toUpperCase() + mainName.slice(1)
+      return { title: capitalized, description: '' }
+    } catch {
+      return { title: '', description: '' }
+    }
   }
 })
 
@@ -830,6 +1068,9 @@ async function createWindow() {
     minHeight: 600,
     title: 'AI万能工具箱',
     frame: false,
+    transparent: true,
+    backgroundColor: '#00000000',
+    backgroundMaterial: 'acrylic',
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -837,7 +1078,6 @@ async function createWindow() {
       preload: path.join(__dirname, 'main-preload.cjs')
     },
     autoHideMenuBar: true,
-    backgroundColor: '#09090b',
     icon: path.join(__dirname, '../build/icon.png'),
     show: false,
   })

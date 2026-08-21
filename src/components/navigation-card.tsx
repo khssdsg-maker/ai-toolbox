@@ -124,7 +124,7 @@ export function NavigationCard({
       onDragOver={onDragOver}
       onDrop={onDrop}
       className={cn(
-        'group relative block cursor-grab active:cursor-grabbing select-none transition-all duration-250 ease-out',
+        'group relative block h-full cursor-grab active:cursor-grabbing select-none transition-all duration-250 ease-out',
         isDragging && 'opacity-30 scale-[0.96] rotate-1'
       )}
     >
@@ -132,12 +132,12 @@ export function NavigationCard({
         href={item.href}
         target={linkTarget}
         rel="noopener noreferrer"
-        className="block"
+        className="block h-full"
         title={displayDesc || displayTitle}
       >
         <div
           className={cn(
-            'relative flex items-start gap-3 rounded-xl bg-card border px-3.5 py-3.5 transition-all duration-250 ease-out hover:shadow-lg hover:-translate-y-0.5',
+            'relative flex items-center gap-3 rounded-xl bg-card border px-3.5 py-3 h-full min-h-[74px] transition-all duration-250 ease-out hover:shadow-lg hover:-translate-y-0.5',
             isPinned
               ? 'border-amber-500/50 bg-amber-500/[0.04] hover:border-amber-500/80 shadow-sm'
               : 'border-border/40 hover:border-primary/40'
@@ -159,10 +159,10 @@ export function NavigationCard({
             />
           </div>
 
-          {/* 文字内容 */}
-          <div className="flex-1 min-w-0 pr-16">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <h3 className="font-semibold text-[14.5px] text-foreground truncate leading-snug transition-colors duration-200 group-hover:text-primary">
+          {/* 文字内容（统一单行截断与垂直居中，确保所有卡片高度 100% 齐平） */}
+          <div className="flex-1 min-w-0 pr-14 flex flex-col justify-center gap-0.5">
+            <div className="flex items-center gap-1.5 min-w-0">
+              <h3 className="font-semibold text-[13.5px] sm:text-[14px] text-foreground truncate leading-tight transition-colors duration-200 group-hover:text-primary">
                 {displayTitle}
               </h3>
               {item.isCustom && (
@@ -172,11 +172,9 @@ export function NavigationCard({
               )}
               <ArrowUpRight className="w-3.5 h-3.5 flex-shrink-0 opacity-0 -translate-x-1 translate-y-0.5 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:text-primary text-muted-foreground/30" />
             </div>
-            {displayDesc && (
-              <p className="text-muted-foreground/80 text-[12.5px] leading-relaxed mt-0.5 line-clamp-1">
-                {displayDesc}
-              </p>
-            )}
+            <p className="text-muted-foreground/80 text-[12px] leading-snug line-clamp-1 truncate">
+              {displayDesc || (locale === 'en' ? 'Quick access portal' : '一键极速直达')}
+            </p>
           </div>
 
           {/* 常用置顶、编辑、单卡片重抓、收藏与删除按键 */}

@@ -1,13 +1,40 @@
-'use client'
-
-// 应用设置弹窗：链接打开方式 / 主题外观 / 界面语言 / 数据管理 / 手动检查更新 / 最近更新日志
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { X, Settings2, Sun, Moon, Monitor, Github, ExternalLink, History, Sparkles, ChevronDown, ChevronUp, RefreshCw, AlertCircle } from 'lucide-react'
+import { X, Settings2, Sun, Moon, Monitor, Github, ExternalLink, History, Sparkles, ChevronDown, ChevronUp, RefreshCw, AlertCircle, Globe, Image as ImageIcon, Video, Sliders, Eye, Trash2, UploadCloud, Gamepad2, FolderSearch, MonitorPlay } from 'lucide-react'
 import { Button } from '@/registry/new-york/ui/button'
 import { useTheme } from 'next-themes'
 import { useLanguage } from '@/lib/language-context'
 import { CAPSULE_THEMES, CapsuleThemeKey } from '@/components/floating-sidebar'
+import { WallpaperConfig, WALLPAPER_PRESETS, DEFAULT_WALLPAPER_CONFIG } from '@/components/wallpaper-background'
+
+export interface WallpaperEngineItem {
+  id: string
+  title: string
+  type: 'video' | 'image'
+  mediaPath: string
+  mediaUrl: string
+  preview?: string
+  folderPath: string
+}
+
+export interface UIThemeOption {
+  key: string
+  name: string
+  nameEn: string
+  color: string
+  desc: string
+  descEn: string
+}
+
+export const UI_THEMES: UIThemeOption[] = [
+  { key: 'default', name: '经典默认', nameEn: 'Classic Default', color: '#3b82f6', desc: '原始均衡蓝墨配色，清晰护眼', descEn: 'Balanced classic dark ink style' },
+  { key: 'mint', name: '赛博薄荷', nameEn: 'Cyber Mint', color: '#4DE0B1', desc: '高能荧光生机，薄荷绿流光高亮', descEn: 'High-energy bioluminescent mint glow' },
+  { key: 'aurora', name: '深海极光', nameEn: 'Aurora Blue', color: '#3B82F6', desc: '深邃湛蓝极光，灵动科技质感', descEn: 'Deep cyan aurora & smooth tech vibe' },
+  { key: 'neon', name: '赛博霓虹', nameEn: 'Neon Cyber', color: '#A855F7', desc: '电光紫全息霓虹，极具未来感', descEn: 'Electric purple holographic neon glow' },
+  { key: 'sunset', name: '电光落日', nameEn: 'Sunset Ember', color: '#F59E0B', desc: '暖阳炽热琥珀金，熔岩流体高光', descEn: 'Warm sunset amber & solar flare highlights' },
+  { key: 'sakura', name: '樱花绯红', nameEn: 'Sakura Bloom', color: '#EC4899', desc: '柔和花瓣绯红粉，细腻温润视觉', descEn: 'Soft sakura petal pink & gentle warmth' },
+  { key: 'obsidian', name: '黑曜钛金', nameEn: 'Obsidian Pro', color: '#64748B', desc: '深空冷金属拉丝灰，极客高级感', descEn: 'Deep space cold titanium brushed metal' }
+]
 
 interface BrowserInfo {
   name: string
@@ -34,6 +61,26 @@ interface ReleaseNote {
 }
 
 export const FALLBACK_RELEASE_NOTES: ReleaseNote[] = [
+  {
+    version: 'v1.5.7',
+    date: '2026-08-22',
+    title: 'Steam Wallpaper Engine 联动、全景通透无界画布、全导航自定义与主题解耦',
+    titleEn: 'Wallpaper Engine Integration, Seamless Acrylic Canvas, Universal Custom Cards & Decoupled Themes',
+    changes: [
+      '【Steam Wallpaper Engine 联动】深度支持自动扫描并联动 Wallpaper Engine 创意工坊已下载壁纸库，支持自定义壁纸目录与内置画廊选择，一键秒切 GPU 硬件加速静音动态视频壁纸',
+      '【Windows 原生桌面透视 (Desktop Acrylic)】开启透明窗体与亚克力磨砂材质，支持直接穿透看到电脑桌面正在运行的系统壁纸与底层窗口',
+      '【全景无界通透玻璃画布】全面消除生硬实体分割线与死白色块，全站采用两端羽化消融微光线与 Linear/Raycast 级悬浮晶体磨砂卡片',
+      '【全 6 大导航枢纽通用自定义】AI工具、驱动中心、转换中心、网络工具、提示词宝典、视频中心全面支持自定义卡片添加、实时爬虫与全量数据备份导入导出',
+      '【界面氛围主题解耦】7 套专属 UI 氛围色彩与 6 款悬浮胶囊微动效主题解耦，支持自由搭配组合'
+    ],
+    changesEn: [
+      'Wallpaper Engine Integration: Auto-scans and links downloaded Steam workshop wallpapers with in-app gallery preview and hardware-accelerated video playback',
+      'Native Desktop Acrylic Translucency: Transparent window architecture showing through to real Windows desktop wallpaper and windows',
+      'Seamless Glassmorphism Canvas: Eliminates hard divider borders, featuring feathered whisper dividers and Linear/Raycast-grade frosted glass cards',
+      'Universal Custom Cards Across 6 Hubs: Full custom cards, auto web scraper, and JSON backup/restore across all 6 navigation hubs',
+      'Decoupled UI Themes: 7 UI accent color palettes decoupled from 6 animated capsule island themes for flexible personalization'
+    ]
+  },
   {
     version: 'v1.5.6',
     date: '2026-08-19',
@@ -407,6 +454,7 @@ function isGreaterVersion(remote: string, local: string): boolean {
 export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   const { theme, setTheme } = useTheme()
   const { locale, setLocale, t } = useLanguage()
+  const [activeTab, setActiveTab] = useState<'general' | 'appearance' | 'browsing' | 'data' | 'update' | 'about'>('general')
   const [isDesktop, setIsDesktop] = useState(false)
   const [linkSettings, setLinkSettings] = useState<LinkSettings>({ mode: 'ask', browserPath: '' })
   const [browsers, setBrowsers] = useState<BrowserInfo[]>([])
@@ -482,11 +530,19 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   }, [open])
 
   const [capsuleTheme, setCapsuleTheme] = useState<CapsuleThemeKey>('mint')
+  const [uiTheme, setUiTheme] = useState<string>('default')
+  const [wallpaperConfig, setWallpaperConfig] = useState<WallpaperConfig>(DEFAULT_WALLPAPER_CONFIG)
 
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('ai-toolbox-capsule-theme') as CapsuleThemeKey
-      if (saved && CAPSULE_THEMES.some(t => t.key === saved)) setCapsuleTheme(saved)
+      const savedCapsule = localStorage.getItem('ai-toolbox-capsule-theme') as CapsuleThemeKey
+      if (savedCapsule && CAPSULE_THEMES.some(t => t.key === savedCapsule)) setCapsuleTheme(savedCapsule)
+
+      const savedUiTheme = localStorage.getItem('ai-toolbox-ui-theme')
+      if (savedUiTheme) setUiTheme(savedUiTheme)
+
+      const savedWallpaper = localStorage.getItem('ai-toolbox-wallpaper-config')
+      if (savedWallpaper) setWallpaperConfig({ ...DEFAULT_WALLPAPER_CONFIG, ...JSON.parse(savedWallpaper) })
     } catch {}
   }, [open])
 
@@ -496,6 +552,103 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
       localStorage.setItem('ai-toolbox-capsule-theme', thKey)
       window.dispatchEvent(new CustomEvent('ai-toolbox-capsule-theme-change', { detail: { theme: thKey } }))
     } catch {}
+  }
+
+  const handleSetUiTheme = (themeKey: string) => {
+    setUiTheme(themeKey)
+    try {
+      localStorage.setItem('ai-toolbox-ui-theme', themeKey)
+      window.dispatchEvent(new CustomEvent('ai-toolbox-ui-theme-change', { detail: { theme: themeKey } }))
+    } catch {}
+  }
+
+  const handleUpdateWallpaper = (partial: Partial<WallpaperConfig>) => {
+    const next = { ...wallpaperConfig, ...partial }
+    setWallpaperConfig(next)
+    try {
+      localStorage.setItem('ai-toolbox-wallpaper-config', JSON.stringify(next))
+      window.dispatchEvent(new CustomEvent('ai-toolbox-wallpaper-change', { detail: next }))
+    } catch {}
+  }
+
+  const [weWallpapers, setWeWallpapers] = useState<WallpaperEngineItem[]>([])
+  const [weScanning, setWeScanning] = useState(false)
+  const [weCurrentPath, setWeCurrentPath] = useState<string>('')
+
+  // 扫描 Wallpaper Engine 壁纸
+  const handleScanWallpaperEngine = async () => {
+    setWeScanning(true)
+    try {
+      const api = (window as unknown as {
+        appAPI?: {
+          scanWallpaperEngine?: (path?: string) => Promise<{ path: string; items: WallpaperEngineItem[] }>
+        }
+      }).appAPI
+
+      if (api && api.scanWallpaperEngine) {
+        const res = await api.scanWallpaperEngine()
+        if (res && res.items) {
+          setWeWallpapers(res.items)
+          setWeCurrentPath(res.path || '')
+          if (res.items.length === 0) {
+            alert(t('未在 Steam 默认路径检测到 Wallpaper Engine 创意工坊壁纸，请点击【选择本地壁纸目录】手动指定。', 'No Wallpaper Engine items found in default paths. Please choose folder manually.'))
+          }
+        }
+      } else {
+        alert(t('Wallpaper Engine 本地联动仅在桌面客户端中支持', 'Wallpaper Engine sync is only supported in desktop client'))
+      }
+    } catch {
+      alert(t('扫描壁纸失败，请重试', 'Failed to scan wallpapers'))
+    } finally {
+      setWeScanning(false)
+    }
+  }
+
+  // 手动选择 Wallpaper 文件夹
+  const handleSelectWallpaperFolder = async () => {
+    setWeScanning(true)
+    try {
+      const api = (window as unknown as {
+        appAPI?: {
+          selectWallpaperFolder?: () => Promise<{ path: string; items: WallpaperEngineItem[] } | null>
+        }
+      }).appAPI
+
+      if (api && api.selectWallpaperFolder) {
+        const res = await api.selectWallpaperFolder()
+        if (res && res.items) {
+          setWeWallpapers(res.items)
+          setWeCurrentPath(res.path || '')
+        }
+      }
+    } catch {}
+    finally {
+      setWeScanning(false)
+    }
+  }
+
+  const handleApplyWallpaperEngineItem = (item: WallpaperEngineItem) => {
+    handleUpdateWallpaper({
+      type: item.type,
+      url: item.mediaUrl || item.mediaPath,
+    })
+  }
+
+  const handleUploadWallpaperFile = (e: React.ChangeEvent<HTMLInputElement>, isVideo = false) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      const result = event.target?.result as string
+      if (result) {
+        handleUpdateWallpaper({
+          type: isVideo ? 'video' : 'image',
+          url: result,
+        })
+      }
+    }
+    reader.readAsDataURL(file)
+    e.target.value = ''
   }
 
   useEffect(() => { setMounted(true) }, [])
@@ -511,6 +664,108 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
       setSavedTip(true)
       setTimeout(() => setSavedTip(false), 1500)
     }
+  }
+
+  // 打开本地数据物理目录
+  const handleOpenDataFolder = () => {
+    const api = (window as unknown as { appAPI?: { openDataFolder?: () => void } }).appAPI
+    if (api && api.openDataFolder) {
+      api.openDataFolder()
+    } else {
+      alert(t('网页版无需本地目录，数据直接保存在浏览器中', 'Web version data is saved directly in browser'))
+    }
+  }
+
+  // 导出全量数据备份（全6大导航枢纽自定义数据、主题与壁纸配置）
+  const handleExportAllData = () => {
+    try {
+      const backup = {
+        app: 'AI万能工具箱',
+        version: appVersion || '1.5.6',
+        exportDate: new Date().toISOString(),
+        favorites: JSON.parse(localStorage.getItem('ai-toolbox-favorites') || '[]'),
+        customTools: JSON.parse(localStorage.getItem('ai-toolbox-custom-tools') || '[]'),
+        customCategories: JSON.parse(localStorage.getItem('ai-toolbox-custom-categories') || '[]'),
+        pinnedTools: JSON.parse(localStorage.getItem('ai-toolbox-pinned-tools') || '[]'),
+        customDrivers: JSON.parse(localStorage.getItem('ai-toolbox-custom-drivers') || '[]'),
+        customConverters: JSON.parse(localStorage.getItem('ai-toolbox-custom-converters') || '[]'),
+        customNetworkTools: JSON.parse(localStorage.getItem('ai-toolbox-custom-network-tools') || '[]'),
+        customPromptsTools: JSON.parse(localStorage.getItem('ai-toolbox-custom-prompts-tools') || '[]'),
+        customVideos: JSON.parse(localStorage.getItem('ai-toolbox-custom-videos') || '[]'),
+        promptFavs: JSON.parse(localStorage.getItem('ai_toolbox_prompt_favs') || '[]'),
+        capsuleTheme: localStorage.getItem('ai-toolbox-capsule-theme') || 'mint',
+        uiTheme: localStorage.getItem('ai-toolbox-ui-theme') || 'default',
+        wallpaperConfig: JSON.parse(localStorage.getItem('ai-toolbox-wallpaper-config') || '{}'),
+      }
+      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' })
+      const a = document.createElement('a')
+      a.href = URL.createObjectURL(blob)
+      a.download = `ai-toolbox-full-backup-${new Date().toISOString().slice(0, 10)}.json`
+      a.click()
+    } catch {}
+  }
+
+  // 恢复全量数据备份（覆盖并持久化全6大导航枢纽数据、主题与壁纸）
+  const handleImportAllData = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      try {
+        const data = JSON.parse(event.target?.result as string)
+        if (data && typeof data === 'object') {
+          if (Array.isArray(data.favorites)) {
+            localStorage.setItem('ai-toolbox-favorites', JSON.stringify(data.favorites))
+            window.dispatchEvent(new CustomEvent('ai-toolbox-favorites-updated'))
+          }
+          if (Array.isArray(data.customTools)) {
+            localStorage.setItem('ai-toolbox-custom-tools', JSON.stringify(data.customTools))
+          }
+          if (Array.isArray(data.customCategories)) {
+            localStorage.setItem('ai-toolbox-custom-categories', JSON.stringify(data.customCategories))
+          }
+          if (Array.isArray(data.pinnedTools)) {
+            localStorage.setItem('ai-toolbox-pinned-tools', JSON.stringify(data.pinnedTools))
+          }
+          if (Array.isArray(data.customDrivers)) {
+            localStorage.setItem('ai-toolbox-custom-drivers', JSON.stringify(data.customDrivers))
+          }
+          if (Array.isArray(data.customConverters)) {
+            localStorage.setItem('ai-toolbox-custom-converters', JSON.stringify(data.customConverters))
+          }
+          if (Array.isArray(data.customNetworkTools)) {
+            localStorage.setItem('ai-toolbox-custom-network-tools', JSON.stringify(data.customNetworkTools))
+          }
+          if (Array.isArray(data.customPromptsTools)) {
+            localStorage.setItem('ai-toolbox-custom-prompts-tools', JSON.stringify(data.customPromptsTools))
+          }
+          if (Array.isArray(data.customVideos)) {
+            localStorage.setItem('ai-toolbox-custom-videos', JSON.stringify(data.customVideos))
+          }
+          if (Array.isArray(data.promptFavs)) {
+            localStorage.setItem('ai_toolbox_prompt_favs', JSON.stringify(data.promptFavs))
+          }
+          if (data.capsuleTheme) {
+            localStorage.setItem('ai-toolbox-capsule-theme', data.capsuleTheme)
+            window.dispatchEvent(new CustomEvent('ai-toolbox-capsule-theme-change', { detail: { theme: data.capsuleTheme } }))
+          }
+          if (data.uiTheme) {
+            localStorage.setItem('ai-toolbox-ui-theme', data.uiTheme)
+            window.dispatchEvent(new CustomEvent('ai-toolbox-ui-theme-change', { detail: { theme: data.uiTheme } }))
+          }
+          if (data.wallpaperConfig && typeof data.wallpaperConfig === 'object') {
+            localStorage.setItem('ai-toolbox-wallpaper-config', JSON.stringify(data.wallpaperConfig))
+            window.dispatchEvent(new CustomEvent('ai-toolbox-wallpaper-change', { detail: data.wallpaperConfig }))
+          }
+          alert(t('🎉 全量数据备份恢复成功！包含所有导航卡片、主题与壁纸配置，页面将自动刷新生效。', 'Backup restored successfully! Reloading...'))
+          window.location.reload()
+        }
+      } catch {
+        alert(t('备份文件解析失败，请确认文件格式是否正确', 'Invalid backup file format'))
+      }
+    }
+    reader.readAsText(file)
+    e.target.value = ''
   }
 
   // 清空收藏
@@ -625,10 +880,19 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
     }
   }
 
+  const navTabs = [
+    { id: 'general' as const, label: t('常规偏好', 'General'), icon: Settings2 },
+    { id: 'appearance' as const, label: t('外观动效', 'Appearance'), icon: Sparkles },
+    { id: 'browsing' as const, label: t('浏览跳转', 'Browsing'), icon: Globe },
+    { id: 'data' as const, label: t('数据备份', 'Data & Backup'), icon: History },
+    { id: 'update' as const, label: t('版本更新', 'Updates'), icon: RefreshCw },
+    { id: 'about' as const, label: t('关于我们', 'About'), icon: AlertCircle },
+  ]
+
   const linkOptions = [
     { value: 'ask', label: t('每次询问我', 'Ask every time') },
-    { value: 'internal', label: t('应用内浏览器打开（带标签页）', 'In-app browser (with tabs)') },
-    { value: 'external', label: t('系统默认浏览器', 'System default browser') },
+    { value: 'internal', label: t('应用内浏览器打开（带多标签页与实时翻译）', 'In-app browser (with tabs & translator)') },
+    { value: 'external', label: t('系统默认外部浏览器', 'System default external browser') },
   ]
 
   const themeOptions = [
@@ -638,301 +902,805 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   ]
 
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-md p-4 sm:p-6" onClick={onClose}>
       <div
-        className="w-full max-w-md mx-4 max-h-[85vh] overflow-y-auto rounded-2xl bg-card border border-border/50 shadow-2xl p-6"
+        className="w-full max-w-4xl h-[620px] max-h-[90vh] rounded-2xl bg-card border border-border/70 shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-150 select-none"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between mb-5">
-          <div className="flex items-center gap-2">
-            <Settings2 className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-bold">{t('设置', 'Settings')}</h2>
+        {/* 顶部标题栏 */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border/40 bg-muted/20 flex-shrink-0">
+          <div className="flex items-center gap-2.5">
+            <div className="p-1.5 rounded-lg bg-primary/10 text-primary">
+              <Settings2 className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="text-base font-bold tracking-tight">{t('系统设置中心', 'Settings Studio')}</h2>
+              <p className="text-[11px] text-muted-foreground">{t('个性化偏好、主题动效、浏览行为与数据备份', 'Preferences, Themes, Browsing & Full Backup')}</p>
+            </div>
           </div>
-          <button onClick={onClose} className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-muted transition-colors">
+          <button onClick={onClose} className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
             <X className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="space-y-6">
-          {/* 主题外观 */}
-          <div>
-            <h3 className="text-sm font-semibold mb-3">{t('主题外观', 'Theme')}</h3>
-            <div className="grid grid-cols-3 gap-2">
-              {themeOptions.map((opt) => {
-                const Icon = opt.icon
-                return (
-                  <button
-                    key={opt.value}
-                    onClick={() => setTheme(opt.value)}
-                    className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border transition-colors ${
-                      theme === opt.value
-                        ? 'border-primary bg-primary/5 text-primary'
-                        : 'border-border/50 hover:border-border text-muted-foreground'
-                    }`}
-                  >
-                    <Icon className="h-4 w-4" />
-                    <span className="text-xs">{opt.label}</span>
-                  </button>
-                )
-              })}
-            </div>
-          </div>
+        {/* 主体双栏区域 */}
+        <div className="flex-1 flex overflow-hidden">
+          {/* 左侧导航栏 */}
+          <aside className="w-48 sm:w-52 border-r border-border/40 p-3 bg-muted/15 flex flex-col gap-1.5 flex-shrink-0 overflow-y-auto">
+            {navTabs.map((tab) => {
+              const Icon = tab.icon
+              const isActive = activeTab === tab.id
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all ${
+                    isActive
+                      ? 'bg-primary/10 text-primary shadow-xs font-semibold'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
+                  }`}
+                >
+                  <Icon className={`h-4 w-4 ${isActive ? 'text-primary' : 'text-muted-foreground'}`} />
+                  <span>{tab.label}</span>
+                </button>
+              )
+            })}
 
-          {/* 胶囊岛高定主题与专属动效 */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold">{t('胶囊岛动效与主题', 'Capsule Island Themes')}</h3>
-              <span className="text-[11px] text-muted-foreground">{t('6 款专属动画风格', '6 Unique Animation Styles')}</span>
+            <div className="mt-auto pt-3 border-t border-border/30 px-2 text-[11px] text-muted-foreground/70">
+              <p className="truncate">AI万能工具箱 v{appVersion || '1.5.6'}</p>
+              <p className="text-[10px] text-muted-foreground/50">MIT Licensed</p>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {CAPSULE_THEMES.map((th) => {
-                const isSelected = capsuleTheme === th.key
-                return (
-                  <button
-                    key={th.key}
-                    type="button"
-                    onClick={() => handleSetCapsuleTheme(th.key)}
-                    className={`flex items-start gap-2.5 p-2.5 rounded-xl border text-left transition-all ${
-                      isSelected
-                        ? 'border-primary bg-primary/5 text-foreground shadow-sm'
-                        : 'border-border/50 hover:border-border text-muted-foreground'
-                    }`}
-                  >
-                    <span
-                      className="w-3.5 h-3.5 rounded-full mt-0.5 flex-shrink-0 shadow-sm"
-                      style={{ backgroundColor: th.color }}
-                    />
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs font-semibold truncate">
-                        {locale === 'en' ? th.nameEn : th.name}
-                      </p>
-                      <p className="text-[10px] text-muted-foreground truncate leading-tight mt-0.5">
-                        {th.desc}
-                      </p>
+          </aside>
+
+          {/* 右侧内容面板 */}
+          <main className="flex-1 p-6 overflow-y-auto space-y-6">
+            {/* 1. 常规偏好 */}
+            {activeTab === 'general' && (
+              <div className="space-y-6 animate-in fade-in duration-150">
+                <section>
+                  <h3 className="text-sm font-bold text-foreground mb-1">{t('界面语言 (Language)', 'Interface Language')}</h3>
+                  <p className="text-xs text-muted-foreground mb-3">{t('实时生效，无需重启软件', 'Instant change without restart')}</p>
+                  <div className="grid grid-cols-2 gap-3 max-w-md">
+                    <button
+                      onClick={() => setLocale('zh')}
+                      className={`p-3 rounded-xl border text-sm transition-all flex items-center justify-between ${
+                        locale === 'zh' ? 'border-primary bg-primary/5 text-primary font-semibold shadow-xs' : 'border-border/50 hover:border-border text-muted-foreground'
+                      }`}
+                    >
+                      <span>简体中文</span>
+                      {locale === 'zh' && <span className="text-xs">✓</span>}
+                    </button>
+                    <button
+                      onClick={() => setLocale('en')}
+                      className={`p-3 rounded-xl border text-sm transition-all flex items-center justify-between ${
+                        locale === 'en' ? 'border-primary bg-primary/5 text-primary font-semibold shadow-xs' : 'border-border/50 hover:border-border text-muted-foreground'
+                      }`}
+                    >
+                      <span>English</span>
+                      {locale === 'en' && <span className="text-xs">✓</span>}
+                    </button>
+                  </div>
+                </section>
+
+                <section className="pt-4 border-t border-border/40">
+                  <h3 className="text-sm font-bold text-foreground mb-1">{t('窗口与运行状态', 'Window & Launch')}</h3>
+                  <p className="text-xs text-muted-foreground mb-3">{t('智能记忆窗口大小、屏幕位置与最大化状态', 'Auto-restore window dimensions and maximize state')}</p>
+                  <div className="p-3.5 rounded-xl bg-muted/30 border border-border/40 space-y-2 text-xs text-muted-foreground">
+                    <div className="flex items-center justify-between">
+                      <span>{t('窗口状态物理记忆', 'Window State Memory')}</span>
+                      <span className="text-green-600 dark:text-green-400 font-medium">{t('已启用 (window-state.json)', 'Enabled')}</span>
                     </div>
-                  </button>
-                )
-              })}
-            </div>
-          </div>
+                    <div className="flex items-center justify-between">
+                      <span>{t('单实例防多开保护', 'Single Instance Lock')}</span>
+                      <span className="text-green-600 dark:text-green-400 font-medium">{t('已启用 (SingleLock)', 'Enabled')}</span>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            )}
 
-          {/* 界面语言 */}
-          <div>
-            <h3 className="text-sm font-semibold mb-3">{t('界面语言', 'Language')}</h3>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={() => setLocale('zh')}
-                className={`p-2.5 rounded-xl border text-sm transition-colors ${
-                  locale === 'zh' ? 'border-primary bg-primary/5 text-primary font-medium' : 'border-border/50 hover:border-border text-muted-foreground'
-                }`}
-              >
-                简体中文
-              </button>
-              <button
-                onClick={() => setLocale('en')}
-                className={`p-2.5 rounded-xl border text-sm transition-colors ${
-                  locale === 'en' ? 'border-primary bg-primary/5 text-primary font-medium' : 'border-border/50 hover:border-border text-muted-foreground'
-                }`}
-              >
-                English
-              </button>
-            </div>
-          </div>
-
-          {/* 链接打开方式（仅桌面应用） */}
-          {isDesktop && (
-            <div>
-              <h3 className="text-sm font-semibold mb-3">
-                {t('链接打开方式', 'Link opening')}
-                {savedTip && <span className="ml-2 text-xs text-green-600">{t('已保存 ✓', 'Saved ✓')}</span>}
-              </h3>
-              <div className="space-y-2">
-                {linkOptions.map((opt) => (
-                  <label
-                    key={opt.value}
-                    className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-colors ${
-                      linkSettings.mode === opt.value && !(opt.value === 'external' && linkSettings.browserPath)
-                        ? 'border-primary bg-primary/5'
-                        : 'border-border/50 hover:border-border'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="linkmode"
-                      checked={linkSettings.mode === opt.value && !(opt.value === 'external' && linkSettings.browserPath)}
-                      onChange={() => saveLinkSettings({ mode: opt.value, browserPath: '' })}
-                      className="accent-[hsl(33_92%_55%)]"
-                    />
-                    <span className="text-sm">{opt.label}</span>
-                  </label>
-                ))}
-                {browsers.length > 0 && (
-                  <div className="pt-1">
-                    <p className="text-xs text-muted-foreground mb-2">{t('或指定浏览器：', 'Or pick a browser:')}</p>
-                    <div className="grid grid-cols-2 gap-2">
-                      {browsers.map((b) => (
-                        <label
-                          key={b.path}
-                          className={`flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer transition-colors text-sm ${
-                            linkSettings.browserPath === b.path
-                              ? 'border-primary bg-primary/5'
-                              : 'border-border/50 hover:border-border'
+            {/* 2. 外观与动效 */}
+            {activeTab === 'appearance' && (
+              <div className="space-y-7 animate-in fade-in duration-150 pb-6">
+                {/* 1. 明暗模式 */}
+                <section>
+                  <h3 className="text-sm font-bold text-foreground mb-1">{t('明暗主题模式', 'Color Theme')}</h3>
+                  <p className="text-xs text-muted-foreground mb-3">{t('选择深色、浅色或跟随 Windows 系统外观', 'Dark, Light or System default')}</p>
+                  <div className="grid grid-cols-3 gap-3 max-w-lg">
+                    {themeOptions.map((opt) => {
+                      const Icon = opt.icon
+                      const isSel = theme === opt.value
+                      return (
+                        <button
+                          key={opt.value}
+                          onClick={() => setTheme(opt.value)}
+                          className={`flex flex-col items-center gap-2 p-3.5 rounded-xl border transition-all ${
+                            isSel
+                              ? 'border-primary bg-primary/5 text-primary shadow-xs font-semibold ring-1 ring-primary/40'
+                              : 'border-border/50 hover:border-border text-muted-foreground'
                           }`}
                         >
-                          <input
-                            type="radio"
-                            name="linkmode"
-                            checked={linkSettings.browserPath === b.path}
-                            onChange={() => saveLinkSettings({ mode: 'external', browserPath: b.path })}
-                            className="accent-[hsl(33_92%_55%)]"
-                          />
-                          {b.name}
-                        </label>
-                      ))}
-                    </div>
+                          <Icon className="h-5 w-5" />
+                          <span className="text-xs">{opt.label}</span>
+                        </button>
+                      )
+                    })}
                   </div>
-                )}
-              </div>
-            </div>
-          )}
+                </section>
 
-          {/* 检查更新板块（带版本对比与是否更新确认） */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-semibold">{t('版本与更新', 'Version & Update')}</h3>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleCheckUpdate}
-                disabled={checkingUpdate}
-                className="h-8 text-xs gap-1.5"
-              >
-                <RefreshCw className={`h-3.5 w-3.5 ${checkingUpdate ? 'animate-spin' : ''}`} />
-                {t('检查更新', 'Check Updates')}
-              </Button>
-            </div>
-
-            {/* 发现新版本时的互动面板 */}
-            {updateResult.status === 'available' && (
-              <div className="p-3.5 rounded-xl border border-amber-500/30 bg-amber-500/10 space-y-2.5 animate-in fade-in duration-200 mt-2">
-                <div className="flex items-center gap-2 text-amber-700 dark:text-amber-300 font-semibold text-xs">
-                  <Sparkles className="h-4 w-4 flex-shrink-0" />
-                  <span>{t(`发现新版本 v${updateResult.version}！`, `New version v${updateResult.version} available!`)}</span>
-                </div>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  {t('检测到官方有新版本更新，是否现在前往查看并下载新版本？', 'Official update detected. Would you like to view and download the latest release?')}
-                </p>
-                {isDownloading ? (
-                  <div className="space-y-1.5 pt-1">
-                    <div className="flex items-center justify-between text-xs text-amber-700 dark:text-amber-300 font-semibold">
-                      <span>{t(downloadProgress === 100 ? '下载完成，正在自动启动安装向导...' : '正在为您下载最新安装包...', downloadProgress === 100 ? 'Download complete, launching setup...' : 'Downloading update...')}</span>
-                      <span>{downloadProgress !== null ? `${downloadProgress}%` : ''}</span>
+                {/* 2. 全局界面氛围主题 */}
+                <section className="pt-4 border-t border-border/40">
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="h-4 w-4 text-primary" />
+                      <h3 className="text-sm font-bold text-foreground">{t('全局界面氛围主题 (UI Accent Theme)', 'UI Accent Theme')}</h3>
                     </div>
-                    <div className="w-full bg-amber-500/20 rounded-full h-2 overflow-hidden">
-                      <div
-                        className="bg-amber-500 h-full transition-all duration-300 rounded-full"
-                        style={{ width: `${downloadProgress || 0}%` }}
+                    <span className="text-xs text-primary font-medium">{t('与胶囊解耦 · 即时生效', 'Decoupled · Live Update')}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-3">{t('为整个软件的主色调、高亮流光、卡片边框与按钮赋予专属氛围色彩', 'Set accent highlight colors and border glow across the whole application')}</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                    {UI_THEMES.map((th) => {
+                      const isSelected = uiTheme === th.key
+                      return (
+                        <button
+                          key={th.key}
+                          type="button"
+                          onClick={() => handleSetUiTheme(th.key)}
+                          className={`flex items-start gap-2.5 p-3 rounded-xl border text-left transition-all ${
+                            isSelected
+                              ? 'border-primary bg-primary/5 text-foreground shadow-sm ring-1 ring-primary/50'
+                              : 'border-border/50 hover:border-border text-muted-foreground'
+                          }`}
+                        >
+                          <span
+                            className="w-3.5 h-3.5 rounded-full mt-0.5 flex-shrink-0 shadow-sm ring-2 ring-background"
+                            style={{ backgroundColor: th.color }}
+                          />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs font-bold truncate text-foreground flex items-center justify-between">
+                              <span>{locale === 'en' ? th.nameEn : th.name}</span>
+                              {isSelected && <span className="text-[10px] text-primary">✓</span>}
+                            </p>
+                            <p className="text-[11px] text-muted-foreground leading-relaxed mt-0.5 line-clamp-1">
+                              {locale === 'en' ? th.descEn : th.desc}
+                            </p>
+                          </div>
+                        </button>
+                      )
+                    })}
+                  </div>
+                </section>
+
+                {/* 3. 悬浮胶囊导航主题 */}
+                <section className="pt-4 border-t border-border/40">
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className="text-sm font-bold text-foreground">{t('悬浮胶囊 6 大动效主题', 'Capsule Island Themes')}</h3>
+                    <span className="text-xs text-muted-foreground">{t('左侧常驻胶囊', 'Floating Island')}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-3">{t('独立选择左侧悬浮胶囊岛的生物荧光、全息霓虹或机械金属质感', 'Choose live glowing & physics feedback styles for the capsule dock')}</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {CAPSULE_THEMES.map((th) => {
+                      const isSelected = capsuleTheme === th.key
+                      return (
+                        <button
+                          key={th.key}
+                          type="button"
+                          onClick={() => handleSetCapsuleTheme(th.key)}
+                          className={`flex items-start gap-3 p-3 rounded-xl border text-left transition-all ${
+                            isSelected
+                              ? 'border-primary bg-primary/5 text-foreground shadow-sm ring-1 ring-primary/40'
+                              : 'border-border/50 hover:border-border text-muted-foreground'
+                          }`}
+                        >
+                          <span
+                            className="w-4 h-4 rounded-full mt-0.5 flex-shrink-0 shadow-sm ring-2 ring-background"
+                            style={{ backgroundColor: th.color }}
+                          />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs font-bold truncate text-foreground">
+                              {locale === 'en' ? th.nameEn : th.name}
+                            </p>
+                            <p className="text-[11px] text-muted-foreground leading-relaxed mt-0.5">
+                              {th.desc}
+                            </p>
+                          </div>
+                        </button>
+                      )
+                    })}
+                  </div>
+                </section>
+
+                {/* 4. 自定义壁纸与毛玻璃透明界面 */}
+                <section className="pt-4 border-t border-border/40 space-y-4">
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-2">
+                      <ImageIcon className="h-4 w-4 text-primary" />
+                      <h3 className="text-sm font-bold text-foreground">{t('自定义壁纸与动态视频', 'Wallpaper & Dynamic Video')}</h3>
+                    </div>
+                    <span className="text-xs text-muted-foreground">{t('沉浸式背景', 'Immersive Canvas')}</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{t('支持精选预设、本地静态图片与本地 MP4 动态视频循环播放', 'Presets, custom images and dynamic video loops (MP4/WebM)')}</p>
+
+                  {/* 壁纸类型切换器 */}
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    {[
+                      { id: 'none', label: t('🚫 纯净实体', 'No Wallpaper') },
+                      { id: 'desktop', label: t('🪟 原生透视桌面', 'Desktop Acrylic') },
+                      { id: 'we', label: t('🎮 Wallpaper Engine', 'Wallpaper Engine') },
+                      { id: 'preset', label: t('🌟 精选流体光幕', 'Presets') },
+                      { id: 'image', label: t('🖼️ 自定义图片', 'Custom Image') },
+                      { id: 'video', label: t('🎬 动态视频', 'Dynamic Video') },
+                      { id: 'url', label: t('🌐 网络直链', 'Online URL') },
+                    ].map((mode) => (
+                      <button
+                        key={mode.id}
+                        type="button"
+                        onClick={() => {
+                          if (mode.id === 'we') {
+                            if (weWallpapers.length === 0) handleScanWallpaperEngine()
+                            handleUpdateWallpaper({ type: 'video' })
+                          } else {
+                            handleUpdateWallpaper({ type: mode.id as any })
+                          }
+                        }}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+                          (wallpaperConfig.type === mode.id || (mode.id === 'we' && weWallpapers.length > 0 && wallpaperConfig.type === 'video'))
+                            ? 'border-primary bg-primary/10 text-primary font-bold shadow-xs ring-1 ring-primary/40'
+                            : 'border-border/50 hover:border-border text-muted-foreground hover:text-foreground'
+                        }`}
+                      >
+                        {mode.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* 1. 原生透视电脑桌面 */}
+                  {wallpaperConfig.type === 'desktop' && (
+                    <div className="p-4 rounded-xl border border-primary/30 bg-primary/5 space-y-2 animate-in fade-in duration-150">
+                      <div className="flex items-center gap-2 text-primary font-bold text-xs">
+                        <Eye className="h-4 w-4" />
+                        <span>{t('🪟 Windows 原生桌面亚克力透视模式已激活', 'Desktop Acrylic Translucency Active')}</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        {t('软件窗口底层已完全穿透，您当前 Windows 电脑桌面上运行的任何壁纸（包括 Wallpaper Engine 桌面壁纸与桌面图标）都将透过毛玻璃卡片自然透出！', 'The window background is fully transparent to your real Windows desktop.')}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* 2. Wallpaper Engine 创意工坊画廊 */}
+                  {(wallpaperConfig.type === 'we' || weWallpapers.length > 0) && (
+                    <div className="p-4 rounded-xl border border-border/50 bg-muted/20 space-y-3.5 animate-in fade-in duration-150">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
+                        <div className="flex items-center gap-2">
+                          <Gamepad2 className="h-4 w-4 text-primary" />
+                          <h4 className="text-xs font-bold text-foreground">
+                            {t('Wallpaper Engine 创意工坊已下载壁纸库', 'Wallpaper Engine Downloaded Library')}
+                          </h4>
+                          {weWallpapers.length > 0 && (
+                            <span className="text-[10px] bg-primary/15 text-primary px-1.5 py-0.5 rounded font-mono font-bold">
+                              {weWallpapers.length} 款
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            disabled={weScanning}
+                            onClick={handleScanWallpaperEngine}
+                            className="h-7 text-xs gap-1"
+                          >
+                            <RefreshCw className={`h-3 w-3 ${weScanning ? 'animate-spin' : ''}`} />
+                            <span>{weScanning ? t('扫描中...', 'Scanning...') : t('重新扫描 Steam', 'Scan Steam')}</span>
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            disabled={weScanning}
+                            onClick={handleSelectWallpaperFolder}
+                            className="h-7 text-xs gap-1"
+                          >
+                            <FolderSearch className="h-3 w-3" />
+                            <span>{t('选择本地目录', 'Pick Folder')}</span>
+                          </Button>
+                        </div>
+                      </div>
+
+                      {weCurrentPath && (
+                        <p className="text-[10px] text-muted-foreground font-mono truncate bg-background/50 p-1.5 rounded-md border border-border/40">
+                          {t('📁 当前壁纸目录: ', 'Directory: ')}{weCurrentPath}
+                        </p>
+                      )}
+
+                      {/* 扫描到的壁纸网格画廊 */}
+                      {weWallpapers.length > 0 ? (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 max-h-64 overflow-y-auto pr-1">
+                          {weWallpapers.map((item) => {
+                            const isCurrent = wallpaperConfig.url === item.mediaUrl || wallpaperConfig.url === item.mediaPath
+                            return (
+                              <div
+                                key={item.id}
+                                onClick={() => handleApplyWallpaperEngineItem(item)}
+                                className={`group relative rounded-xl border p-2 flex flex-col gap-1.5 cursor-pointer transition-all ${
+                                  isCurrent
+                                    ? 'border-primary ring-2 ring-primary/50 bg-primary/10 shadow-md scale-[1.02]'
+                                    : 'border-border/50 hover:border-primary/50 hover:bg-muted/40'
+                                }`}
+                              >
+                                <div className="relative w-full h-20 rounded-lg overflow-hidden bg-black/40 flex items-center justify-center">
+                                  {item.preview ? (
+                                    <img
+                                      src={item.preview}
+                                      alt={item.title}
+                                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    />
+                                  ) : (
+                                    <MonitorPlay className="h-8 w-8 text-muted-foreground/50" />
+                                  )}
+                                  <span className="absolute top-1 right-1 text-[9px] bg-black/70 text-white px-1.5 py-0.2 rounded font-medium backdrop-blur-xs">
+                                    {item.type === 'video' ? '🎬 动态视频' : '🖼️ 静态图片'}
+                                  </span>
+                                  {isCurrent && (
+                                    <div className="absolute inset-0 bg-primary/20 backdrop-blur-[1px] flex items-center justify-center text-white font-bold text-xs">
+                                      ✓ 使用中
+                                    </div>
+                                  )}
+                                </div>
+                                <span className="text-[11px] font-bold text-foreground truncate" title={item.title}>
+                                  {item.title}
+                                </span>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      ) : (
+                        <div className="p-4 rounded-xl border border-dashed border-border/60 text-center space-y-2">
+                          <p className="text-xs text-muted-foreground">
+                            {t('点击上方【重新扫描 Steam】或【选择本地目录】导入您的 Wallpaper Engine 壁纸', 'Click Scan Steam or Pick Folder to import your Wallpaper Engine collection.')}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* 3. 预设列表 */}
+                  {wallpaperConfig.type === 'preset' && (
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1 animate-in fade-in duration-150">
+                      {WALLPAPER_PRESETS.map((p) => {
+                        const isSel = wallpaperConfig.presetId === p.id
+                        return (
+                          <button
+                            key={p.id}
+                            type="button"
+                            onClick={() => handleUpdateWallpaper({ presetId: p.id })}
+                            className={`p-2.5 rounded-xl border text-left flex flex-col gap-2 transition-all ${
+                              isSel
+                                ? 'border-primary ring-2 ring-primary/50 shadow-md scale-[1.02]'
+                                : 'border-border/50 hover:border-border opacity-85 hover:opacity-100'
+                            }`}
+                          >
+                            <div
+                              className="w-full h-12 rounded-lg shadow-inner flex items-center justify-center text-white text-[10px] font-bold"
+                              style={{ background: p.preview }}
+                            >
+                              {isSel && '✓'}
+                            </div>
+                            <span className="text-[11px] font-bold text-foreground truncate">
+                              {locale === 'en' ? p.nameEn : p.name}
+                            </span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  )}
+
+                  {/* 本地图片上传 */}
+                  {wallpaperConfig.type === 'image' && (
+                    <div className="p-4 rounded-xl border border-border/50 bg-muted/20 space-y-3 animate-in fade-in duration-150">
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                          <UploadCloud className="h-4 w-4 text-primary" />
+                          <span>{t('选择本地图片 (JPG / PNG / WEBP)', 'Choose Local Image')}</span>
+                        </label>
+                        {wallpaperConfig.url && (
+                          <button
+                            type="button"
+                            onClick={() => handleUpdateWallpaper({ url: '' })}
+                            className="text-xs text-red-500 hover:underline flex items-center gap-1"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                            <span>{t('清除图片', 'Clear')}</span>
+                          </button>
+                        )}
+                      </div>
+                      <input
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp,image/jpg"
+                        onChange={(e) => handleUploadWallpaperFile(e, false)}
+                        className="block w-full text-xs text-muted-foreground file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-primary-foreground hover:file:opacity-90 cursor-pointer"
                       />
                     </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2 pt-1">
-                    <Button size="sm" onClick={handleConfirmUpdate} className="h-7 text-xs bg-amber-600 hover:bg-amber-700 text-white">
-                      {isDesktop ? t('应用内下载并升级', 'Download & Update') : t('前往 GitHub 查看', 'View on GitHub')}
-                    </Button>
-                    <Button size="sm" variant="ghost" onClick={() => setUpdateResult({ status: 'idle' })} className="h-7 text-xs text-muted-foreground">
-                      {t('暂不更新', 'Later')}
-                    </Button>
-                  </div>
-                )}
-              </div>
-            )}
+                  )}
 
-            {updateResult.status === 'latest' && (
-              <p className="text-xs text-green-600 dark:text-green-400 bg-green-500/10 py-2 px-3 rounded-lg border border-green-500/20 mt-2">
-                ✓ {t(`当前已是最新版本 (v${updateResult.version})`, `Already on the latest version (v${updateResult.version})`)}
-              </p>
-            )}
-
-            {updateResult.status === 'error' && (
-              <p className="text-xs text-red-500 bg-red-500/10 py-2 px-3 rounded-lg border border-red-500/20 mt-2 flex items-center gap-1.5">
-                <AlertCircle className="h-3.5 w-3.5 flex-shrink-0" />
-                <span>{updateResult.message}</span>
-              </p>
-            )}
-          </div>
-
-          {/* 数据管理 */}
-          <div>
-            <h3 className="text-sm font-semibold mb-3">{t('数据管理', 'Data')}</h3>
-            <Button variant="outline" size="sm" onClick={handleClearFavorites} className="text-red-500 border-red-500/30 hover:bg-red-500/10 hover:text-red-600">
-              {clearTip || t('清空所有收藏', 'Clear all favorites')}
-            </Button>
-          </div>
-
-          {/* 最近更新日志面板 */}
-          <div className="pt-2 border-t border-border/40 space-y-3">
-            <button
-              onClick={() => setShowChangelog(!showChangelog)}
-              className="w-full flex items-center justify-between p-3 rounded-xl border border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors text-primary font-medium text-sm"
-            >
-              <div className="flex items-center gap-2">
-                <History className="h-4 w-4 text-primary" />
-                <span>{t('最近 4 次更新日志', 'Recent 4 Release Notes')}</span>
-              </div>
-              {showChangelog ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-            </button>
-
-            {showChangelog && (
-              <div className="space-y-3 p-3 rounded-xl bg-muted/40 border border-border/50 animate-in fade-in duration-200">
-                {releaseNotes.map((note) => (
-                  <div key={note.version} className="space-y-1 pb-2.5 border-b border-border/30 last:border-0 last:pb-0">
-                    <div className="flex items-center justify-between text-xs font-semibold text-foreground">
-                      <span className="flex items-center gap-1.5 truncate max-w-[280px]">
-                        <Sparkles className="h-3.5 w-3.5 text-amber-500 flex-shrink-0" />
-                        <span>{note.version} {note.title ? `— ${locale === 'zh' ? note.title : note.titleEn}` : ''}</span>
-                      </span>
-                      <span className="text-[10px] text-muted-foreground/70 font-mono flex-shrink-0 ml-2">{note.date}</span>
+                  {/* 本地视频上传 */}
+                  {wallpaperConfig.type === 'video' && (
+                    <div className="p-4 rounded-xl border border-border/50 bg-muted/20 space-y-3 animate-in fade-in duration-150">
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                          <Video className="h-4 w-4 text-primary" />
+                          <span>{t('选择本地动态视频 (MP4 / WebM)', 'Choose Dynamic Video')}</span>
+                        </label>
+                        {wallpaperConfig.url && (
+                          <button
+                            type="button"
+                            onClick={() => handleUpdateWallpaper({ url: '' })}
+                            className="text-xs text-red-500 hover:underline flex items-center gap-1"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                            <span>{t('清除视频', 'Clear')}</span>
+                          </button>
+                        )}
+                      </div>
+                      <input
+                        type="file"
+                        accept="video/mp4,video/webm"
+                        onChange={(e) => handleUploadWallpaperFile(e, true)}
+                        className="block w-full text-xs text-muted-foreground file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-primary-foreground hover:file:opacity-90 cursor-pointer"
+                      />
+                      <p className="text-[11px] text-muted-foreground/80">
+                        {t('⚡ 提示：视频将在背景以硬件加速静音循环播放，建议分辨率 1080P 以内以获得最佳流畅度。', 'Video plays muted in a hardware-accelerated loop in the background.')}
+                      </p>
                     </div>
-                    <ul className="list-disc list-inside space-y-1 text-muted-foreground text-[11px] leading-relaxed pl-1">
-                      {(locale === 'zh' ? note.changes : note.changesEn).map((change, idx) => (
-                        <li key={idx}>{change}</li>
-                      ))}
-                    </ul>
+                  )}
+
+                  {/* 在线 URL */}
+                  {wallpaperConfig.type === 'url' && (
+                    <div className="p-4 rounded-xl border border-border/50 bg-muted/20 space-y-2 animate-in fade-in duration-150">
+                      <label className="text-xs font-semibold text-foreground block">
+                        {t('图片或 MP4 视频网络直链 URL', 'Direct Image or MP4 Video URL')}
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="https://.../wallpaper.mp4 或 https://.../bg.jpg"
+                        value={wallpaperConfig.url}
+                        onChange={(e) => handleUpdateWallpaper({ url: e.target.value })}
+                        className="w-full px-3 py-2 text-xs rounded-xl bg-background border border-border/60 focus:outline-hidden focus:ring-1 focus:ring-primary"
+                      />
+                    </div>
+                  )}
+
+                  {/* 遮罩、模糊与毛玻璃透明度调节器 */}
+                  <div className="p-4 rounded-xl border border-border/50 bg-muted/15 space-y-4">
+                    <div className="flex items-center justify-between border-b border-border/30 pb-3">
+                      <div>
+                        <p className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                          <Eye className="h-3.5 w-3.5 text-primary" />
+                          <span>{t('✨ 亚克力毛玻璃透明界面', 'Acrylic Glassmorphism Mode')}</span>
+                        </p>
+                        <p className="text-[11px] text-muted-foreground mt-0.5">
+                          {t('开启后顶栏、侧边栏与卡片底板呈现半透明高斯磨砂质感', 'Semi-transparent frosted glass across headers and cards')}
+                        </p>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={wallpaperConfig.glassMode || wallpaperConfig.type !== 'none'}
+                          onChange={(e) => handleUpdateWallpaper({ glassMode: e.target.checked })}
+                          className="sr-only peer"
+                        />
+                        <div className="w-9 h-5 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary" />
+                      </label>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                      <div>
+                        <div className="flex justify-between mb-1.5">
+                          <span className="font-semibold text-foreground">{t('壁纸遮罩暗化度', 'Mask Opacity')}</span>
+                          <span className="text-muted-foreground font-mono">{Math.round(wallpaperConfig.maskOpacity * 100)}%</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="0"
+                          max="0.9"
+                          step="0.05"
+                          value={wallpaperConfig.maskOpacity}
+                          onChange={(e) => handleUpdateWallpaper({ maskOpacity: parseFloat(e.target.value) })}
+                          className="w-full accent-primary h-1.5 bg-muted rounded-lg cursor-pointer"
+                        />
+                      </div>
+
+                      <div>
+                        <div className="flex justify-between mb-1.5">
+                          <span className="font-semibold text-foreground">{t('背景高斯模糊', 'Background Blur')}</span>
+                          <span className="text-muted-foreground font-mono">{wallpaperConfig.bgBlur}px</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="0"
+                          max="30"
+                          step="1"
+                          value={wallpaperConfig.bgBlur}
+                          onChange={(e) => handleUpdateWallpaper({ bgBlur: parseInt(e.target.value, 10) })}
+                          className="w-full accent-primary h-1.5 bg-muted rounded-lg cursor-pointer"
+                        />
+                      </div>
+
+                      <div>
+                        <div className="flex justify-between mb-1.5">
+                          <span className="font-semibold text-foreground">{t('界面半透明度', 'Glass Opacity')}</span>
+                          <span className="text-muted-foreground font-mono">{Math.round(wallpaperConfig.glassOpacity * 100)}%</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="0.2"
+                          max="0.9"
+                          step="0.05"
+                          value={wallpaperConfig.glassOpacity}
+                          onChange={(e) => handleUpdateWallpaper({ glassOpacity: parseFloat(e.target.value) })}
+                          className="w-full accent-primary h-1.5 bg-muted rounded-lg cursor-pointer"
+                        />
+                      </div>
+
+                      <div>
+                        <div className="flex justify-between mb-1.5">
+                          <span className="font-semibold text-foreground">{t('毛玻璃磨砂半径', 'Frosted Radius')}</span>
+                          <span className="text-muted-foreground font-mono">{wallpaperConfig.glassBlur}px</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="0"
+                          max="24"
+                          step="2"
+                          value={wallpaperConfig.glassBlur}
+                          onChange={(e) => handleUpdateWallpaper({ glassBlur: parseInt(e.target.value, 10) })}
+                          className="w-full accent-primary h-1.5 bg-muted rounded-lg cursor-pointer"
+                        />
+                      </div>
+                    </div>
                   </div>
-                ))}
+                </section>
               </div>
             )}
 
-            {/* 关于与开发者信息 */}
-            <div className="pt-2 flex flex-col items-center gap-2 text-xs">
-              <p className="text-muted-foreground">
-                {t('AI万能工具箱', 'AI Toolbox')} v{appVersion} · {t('AI 时代的超级工具箱', 'The super toolbox for the AI era')}
-              </p>
-              <div className="flex items-center gap-3">
-                <a
-                  href="https://github.com/khssdsg-maker/ai-toolbox"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors"
-                >
-                  <Github className="h-3.5 w-3.5" />
-                  <span>{t('GitHub 仓库', 'GitHub Repo')}</span>
-                  <ExternalLink className="h-3 w-3 opacity-60" />
-                </a>
-                <span className="text-border">|</span>
-                <a
-                  href="https://github.com/khssdsg-maker"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors"
-                >
-                  <span>{t('开发者: khssdsg-maker', 'Author: khssdsg-maker')}</span>
-                  <ExternalLink className="h-3 w-3 opacity-60" />
-                </a>
+            {/* 3. 网页与浏览 */}
+            {activeTab === 'browsing' && (
+              <div className="space-y-6 animate-in fade-in duration-150">
+                <section>
+                  <div className="flex items-center justify-between mb-1">
+                    <h3 className="text-sm font-bold text-foreground">{t('链接打开方式偏好', 'Link Opening Preference')}</h3>
+                    {savedTip && <span className="text-xs text-green-600 font-semibold">{t('已实时保存 ✓', 'Saved ✓')}</span>}
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-3">{t('在桌面应用中点击工具卡片时的默认跳转行为', 'Default target when clicking tool cards in desktop app')}</p>
+                  
+                  <div className="space-y-2 max-w-xl">
+                    {linkOptions.map((opt) => (
+                      <label
+                        key={opt.value}
+                        className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
+                          linkSettings.mode === opt.value && !(opt.value === 'external' && linkSettings.browserPath)
+                            ? 'border-primary bg-primary/5 text-foreground font-medium'
+                            : 'border-border/50 hover:border-border text-muted-foreground'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="linkmode"
+                          checked={linkSettings.mode === opt.value && !(opt.value === 'external' && linkSettings.browserPath)}
+                          onChange={() => saveLinkSettings({ mode: opt.value, browserPath: '' })}
+                          className="accent-[hsl(33_92%_55%)]"
+                        />
+                        <span className="text-xs sm:text-sm">{opt.label}</span>
+                      </label>
+                    ))}
+                  </div>
+
+                  {browsers.length > 0 && (
+                    <div className="mt-4 pt-3 border-t border-border/30 max-w-xl">
+                      <p className="text-xs font-semibold text-foreground mb-2">{t('或定向指定已安装的外部浏览器：', 'Or route directly to an installed browser:')}</p>
+                      <div className="grid grid-cols-2 gap-2">
+                        {browsers.map((b) => (
+                          <label
+                            key={b.path}
+                            className={`flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer transition-all text-xs ${
+                              linkSettings.browserPath === b.path
+                                ? 'border-primary bg-primary/5 text-foreground font-semibold'
+                                : 'border-border/50 hover:border-border text-muted-foreground'
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              name="linkmode"
+                              checked={linkSettings.browserPath === b.path}
+                              onChange={() => saveLinkSettings({ mode: 'external', browserPath: b.path })}
+                              className="accent-[hsl(33_92%_55%)]"
+                            />
+                            <span className="truncate">{b.name}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </section>
               </div>
-            </div>
-          </div>
+            )}
+
+            {/* 4. 数据与备份 */}
+            {activeTab === 'data' && (
+              <div className="space-y-6 animate-in fade-in duration-150">
+                <section>
+                  <h3 className="text-sm font-bold text-foreground mb-1">{t('全量数据备份与迁移', 'Full Data Backup & Restore')}</h3>
+                  <p className="text-xs text-muted-foreground mb-3">{t('一键导出包含「个人收藏 + 自建分类 + 自定义工具 + 拖拽排版记忆」的完整 JSON 备份', 'Export full JSON backup including favorites, custom categories & layout')}</p>
+                  
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Button variant="outline" size="sm" onClick={handleExportAllData} className="gap-1.5 text-xs">
+                      <Sparkles className="h-3.5 w-3.5 text-amber-500" />
+                      <span>{t('导出全量备份 (JSON)', 'Export Full Backup (JSON)')}</span>
+                    </Button>
+
+                    <label className="cursor-pointer">
+                      <input type="file" accept=".json" onChange={handleImportAllData} className="hidden" />
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/80 bg-card hover:bg-muted text-xs font-medium transition-colors">
+                        <History className="h-3.5 w-3.5 text-blue-500" />
+                        <span>{t('导入备份文件', 'Import Backup File')}</span>
+                      </span>
+                    </label>
+
+                    {isDesktop && (
+                      <Button variant="outline" size="sm" onClick={handleOpenDataFolder} className="gap-1.5 text-xs">
+                        <ExternalLink className="h-3.5 w-3.5 text-primary" />
+                        <span>{t('打开本地数据目录 (%APPDATA%)', 'Open Data Directory')}</span>
+                      </Button>
+                    )}
+                  </div>
+                </section>
+
+                <section className="pt-4 border-t border-border/40">
+                  <h3 className="text-sm font-bold text-red-500 mb-1">{t('危险区重置', 'Danger Zone')}</h3>
+                  <p className="text-xs text-muted-foreground mb-3">{t('仅清空您的收藏记录，不会影响自建分类与系统配置', 'Clear favorites only')}</p>
+                  <Button variant="outline" size="sm" onClick={handleClearFavorites} className="text-red-500 border-red-500/30 hover:bg-red-500/10 text-xs">
+                    {clearTip || t('清空个人收藏列表', 'Clear all favorites')}
+                  </Button>
+                </section>
+              </div>
+            )}
+
+            {/* 5. 版本更新 */}
+            {activeTab === 'update' && (
+              <div className="space-y-6 animate-in fade-in duration-150">
+                <section>
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h3 className="text-sm font-bold text-foreground">{t('版本与在线更新', 'Version & Update Check')}</h3>
+                      <p className="text-xs text-muted-foreground">{t('当前安装版本：', 'Current version: ')} v{appVersion || '1.5.6'}</p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleCheckUpdate}
+                      disabled={checkingUpdate}
+                      className="gap-1.5 text-xs"
+                    >
+                      <RefreshCw className={`h-3.5 w-3.5 ${checkingUpdate ? 'animate-spin' : ''}`} />
+                      <span>{t('检查新版本', 'Check Updates')}</span>
+                    </Button>
+                  </div>
+
+                  {/* 发现新版本时的升级面板 */}
+                  {updateResult.status === 'available' && (
+                    <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-500/10 space-y-3 animate-in fade-in duration-200">
+                      <div className="flex items-center gap-2 text-amber-700 dark:text-amber-300 font-bold text-xs sm:text-sm">
+                        <Sparkles className="h-4 w-4 flex-shrink-0" />
+                        <span>{t(`发现新版本 v${updateResult.version}！`, `New version v${updateResult.version} available!`)}</span>
+                      </div>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        {t('检测到官方有新版本更新，是否现在前往查看并下载新版本？', 'Official update detected. Would you like to view and download the latest release?')}
+                      </p>
+                      {isDownloading ? (
+                        <div className="space-y-1.5 pt-1">
+                          <div className="flex items-center justify-between text-xs text-amber-700 dark:text-amber-300 font-semibold">
+                            <span>{t(downloadProgress === 100 ? '下载完成，正在自动启动安装向导...' : '正在为您下载最新安装包...', downloadProgress === 100 ? 'Download complete, launching setup...' : 'Downloading update...')}</span>
+                            <span>{downloadProgress !== null ? `${downloadProgress}%` : ''}</span>
+                          </div>
+                          <div className="w-full bg-amber-500/20 rounded-full h-2 overflow-hidden">
+                            <div
+                              className="bg-amber-500 h-full transition-all duration-300 rounded-full"
+                              style={{ width: `${downloadProgress || 0}%` }}
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2 pt-1">
+                          <Button size="sm" onClick={handleConfirmUpdate} className="h-8 text-xs bg-amber-600 hover:bg-amber-700 text-white">
+                            {isDesktop ? t('应用内一键下载升级', 'Download & Update') : t('前往 GitHub 查看', 'View on GitHub')}
+                          </Button>
+                          <Button size="sm" variant="ghost" onClick={() => setUpdateResult({ status: 'idle' })} className="h-8 text-xs text-muted-foreground">
+                            {t('暂不更新', 'Later')}
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {updateResult.status === 'latest' && (
+                    <p className="text-xs text-green-600 dark:text-green-400 bg-green-500/10 py-2.5 px-3 rounded-xl border border-green-500/20 flex items-center gap-2">
+                      <span>✓</span>
+                      <span>{t(`当前已是最新版本 (v${updateResult.version})`, `Already on the latest version (v${updateResult.version})`)}</span>
+                    </p>
+                  )}
+
+                  {updateResult.status === 'error' && (
+                    <p className="text-xs text-red-500 bg-red-500/10 py-2.5 px-3 rounded-xl border border-red-500/20 flex items-center gap-2">
+                      <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                      <span>{updateResult.message}</span>
+                    </p>
+                  )}
+                </section>
+
+                {/* 最近更新日志 */}
+                <section className="pt-4 border-t border-border/40">
+                  <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2">
+                    <History className="h-4 w-4 text-primary" />
+                    <span>{t('版本迭代历史', 'Release Changelog')}</span>
+                  </h3>
+
+                  <div className="space-y-3.5">
+                    {releaseNotes.slice(0, 3).map((note) => (
+                      <div key={note.version} className="p-3.5 rounded-xl bg-muted/30 border border-border/40 space-y-1.5">
+                        <div className="flex items-center justify-between text-xs font-bold text-foreground">
+                          <span className="flex items-center gap-1.5">
+                            <Sparkles className="h-3.5 w-3.5 text-amber-500 flex-shrink-0" />
+                            <span>{note.version} {note.title ? `— ${locale === 'zh' ? note.title : note.titleEn}` : ''}</span>
+                          </span>
+                          <span className="text-[10px] text-muted-foreground font-mono">{note.date}</span>
+                        </div>
+                        <ul className="list-disc list-inside space-y-1 text-muted-foreground text-[11.5px] leading-relaxed">
+                          {(locale === 'zh' ? note.changes : note.changesEn).map((c, idx) => (
+                            <li key={idx}>{c}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              </div>
+            )}
+
+            {/* 6. 关于我们 */}
+            {activeTab === 'about' && (
+              <div className="space-y-6 animate-in fade-in duration-150">
+                <section className="text-center py-4 space-y-2">
+                  <h3 className="text-lg font-bold tracking-tight text-foreground">{t('AI万能工具箱', 'AI Toolbox')}</h3>
+                  <p className="text-xs text-muted-foreground max-w-md mx-auto leading-relaxed">
+                    {t('专为 AI 时代打造的高性能桌面生产力枢纽，汇聚全球顶尖 AI 工具、品牌驱动中心、格式转换工作台与多模型分屏对比台。', 'Curated AI productivity powerhouse with Model Arena, Drivers & Converters.')}
+                  </p>
+                </section>
+
+                <section className="p-4 rounded-xl bg-muted/30 border border-border/40 space-y-2.5 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">{t('开源协议', 'License')}</span>
+                    <span className="font-semibold text-foreground">MIT License</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">{t('开发作者', 'Author')}</span>
+                    <a href="https://github.com/khssdsg-maker" target="_blank" rel="noreferrer" className="text-primary hover:underline font-semibold flex items-center gap-1">
+                      <span>khssdsg-maker</span>
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">{t('官方开源仓库', 'GitHub Repository')}</span>
+                    <a href="https://github.com/khssdsg-maker/ai-toolbox" target="_blank" rel="noreferrer" className="text-primary hover:underline font-semibold flex items-center gap-1">
+                      <Github className="h-3.5 w-3.5" />
+                      <span>khssdsg-maker/ai-toolbox</span>
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </div>
+                </section>
+              </div>
+            )}
+          </main>
         </div>
       </div>
     </div>,
