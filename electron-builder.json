@@ -5,6 +5,7 @@
   "directories": {
     "output": "dist-electron"
   },
+  "electronLanguages": ["zh-CN", "en-US"],
   "files": [
     "electron/main.mjs",
     "electron/tab-bar.html",

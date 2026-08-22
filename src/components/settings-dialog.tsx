@@ -62,6 +62,20 @@ interface ReleaseNote {
 
 export const FALLBACK_RELEASE_NOTES: ReleaseNote[] = [
   {
+    version: 'v1.6.1',
+    date: '2026-08-22',
+    title: '安装包与安装体积大幅瘦身',
+    titleEn: 'Significantly Slimmed Installer & Installation Footprint',
+    changes: [
+      '【安装包瘦身】下载安装包从 105 MB 减至约 92 MB（-12%），安装体积从 360 MB 减至约 314 MB（-13%）',
+      '【语言包精简】裁剪 Chromium 冗余语言包，仅保留简体中文与英文（zh-CN / en-US），功能零影响'
+    ],
+    changesEn: [
+      'Slimmed Installer: Download size reduced from 105 MB to ~92 MB (-12%), on-disk footprint from 360 MB to ~314 MB (-13%)',
+      'Locale Cleanup: Trimmed redundant Chromium language packs, keeping only Simplified Chinese & English (zh-CN / en-US) with zero feature impact'
+    ]
+  },
+  {
     version: 'v1.6.0',
     date: '2026-08-22',
     title: '真·实时桌面透视、磨砂无极调节、五层玻璃层次与全站铺满布局',
