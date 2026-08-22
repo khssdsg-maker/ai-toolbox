@@ -7,5 +7,9 @@ export const metadata: Metadata = {
 }
 
 export default function PromptsPage() {
-  return <PromptsCenter />
+  return (
+    <div className="min-h-screen bg-background">
+      <PromptsCenter />
+    </div>
+  )
 }

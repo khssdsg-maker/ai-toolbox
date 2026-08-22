@@ -540,7 +540,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
 
         {/* 主内容区 */}
         <div className="px-5 sm:px-10 pt-10 pb-8 flex-1">
-          <div className="max-w-5xl mx-auto">
+          <div>
             {/* 首屏标题 */}
             <section className="mb-12 sm:mb-16 flex items-start justify-between gap-4 flex-wrap">
               <div>
@@ -611,7 +611,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
 
                     {/* 工具卡片列表 */}
                     {categoryItems.length > 0 ? (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 relative">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 relative">
                         {categoryItems.map((item, itemIndex) => {
                           const isThisDragging = isCurrentCatDragging && dragState?.dragIdx === itemIndex
 

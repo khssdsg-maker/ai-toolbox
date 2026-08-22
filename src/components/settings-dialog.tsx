@@ -62,6 +62,26 @@ interface ReleaseNote {
 
 export const FALLBACK_RELEASE_NOTES: ReleaseNote[] = [
   {
+    version: 'v1.6.0',
+    date: '2026-08-22',
+    title: '真·实时桌面透视、磨砂无极调节、五层玻璃层次与全站铺满布局',
+    titleEn: 'Real-time Desktop See-through, Stepless Frost Control, 5-Layer Glass Hierarchy & Full-width Layout',
+    changes: [
+      '【真·实时桌面透视】移除固定亚克力磨砂，窗口全透明实时透出桌面动态壁纸，软件与桌面同一动画',
+      '【磨砂无极调节】新增全屏磨砂纱层，"背景高斯模糊"滑杆升级为 0~40 无极磨砂，全清晰 ↔ 重磨砂实时可调',
+      '【五层玻璃层次体系】桌面→舞台底→侧栏顶栏→卡片→胶囊岛五档亮度递进，消除割裂竖线，软件界面与桌面明辨分明',
+      '【全站铺满与质感统一】主页/视频页内容铺满超宽屏（4~5 列自适应），侧栏/顶栏/弹层/muted 块全部玻璃化统一，预设光幕四边羽化',
+      '【修复】Wallpaper Engine 壁纸加载报错（/local-media 服务端变量未定义），预设光幕窗口两侧辉光断层'
+    ],
+    changesEn: [
+      'Real-time Desktop See-through: Removed fixed system acrylic for fully transparent windows that mirror your live desktop wallpaper in real time',
+      'Stepless Frost Control: New full-screen frost veil upgrades the Gaussian blur slider to a 0-40 stepless range, from crystal clear to heavily frosted',
+      '5-Layer Glass Hierarchy: Desktop, stage base, chrome bars, cards and capsule island step up in brightness for clear separation without hard dividers',
+      'Full-width Unified Layout: Home & Video hubs now span ultra-wide screens (4-5 adaptive columns) with consistent glassmorphism across all panels',
+      'Fixes: Wallpaper Engine loading error (undefined server variable in /local-media) and preset aurora edge glow clipping on both window sides'
+    ]
+  },
+  {
     version: 'v1.5.7',
     date: '2026-08-22',
     title: 'Steam Wallpaper Engine 联动、全景通透无界画布、全导航自定义与主题解耦',

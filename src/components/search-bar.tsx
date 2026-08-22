@@ -123,7 +123,7 @@ export function SearchBar({ onSearch, searchResults, searchQuery, siteConfig }: 
       </div>
 
       {showResults && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-background border rounded-lg shadow-xl z-50 max-h-[70vh] overflow-hidden">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-popover border rounded-lg shadow-xl z-50 max-h-[70vh] overflow-hidden">
           <Command className="border-0 shadow-none">
             <CommandList className="max-h-[70vh] overflow-y-auto">
               {searchResults.length === 0 ? (

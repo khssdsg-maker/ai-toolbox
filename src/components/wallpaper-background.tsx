@@ -7,7 +7,7 @@ export interface WallpaperConfig {
   url: string
   presetId: string
   maskOpacity: number // 0 ~ 0.9
-  bgBlur: number // 0 ~ 30
+  bgBlur: number // 0 ~ 30 全屏磨砂纱强度（无极，映射 0~40px backdrop blur）
   glassMode: boolean
   glassOpacity: number // 0.2 ~ 0.9
   glassBlur: number // 0 ~ 24
@@ -106,17 +106,25 @@ export function WallpaperBackground() {
       root.removeAttribute('data-ui-theme')
     }
 
-    // 注入毛玻璃状态与变量
+    // 注入毛玻璃状态与变量（五层层次体系：舞台底 / 侧栏顶栏 / 卡片 / 胶囊岛，随滑杆联动）
     const isGlassActive = config.glassMode || config.type !== 'none'
     if (isGlassActive) {
+      const stageOpacity = Math.min(Math.max(config.glassOpacity * 0.62, 0.18), 0.6)
       root.setAttribute('data-glass-mode', 'true')
-      root.style.setProperty('--glass-bg-opacity', config.glassOpacity.toString())
+      root.style.setProperty('--glass-bg-opacity', stageOpacity.toString())
+      root.style.setProperty('--glass-chrome-opacity', Math.min(Math.max(config.glassOpacity * 0.55, 0.18), 0.5).toString())
       root.style.setProperty('--glass-card-opacity', Math.min(config.glassOpacity + 0.12, 0.95).toString())
+      root.style.setProperty('--glass-island-opacity', Math.min(Math.max(config.glassOpacity * 0.85, 0.3), 0.6).toString())
+      root.style.setProperty('--glass-island-blur', `${Math.min(config.glassBlur * 1.75, 40)}px`)
       root.style.setProperty('--glass-blur', `${config.glassBlur}px`)
     } else {
       root.removeAttribute('data-glass-mode')
       root.style.removeProperty('--glass-bg-opacity')
+      root.style.removeProperty('--glass-stage-blur')
+      root.style.removeProperty('--glass-chrome-opacity')
       root.style.removeProperty('--glass-card-opacity')
+      root.style.removeProperty('--glass-island-opacity')
+      root.style.removeProperty('--glass-island-blur')
       root.style.removeProperty('--glass-blur')
     }
   }, [config, uiTheme])
@@ -141,31 +149,31 @@ export function WallpaperBackground() {
           loop
           muted
           playsInline
-          className="w-full h-full object-cover transition-transform duration-500"
-          style={{
-            filter: config.bgBlur > 0 ? `blur(${config.bgBlur}px)` : 'none',
-            transform: config.bgBlur > 0 ? 'scale(1.08)' : 'scale(1.01)',
-          }}
+          className="w-full h-full object-cover"
         />
       )}
 
       {/* 2. 静态图片 / 网络 URL 壁纸 */}
       {(config.type === 'image' || config.type === 'url') && config.url && (
         <div
-          className="w-full h-full bg-cover bg-center transition-all duration-500"
-          style={{
-            backgroundImage: `url("${config.url}")`,
-            filter: config.bgBlur > 0 ? `blur(${config.bgBlur}px)` : 'none',
-            transform: config.bgBlur > 0 ? 'scale(1.08)' : 'scale(1.01)',
-          }}
+          className="w-full h-full bg-cover bg-center"
+          style={{ backgroundImage: `url("${config.url}")` }}
         />
       )}
 
-      {/* 3. 内置精选动态流体光幕预设 */}
+      {/* 3. 内置精选动态流体光幕预设（半透明光幕纱罩 + 四边羽化，根治窗口两侧辉光断层） */}
       {config.type === 'preset' && (
-        <div className="relative w-full h-full overflow-hidden transition-all duration-700 bg-background">
+        <div
+          className="relative w-full h-full overflow-hidden transition-all duration-700"
+          style={{
+            maskImage: 'linear-gradient(90deg, transparent 0%, black 5%, black 95%, transparent 100%), linear-gradient(180deg, transparent 0%, black 3%, black 97%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(90deg, transparent 0%, black 5%, black 95%, transparent 100%), linear-gradient(180deg, transparent 0%, black 3%, black 97%, transparent 100%)',
+            maskComposite: 'intersect',
+            WebkitMaskComposite: 'source-in',
+          }}
+        >
           {config.presetId === 'aurora-waves' && (
-            <div className="absolute inset-0 bg-[#060d17]">
+            <div className="absolute inset-0" style={{ backgroundColor: 'rgba(6, 13, 23, 0.65)' }}>
               {/* 光球 1: 极光青蓝 */}
               <div
                 className="absolute -top-[15%] -left-[10%] w-[55vw] h-[55vw] rounded-full blur-[100px] opacity-60 mix-blend-screen"
@@ -202,7 +210,7 @@ export function WallpaperBackground() {
           )}
 
           {config.presetId === 'cyber-neon' && (
-            <div className="absolute inset-0 bg-[#090514]">
+            <div className="absolute inset-0" style={{ backgroundColor: 'rgba(9, 5, 20, 0.65)' }}>
               {/* 光球 1: 赛博霓虹紫 */}
               <div
                 className="absolute -top-[10%] left-[15%] w-[60vw] h-[60vw] rounded-full blur-[100px] opacity-65 mix-blend-screen"
@@ -231,7 +239,7 @@ export function WallpaperBackground() {
           )}
 
           {config.presetId === 'deep-space' && (
-            <div className="absolute inset-0 bg-[#030712]">
+            <div className="absolute inset-0" style={{ backgroundColor: 'rgba(3, 7, 18, 0.65)' }}>
               {/* 光球 1: 深空深蓝 */}
               <div
                 className="absolute top-[10%] left-[20%] w-[65vw] h-[65vw] rounded-full blur-[120px] opacity-50 mix-blend-screen"
@@ -260,7 +268,7 @@ export function WallpaperBackground() {
           )}
 
           {config.presetId === 'sunset-amber' && (
-            <div className="absolute inset-0 bg-[#130907]">
+            <div className="absolute inset-0" style={{ backgroundColor: 'rgba(19, 9, 7, 0.65)' }}>
               {/* 光球 1: 耀斑琥珀金 */}
               <div
                 className="absolute -top-[15%] left-[10%] w-[60vw] h-[60vw] rounded-full blur-[100px] opacity-60 mix-blend-screen"
@@ -290,11 +298,24 @@ export function WallpaperBackground() {
         </div>
       )}
 
-      {/* 4. 遮罩暗化层（确保文字高对比度可读） */}
-      <div
-        className="absolute inset-0 bg-black transition-opacity duration-300 pointer-events-none"
-        style={{ opacity: config.maskOpacity }}
-      />
+      {/* 3.5 全屏磨砂纱层：背景高斯模糊滑杆升级为无极磨砂强度（0 全清晰 ~ 40 重磨砂） */}
+      {config.type !== 'desktop' && (
+        <div
+          className="absolute inset-0"
+          style={{
+            backdropFilter: config.bgBlur > 0 ? `blur(${config.bgBlur * 1.33}px)` : 'none',
+            WebkitBackdropFilter: config.bgBlur > 0 ? `blur(${config.bgBlur * 1.33}px)` : 'none',
+          }}
+        />
+      )}
+
+      {/* 4. 遮罩暗化层（图片/视频壁纸减半遮罩提亮；预设光幕与桌面透视实时透出不遮挡） */}
+      {(config.type === 'image' || config.type === 'url' || config.type === 'video') && (
+        <div
+          className="absolute inset-0 bg-black transition-opacity duration-300 pointer-events-none"
+          style={{ opacity: config.maskOpacity * 0.5 }}
+        />
+      )}
     </div>
   )
 }

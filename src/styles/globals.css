@@ -216,7 +216,7 @@
 }
 
 /* =========================================================================
-   ✨ 亚克力毛玻璃透明界面引擎 (Glassmorphism Mode) 与 原生桌面透视
+   ✨ 亚克力毛玻璃透明界面引擎 (Glassmorphism Mode) 与 原生桌面实时透视
    ========================================================================= */
 html[data-glass-mode="true"],
 html[data-glass-mode="true"] body,
@@ -231,40 +231,48 @@ body.glass-mode main {
   background-color: transparent !important;
 }
 
+/* 🌟 L1 舞台底（.bg-background 纯类）：全页玻璃画布，界定软件区域
+      不加 backdrop 模糊（会糊掉应用内壁纸视频层），仅靠色纱保证软件辨识度 */
 html[data-glass-mode="true"] .bg-background,
 body.glass-mode .bg-background {
-  background-color: hsla(var(--background) / var(--glass-bg-opacity, 0.05)) !important;
+  background-color: hsla(var(--background) / var(--glass-bg-opacity, 0.28)) !important;
 }
 
-/* 🌟 左侧栏与侧边导航：浮空亚克力磨砂玻璃 */
-html[data-glass-mode="true"] aside,
-body.glass-mode aside {
-  background-color: hsla(var(--background) / var(--glass-card-opacity, 0.45)) !important;
+/* 🌟 L2 面板底色变体（bg-background/70 ~ /90 等）：
+      Tailwind 的 bg-background/85 是独立类名 token，.bg-background 选择器无法命中，
+      必须用属性子串选择器补齐，否则侧栏与顶栏始终保持高不透明 */
+html[data-glass-mode="true"] [class*="bg-background/"],
+body.glass-mode [class*="bg-background/"] {
+  background-color: hsla(var(--background) / var(--glass-chrome-opacity, 0.25)) !important;
   backdrop-filter: blur(var(--glass-blur, 24px)) !important;
   -webkit-backdrop-filter: blur(var(--glass-blur, 24px)) !important;
-  border-right-color: rgba(255, 255, 255, 0.1) !important;
-}
-.dark[data-glass-mode="true"] aside,
-html.dark[data-glass-mode="true"] aside {
-  border-right-color: rgba(255, 255, 255, 0.06) !important;
 }
 
-/* 🌟 顶部导航栏：浮空超薄晶体条 */
+/* 🌟 L2 左侧栏与侧边导航（胶囊岛除外）：亮度递进一档，右缘内高光 + 柔光过渡替代竖线 */
+html[data-glass-mode="true"] aside:not(.capsule-island),
+body.glass-mode aside:not(.capsule-island) {
+  background-color: hsla(var(--background) / var(--glass-chrome-opacity, 0.25)) !important;
+  backdrop-filter: blur(var(--glass-blur, 24px)) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur, 24px)) !important;
+  border-color: transparent !important;
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.07), 6px 0 18px -12px hsla(var(--background) / 0.5) !important;
+}
+
+/* 🌟 L2 顶部导航栏：亮度递进一档，底缘柔光羽化衔接（inset 微高光 + 向下光雾） */
 html[data-glass-mode="true"] header,
 body.glass-mode header {
-  background-color: hsla(var(--background) / var(--glass-card-opacity, 0.4)) !important;
+  background-color: hsla(var(--background) / var(--glass-chrome-opacity, 0.25)) !important;
   backdrop-filter: blur(var(--glass-blur, 24px)) !important;
   -webkit-backdrop-filter: blur(var(--glass-blur, 24px)) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-.dark[data-glass-mode="true"] header,
-html.dark[data-glass-mode="true"] header {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-color: transparent !important;
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.07), 0 18px 20px -16px hsla(var(--background) / 0.5) !important;
 }
 
-/* 🌟 Linear / Raycast 级悬浮晶体磨砂卡片 */
+/* 🌟 Linear / Raycast 级悬浮晶体磨砂卡片（含 bg-card/90 等透明度变体） */
 html[data-glass-mode="true"] .bg-card,
-body.glass-mode .bg-card {
+html[data-glass-mode="true"] [class*="bg-card/"],
+body.glass-mode .bg-card,
+body.glass-mode [class*="bg-card/"] {
   background-color: hsla(var(--card) / var(--glass-card-opacity, 0.5)) !important;
   backdrop-filter: blur(var(--glass-blur, 16px)) !important;
   -webkit-backdrop-filter: blur(var(--glass-blur, 16px)) !important;
@@ -273,9 +281,39 @@ body.glass-mode .bg-card {
 }
 
 .dark[data-glass-mode="true"] .bg-card,
-html.dark[data-glass-mode="true"] .bg-card {
+.dark[data-glass-mode="true"] [class*="bg-card/"],
+html.dark[data-glass-mode="true"] .bg-card,
+html.dark[data-glass-mode="true"] [class*="bg-card/"] {
   border-color: rgba(255, 255, 255, 0.08) !important;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25) !important;
+}
+
+/* 🌟 静音底色块（bg-muted 与 /xx 变体）：大面积容器统一纳入玻璃体系（播放列表整列、tab 条、弹窗标题条等） */
+html[data-glass-mode="true"] .bg-muted,
+html[data-glass-mode="true"] [class*="bg-muted/"],
+body.glass-mode .bg-muted,
+body.glass-mode [class*="bg-muted/"] {
+  background-color: hsla(var(--muted) / 0.14) !important;
+}
+
+/* 🌟 弹层气泡（bg-popover 与 /95 等变体）：统一玻璃质感 */
+html[data-glass-mode="true"] .bg-popover,
+html[data-glass-mode="true"] [class*="bg-popover/"],
+body.glass-mode .bg-popover,
+body.glass-mode [class*="bg-popover/"] {
+  background-color: hsla(var(--popover) / calc(var(--glass-card-opacity, 0.5) + 0.15)) !important;
+  backdrop-filter: blur(var(--glass-blur, 20px)) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur, 20px)) !important;
+}
+
+/* 🌟 L4 胶囊岛专属：最透悬浮晶体岛（深磨砂 + 白描边 + 投影，四边统一） */
+html[data-glass-mode="true"] .capsule-island,
+body.glass-mode .capsule-island {
+  background-color: hsla(var(--card) / var(--glass-island-opacity, 0.38)) !important;
+  backdrop-filter: blur(var(--glass-island-blur, 28px)) saturate(1.35) !important;
+  -webkit-backdrop-filter: blur(var(--glass-island-blur, 28px)) saturate(1.35) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25) !important;
 }
 
 /* 🌟 全局羽化微光消融分隔线 (Feathered Divider) */
@@ -283,6 +321,12 @@ html.dark[data-glass-mode="true"] .bg-card {
   height: 1px !important;
   background: linear-gradient(90deg, transparent 0%, hsla(var(--border) / 0.65) 20%, hsla(var(--border) / 0.65) 80%, transparent 100%) !important;
   border: none !important;
+}
+
+/* 玻璃模式下进一步羽化弱化，消除界面分块隔阂感 */
+html[data-glass-mode="true"] .feathered-divider,
+body.glass-mode .feathered-divider {
+  background: linear-gradient(90deg, transparent 0%, hsla(var(--border) / 0.25) 30%, hsla(var(--border) / 0.25) 70%, transparent 100%) !important;
 }
 
 /* =========================================================================

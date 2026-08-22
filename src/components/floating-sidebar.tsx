@@ -177,7 +177,7 @@ export function FloatingSidebar() {
     <>
       <aside
         style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
-        className="fixed left-3 top-1/2 -translate-y-1/2 z-50 hidden sm:flex flex-col items-center gap-2 p-2 rounded-[26px] bg-card/90 backdrop-blur-2xl border border-border/70 shadow-2xl shadow-black/25 select-none"
+        className="capsule-island fixed left-3 top-1/2 -translate-y-1/2 z-50 hidden sm:flex flex-col items-center gap-2 p-2 rounded-[26px] bg-card/90 backdrop-blur-2xl border border-border/70 shadow-2xl shadow-black/25 select-none"
       >
         {/* 8 大功能模块导航按键 */}
         {links.map((item) => {

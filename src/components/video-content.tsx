@@ -364,13 +364,13 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
                 </div>
             )}
 
-            <div style={{ display: isMobile ? "none" : "block" }}>
+            <aside style={{ display: isMobile ? "none" : "block" }}>
                 <Sidebar
                     navigationData={mergedNavigationData}
                     siteInfo={siteData}
                     className="sticky top-0 h-screen"
                 />
-            </div>
+            </aside>
 
             <div
                 className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm transition-all"
@@ -431,7 +431,7 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
                 </header>
 
                 <div className="px-5 sm:px-10 pt-10 pb-8">
-                    <div className="max-w-5xl mx-auto">
+                    <div>
                         <section className="mb-12 sm:mb-16 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                             <div>
                                 <h1 className="text-3xl sm:text-[2.5rem] font-bold leading-[1.15] tracking-tight">
@@ -477,7 +477,7 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
                                     <div className="mt-1 mb-5 feathered-divider" />
 
                                     {category.items && category.items.length > 0 && (
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
                                             {category.items.map((item, itemIndex) => (
                                                 item.videoConfig ? (
                                                     <VideoCard key={item.id} item={item} siteConfig={siteData} />

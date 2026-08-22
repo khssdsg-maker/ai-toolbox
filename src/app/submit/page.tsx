@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default function SubmitPage() {
     return (
         <Container>
-            <div className="min-h-screen py-10 px-4">
+            <div className="min-h-screen bg-background py-10 px-4">
                 {/* 返回按钮 */}
                 <div className="max-w-2xl mx-auto mb-8">
                     <Link href="/">

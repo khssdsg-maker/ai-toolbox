@@ -105,7 +105,7 @@ export function Sidebar({ className, navigationData, siteInfo, onClose, onAddCat
   }
 
   return (
-    <div className={cn("w-full bg-background flex flex-col h-full", className)}>
+    <div className={cn("w-full flex flex-col h-full", className)}>
       {/* 头部 Brand */}
       <div className="flex h-14 items-center px-4 flex-shrink-0 border-b border-border/40">
         <Link href="/" className="flex items-center gap-2 font-semibold">

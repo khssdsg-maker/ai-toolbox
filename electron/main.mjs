@@ -717,7 +717,7 @@ function startStaticServer(rootDir) {
         return
       }
       if (urlPath === '/local-media') {
-        const targetPath = parsedUrl.searchParams.get('path')
+        const targetPath = new URL(req.url, 'http://localhost').searchParams.get('path')
         if (!targetPath || !fs.existsSync(targetPath)) {
           res.writeHead(404)
           res.end('File Not Found')
@@ -1070,7 +1070,6 @@ async function createWindow() {
     frame: false,
     transparent: true,
     backgroundColor: '#00000000',
-    backgroundMaterial: 'acrylic',
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
