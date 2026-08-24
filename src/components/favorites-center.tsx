@@ -172,23 +172,20 @@ export function FavoritesCenter() {
 
   // 统计数据
   const countAll = favorites.length
-  const countAi = favorites.filter((f) => f.category === 'ai-tool').length
-  const countVideo = favorites.filter((f) => f.category === 'video' || f.videoConfig).length
-  const countWeb = favorites.filter((f) => f.category !== 'ai-tool' && f.category !== 'video' && !f.videoConfig).length
-
   return (
     <div className="min-h-screen bg-background text-foreground pb-12">
-      {/* Toast 提醒 */}
       {toastMsg && (
         <div className="fixed top-16 right-6 z-50 bg-primary text-primary-foreground px-4 py-2 rounded-xl shadow-lg text-xs font-semibold animate-in fade-in slide-in-from-top-2 duration-200">
           {toastMsg}
         </div>
       )}
 
-      {/* 顶部导航与快捷操作栏 */}
-      <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border/40">
-        <div className="flex items-center justify-between px-5 sm:px-10 sm:pl-24 h-14 max-w-6xl mx-auto">
-          <div className="flex items-center gap-3">
+      <header
+        style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}
+        className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border/40 select-none"
+      >
+        <div className="flex items-center justify-between pl-4 sm:pl-20 md:pl-24 pr-2 sm:pr-3 h-14 w-full">
+          <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties} className="flex items-center gap-3">
             <Link href="/">
               <Button variant="ghost" size="sm" className="gap-1.5 -ml-2 text-muted-foreground hover:text-foreground">
                 <ArrowLeft className="h-4 w-4" />
@@ -202,18 +199,13 @@ export function FavoritesCenter() {
             </h1>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleExport}
-              title={t('导出收藏备份 JSON', 'Export JSON')}
-              className="gap-1 text-xs"
-            >
+          <div className="flex-1 h-full min-w-[12px]" />
+
+          <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties} className="flex items-center gap-2 flex-shrink-0">
+            <Button variant="outline" size="sm" onClick={handleExport} className="gap-1 text-xs">
               <Download className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">{t('导出备份', 'Export')}</span>
             </Button>
-
             <label className="cursor-pointer">
               <input type="file" accept=".json" onChange={handleImport} className="hidden" />
               <span className="inline-flex items-center gap-1 h-8 px-3 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground text-xs font-medium transition-colors">
@@ -221,19 +213,16 @@ export function FavoritesCenter() {
                 <span className="hidden sm:inline">{t('导入备份', 'Import')}</span>
               </span>
             </label>
-
             <Button size="sm" className="gap-1.5 text-xs ml-1" onClick={() => setShowForm(!showForm)}>
               <Plus className="h-4 w-4" />
-              <span>{t('新增网页书签', 'Add Bookmark')}</span>
+              <span>{t('新增', 'Add')}</span>
             </Button>
-
             <WindowControls />
           </div>
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-5 sm:px-10 sm:pl-24 py-6 space-y-6">
-        {/* 新增收藏表单面板 */}
+      <div className="w-full pl-4 sm:pl-20 md:pl-24 pr-4 sm:pr-6 md:pr-8 py-6 space-y-6">
         {showForm && (
           <form onSubmit={handleAdd} className="p-5 rounded-2xl bg-card border border-border/60 shadow-lg space-y-4 animate-in fade-in duration-200">
             <div className="flex items-center justify-between border-b border-border/40 pb-3">
@@ -241,11 +230,7 @@ export function FavoritesCenter() {
                 <Plus className="h-4 w-4 text-primary" />
                 <span>{t('新增书签/网址收藏', 'Add New Bookmark')}</span>
               </h2>
-              <button
-                type="button"
-                onClick={() => setShowForm(false)}
-                className="text-muted-foreground hover:text-foreground p-1 rounded-md"
-              >
+              <button type="button" onClick={() => setShowForm(false)} className="text-muted-foreground hover:text-foreground text-xs">
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -273,10 +258,10 @@ export function FavoritesCenter() {
               className="w-full h-9 rounded-lg border border-border/60 bg-background px-3 text-xs focus:outline-none focus:ring-1 focus:ring-primary"
             />
             <div className="flex gap-2 justify-end pt-1">
-              <Button type="button" variant="ghost" size="sm" onClick={() => setShowForm(false)}>
+              <Button type="button" variant="ghost" size="sm" onClick={() => setShowForm(false)} className="h-8 text-xs">
                 {t('取消', 'Cancel')}
               </Button>
-              <Button type="submit" size="sm" className="gap-1.5">
+              <Button type="submit" size="sm" className="h-8 text-xs gap-1.5">
                 <Plus className="h-4 w-4" />
                 {t('确认添加', 'Save Bookmark')}
               </Button>
@@ -284,65 +269,48 @@ export function FavoritesCenter() {
           </form>
         )}
 
-        {/* 控制工具条：分类 Tab 选项卡与搜寻框 */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          {/* 分类选项卡 */}
-          <div className="flex items-center gap-1 p-1 rounded-xl bg-muted/60 border border-border/40 overflow-x-auto text-xs font-medium">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-muted/60 border border-border/40 overflow-x-auto text-xs font-medium w-full sm:w-auto">
             <button
               onClick={() => setFilterTab('all')}
-              className={`px-3 py-1.5 rounded-lg transition-all ${filterTab === 'all' ? 'bg-card text-foreground shadow-sm font-semibold' : 'text-muted-foreground hover:text-foreground'}`}
+              className={`px-3 py-1.5 rounded-lg transition-all whitespace-nowrap ${filterTab === 'all' ? 'bg-card text-foreground shadow-sm font-semibold' : 'text-muted-foreground hover:text-foreground'}`}
             >
               {t('全部', 'All')} ({countAll})
             </button>
             <button
               onClick={() => setFilterTab('ai-tool')}
-              className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${filterTab === 'ai-tool' ? 'bg-card text-foreground shadow-sm font-semibold' : 'text-muted-foreground hover:text-foreground'}`}
+              className={`px-3 py-1.5 rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 ${filterTab === 'ai-tool' ? 'bg-card text-foreground shadow-sm font-semibold' : 'text-muted-foreground hover:text-foreground'}`}
             >
               <Sparkles className="h-3.5 w-3.5 text-amber-500" />
-              <span>{t('AI 工具', 'AI Tools')}</span> ({countAi})
+              <span>{t('AI 工具', 'AI Tools')}</span>
             </button>
             <button
               onClick={() => setFilterTab('video')}
-              className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${filterTab === 'video' ? 'bg-card text-foreground shadow-sm font-semibold' : 'text-muted-foreground hover:text-foreground'}`}
+              className={`px-3 py-1.5 rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 ${filterTab === 'video' ? 'bg-card text-foreground shadow-sm font-semibold' : 'text-muted-foreground hover:text-foreground'}`}
             >
               <MonitorPlay className="h-3.5 w-3.5 text-purple-500" />
-              <span>{t('视频/媒体', 'Videos')}</span> ({countVideo})
+              <span>{t('视频/媒体', 'Videos')}</span>
             </button>
             <button
               onClick={() => setFilterTab('website')}
-              className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${filterTab === 'website' ? 'bg-card text-foreground shadow-sm font-semibold' : 'text-muted-foreground hover:text-foreground'}`}
+              className={`px-3 py-1.5 rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 ${filterTab === 'website' ? 'bg-card text-foreground shadow-sm font-semibold' : 'text-muted-foreground hover:text-foreground'}`}
             >
               <Globe className="h-3.5 w-3.5 text-blue-500" />
-              <span>{t('自定义书签', 'Bookmarks')}</span> ({countWeb})
+              <span>{t('自定义书签', 'Bookmarks')}</span>
             </button>
           </div>
 
-          {/* 实时搜索框 */}
           <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-            <input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t('搜索已收藏的工具与书签...', 'Search favorites...')}
-              className="w-full h-9 pl-9 pr-7 rounded-xl border border-border/50 bg-card text-xs focus:outline-none focus:ring-1 focus:ring-primary"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-              >
-                <X className="h-3.5 w-3.5" />
-              </button>
-            )}
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder={t('搜索已收藏的工具与书签...', 'Search favorites...')} className="w-full h-9 pl-9 pr-7 rounded-xl border border-border/50 bg-card text-xs focus:outline-none focus:ring-1 focus:ring-primary" />
+            {searchQuery && <button onClick={() => setSearchQuery('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"><X className="h-3.5 w-3.5" /></button>}
           </div>
         </div>
 
-        {/* 收藏物品列表展示区 */}
         {mounted && filteredList.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
             {filteredList.map((fav) => {
               const isVideo = fav.category === 'video' || !!fav.videoConfig
-
               if (isVideo) {
                 return (
                   <div key={fav.id} className="relative group/fav">

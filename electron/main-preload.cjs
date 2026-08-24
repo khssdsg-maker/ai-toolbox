@@ -18,4 +18,5 @@ contextBridge.exposeInMainWorld('appAPI', {
   onDownloadProgress: (cb) => ipcRenderer.on('update:download-progress', (e, percent) => cb(percent)),
   scanWallpaperEngine: (customDir) => ipcRenderer.invoke('app:scan-wallpaper-engine', customDir),
   selectWallpaperFolder: () => ipcRenderer.invoke('app:select-wallpaper-folder'),
+  onMaximizedChange: (cb) => ipcRenderer.on('window:maximized-change', (e, isMax) => cb(isMax)),
 })

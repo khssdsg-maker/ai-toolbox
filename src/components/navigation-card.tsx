@@ -159,8 +159,8 @@ export function NavigationCard({
             />
           </div>
 
-          {/* 文字内容（统一单行截断与垂直居中，确保所有卡片高度 100% 齐平） */}
-          <div className="flex-1 min-w-0 pr-14 flex flex-col justify-center gap-0.5">
+          {/* 文字内容（零阻碍吃满卡片全宽，确保所有长名称完整展示） */}
+          <div className="flex-1 min-w-0 flex flex-col justify-center gap-0.5">
             <div className="flex items-center gap-1.5 min-w-0">
               <h3 className="font-semibold text-[13.5px] sm:text-[14px] text-foreground truncate leading-tight transition-colors duration-200 group-hover:text-primary">
                 {displayTitle}
@@ -170,15 +170,15 @@ export function NavigationCard({
                   {t('自定义', 'Custom')}
                 </span>
               )}
-              <ArrowUpRight className="w-3.5 h-3.5 flex-shrink-0 opacity-0 -translate-x-1 translate-y-0.5 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:text-primary text-muted-foreground/30" />
+              <ArrowUpRight className="w-3.5 h-3.5 flex-shrink-0 hidden group-hover:inline-block text-primary" />
             </div>
             <p className="text-muted-foreground/80 text-[12px] leading-snug line-clamp-1 truncate">
               {displayDesc || (locale === 'en' ? 'Quick access portal' : '一键极速直达')}
             </p>
           </div>
 
-          {/* 常用置顶、编辑、单卡片重抓、收藏与删除按键 */}
-          <div className="absolute right-2 top-2.5 flex items-center gap-0.5 bg-card/80 backdrop-blur-sm rounded-lg p-0.5 border border-border/30 opacity-0 group-hover:opacity-100 transition-opacity">
+          {/* 常用置顶、编辑、单卡片重抓、收藏与删除按键（晶体磨砂浮层，Hover 时优雅浮现） */}
+          <div className="absolute right-1.5 top-1.5 z-10 flex items-center gap-0.5 bg-card/90 backdrop-blur-md rounded-lg p-0.5 border border-border/50 shadow-xs opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none group-hover:pointer-events-auto">
             {/* 🔄 单卡片独立重新拉取图标 */}
             <button
               type="button"

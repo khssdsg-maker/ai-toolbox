@@ -484,8 +484,8 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
           style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}
           className="sticky top-0 z-30 bg-background/70 backdrop-blur-2xl border-b border-border/30 select-none"
         >
-          <div className="flex items-center gap-2.5 px-4 sm:px-8 h-14">
-            <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties} className="flex-1 min-w-0">
+          <div className="flex items-center gap-2.5 pl-4 sm:pl-6 pr-2 sm:pr-3 h-14 w-full">
+            <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties} className="w-36 sm:w-60 md:w-80 max-w-sm min-w-[110px] flex-shrink">
               <SearchBar
                 navigationData={navigationData}
                 onSearch={handleSearch}
@@ -494,13 +494,15 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
                 siteConfig={siteData}
               />
             </div>
+            {/* 顶栏原生窗口可拖拽区域 */}
+            <div className="flex-1 h-full min-w-[12px]" />
             <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties} className="flex items-center gap-1.5 flex-shrink-0">
               {/* 🌟 「+ 新建分类」专属按键 */}
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowAddCatModal(true)}
-                className="h-8 gap-1 text-xs font-medium text-muted-foreground hover:text-foreground hidden sm:flex"
+                className="h-8 gap-1 text-xs font-medium text-muted-foreground hover:text-foreground hidden md:flex"
               >
                 <FolderPlus className="w-3.5 h-3.5" />
                 <span>{t('新建分类', 'Add Category')}</span>
@@ -539,7 +541,7 @@ export function NavigationContent({ navigationData, siteData }: NavigationConten
         </header>
 
         {/* 主内容区 */}
-        <div className="px-5 sm:px-10 pt-10 pb-8 flex-1">
+        <div className="pl-4 sm:pl-6 pr-4 sm:pr-6 pt-8 pb-12 flex-1 w-full">
           <div>
             {/* 首屏标题 */}
             <section className="mb-12 sm:mb-16 flex items-start justify-between gap-4 flex-wrap">

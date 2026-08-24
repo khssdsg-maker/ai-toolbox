@@ -1000,8 +1000,11 @@ ${specificTask}
       {/* ========================================================================= */}
       {/* 顶部控制栏 */}
       {/* ========================================================================= */}
-      <header className="flex-none bg-background/90 backdrop-blur-lg border-b border-border/40 h-14 px-4 sm:px-6 sm:pl-24 flex items-center justify-between gap-3 z-30">
-        <div className="flex items-center gap-3 min-w-0">
+      <header
+        style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}
+        className="flex-none bg-background/90 backdrop-blur-lg border-b border-border/40 h-14 pl-4 sm:pl-20 md:pl-24 pr-2 sm:pr-3 flex items-center justify-between gap-3 z-30 select-none"
+      >
+        <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties} className="flex items-center gap-3 min-w-0">
           <Link href="/">
             <Button variant="ghost" size="sm" className="gap-1.5 -ml-2 text-muted-foreground hover:text-foreground">
               <ArrowLeft className="h-4 w-4" />
@@ -1021,8 +1024,11 @@ ${specificTask}
           </div>
         </div>
 
+        {/* 顶栏原生窗口可拖拽区域 */}
+        <div className="flex-1 h-full min-w-[12px]" />
+
         {/* 顶部中央：多屏布局模式切换器 */}
-        <div className="flex items-center gap-2">
+        <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties} className="flex items-center gap-2 flex-shrink-0">
           <div className="flex items-center bg-muted/60 p-0.5 rounded-xl border border-border/60 text-xs">
             <button
               onClick={() => { setLayoutMode('split-2'); setMaximizedSlot(null) }}

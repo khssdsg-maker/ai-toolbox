@@ -356,9 +356,15 @@ body.glass-mode .feathered-divider {
 
 @layer base {
   * { @apply border-border; }
-  html { @apply scroll-smooth; }
+  html {
+    @apply scroll-smooth;
+    background: transparent !important;
+    overflow: hidden;
+  }
   body {
-    @apply bg-background text-foreground overscroll-none;
+    @apply text-foreground overscroll-none;
+    background: transparent !important;
+    overflow: hidden;
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
   }

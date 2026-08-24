@@ -1,7 +1,7 @@
 # 📋 AI万能工具箱 (AI Toolbox) 项目开发无缝交接文档
 
-> **文档创建/更新时间**：2026-08-19
-> **当前最新版本**：`v1.5.6` (已成功发布至 GitHub Releases 与 Cloudflare Pages)
+> **文档创建/更新时间**：2026-08-22
+> **当前最新版本**：`v1.6.1` (已成功发布至 GitHub Releases 与 Cloudflare Pages)
 > **项目本地路径**：`C:\Users\海辰\.gemini\antigravity\scratch\ai-toolbox`
 > **GitHub 仓库**：`https://github.com/khssdsg-maker/ai-toolbox`
 > **在线体验版**：`https://ai-toolbox-ajc.pages.dev`
@@ -10,7 +10,58 @@
 
 ## 一、 项目当前最新状态与已完成工作
 
-### 1. 全新发布【黄金三栏零重叠架构、胶囊岛 6 大高定动效主题与全自由拖拽排版】(`v1.5.6`)
+### 0. ⭐ 下一阶段开发路线图（2026-08-22 战略决策，新 Agent 必读）
+
+> 背景：产品诊断结论——九大功能模块分散火力，每条战线 60-80 分无一 95 分；多轮迭代被视觉微调吞噬，基建欠账（数据安全/发布工程/测试）未还。**战略转向：收敛聚焦，把 AI 分屏研判做成全网最强，其余枢纽降级维护。**
+
+**四阶段路线图（按序执行）：**
+
+**📦 阶段一 v1.7.0「还债保命」（1-2 天，不加任何新功能）**
+1. 数据镜像备份：启动时把 localStorage 关键数据（自建分类/卡片/主题/阵容）自动镜像写入 userData 的 JSON，检测 localStorage 为空时自动恢复（堵住"清缓存全丢"漏洞）；
+2. 发布工程加固：publish-release.js 增加代理可达性探测（7890 不通自动走直连）；更新日志从 settings-dialog.tsx 内嵌数组外置为独立 JSON 文件（拆除"正则解析组件源码"脆弱耦合）；
+3. 工程卫生：启用 ESLint（结束永久 --no-lint）、清死代码（arena 的 single-1 死路径、无 UI 入口的 removeCustomModel、未使用图标）、修正 README 与代码失真（react-resizable-panels 宣称在用实为手写拖拽）；
+4. 顺手修 arena 小 bug：通义万相被误分入"国际顶流"分组（arena-content.tsx:875/:882 slice 边界）、自定义模型缺删除 UI。
+
+**⚔️ 阶段二 v1.8.0「AI 分屏 · 全自动流水线」核心战役（3-5 天，只打分屏）**
+1. 回复完成自动检测：轮询各栏 webview 字数，连续 3 次稳定即判定生成完毕（整条流水线缺失的触发器）；
+2. 全自动研判流水线：群发 → 自动等各站完成 → 自动抓取 → 自动喂总审官 → 自动出终审，全程零人肉；
+3. 注入可见性：逐栏发送成功/失败徽标 + 重试按钮；webview 加载状态条与白屏/Cloudflare 拦截提示（现无任何 did-fail-load 处理）；
+4. 体验闭环：阵容与布局记忆（现全部不持久化，刷新即丢）、多套阵容预设一键切换、总审官 webview 会话保活（现关弹窗即销毁，重开冷加载 5-10 秒）、三栏/四宫格拖拽调宽（用已安装未使用的 react-resizable-panels）。
+
+**🏆 阶段三 v1.9.0「战绩与升级体验」（2-3 天）**
+1. 竞技场战绩系统：A/B 投票 + ELO 排行榜（Award/Crown 图标已导入未使用）；2. 研判报告一键导出 Markdown；3. 接入 electron-updater 差量更新（blockmap/app-update.yml 打包时已在生成，安装包 92MB → 每次升级仅几 MB）。
+
+**✂️ 阶段四 v2.0「做减法」战略版**
+- 其余枢纽降级为精简入口不再迭代；安全收尾：AI 站分站独立 partition（现 11 站 cookie 共池 persist:ai_arena 有跨站关联风控风险）、CSP/XFO 剥离按域名白名单收窄（main.mjs setupSessionSecurity 现对所有域名无差别生效）；README 写清晰定位宣言。
+
+**🚫 不做清单（防发散，与做什么同等重要）：**
+1. 不再新增第 10 个功能枢纽，新功能只进 AI 分屏；
+2. 视觉体系冻结：五层玻璃体系已定稿，只修显示 bug，不再调主观参数（透明度/磨砂数值）；
+3. 不做 Web 端 arena 降级（webview 依赖 Electron 是架构事实，浏览器端保持"新窗口打开"卡片）。
+
+### 0.5 ⭐ 本会话（2026-08-22，v1.5.7→v1.6.1）确立的关键技术事实（新 Agent 防坑必读）
+1. **五层玻璃层次体系**：桌面 → 舞台底(`.bg-background`) → 侧栏/顶栏(chrome 档) → 卡片(card 档) → 胶囊岛(`.capsule-island`)，CSS 变量注入于 `wallpaper-background.tsx`（随设置滑杆联动）。玻璃选择器必须含 `[class*="bg-background/"]`、`[class*="bg-card/"]`、`[class*="bg-muted/"]` 等属性子串匹配——**Tailwind v4 的 `bg-background/85` 是独立类名 token，`.bg-background` 选择器匹配不到它**。
+2. **磨砂架构**：main.mjs 已**移除** `backgroundMaterial: 'acrylic'`（曾两度反复，最终决策：桌面清晰实时透视）；全屏磨砂由 `wallpaper-background.tsx` 的磨砂纱层（`backdrop-filter: blur(bgBlur×1.33px)`）无极控制，"背景高斯模糊"滑杆=全屏磨砂强度（0 全清晰~40 重磨砂）。**CSS 无法模糊窗口外的真实桌面**（backdrop-filter 只作用于应用内网页内容），只有系统 acrylic 能磨砂桌面但强度固定不可调——此为最终取舍结论，勿再反复。
+3. 预设光幕四边羽化 mask（左右 5%/上下 3%）防窗口边缘辉光硬切断层；预设底色为 65% alpha 纱罩；图片/视频壁纸黑遮罩渲染时 ×0.5。
+4. **发布流程三大坑**：① publish-release.js 在无环境代理时强制注入 `127.0.0.1:7890`——**代理软件未运行时 electron-builder 必挂**（ECONNREFUSED），先 `curl -x http://127.0.0.1:7890` 测代理再跑，不通请海辰开代理；② `gh release create` 中断会残留**草稿状态**（isDraft:true 用户不可见），需 `gh release edit vX.X.X --draft=false` 修正并验证 api.github.com/releases/latest；③ 国内网络 github.com 主站时断时续而 api.github.com 通常可达，push 失败多为网络窗口期，多重试或等代理。
+5. **安装包瘦身**：electron-builder.json 已加 `"electronLanguages": ["zh-CN", "en-US"]`（裁 55 个语言包），安装包 105→92MB、安装体积 360→314MB。Chromium LICENSES.chromium.html（20MB）保留未删（海辰决策）。
+6. Wallpaper Engine 壁纸 `/local-media` 接口的 `parsedUrl` 未定义变量 bug 已在 v1.6.0 修复（改 `new URL(req.url, 'http://localhost')`）。
+7. arena 完整功能清单与 10 项已知局限已在 2026-08-22 全面梳理（注入引擎 15 输入框+12 按钮选择器、DOM 改版即静默失效、研判弹窗"共识点/优势速览"为硬编码假智能、状态不持久化等），优化项已纳入上述路线图阶段一/二。
+
+### 1. 全新发布【真·实时桌面透视、磨砂无极调节、五层玻璃层次与全站铺满布局】(`v1.6.0`)
+- **真·实时桌面透视**：移除固定系统亚克力磨砂，窗口全透明实时透出桌面动态壁纸（Wallpaper Engine 动画与桌面同一动画）。
+- **磨砂无极调节**：新增全屏磨砂纱层，"背景高斯模糊"滑杆升级为 0~40 无级磨砂（全清晰 ↔ 重磨砂实时可调）。
+- **五层玻璃层次体系**：桌面→舞台底→侧栏顶栏→卡片→胶囊岛五档亮度递进，消除割裂竖线，软件界面与桌面明辨分明；胶囊岛改最透悬浮晶体（capsule-island 专属规则）。
+- **全站铺满与质感统一**：主页/视频页内容去除 max-w-5xl 限宽铺满超宽屏（网格自适应 4~5 列）；侧栏/顶栏/弹层/bg-muted 块全部玻璃化统一；预设光幕四边羽化消融。
+- **修复**：Wallpaper Engine 壁纸加载报错（/local-media 服务端变量未定义）、预设光幕窗口两侧辉光断层。
+
+### 2. 发布【安装包与安装体积大幅瘦身】(`v1.6.1`)
+- 下载安装包 105 MB → 92 MB（-12%），安装体积 360 MB → 314 MB（-13%）；裁剪 Chromium 冗余语言包仅留 zh-CN/en-US，功能零影响。
+
+### 3. 发布【Steam Wallpaper Engine 联动、全景通透无界画布、全导航自定义与主题解耦】(`v1.5.7`)
+- WE 创意工坊壁纸库自动扫描/自定义目录画廊选择/GPU 加速静音视频壁纸；Windows 桌面透视透明窗体；全景羽化消融分割线与晶体磨砂卡片；6 大枢纽通用自定义卡片与 JSON 备份；7 套 UI 氛围色与 6 款胶囊动效主题解耦。
+
+### 4. 全新发布【黄金三栏零重叠架构、胶囊岛 6 大高定动效主题与全自由拖拽排版】(`v1.5.6`)
 - **黄金三栏物理隔离（彻底根治重叠）**：全局悬浮胶囊岛（`left-3`）、纯净 AI 分类侧边栏（`left-58px`）与主画卷内容（`lg:pl-282px`）各司其职并列排布，彻底消除遮挡。
 - **胶囊岛 6 大高定动效主题引擎**：
   1. 🌿 **赛博薄荷绿 (默认经典)**：`#4DE0B1` 生物荧光呼吸脉冲（Bioluminescent Pulse）
@@ -171,7 +222,7 @@
 我们继续【AI万能工具箱】项目的开发。
 项目本地路径：C:\Users\海辰\.gemini\antigravity\scratch\ai-toolbox
 
-请先读取本地的交接文档 HANDOFF.md 以及全局规则 C:\Users\海辰\.gemini\config\rules\haichen-workflow.md 确认项目最新状态与海辰的开发习惯。
+请先读取本地的交接文档 HANDOFF.md（重点精读「一、0. ⭐ 下一阶段开发路线图」与「一、0.5 ⭐ 本会话确立的关键技术事实（防坑必读）」两节）以及全局规则 C:\Users\海辰\.gemini\config\rules\haichen-workflow.md，确认项目最新状态、既定路线图与海辰的开发铁律后再行动。
 
-确认完毕后，我们接下来开始做：[在此填写您下一步的新需求/修改]
+确认完毕后，我们接下来开始做：[在此填写您下一步的新需求/修改，或直接填写"按 HANDOFF.md 路线图执行下一阶段"]
 ```

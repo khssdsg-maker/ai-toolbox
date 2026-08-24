@@ -314,18 +314,27 @@ export function ToolsCenter() {
         </div>
       )}
 
-      {/* 统一顶栏 */}
-      <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border/40">
-        <div className="flex items-center gap-4 px-5 sm:px-10 sm:pl-24 h-14 max-w-6xl mx-auto">
-          <Link href="/">
-            <Button variant="ghost" size="sm" className="gap-1.5 -ml-2 text-muted-foreground">
-              <ArrowLeft className="h-4 w-4" />
-              {t('首页', 'Home')}
-            </Button>
-          </Link>
-          <h1 className="text-lg font-bold tracking-tight">{t('网络工具箱', 'Network Tools')}</h1>
+      {/* 顶部导航与全局窗口控制栏 */}
+      <header
+        style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}
+        className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border/40 select-none"
+      >
+        <div className="flex items-center gap-4 pl-4 sm:pl-20 md:pl-24 pr-2 sm:pr-3 h-14 w-full">
+          <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties} className="flex items-center gap-3">
+            <Link href="/">
+              <Button variant="ghost" size="sm" className="gap-1.5 -ml-2 text-muted-foreground hover:text-foreground">
+                <ArrowLeft className="h-4 w-4" />
+                {t('首页', 'Home')}
+              </Button>
+            </Link>
+            <div className="h-4 w-[1px] bg-border/60" />
+            <h1 className="text-base font-bold tracking-tight">{t('网络工具箱', 'Network Tools')}</h1>
+          </div>
           
-          <div className="ml-auto flex items-center gap-2">
+          {/* 顶栏原生窗口可拖拽区域 */}
+          <div className="flex-1 h-full min-w-[12px]" />
+
+          <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties} className="flex items-center gap-2 flex-shrink-0">
             <Button
               variant="outline"
               size="sm"
@@ -335,18 +344,18 @@ export function ToolsCenter() {
               <Plus className="h-3.5 w-3.5" />
               <span>{t('添加工具', 'Add Tool')}</span>
             </Button>
-            <div className="w-[1px] h-4 bg-border/60 mx-0.5" />
-            <Link href="/convert" aria-label={t('文件转换', 'Convert')}>
+            <div className="hidden xl:block w-[1px] h-4 bg-border/60 mx-0.5" />
+            <Link href="/convert" aria-label={t('文件转换', 'Convert')} className="hidden xl:inline-flex">
               <Button variant="ghost" size="icon" className="hover:bg-accent/50 h-8 w-8">
                 <ArrowRightLeft className="h-[17px] w-[17px]" />
               </Button>
             </Link>
-            <Link href="/videos" aria-label={t('视频导航', 'Videos')}>
+            <Link href="/videos" aria-label={t('视频导航', 'Videos')} className="hidden xl:inline-flex">
               <Button variant="ghost" size="icon" className="hover:bg-accent/50 h-8 w-8">
                 <MonitorPlay className="h-[17px] w-[17px]" />
               </Button>
             </Link>
-            <Link href="/favorites" aria-label={t('我的收藏', 'Favorites')}>
+            <Link href="/favorites" aria-label={t('我的收藏', 'Favorites')} className="hidden xl:inline-flex">
               <Button variant="ghost" size="icon" className="hover:bg-accent/50 h-8 w-8">
                 <Star className="h-[17px] w-[17px]" />
               </Button>
@@ -358,8 +367,8 @@ export function ToolsCenter() {
       </header>
 
       {/* 主体内容 */}
-      <div className="px-5 sm:px-10 sm:pl-24 pt-8 pb-16">
-        <div className="max-w-5xl mx-auto">
+      <div className="pl-4 sm:pl-20 md:pl-24 pr-4 sm:pr-6 md:pr-8 pt-8 pb-16 w-full">
+        <div>
           <section className="mb-10 sm:mb-14 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
               <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-semibold mb-3 border border-blue-500/20">
@@ -403,7 +412,7 @@ export function ToolsCenter() {
                   </div>
                   <div className="mt-3 feathered-divider" />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3.5">
                   {category.items.map((item) => (
                     <div key={item.id} className="relative group">
                       <NavigationCard item={item} />

@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { Providers } from '@/components/providers'
 import { FloatingSidebar } from '@/components/floating-sidebar'
 import { WallpaperBackground } from '@/components/wallpaper-background'
+import { WindowFrame } from '@/components/window-frame'
 import type { Metadata } from 'next'
 import Script from 'next/script'
 // Define font CSS variable classes without external Google Font network dependencies
@@ -61,9 +62,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Providers>
-            <WallpaperBackground />
-            <FloatingSidebar />
-            {children}
+            <WindowFrame>
+              <WallpaperBackground />
+              <FloatingSidebar />
+              {children}
+            </WindowFrame>
           </Providers>
         </ThemeProvider>
       </body>

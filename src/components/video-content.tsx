@@ -389,9 +389,12 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
             </div>
 
             <main className="flex-1 min-w-0">
-                <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border/40">
-                    <div className="flex items-center gap-4 px-5 sm:px-10 h-14">
-                        <div className="flex-1 min-w-0">
+                <header
+                    style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}
+                    className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border/40 select-none"
+                >
+                    <div className="flex items-center gap-3 pl-4 sm:pl-6 pr-2 sm:pr-3 h-14 w-full">
+                        <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties} className="w-36 sm:w-60 md:w-80 max-w-sm min-w-[110px] flex-shrink">
                             <SearchBar
                                 navigationData={mergedNavigationData}
                                 onSearch={handleSearch}
@@ -400,7 +403,11 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
                                 siteConfig={siteData}
                             />
                         </div>
-                        <div className="flex items-center gap-2">
+
+                        {/* 顶栏原生窗口可拖拽区域 */}
+                        <div className="flex-1 h-full min-w-[12px]" />
+
+                        <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties} className="flex items-center gap-2 flex-shrink-0">
                             <Button
                                 variant="outline"
                                 size="sm"
@@ -408,7 +415,7 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
                                 className="h-8 text-xs gap-1.5 border-primary/40 bg-primary/5 hover:bg-primary/10 text-primary font-medium"
                             >
                                 <Plus className="h-3.5 w-3.5" />
-                                <span>{t('添加视频', 'Add Video')}</span>
+                                <span className="hidden sm:inline">{t('添加视频', 'Add Video')}</span>
                             </Button>
                             <div className="w-[1px] h-4 bg-border/60 mx-0.5" />
                             <ModeToggle />
@@ -430,7 +437,7 @@ export function VideoContent({ navigationData, siteData }: VideoContentProps) {
                     </div>
                 </header>
 
-                <div className="px-5 sm:px-10 pt-10 pb-8">
+                <div className="pl-4 sm:pl-6 pr-4 sm:pr-6 md:pr-8 pt-8 pb-16 flex-1 w-full">
                     <div>
                         <section className="mb-12 sm:mb-16 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                             <div>

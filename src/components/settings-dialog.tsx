@@ -62,6 +62,26 @@ interface ReleaseNote {
 
 export const FALLBACK_RELEASE_NOTES: ReleaseNote[] = [
   {
+    version: 'v1.6.2',
+    date: '2026-08-24',
+    title: '高定圆润四角、全景卡片画卷与顶栏自适应贴边',
+    titleEn: 'Rounded Window Corners, Full-width Responsive Cards & Adaptive Header Controls',
+    changes: [
+      '【物理级真实圆润四角】打通透明画布与 WindowFrame 架构，窗口化模式呈现 16px 丝滑大圆角与晶体描边，最大化平滑贴边',
+      '【全站子页面全景舒展】彻底解除驱动中心、网络工具、格式转换、个人收藏与提示词页面的固定限宽，升级 4~6 列自适应网格，充分利用屏幕空间',
+      '【顶栏全自适应弹性响应】顶栏控制键贴合最右上角自适应流动，搜索框智能弹性伸缩，全站顶栏原生窗口拖拽支持',
+      '【卡片标题零截断】导航卡片名称全宽舒展 100% 完整展示，悬浮呈现晶体磨砂功能胶囊',
+      '【视觉走廊与秩序分明】保持胶囊岛 80px+ 安全走廊与各功能板块 48px+ 段落间隔，呼吸感与空间利用率兼得'
+    ],
+    changesEn: [
+      'True Rounded Window Corners: Transparent window canvas with 16px smooth rounded corners and glass border, seamless edge-snapping on maximize',
+      'Full-width Responsive Cards: Removed container constraints across subpages (Drivers, Tools, Convert, Favorites, Prompts), upgraded to 4-6 column adaptive grid',
+      'Adaptive Header Controls: Window controls pinned to the top-right corner, elastic search bar, and seamless drag area across all headers',
+      'Zero Title Truncation: Navigation card titles expand 100% with floating crystal frosted actions on hover',
+      'Spacious Tiered Layout: Clean visual corridor for floating capsule island and elegant spacing between category sections'
+    ]
+  },
+  {
     version: 'v1.6.1',
     date: '2026-08-22',
     title: '安装包与安装体积大幅瘦身',

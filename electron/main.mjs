@@ -1090,8 +1090,14 @@ async function createWindow() {
 
   mainWindow.on('resize', saveWindowState)
   mainWindow.on('move', saveWindowState)
-  mainWindow.on('maximize', saveWindowState)
-  mainWindow.on('unmaximize', saveWindowState)
+  mainWindow.on('maximize', () => {
+    saveWindowState()
+    mainWindow?.webContents?.send('window:maximized-change', true)
+  })
+  mainWindow.on('unmaximize', () => {
+    saveWindowState()
+    mainWindow?.webContents?.send('window:maximized-change', false)
+  })
   mainWindow.on('close', saveWindowState)
 
   // 主窗口防劫持铁闸：拦截并禁止任何外部网页跳转篡改主应用路由

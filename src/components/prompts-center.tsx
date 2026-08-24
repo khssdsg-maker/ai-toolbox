@@ -34,6 +34,7 @@ import {
 import { Button } from '@/registry/new-york/ui/button'
 import { PROMPTS_DATA, PROMPT_CATEGORIES, PROMPT_PLATFORMS, type PromptItem, type PromptPlatform } from '@/data/prompts-data'
 import { SiteFavicon } from '@/components/site-favicon'
+import { WindowControls } from '@/components/window-controls'
 import { useLanguage } from '@/lib/language-context'
 import { cn } from '@/lib/utils'
 
@@ -345,7 +346,7 @@ export function PromptsCenter() {
   }, [selectedCategory, selectedTag, searchQuery, favorites])
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:pl-24 py-6 space-y-7 relative">
+    <div className="min-h-screen bg-background relative pb-12">
       {/* 全局反馈 Toast */}
       {toastMessage && (
         <div className="fixed top-16 left-1/2 -translate-x-1/2 z-[110] px-4 py-2 bg-foreground text-background text-xs font-semibold rounded-full shadow-lg border border-border/20 animate-in fade-in slide-in-from-top-2 duration-150 pointer-events-none">
@@ -455,24 +456,47 @@ export function PromptsCenter() {
         </div>
       )}
 
-      {/* 顶部快捷返回条 */}
-      <div className="flex items-center justify-between">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-card/80 hover:bg-muted text-xs font-semibold text-muted-foreground hover:text-foreground border border-border/60 transition-all shadow-sm group"
-        >
-          <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" />
-          <span>{t('返回工具箱首页', 'Back to Home')}</span>
-        </Link>
-        <Button
-          onClick={handleOpenAddPlatform}
-          size="sm"
-          className="gap-1.5 text-xs h-8 bg-primary text-primary-foreground font-medium shadow-xs"
-        >
-          <Plus className="h-3.5 w-3.5" />
-          <span>{t('➕ 添加提示词站点', 'Add Prompt Site')}</span>
-        </Button>
-      </div>
+      {/* 顶部导航与全局窗口控制栏 */}
+      <header
+        style={{ WebkitAppRegion: 'drag' } as React.CSSProperties}
+        className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border/40 select-none"
+      >
+        <div className="flex items-center justify-between pl-4 sm:pl-20 md:pl-24 pr-2 sm:pr-3 h-14 w-full">
+          <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties} className="flex items-center gap-3">
+            <Link href="/">
+              <Button variant="ghost" size="sm" className="gap-1.5 -ml-2 text-muted-foreground hover:text-foreground">
+                <ArrowLeft className="h-4 w-4" />
+                {t('首页', 'Home')}
+              </Button>
+            </Link>
+            <div className="h-4 w-[1px] bg-border/60" />
+            <h1 className="text-base font-bold flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-primary" />
+              <span>{t('AI 提示词灵感宝典', 'Prompts Hub')}</span>
+            </h1>
+          </div>
+
+          {/* 顶栏原生窗口可拖拽区域 */}
+          <div className="flex-1 h-full min-w-[12px]" />
+
+          <div style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties} className="flex items-center gap-2 flex-shrink-0">
+            <Button
+              onClick={handleOpenAddPlatform}
+              size="sm"
+              variant="outline"
+              className="gap-1.5 text-xs h-8 border-primary/40 bg-primary/5 hover:bg-primary/10 text-primary font-medium"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              <span>{t('添加站点', 'Add Site')}</span>
+            </Button>
+            <div className="w-[1px] h-4 bg-border/60 mx-0.5" />
+            <WindowControls />
+          </div>
+        </div>
+      </header>
+
+      {/* 主体内容（保证左侧避让胶囊岛的安全距离） */}
+      <div className="w-full pl-4 sm:pl-20 md:pl-24 pr-4 sm:pr-6 md:pr-8 py-6 space-y-7 relative">
 
       {/* 顶部标题横幅 */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-card via-card to-primary/5 border border-border/60 p-6 sm:p-8 shadow-sm">
@@ -546,7 +570,7 @@ export function PromptsCenter() {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3.5">
           {filteredPlatforms.map((platform) => (
             <div key={platform.id} className="relative group">
               <a
@@ -717,7 +741,7 @@ export function PromptsCenter() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-5">
             {filteredPrompts.map((item) => {
               const hasVariables = item.variables && item.variables.length > 0
               const isExpanded = expandedIds[item.id] || false
@@ -886,6 +910,7 @@ export function PromptsCenter() {
           </div>
         )}
       </section>
+      </div>
     </div>
   )
 }
