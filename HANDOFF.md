@@ -1,7 +1,7 @@
 # 📋 AI万能工具箱 (AI Toolbox) 项目开发无缝交接文档
 
-> **文档创建/更新时间**：2026-08-22
-> **当前最新版本**：`v1.6.1` (已成功发布至 GitHub Releases 与 Cloudflare Pages)
+> **文档创建/更新时间**：2026-08-24
+> **当前最新版本**：`v1.6.2` (已成功发布至 GitHub Releases 与 Cloudflare Pages)
 > **项目本地路径**：`C:\Users\海辰\.gemini\antigravity\scratch\ai-toolbox`
 > **GitHub 仓库**：`https://github.com/khssdsg-maker/ai-toolbox`
 > **在线体验版**：`https://ai-toolbox-ajc.pages.dev`
