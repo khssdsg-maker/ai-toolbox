@@ -963,6 +963,16 @@
           "descriptionEn": "In-browser full-stack AI development platform to prompt, run and deploy web apps in cloud sandboxes",
           "icon": "",
           "enabled": true
+        },
+        {
+          "id": "5_8",
+          "title": "agent-qa",
+          "titleEn": "agent-qa",
+          "href": "https://vostride.com",
+          "description": "自然语言测试 Web、Android 和 iOS 应用，支持持久记忆、验证后的自我改进及 CLI/MCP 集成",
+          "descriptionEn": "Natural-language testing for Web, Android, and iOS with persistent memory, validated self-improvement, and CLI/MCP integration.",
+          "icon": "",
+          "enabled": true
         }
       ]
     },
